@@ -6,8 +6,10 @@ from shadowseed.manager import SSLManager, SeedStatus
 def fake_embedding(text: str) -> np.ndarray:
     if "Koloniaal kapitaal" in text:
         return np.array([1.0, 0.0, 0.0])
+    if "Winsten uit trans-Atlantische slavenhandel" in text:
+        return np.array([0.96, 0.28, 0.0])
     if "Koloniale katoen" in text:
-        return np.array([0.95, 0.05, 0.0])
+        return np.array([0.96, -0.28, 0.0])
     return np.array([0.0, 1.0, 0.0])
 
 
@@ -47,3 +49,40 @@ def test_reactivate_dormant_seed_by_keyword():
     reactivated = manager.reactivate_by_text("De katoenhandel voedde de textielindustrie.")
     assert reactivated == [seed_id]
     assert manager.seeds[seed_id].status == SeedStatus.NEW
+    assert manager.seeds[seed_id].trace > 2.0
+
+
+def test_contradiction_resets_weight_and_status():
+    manager = SSLManager(embedding_fn=fake_embedding)
+    seed_id = manager.add_or_update_seed(
+        "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen."
+    )
+    manager.seeds[seed_id].weight = 0.6
+    manager.seeds[seed_id].occurrence_count = 4
+
+    result = manager.run_validation_gate(seed_id, contradiction=True)
+    assert result is False
+    assert manager.seeds[seed_id].status == SeedStatus.NEW
+    assert manager.seeds[seed_id].occurrence_count == 1
+    assert manager.seeds[seed_id].weight < 0.6
+
+
+def test_constellations_group_promoted_seeds():
+    manager = SSLManager(embedding_fn=fake_embedding, dedup_threshold=0.999)
+    first = manager.add_or_update_seed(
+        "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen."
+    )
+    second = manager.add_or_update_seed(
+        "Winsten uit trans-Atlantische slavenhandel als investeringskapitaal voor industrialisatie."
+    )
+    third = manager.add_or_update_seed(
+        "Koloniale katoen als grondstof voor de Britse textielindustrie."
+    )
+
+    for seed_id in [first, second, third]:
+        manager.seeds[seed_id].status = SeedStatus.PROMOTED
+        manager.seeds[seed_id].weight = 0.6
+
+    constellations = manager.find_constellations(threshold=0.95, min_members=3)
+    assert len(constellations) == 1
+    assert constellations[0].members == [first, second, third]
