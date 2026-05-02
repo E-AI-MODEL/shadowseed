@@ -43,7 +43,11 @@ class BenchmarkResult:
 
     def to_dict(self) -> dict:
         payload = asdict(self)
-        missing = [field_name for field_name in REQUIRED_RESULT_FIELDS if field_name not in payload]
+        missing = [
+            field_name
+            for field_name in REQUIRED_RESULT_FIELDS
+            if field_name not in payload
+        ]
         if missing:
             raise ValueError(f"Result payload mist verplichte velden: {missing}")
         return payload
