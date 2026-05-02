@@ -56,3 +56,4 @@ def test_run_card_smoke():
     assert payload["execution_status"] == "benchmarkvoorbereiding"
     assert payload["execution_gap"] is True
     assert payload["scenarios_loaded"] == 3
+    assert "evaluate.py" in payload["start_command_template"]
