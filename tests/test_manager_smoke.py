@@ -30,6 +30,7 @@ def test_add_update_and_validation_gate_smoke():
 
     manager.seeds[seed_id].occurrence_count = 3
     manager.run_validation_gate(seed_id, external_evidence=True)
+    manager.run_validation_gate(seed_id, external_evidence=True)
     result = manager.run_validation_gate(seed_id, external_evidence=True)
 
     assert result is True
