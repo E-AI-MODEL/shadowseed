@@ -1,0 +1,23 @@
+{
+  "benchmark_name": "AbsenceBench",
+  "run_type": "benchmarkvoorbereiding",
+  "execution_status": "execution-gap aanwezig",
+  "ssl_input_basis": [
+    "shadow_seed_learning_4_5_clean.md",
+    "ssl_4_5_public_release/",
+    "benchmark_bibliotheek/"
+  ],
+  "host_platform": "Hugging Face dataset + GitHub runnerroute",
+  "dataset_status": "aanwezig",
+  "runner_status": "runnerstructuur aanwezig",
+  "score": null,
+  "score_type": "F1 of benchmarkoutput uit upstream runner",
+  "interpretation": "De repo kan een controleerbare execution-lane dragen, maar nog geen geclaimde live benchmarkrun.",
+  "limitations": [
+    "live hostverificatie ontbreekt",
+    "provider- en modelkeuze nog niet vastgezet",
+    "upstream outputmapping nog niet end-to-end getest"
+  ],
+  "execution_gap": true,
+  "timestamp": "2026-05-02T17:21:00+00:00"
+}
