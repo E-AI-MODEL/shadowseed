@@ -1,7 +1,7 @@
 """
 Shadow Seed Learning 4.5
 
-Minimale Niveau 1 implementatie, afgeleid van de publieke SSL 4.5 release.
+Benchmarkgerichte Niveau 1 implementatie, afgeleid van de publieke SSL 4.5 release.
 
 Belangrijk:
     - een seed is atomisch
@@ -52,6 +52,16 @@ class ShadowSeed:
         return data
 
 
+@dataclass
+class Constellation:
+    members: list[str]
+    centroid: list[float]
+    combined_weight: float
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
 class SSLManager:
     def __init__(
         self,
@@ -62,6 +72,8 @@ class SSLManager:
         dormant_threshold: float = 0.05,
         validation_increment: float = 0.2,
         contradiction_penalty: float = 0.3,
+        max_trace: float = 3.0,
+        reactivation_increment: float = 2.0,
         embedding_fn: Callable[[str], np.ndarray] | None = None,
     ):
         self._embedding_fn = embedding_fn
@@ -74,6 +86,8 @@ class SSLManager:
         self.dormant_threshold = dormant_threshold
         self.validation_increment = validation_increment
         self.contradiction_penalty = contradiction_penalty
+        self.max_trace = max_trace
+        self.reactivation_increment = reactivation_increment
 
     def _load_embedder(self):
         if self._embedder is not None:
@@ -90,9 +104,16 @@ class SSLManager:
 
     def get_embedding(self, text: str) -> np.ndarray:
         if self._embedding_fn is not None:
-            return self._embedding_fn(text)
+            return self._normalize_embedding(self._embedding_fn(text))
         embedder = self._load_embedder()
         return embedder.encode(text, normalize_embeddings=True)
+
+    @staticmethod
+    def _normalize_embedding(embedding: np.ndarray) -> np.ndarray:
+        norm = np.linalg.norm(embedding)
+        if norm == 0:
+            return embedding
+        return embedding / norm
 
     @staticmethod
     def is_atomic_seed(text: str) -> bool:
@@ -127,8 +148,9 @@ class SSLManager:
             sim = float(np.dot(new_emb, seed.embedding))
             if sim >= self.dedup_threshold:
                 seed.occurrence_count += 1
-                seed.trace = min(seed.trace + 0.5, 3)
-                seed.status = SeedStatus.ACTIVE
+                seed.trace = min(seed.trace + 0.5, self.max_trace)
+                if seed.status != SeedStatus.PROMOTED:
+                    seed.status = SeedStatus.ACTIVE
                 seed.updated_at = datetime.now().isoformat()
                 return seed_id
 
@@ -181,8 +203,11 @@ class SSLManager:
 
         if check1 and check2 and check3:
             seed.weight = min(1.0, seed.weight + self.validation_increment)
-            if seed.weight >= self.promotion_threshold:
-                seed.status = SeedStatus.PROMOTED
+            seed.status = (
+                SeedStatus.PROMOTED
+                if seed.weight >= self.promotion_threshold
+                else SeedStatus.ACTIVE
+            )
             seed.updated_at = datetime.now().isoformat()
             return True
 
@@ -202,7 +227,7 @@ class SSLManager:
             )
 
             if sim >= threshold or keyword_hit:
-                seed.trace = min(seed.trace + 2.0, 3)
+                seed.trace = min(seed.trace + self.reactivation_increment, self.max_trace)
                 seed.status = SeedStatus.NEW
                 seed.updated_at = datetime.now().isoformat()
                 reactivated.append(seed_id)
@@ -211,11 +236,11 @@ class SSLManager:
 
     def find_constellations(
         self, threshold: float = 0.70, min_members: int = 3
-    ) -> list[dict]:
+    ) -> list[Constellation]:
         promoted = [
             seed for seed in self.seeds.values() if seed.status == SeedStatus.PROMOTED
         ]
-        constellations: list[dict] = []
+        constellations: list[Constellation] = []
         seen: set[tuple[str, ...]] = set()
 
         for index, seed in enumerate(promoted):
@@ -232,16 +257,22 @@ class SSLManager:
                 seen.add(member_ids)
                 centroid = np.mean([item.embedding for item in cluster], axis=0)
                 constellations.append(
-                    {
-                        "members": list(member_ids),
-                        "centroid": centroid.tolist(),
-                        "combined_weight": float(
+                    Constellation(
+                        members=list(member_ids),
+                        centroid=centroid.tolist(),
+                        combined_weight=float(
                             np.mean([item.weight for item in cluster])
                         ),
-                    }
+                    )
                 )
 
         return constellations
 
+    def get_seed(self, seed_id: str) -> ShadowSeed:
+        return self.seeds[seed_id]
+
     def to_dict(self) -> dict:
-        return {"seeds": [seed.to_dict() for seed in self.seeds.values()]}
+        return {
+            "seeds": [seed.to_dict() for seed in self.seeds.values()],
+            "constellations": [item.to_dict() for item in self.find_constellations()],
+        }
