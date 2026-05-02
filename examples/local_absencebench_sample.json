@@ -1,0 +1,18 @@
+{
+  "scenarios": [
+    {
+      "id": "sample-001",
+      "original_context": "De tekst noemt A, B en C.",
+      "modified_context": "De tekst noemt A en C.",
+      "omitted_context": ["B"],
+      "detected": true
+    },
+    {
+      "id": "sample-002",
+      "original_context": "De tekst noemt oorzaak, gevolg en bewijs.",
+      "modified_context": "De tekst noemt oorzaak en gevolg.",
+      "omitted_context": ["bewijs"],
+      "detected": false
+    }
+  ]
+}
