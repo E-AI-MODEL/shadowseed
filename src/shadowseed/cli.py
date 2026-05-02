@@ -6,6 +6,7 @@ import argparse
 
 from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
+from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.run_types import RunType
 
@@ -29,6 +30,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Relatief pad binnen benchmarks/results.",
     )
 
+    hf = subparsers.add_parser("fetch-absencebench")
+    hf.add_argument("--output", default="data/absencebench_sample.json")
+    hf.add_argument("--limit", type=int, default=10)
+
     return parser
 
 
@@ -45,6 +50,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run-local-absencebench":
         path = run_local_absencebench(args.input, args.output)
+        print(path)
+        return 0
+
+    if args.command == "fetch-absencebench":
+        path = fetch_absencebench_sample(args.output, limit=args.limit)
         print(path)
         return 0
 
