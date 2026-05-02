@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Status](https://img.shields.io/badge/status-research%20prototype-orange)
 ![CI](https://img.shields.io/badge/CI-unit%20%2B%20SSL%20suite%20%2B%20NLP%20smoke-brightgreen)
-![License](https://img.shields.io/badge/license-see%20repository-lightgrey)
+![Cost](https://img.shields.io/badge/run-free-brightgreen)
 
 **Shadow Seed Learning (SSL) 4.5** is een mechanisme voor het detecteren, opslaan en valideren van kleine structurele afwezigheden in een antwoord.
 
@@ -12,13 +12,26 @@ De kern:
 
 > Een seed bevat precies één gap.
 
-Deze repository bevat de implementatie, de officiële SSL 4.5 Gap-Test Suite en een lichte NLP-smoke test. Alles draait gratis in GitHub Actions, zonder betaalde API's en zonder verplichte modeldownload.
+Deze repository bevat:
+
+- de SSL 4.5 implementatie
+- de officiële SSL 4.5 Gap-Test Suite
+- een lichte NLP / AbsenceBench smoke test
+- CI die alles gratis draait zonder betaalde API's of verplichte modeldownload
+
+---
+
+## Waarom deze repo bestaat
+
+Veel evaluaties meten of een model iets weet. SSL 4.5 test iets anders:
+
+> kan een systeem herkennen wat structureel ontbreekt, dat als atomische seed opslaan, en pas na validatie laten meewegen?
+
+De repo test dus niet alleen code, maar ook de methode: detectie, atomiciteit, trace, weight, Validation Gate en promotie.
 
 ---
 
 ## Wat wordt getest?
-
-Deze repo test twee dingen:
 
 | Laag | Doel | Commando | CI |
 |---|---|---|---|
@@ -26,7 +39,7 @@ Deze repo test twee dingen:
 | SSL 4.5 Gap-Test Suite | Klopt de paper-pipeline? | `shadowseed run-gap-suite` | ja |
 | NLP / AbsenceBench smoke | Breekt de absence-runner niet? | `shadowseed run-nlp-smoke` | ja |
 
-De Gap-Test Suite is de belangrijkste test. Die gebruikt drie scenario's met atomische ground-truth seeds en score 0/1/2.
+De Gap-Test Suite is de hoofdtest. Die gebruikt drie scenario's met atomische ground-truth seeds en score 0/1/2.
 
 ---
 
@@ -52,7 +65,7 @@ flowchart TD
 
 ---
 
-## Twee velden: trace en weight
+## Lifecycle
 
 ```mermaid
 stateDiagram-v2
@@ -71,7 +84,7 @@ stateDiagram-v2
 | `trace` | aanwezigheid van de seed | `2.0` | geheugensterkte |
 | `weight` | invloed van de seed | `0.0` | pas na validatie actief |
 
-Belangrijk: een nieuwe seed is aanwezig, maar heeft nog geen invloed.
+Een nieuwe seed is dus wel aanwezig, maar stuurt nog niets.
 
 ---
 
@@ -91,7 +104,7 @@ pip install -e ".[test,models]"
 
 ## Quickstart
 
-Run alles lokaal:
+Run dezelfde checks als CI:
 
 ```bash
 pytest
@@ -140,7 +153,7 @@ De CI gebruikt geen betaalde API's en downloadt standaard geen groot model.
 
 ## Evaluatie
 
-De SSL 4.5 Gap-Test Suite gebruikt de score uit de specificatie:
+De SSL 4.5 Gap-Test Suite gebruikt deze schaal:
 
 | Score | Betekenis |
 |---:|---|
@@ -149,6 +162,38 @@ De SSL 4.5 Gap-Test Suite gebruikt de score uit de specificatie:
 | 2 | atomische en structureel juiste gap gevonden |
 
 Ground truth wordt niet gebruikt tijdens detectie. Ground truth wordt alleen gebruikt voor evaluatie en externe validatie in de Validation Gate.
+
+### Voorbeeldoutput
+
+`shadowseed run-gap-suite` schrijft standaard naar:
+
+```text
+results/ssl45_gap_suite.json
+```
+
+Voorbeeld van de samenvatting:
+
+```json
+{
+  "summary": {
+    "suite_version": "4.5",
+    "scenario_count": 3,
+    "mean_scenario_score": 1.33,
+    "atomische_hits": 4,
+    "promoted_hits": 3
+  }
+}
+```
+
+### Interpretatie
+
+| Veld | Betekenis |
+|---|---|
+| `mean_scenario_score` | gemiddelde score over de scenario's op schaal 0/1/2 |
+| `atomische_hits` | aantal seeds met score 2 |
+| `promoted_hits` | aantal seeds dat na Validation Gate promoted is |
+
+Een goede run vindt niet alleen veel gaps, maar vooral **atomische** gaps. Promotie telt pas mee als de seed door de Validation Gate komt.
 
 ---
 
