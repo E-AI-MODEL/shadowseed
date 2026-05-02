@@ -6,14 +6,6 @@ Dit document is de standaard runkaart voor de eerste AbsenceBench-lane in deze r
 
 Toetsen of een SSL 4.5-conditie betere absence detection oplevert dan een baselineconditie zonder expliciete SSL-sturing.
 
-## Bronbasis
-
-Verplicht gebruiken:
-
-- `shadow_seed_learning_4_5_clean.md`
-- `ssl_4_5_public_release/`
-- `benchmark_bibliotheek/`
-
 ## Bron en host
 
 - dataset-host: `harveyfin/AbsenceBench` op Hugging Face
@@ -21,59 +13,35 @@ Verplicht gebruiken:
 - code-host: `harvey-fin/absence-bench` op GitHub
 - publieke benchmarksite: `absencebench.github.io`
 
-## Executionstatus
+## Fase-3 executionstatus
 
-- huidige status: `benchmarkvoorbereiding`
+Op 2 mei 2026 geldt:
+
+- host_status: `aanwezig`
+- runner_status: `runnerstructuur aanwezig`
+- executionstatus: `benchmarkvoorbereiding`
 - execution-gap aanwezig: `ja`
-- repo-status: `te verifiëren`
 
 ## Waarom nog geen echte benchmarkrun
 
-De repo legt de benchmarkroute inhoudelijk vast, maar claimt nog geen actuele runnerverificatie. Daardoor zijn de volgende onderdelen nog niet hard bevestigd:
+Hoewel de publieke bronlagen zichtbaar zijn en de upstream repo een evaluatie-entrypoint toont, ontbreken in deze repo nog harde live-bevestigingen voor:
 
-- startcommando baseline
-- startcommando SSL-conditie
-- actuele uitvoerbaarheid van de gekozen runnerrepo
-- score-output schema
-- exacte model- en providerkeuze
+- end-to-end benchmarkuitvoering vanuit een gecontroleerde `shadowseed`-route
+- definitieve provider- en modelkeuze
+- stabiele outputmapping naar het lokale resultschema
 
-## Twee-conditie-opzet
+## Startcommand-template
 
-### Baseline
+```bash
+python evaluate.py --model_family <provider> --model <model> --in_dir tests --out_dir results
+```
 
-- label: `baseline`
-- doel: meten hoe een gewone modelopzet zonder SSL-logica presteert
-- instructielaag: neutrale benchmarkaansturing zonder seed- of gaplogica
+Dit template is afgeleid van de huidige upstream README, maar telt in `shadowseed` nog niet als bewijs van een afgeronde live run.
 
-### SSL-conditie
+## Outdated-blokkade
 
-- label: `ssl_condition`
-- doel: meten of SSL-sturing betere absence detection oplevert
-- instructielaag: Detection-Pass, seed-normalisatie en validatielogica volgens SSL 4.5
+Als de upstream repo later outdated blijkt, valt de route automatisch terug naar:
 
-## Minimale runnotitie
-
-- benchmark: `AbsenceBench`
-- executionstatus: `benchmarkvoorbereiding`
-- dataset-host: `harveyfin/AbsenceBench`
-- code-host: `harvey-fin/absence-bench`
-- paper-host: `2506.11440`
-- model: `nog te kiezen`
-- provider: `nog te kiezen`
-- benchmarksubset: `nog te kiezen`
-- baselineprompt-aansturing: `nog te verifiëren`
-- ssl-aansturing: `Detection-Pass + seed-normalisatie + validation discipline`
-- startcommando baseline: `nog te verifiëren`
-- startcommando SSL-conditie: `nog te verifiëren`
-- score-output pad of vorm: `nog te verifiëren`
-- rapportbestemming: `runs/absencebench/`
-- execution-gap: `ja`
-- ontbrekende componenten:
-  - actuele runnerverificatie
-  - bevestigd startcommando
-  - model- en providerselectie
-  - outputschema
-
-## Handoff
-
-Wanneer de runnerroute actueel is geverifieerd, kan deze runkaart worden opgewaardeerd van `benchmarkvoorbereiding` naar `echte benchmarkrun`.
+- `runner_status = outdated`
+- `executionstatus = execution-gap aanwezig`
+- geen `echte benchmarkrun`
