@@ -1,1 +1,8 @@
-{"version":"4.5"}
+{
+  "version": "4.5",
+  "scoring": {
+    "0": "geen relevante gap gevonden",
+    "1": "richting klopt, maar output is te vaag of te breed",
+    "2": "atomische en structureel juiste gap gevonden"
+  }
+}
