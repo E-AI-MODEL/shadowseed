@@ -3,45 +3,49 @@
 [![tests](https://github.com/E-AI-MODEL/shadowseed/actions/workflows/tests.yml/badge.svg)](https://github.com/E-AI-MODEL/shadowseed/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Status](https://img.shields.io/badge/status-research%20prototype-orange)
-![CI](https://img.shields.io/badge/CI-unit%20%2B%20SSL%20suite%20%2B%20NLP%20smoke-brightgreen)
 ![Cost](https://img.shields.io/badge/run-free-brightgreen)
 
-**Shadow Seed Learning (SSL) 4.5** is een mechanisme voor het detecteren, opslaan en valideren van kleine structurele afwezigheden in een antwoord.
-
-De kern:
+**Shadow Seed Learning (SSL) 4.5** is een mechanisme om kleine structurele afwezigheden in antwoorden te detecteren, op te slaan als gewichtloze seeds en pas na validatie te gebruiken voor vervolgvragen, retrieval of falsificatie.
 
 > Een seed bevat precies één gap.
 
-Deze repository bevat:
+## Installatie
 
-- de SSL 4.5 implementatie
-- de officiële SSL 4.5 Gap-Test Suite
-- een lichte NLP / AbsenceBench smoke test
-- CI die alles gratis draait zonder betaalde API's of verplichte modeldownload
+```bash
+pip install -e ".[test]"
+```
 
----
+Optioneel met embeddingmodel:
 
-## Waarom deze repo bestaat
+```bash
+pip install -e ".[test,models]"
+```
 
-Veel evaluaties meten of een model iets weet. SSL 4.5 test iets anders:
+## Snel starten
 
-> kan een systeem herkennen wat structureel ontbreekt, dat als atomische seed opslaan, en pas na validatie laten meewegen?
+```bash
+pytest
+shadowseed run-gap-suite
+shadowseed run-nlp-smoke
+```
 
-De repo test dus niet alleen code, maar ook de methode: detectie, atomiciteit, trace, weight, Validation Gate en promotie.
+## CLI
 
----
+```bash
+shadowseed run-gap-suite
+shadowseed run-nlp-smoke
+shadowseed fetch-absencebench --limit 10
+shadowseed run-local-absencebench --input examples/local_absencebench_sample.json
+shadowseed prepare-absencebench
+```
 
 ## Wat wordt getest?
 
 | Laag | Doel | Commando | CI |
 |---|---|---|---|
-| Unit tests | Klopt de code? | `pytest` | ja |
-| SSL 4.5 Gap-Test Suite | Klopt de paper-pipeline? | `shadowseed run-gap-suite` | ja |
-| NLP / AbsenceBench smoke | Breekt de absence-runner niet? | `shadowseed run-nlp-smoke` | ja |
-
-De Gap-Test Suite is de hoofdtest. Die gebruikt drie scenario's met atomische ground-truth seeds en score 0/1/2.
-
----
+| Unit tests | codecorrectheid | `pytest` | ja |
+| SSL 4.5 Gap-Test Suite | paper-pipeline | `shadowseed run-gap-suite` | ja |
+| NLP / AbsenceBench smoke | regressiecheck | `shadowseed run-nlp-smoke` | ja |
 
 ## Architectuur
 
@@ -60,236 +64,41 @@ flowchart TD
     K --> L{weight >= drempel?}
     L -- nee --> J
     L -- ja --> M[PROMOTED]
-    M --> N[Active Probe of retrieval]
+    M --> N[Active Probe]
 ```
-
----
-
-## Lifecycle
-
-```mermaid
-stateDiagram-v2
-    [*] --> NEW
-    NEW --> ACTIVE: herkend
-    ACTIVE --> DECAYING: geen trigger
-    DECAYING --> DORMANT: trace < 0.05
-    DORMANT --> NEW: TrTL-trigger
-    ACTIVE --> PROMOTED: Validation Gate + weight >= threshold
-    PROMOTED --> NEW: falsificatie
-    DORMANT --> EXPIRED: te lang dormant
-```
-
-| Veld | Betekenis | Startwaarde | Rol |
-|---|---|---:|---|
-| `trace` | aanwezigheid van de seed | `2.0` | geheugensterkte |
-| `weight` | invloed van de seed | `0.0` | pas na validatie actief |
-
-Een nieuwe seed is dus wel aanwezig, maar stuurt nog niets.
-
----
-
-## Installatie
-
-```bash
-pip install -e ".[test]"
-```
-
-Optioneel met embeddingmodel:
-
-```bash
-pip install -e ".[test,models]"
-```
-
----
-
-## Quickstart
-
-Run dezelfde checks als CI:
-
-```bash
-pytest
-shadowseed run-gap-suite
-shadowseed run-nlp-smoke
-```
-
-Run een kleine AbsenceBench-sample:
-
-```bash
-shadowseed fetch-absencebench --limit 10
-shadowseed run-local-absencebench --input data/absencebench_sample.json
-```
-
----
-
-## CLI
-
-```bash
-shadowseed run-gap-suite
-shadowseed run-nlp-smoke
-shadowseed fetch-absencebench --limit 10
-shadowseed run-local-absencebench --input examples/local_absencebench_sample.json
-shadowseed prepare-absencebench
-```
-
----
-
-## CI
-
-GitHub Actions draait op elke push en pull request:
-
-```mermaid
-flowchart LR
-    A[Push / PR] --> B[Unit tests 3.10]
-    A --> C[Unit tests 3.11]
-    B --> D[SSL 4.5 Gap-Test Suite]
-    C --> D
-    B --> E[NLP AbsenceBench smoke]
-    C --> E
-```
-
-De CI gebruikt geen betaalde API's en downloadt standaard geen groot model.
-
----
-
-## Evaluatie
-
-De SSL 4.5 Gap-Test Suite gebruikt deze schaal:
-
-| Score | Betekenis |
-|---:|---|
-| 0 | geen relevante gap gevonden |
-| 1 | richting klopt, maar output is te vaag of te breed |
-| 2 | atomische en structureel juiste gap gevonden |
-
-Ground truth wordt niet gebruikt tijdens detectie. Ground truth wordt alleen gebruikt voor evaluatie en externe validatie in de Validation Gate.
-
-### Voorbeeldoutput
-
-`shadowseed run-gap-suite` schrijft standaard naar:
-
-```text
-results/ssl45_gap_suite.json
-```
-
-Voorbeeld van de samenvatting:
-
-```json
-{
-  "summary": {
-    "suite_version": "4.5",
-    "scenario_count": 3,
-    "mean_scenario_score": 1.33,
-    "atomische_hits": 6,
-    "promoted_hits": 0
-  }
-}
-```
-
-### Interpretatie
-
-| Veld | Betekenis |
-|---|---|
-| `mean_scenario_score` | gemiddelde score over de scenario's op schaal 0/1/2 |
-| `atomische_hits` | aantal seeds met score 2 |
-| `promoted_hits` | aantal seeds dat na Validation Gate promoted is |
-
-Een goede run vindt niet alleen veel gaps, maar vooral **atomische** gaps. Promotie telt pas mee als de seed door de Validation Gate komt.
-
----
-
-## Meerdere runs
-
-Er zijn meerdere runs gedaan met verschillende aantallen turns: 1, 2, 3, 5 en 8. De huidige gratis detector is deterministisch, dus de detectiescore blijft gelijk over deze instellingen. Promotie blijft in deze runs uit.
-
-| Turns | Mean scenario score | Atomische hits | Promoted hits | Scenario A | Scenario B | Scenario C |
-|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 1.33 | 6 | 0 | 2 | 0 | 2 |
-| 2 | 1.33 | 6 | 0 | 2 | 0 | 2 |
-| 3 | 1.33 | 6 | 0 | 2 | 0 | 2 |
-| 5 | 1.33 | 6 | 0 | 2 | 0 | 2 |
-| 8 | 1.33 | 6 | 0 | 2 | 0 | 2 |
-
-### Wat deze runs laten zien
-
-- De detector vindt stabiel atomische gaps in scenario A en C.
-- Scenario B faalt in de huidige gratis detector.
-- Multi-turn herhaling verandert de score nog niet, omdat de detector deterministic is.
-- `promoted_hits = 0` laat zien dat detectie en promotie nog niet goed gekoppeld zijn in de evaluator.
-
-### Conclusie uit deze runs
-
-De repo toont nu reproduceerbare detectie en scoring, maar nog geen sterke empirische claim voor SSL-promotie. De belangrijkste volgende verbetering is niet meer CI of packaging, maar de evaluator: herhaalde detectie moet correct doorwerken naar `occurrence_count`, `evidence_count`, `weight` en uiteindelijk `PROMOTED`.
-
----
-
-## Findings
-
-De huidige gratis evaluator is geschikt als regressietest en als minimale paper-pipeline. De runs tonen vooral waar de methode al meetbaar is en waar de implementatie nog tekortschiet.
-
-### Sterk
-
-- Scenario A en C leveren atomische hits op.
-- De output is reproduceerbaar over meerdere turn-instellingen.
-- De CI bevestigt dat de testlaag stabiel draait.
-
-### Zwak
-
-- Scenario B wordt niet goed gevonden door de huidige detector.
-- Multi-turn levert nog geen meetbaar extra effect op.
-- Promotie blijft uit, dus de Validation Gate wordt nog niet overtuigend als levenscyclus-effect getest.
-
-### Eerlijke status
-
-Dit is een werkende research prototype, geen bewijs dat SSL state-of-the-art is. De repo is nu geschikt om de volgende wetenschappelijke stap te zetten: betere detectiepass, grotere suite en echte multi-turn promotiemeting.
-
----
 
 ## Belangrijke bestanden
 
 ```text
 src/shadowseed/manager.py                         # SSLManager: trace, weight, Validation Gate
-src/shadowseed/data/gap_test_suite_4_5.json       # officiële SSL 4.5 Gap-Test Suite
+src/shadowseed/data/gap_test_suite_4_5.json       # canonieke SSL 4.5 Gap-Test Suite
 src/shadowseed/benchmark/ssl45_gap_suite.py       # evaluator voor de paper-test
-src/shadowseed/benchmark/absencebench_local.py    # lichte NLP smoke runner
-src/shadowseed/benchmark/absencebench_hf.py       # gratis Hugging Face sample fetcher
-src/shadowseed/cli.py                             # CLI entrypoint
+src/shadowseed/prompt_templates.py                # promptbibliotheek
+docs/01_framework.md                              # technische uitleg
 docs/EXPERIMENT.md                                # experimentopzet
 experiments/run_full.py                           # reproduceerbare run helper
 ```
 
----
+## Huidige onderzoeksstatus
 
-## Wat dit wel en niet claimt
+De repo is een research prototype. De huidige gratis evaluator vindt stabiel atomische gaps in scenario A en C, maar scenario B faalt nog en `promoted_hits` blijft 0. Dat betekent: detectie en scoring werken reproduceerbaar, maar het promotie-effect van de Validation Gate is nog niet overtuigend aangetoond.
 
-Wel:
-
-- reproduceerbare SSL 4.5 testopzet
-- scorebare Gap-Test Suite
-- stabiele detectie op scenario A en C
-- gratis CI-run
-
-Niet:
+## Wat dit niet claimt
 
 - geen nieuw foundation model
 - geen aanpassing van modelgewichten
-- geen claim dat SSL al state-of-the-art is
+- geen claim dat SSL state-of-the-art is
 - geen bewezen promotie-effect in de huidige evaluator
 - geen verplichte LLM- of GPU-run
 
----
+## Documentatie
 
-## Status
+Lees verder in:
 
-- `main` is de leidende branch
-- CI is groen
-- SSL 4.5 Gap-Test Suite draait via CI
-- NLP smoke test draait via CI
-
----
+- `docs/01_framework.md`
+- `docs/EXPERIMENT.md`
 
 ## Citeren
-
-Gebruik deze repo als implementatie- en evaluatiebasis voor Shadow Seed Learning 4.5.
 
 ```text
 Visser, H. (2026). Shadow Seed Learning 4.5: Atomische detectie en epistemische navigatie.
