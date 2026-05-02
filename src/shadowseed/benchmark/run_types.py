@@ -12,6 +12,22 @@ class RunType(str, Enum):
 
 
 class ExecutionStatus(str, Enum):
+    SCAN = "benchmarkscan"
     PREPARATION = "benchmarkvoorbereiding"
     EXECUTION_GAP = "execution-gap aanwezig"
     LIVE = "echte benchmarkrun"
+
+
+class HostStatus(str, Enum):
+    UNVERIFIED = "te verifiëren"
+    PRESENT = "aanwezig"
+    VERIFIED = "geverifieerd"
+    OUTDATED = "outdated"
+
+
+class RunnerStatus(str, Enum):
+    UNVERIFIED = "te verifiëren"
+    STRUCTURE_PRESENT = "runnerstructuur aanwezig"
+    VERIFIED = "geverifieerd"
+    OUTDATED = "outdated"
+    BLOCKED = "geblokkeerd"
