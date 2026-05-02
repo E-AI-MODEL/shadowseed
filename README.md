@@ -179,8 +179,8 @@ Voorbeeld van de samenvatting:
     "suite_version": "4.5",
     "scenario_count": 3,
     "mean_scenario_score": 1.33,
-    "atomische_hits": 4,
-    "promoted_hits": 3
+    "atomische_hits": 6,
+    "promoted_hits": 0
   }
 }
 ```
@@ -197,31 +197,50 @@ Een goede run vindt niet alleen veel gaps, maar vooral **atomische** gaps. Promo
 
 ---
 
+## Meerdere runs
+
+Er zijn meerdere runs gedaan met verschillende aantallen turns: 1, 2, 3, 5 en 8. De huidige gratis detector is deterministisch, dus de detectiescore blijft gelijk over deze instellingen. Promotie blijft in deze runs uit.
+
+| Turns | Mean scenario score | Atomische hits | Promoted hits | Scenario A | Scenario B | Scenario C |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 1.33 | 6 | 0 | 2 | 0 | 2 |
+| 2 | 1.33 | 6 | 0 | 2 | 0 | 2 |
+| 3 | 1.33 | 6 | 0 | 2 | 0 | 2 |
+| 5 | 1.33 | 6 | 0 | 2 | 0 | 2 |
+| 8 | 1.33 | 6 | 0 | 2 | 0 | 2 |
+
+### Wat deze runs laten zien
+
+- De detector vindt stabiel atomische gaps in scenario A en C.
+- Scenario B faalt in de huidige gratis detector.
+- Multi-turn herhaling verandert de score nog niet, omdat de detector deterministic is.
+- `promoted_hits = 0` laat zien dat detectie en promotie nog niet goed gekoppeld zijn in de evaluator.
+
+### Conclusie uit deze runs
+
+De repo toont nu reproduceerbare detectie en scoring, maar nog geen sterke empirische claim voor SSL-promotie. De belangrijkste volgende verbetering is niet meer CI of packaging, maar de evaluator: herhaalde detectie moet correct doorwerken naar `occurrence_count`, `evidence_count`, `weight` en uiteindelijk `PROMOTED`.
+
+---
+
 ## Findings
 
-De huidige gratis evaluator laat vooral zien of de SSL 4.5-mechaniek correct werkt: atomische detectie, multi-turn seed-opbouw en promotie via de Validation Gate.
+De huidige gratis evaluator is geschikt als regressietest en als minimale paper-pipeline. De runs tonen vooral waar de methode al meetbaar is en waar de implementatie nog tekortschiet.
 
-### Waar SSL sterk hoort te zijn
+### Sterk
 
-- Scenario's waar een antwoord feitelijk juist is, maar een kleine structurele relatie mist.
-- Multi-turn gebruik, omdat trace en herhaalde herkenning dan betekenis krijgen.
-- Situaties waarin brede detecties moeten worden teruggebracht tot toetsbare, atomische seeds.
+- Scenario A en C leveren atomische hits op.
+- De output is reproduceerbaar over meerdere turn-instellingen.
+- De CI bevestigt dat de testlaag stabiel draait.
 
-### Waar de huidige implementatie beperkt is
+### Zwak
 
-- De detector is deterministisch en gratis. Hij vervangt geen sterke LLM-detectiepass.
-- De Gap-Test Suite is klein: drie scenario's. Dat is goed voor regressie en methodecontrole, maar nog geen brede benchmark.
-- Promotie toont dat de lifecycle werkt; het bewijst nog niet dat SSL state-of-the-art is.
+- Scenario B wordt niet goed gevonden door de huidige detector.
+- Multi-turn levert nog geen meetbaar extra effect op.
+- Promotie blijft uit, dus de Validation Gate wordt nog niet overtuigend als levenscyclus-effect getest.
 
-### Wat een goede run betekent
+### Eerlijke status
 
-Een goede run heeft:
-
-- `mean_scenario_score` boven 1.0
-- meerdere `atomische_hits`
-- `promoted_hits` die niet hoger zijn dan het aantal atomische hits
-
-Dat betekent: het systeem vindt niet alleen mogelijke gaps, maar houdt ruis grotendeels buiten de promoted laag.
+Dit is een werkende research prototype, geen bewijs dat SSL state-of-the-art is. De repo is nu geschikt om de volgende wetenschappelijke stap te zetten: betere detectiepass, grotere suite en echte multi-turn promotiemeting.
 
 ---
 
@@ -245,9 +264,8 @@ experiments/run_full.py                           # reproduceerbare run helper
 Wel:
 
 - reproduceerbare SSL 4.5 testopzet
-- multi-turn seed-opbouw
-- Validation Gate
 - scorebare Gap-Test Suite
+- stabiele detectie op scenario A en C
 - gratis CI-run
 
 Niet:
@@ -255,6 +273,7 @@ Niet:
 - geen nieuw foundation model
 - geen aanpassing van modelgewichten
 - geen claim dat SSL al state-of-the-art is
+- geen bewezen promotie-effect in de huidige evaluator
 - geen verplichte LLM- of GPU-run
 
 ---
