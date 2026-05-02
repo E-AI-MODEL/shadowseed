@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 import json
-from pathlib import Path
 from importlib import resources
+from pathlib import Path
 
 from .run_types import ExecutionStatus, RunType
 
@@ -30,17 +30,20 @@ class AbsenceBenchPreparation:
     code_host: str = "GitHub repo: harvey-fin/absence-bench"
     public_site: str = "absencebench.github.io"
     dataset_status: str = "bibliografisch vastgelegd"
-    runner_route: str = "nog niet hard geverifieerd"
-    runner_status: str = "te verifiëren"
-    startcommando: str = "nog te verifiëren"
-    score_type: str = "nog te verifiëren"
+    runner_route: str = "README + evaluate.py aanwezig, live route nog niet hard geverifieerd"
+    runner_status: str = "runnerstructuur aanwezig"
+    startcommando: str = (
+        "python evaluate.py --model_family <provider> --model <model> "
+        "--in_dir tests --out_dir results"
+    )
+    score_type: str = "F1 of benchmarkoutput uit upstream runner"
     missing_components: list[str] = field(
         default_factory=lambda: [
-            "actuele runnerverificatie",
-            "hard bevestigd startcommando",
+            "actuele live hostverificatie",
+            "end-to-end runneruitvoering vanuit deze repo of gecontroleerde adapter",
             "provider- en modelkeuze voor baseline",
             "provider- en modelkeuze voor ssl_condition",
-            "score-output pad of schema",
+            "score-output mapping van upstream runner naar shadowseed schema",
         ]
     )
     created_at: str = field(
@@ -64,6 +67,7 @@ class AbsenceBenchRunCard:
     runner_status: str
     execution_gap: bool
     scenarios_loaded: int
+    start_command_template: str
     notes: list[str]
 
     def to_dict(self) -> dict:
@@ -92,7 +96,7 @@ def build_run_card() -> AbsenceBenchRunCard:
         benchmark_name="AbsenceBench",
         run_type=RunType.PREPARATION.value,
         execution_status=ExecutionStatus.PREPARATION.value,
-        host_platform="Hugging Face dataset + GitHub runnerroute nog te verifiëren",
+        host_platform="Hugging Face dataset + GitHub runnerroute",
         ssl_input_basis=[
             "shadow_seed_learning_4_5_clean.md",
             "ssl_4_5_public_release/",
@@ -101,11 +105,15 @@ def build_run_card() -> AbsenceBenchRunCard:
         baseline_label="baseline",
         ssl_condition_label="ssl_condition",
         dataset_status="bibliografisch vastgelegd",
-        runner_status="te verifiëren",
+        runner_status="runnerstructuur aanwezig",
         execution_gap=True,
         scenarios_loaded=len(suite.get("scenarios", [])),
+        start_command_template=(
+            "python evaluate.py --model_family <provider> --model <model> "
+            "--in_dir tests --out_dir results"
+        ),
         notes=[
-            "runnerroute nog niet hard geverifieerd",
-            "status blijft benchmarkvoorbereiding",
+            "upstream runnerstructuur is zichtbaar",
+            "status blijft benchmarkvoorbereiding tot live route hard is bevestigd",
         ],
     )
