@@ -61,21 +61,6 @@ Output als JSON:
 }
 """.strip()
 
-SOCRATIC_PROBE = """
-Je hebt een gepromoveerde seed:
-
-"{seed_text}"
-
-Integreer deze seed in het antwoord als één natuurlijke Socratische vraag.
-
-Regels:
-- Niet zeggen dat er iets vergeten is.
-- Geen lijst maken.
-- Geen foutmelding.
-- Eén vraag.
-- De vraag moet de gebruiker uitnodigen de gap te vullen.
-""".strip()
-
 DIALECTICAL_PROBE = """
 Je hebt de hypothese dat deze gap relevant is:
 
@@ -94,6 +79,21 @@ of
 VALIDATED
 """.strip()
 
+SOCRATIC_PROBE = """
+Je hebt een gepromoveerde seed:
+
+"{seed_text}"
+
+Integreer deze seed in het antwoord als één natuurlijke Socratische vraag.
+
+Regels:
+- Niet zeggen dat er iets vergeten is.
+- Geen lijst maken.
+- Geen foutmelding.
+- Eén vraag.
+- De vraag moet de gebruiker uitnodigen de gap te vullen.
+""".strip()
+
 RETRIEVAL_PROBE = """
 Maak één smalle retrieval-query voor deze seed.
 
@@ -108,4 +108,30 @@ Regels:
 
 Output:
 [query]
+""".strip()
+
+JUDGE_PROMPT = """
+Je beoordeelt een SSL-detectie.
+
+Inputtekst:
+{input_text}
+
+Ground truth seeds:
+{ground_truth}
+
+Gedetecteerde seed:
+{detected_seed}
+
+Geef scores:
+- atomiciteit: 0 of 1
+- relevantie: 0 tot 2
+- ground_truth_match: 0 tot 2
+- eindscore: 0, 1 of 2
+
+Regels:
+- Score 2 kan alleen als de seed atomisch is.
+- Een brede lijst krijgt maximaal score 1.
+- Noem kort waarom.
+
+Output als JSON.
 """.strip()
