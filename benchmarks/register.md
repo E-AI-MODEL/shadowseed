@@ -9,43 +9,33 @@ Dit register is de vaste benchmarkbibliotheek voor deze Shadow Seed Learning 4.5
 - status en bronroute expliciet maken
 - voorkomen dat benchmarkwerk buiten vaste lablogica om gebeurt
 
-## Gebruik
-
-Lees dit register altijd samen met `benchmarks/pipeline.md` en de benchmarkspecifieke runkaarten.
-
 ## Benchmarks
 
 | Benchmark | Primaire SSL-koppeling | Rol in deze repo | Verwachte bron | Status | Opmerking |
 |---|---|---|---|---|---|
-| AbsenceBench | Detection-Pass / geometrie van afwezigheid | eerste benchmarkvoorbereiding | Hugging Face dataset + GitHub-code | klaar voor intake | default startbenchmark |
-| GAIA | structurele gaps / multi-step ambiguity | latere verbreding | Hugging Face leaderboard of repo | in bibliotheek | pas na AbsenceBench-voorbereiding |
+| AbsenceBench | Detection-Pass / geometrie van afwezigheid | eerste execution-lane | Hugging Face dataset + GitHub-code | in gebruik | default startbenchmark |
+| GAIA | structurele gaps / multi-step ambiguity | latere verbreding | Hugging Face leaderboard of repo | in bibliotheek | pas na hardere execution-route |
 | LLM Spark | Validation Gate | latere validatielaag | externe repo of paperbron | te verifiëren | nuttig voor flawed-information tests |
 | PTF-ID-Bench | Active Probing / escalatie | latere escalatietest | externe repo of paperbron | te verifiëren | relevant voor mens-escalatiegedrag |
 | AMA-Bench | JSON-state / geheugencontinuïteit | latere geheugentest | externe repo of paperbron | te verifiëren | relevant voor state-updates |
 | MR-Ben | meta-redeneren | latere interpretatietest | externe repo of paperbron | te verifiëren | relevant voor foutanalyse |
 
-## Statuswaarden
+## Fase-3 status voor AbsenceBench
 
-Gebruik in deze repo alleen deze bibliotheekstatussen:
+Op 2 mei 2026 geldt in deze repo:
 
-- `in bibliotheek`
-- `te verifiëren`
-- `klaar voor intake`
-- `klaar voor benchmarkrun`
-- `in gebruik`
-- `gearchiveerd`
+- dataset aanwezig op Hugging Face
+- paper aanwezig op Hugging Face Papers
+- runnerrepo aanwezig op GitHub
+- runnerstructuur zichtbaar via README en `evaluate.py`
+- execution-gap blijft aanwezig totdat end-to-end uitvoering en outputmapping harder zijn bevestigd
 
-## Repo- en runnerregel
+## Outdated-repo regel
 
-Een benchmarkrepo geldt pas als geldige runroute wanneer minimaal aannemelijk is dat:
+Een outdated repo telt nooit als geldige runner.
 
-1. de route actueel genoeg is voor de genoemde benchmarkversie
-2. de codebase niet zichtbaar outdated is
-3. er een plausibele uitvoerroute aanwezig is
-4. de repo meer is dan alleen historische context
+Bij zo'n signaal moet de benchmarklane minimaal vastleggen:
 
-Zolang dat niet hard vastligt, blijft de benchmarkstatus in deze repo minimaal `benchmarkvoorbereiding`.
-
-## AbsenceBench-notitie
-
-Voor AbsenceBench is de benchmarkinhoud al als eerste lane opgenomen, maar de actuele runnerroute blijft nog `te verifiëren`. Daarom is de operationele benchmarkstatus in deze repo nog niet `echte benchmarkrun`.
+- `runner_status = outdated`
+- `execution-gap aanwezig`
+- `execution_status != echte benchmarkrun`
