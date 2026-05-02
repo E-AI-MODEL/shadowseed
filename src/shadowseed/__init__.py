@@ -1,5 +1,5 @@
 """Shadow Seed Learning 4.5 package."""
 
-from .manager import SeedStatus, ShadowSeed, SSLManager
+from .manager import Constellation, SeedStatus, ShadowSeed, SSLManager
 
-__all__ = ["SSLManager", "ShadowSeed", "SeedStatus"]
+__all__ = ["SSLManager", "ShadowSeed", "SeedStatus", "Constellation"]
