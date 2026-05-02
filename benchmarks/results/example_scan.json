@@ -1,0 +1,22 @@
+{
+  "benchmark_name": "AbsenceBench",
+  "run_type": "benchmarkscan",
+  "execution_status": "benchmarkscan",
+  "ssl_input_basis": [
+    "shadow_seed_learning_4_5_clean.md",
+    "ssl_4_5_public_release/",
+    "benchmark_bibliotheek/"
+  ],
+  "host_platform": "Hugging Face dataset + GitHub repo",
+  "dataset_status": "aanwezig",
+  "runner_status": "runnerstructuur aanwezig",
+  "score": null,
+  "score_type": "nog te verifiëren",
+  "interpretation": "Scan bevestigt publieke bronlagen, maar nog geen live benchmarkuitvoering.",
+  "limitations": [
+    "end-to-end runneruitvoering niet getest",
+    "score-output mapping nog niet live bevestigd"
+  ],
+  "execution_gap": true,
+  "timestamp": "2026-05-02T17:20:00+00:00"
+}
