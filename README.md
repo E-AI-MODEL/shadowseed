@@ -197,6 +197,34 @@ Een goede run vindt niet alleen veel gaps, maar vooral **atomische** gaps. Promo
 
 ---
 
+## Findings
+
+De huidige gratis evaluator laat vooral zien of de SSL 4.5-mechaniek correct werkt: atomische detectie, multi-turn seed-opbouw en promotie via de Validation Gate.
+
+### Waar SSL sterk hoort te zijn
+
+- Scenario's waar een antwoord feitelijk juist is, maar een kleine structurele relatie mist.
+- Multi-turn gebruik, omdat trace en herhaalde herkenning dan betekenis krijgen.
+- Situaties waarin brede detecties moeten worden teruggebracht tot toetsbare, atomische seeds.
+
+### Waar de huidige implementatie beperkt is
+
+- De detector is deterministisch en gratis. Hij vervangt geen sterke LLM-detectiepass.
+- De Gap-Test Suite is klein: drie scenario's. Dat is goed voor regressie en methodecontrole, maar nog geen brede benchmark.
+- Promotie toont dat de lifecycle werkt; het bewijst nog niet dat SSL state-of-the-art is.
+
+### Wat een goede run betekent
+
+Een goede run heeft:
+
+- `mean_scenario_score` boven 1.0
+- meerdere `atomische_hits`
+- `promoted_hits` die niet hoger zijn dan het aantal atomische hits
+
+Dat betekent: het systeem vindt niet alleen mogelijke gaps, maar houdt ruis grotendeels buiten de promoted laag.
+
+---
+
 ## Belangrijke bestanden
 
 ```text
