@@ -1,59 +1,95 @@
 # Shadow Seed Learning 4.5
 
-Deze repo bevat een minimale en reproduceerbare basis voor Shadow Seed Learning.
+Deze repository bevat een reproduceerbare implementatie en evaluatiebasis voor **Shadow Seed Learning 4.5**.
+
+De repo draait twee soorten checks:
+
+1. **SSL 4.5 Gap-Test Suite**  
+   De eigen paper-test met drie scenario's, atomische ground-truth seeds, multi-turn seed-opbouw en Validation Gate.
+
+2. **NLP / AbsenceBench smoke test**  
+   Een lichte sanity check op absence-detectie, zonder betaalde API's of zware modeldownload.
 
 ## Installatie
 
-### Licht (aanbevolen)
-
 ```bash
 pip install -e ".[test]"
-pytest
 ```
 
-### Met model (optioneel)
+Optioneel met embeddingmodel:
 
 ```bash
 pip install -e ".[test,models]"
 ```
 
-## CI
-
-De CI draait standaard zonder modeldownload. Dat houdt tests snel en stabiel.
-
-Er is een aparte job die optioneel een echte embedding test uitvoert met caching.
-
 ## Snel starten
+
+Run de unit tests:
 
 ```bash
 pytest
 ```
 
-## Benchmark
-
-De benchmarkroute (`AbsenceBench`) is momenteel een voorbereidingsflow.
+Run de SSL 4.5 Gap-Test Suite:
 
 ```bash
-python scripts/run_absencebench.py
+shadowseed run-gap-suite
 ```
 
-Dit genereert alleen een reproduceerbare status. Geen echte externe run.
+Run de NLP smoke test:
 
-## Structuur
+```bash
+shadowseed run-nlp-smoke
+```
 
-- `src/` kernlogica
-- `tests/` unit tests (geen model nodig)
-- `tests/test_model_optional.py` optionele modeltest
-- `scripts/` benchmark voorbereiding
+## CLI-commando's
 
-## Belangrijk
+```bash
+shadowseed run-gap-suite
+shadowseed run-nlp-smoke
+shadowseed fetch-absencebench --limit 10
+shadowseed run-local-absencebench --input examples/local_absencebench_sample.json
+shadowseed prepare-absencebench
+```
 
-- model is optioneel
-- tests werken zonder internet
-- CI is snel en reproduceerbaar
+## CI
+
+GitHub Actions draait op elke push en pull request:
+
+- unit tests op Python 3.10 en 3.11
+- SSL 4.5 Gap-Test Suite
+- NLP AbsenceBench smoke test
+
+De CI gebruikt geen betaalde API's en downloadt standaard geen groot model.
+
+## Belangrijke bestanden
+
+```text
+src/shadowseed/manager.py                         # SSLManager: trace, weight, Validation Gate
+src/shadowseed/data/gap_test_suite_4_5.json       # officiële SSL 4.5 Gap-Test Suite
+src/shadowseed/benchmark/ssl45_gap_suite.py       # evaluator voor de eigen paper-test
+src/shadowseed/benchmark/absencebench_local.py    # lichte NLP smoke runner
+src/shadowseed/benchmark/absencebench_hf.py       # gratis Hugging Face sample fetcher
+src/shadowseed/cli.py                             # CLI entrypoint
+docs/EXPERIMENT.md                                # experimentopzet
+experiments/run_full.py                           # reproduceerbare run helper
+```
+
+## Evaluatie
+
+De SSL 4.5 Gap-Test Suite gebruikt de score uit de specificatie:
+
+| Score | Betekenis |
+|---:|---|
+| 0 | geen relevante gap gevonden |
+| 1 | richting klopt, maar output is te vaag of te breed |
+| 2 | atomische en structureel juiste gap gevonden |
+
+Ground truth wordt niet gebruikt tijdens detectie. Ground truth wordt alleen gebruikt voor evaluatie en externe validatie in de Validation Gate.
 
 ## Status
 
-- unit tests: stabiel
-- CI: actief
-- benchmark: voorbereiding
+- `main` is de leidende branch
+- CI is groen
+- SSL 4.5 Gap-Test Suite draait via CI
+- NLP smoke test draait via CI
