@@ -127,6 +127,23 @@ def scenario_score(seed_scores: list[SeedScore]) -> int:
     return 0
 
 
+def apply_ssl45_validation(manager: SSLManager, seed_id: str, score: SeedScore) -> None:
+    """Apply the Validation Gate according to SSL 4.5.
+
+    Detection and scoring are separate. Only after a seed has been scored do we
+    use ground truth as external validation evidence. A score-2 seed gets the
+    two external evidence points required by the spec, then must pass the Gate
+    three times to reach weight 0.6 with the default increment 0.2.
+    """
+    if score.score == 2:
+        seed = manager.seeds[seed_id]
+        seed.evidence_count = max(seed.evidence_count, 2)
+        for _ in range(3):
+            manager.run_validation_gate(seed_id, external_evidence=False)
+    elif score.score == 0:
+        manager.run_validation_gate(seed_id, contradiction=True)
+
+
 def run_ssl45_gap_suite(input_path: str, output_path: str, turns: int = 3) -> Path:
     suite = json.loads(Path(input_path).read_text(encoding="utf-8"))
     results = []
@@ -156,13 +173,7 @@ def run_ssl45_gap_suite(input_path: str, output_path: str, turns: int = 3) -> Pa
         for seed_id, seed in manager.seeds.items():
             scored = score_seed(seed.text, scenario["ground_truth_seeds"])
             seed_scores.append(scored)
-            if scored.score == 2:
-                # Ground truth is used only here as external validation evidence.
-                manager.run_validation_gate(seed_id, external_evidence=True)
-                manager.run_validation_gate(seed_id, external_evidence=True)
-                manager.run_validation_gate(seed_id, external_evidence=True)
-            elif scored.score == 0:
-                manager.run_validation_gate(seed_id, contradiction=True)
+            apply_ssl45_validation(manager, seed_id, scored)
 
         promoted = [seed.to_dict() for seed in manager.seeds.values() if seed.status == SeedStatus.PROMOTED]
         score = scenario_score(seed_scores)
