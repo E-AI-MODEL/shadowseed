@@ -10,17 +10,22 @@ Start hier als je de Wiki als één volledig rapport wilt lezen of printen:
 
 - [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage)
 
+Lees daarna het visuele verhaal als compacte, geïllustreerde samenvatting:
+
+- [Visueel verhaal SSL 4.5](Visueel-Verhaal)
+
 ## Leesvolgorde
 
 1. [Tussentijdse rapportage](Tussentijdse-Rapportage)
-2. [Quick Start](Quick-Start)
-3. [Conceptueel overzicht](Conceptueel-Overzicht)
-4. [Architectuur](Architectuur)
-5. [Benchmarks](Benchmarks)
-6. [Fase 2: SLM-runs](SLM-Runs)
-7. [Resultaten en analyse](Resultaten-en-Analyse)
-8. [Blind review protocol](Blind-Review-Protocol)
-9. [Roadmap](Roadmap)
+2. [Visueel verhaal](Visueel-Verhaal)
+3. [Quick Start](Quick-Start)
+4. [Conceptueel overzicht](Conceptueel-Overzicht)
+5. [Architectuur](Architectuur)
+6. [Benchmarks](Benchmarks)
+7. [Fase 2: SLM-runs](SLM-Runs)
+8. [Resultaten en analyse](Resultaten-en-Analyse)
+9. [Blind review protocol](Blind-Review-Protocol)
+10. [Roadmap](Roadmap)
 
 ## Automatische pagina's
 
