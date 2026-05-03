@@ -1,0 +1,76 @@
+name: SLM Model Benefit Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_id:
+        description: "Hugging Face model id"
+        required: true
+        default: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+      turns:
+        description: "Number of SSL detection turns"
+        required: true
+        default: "3"
+      max_new_tokens:
+        description: "Max new tokens per generation"
+        required: true
+        default: "220"
+
+jobs:
+  slm-model-benefit:
+    name: SLM model benefit
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-${{ runner.os }}-${{ inputs.model_id }}
+          restore-keys: |
+            hf-${{ runner.os }}-
+
+      - name: Install model deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[models]"
+
+      - name: Run real SLM model benefit suite
+        run: |
+          python -m shadowseed.cli run-model-benefit-suite \
+            --backend hf-transformers \
+            --model-id "${{ inputs.model_id }}" \
+            --turns "${{ inputs.turns }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --output results/ssl45_model_benefit_suite.json
+
+      - name: Generate companion benchmark outputs
+        run: |
+          python -m shadowseed.cli run-gap-suite
+          python -m shadowseed.cli run-false-positive-suite
+          python -m shadowseed.cli run-benefit-suite
+
+      - name: Analyze SLM results
+        run: |
+          python -m shadowseed.cli analyze-results
+
+      - name: Upload SLM model benefit result
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssl45-slm-model-benefit-results
+          path: results/ssl45_model_benefit_suite.json
+          if-no-files-found: error
+
+      - name: Upload SLM analysis report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssl45-slm-analysis-report
+          path: results/analysis
+          if-no-files-found: error
