@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 
+from shadowseed.analysis.ssl45_result_analyzer import analyze_results
 from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
@@ -73,6 +74,10 @@ def build_parser() -> argparse.ArgumentParser:
     model_benefit.add_argument("--model-id", default=None)
     model_benefit.add_argument("--max-new-tokens", type=int, default=220)
 
+    analyze = subparsers.add_parser("analyze-results")
+    analyze.add_argument("--results-dir", default="results")
+    analyze.add_argument("--output-dir", default="results/analysis")
+
     nlp = subparsers.add_parser("run-nlp-smoke")
     nlp.add_argument("--input", default="examples/local_absencebench_sample.json")
     nlp.add_argument("--output", default="results/absencebench_smoke.json")
@@ -125,6 +130,11 @@ def main(argv: list[str] | None = None) -> int:
             model_id=args.model_id,
             max_new_tokens=args.max_new_tokens,
         )
+        print(path)
+        return 0
+
+    if args.command == "analyze-results":
+        path = analyze_results(args.results_dir, args.output_dir)
         print(path)
         return 0
 
