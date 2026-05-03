@@ -23,7 +23,8 @@ Deze pagina legt in gewone taal uit:
 ## Hoofddossiers
 
 - [Start hier](Start-Hier) — eenvoudige instap en leesroute
-- [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage) — printbaar dossier
+- [Eindconclusie SSL 4.5](Eindconclusie-SSL-4-5) — volledig dossier, printbaar
+- [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage) — tussenstand
 - [Visueel verhaal SSL 4.5](Visueel-Verhaal) — compacte uitleg met diagrammen
 - [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is) — veiligheid, Gate en falsificatie
 
