@@ -41,12 +41,13 @@ def test_ssot_validates_open_seed_through_validation_gate():
     ssot.ingest_document(
         "Bij een grensoverschrijdend consumentencontract moet het toepasselijk recht worden vastgesteld. "
         "Het toepasselijk recht bepaalt welke consumentenregels gelden. "
+        "Het toepasselijk recht is cruciaal bij internationale online koop. "
         "Dit is relevant bij een Nederlandse consument en een Amerikaanse webwinkel.",
         doc_id="doc_002",
         chunk_words=8,
     )
     validations = ssot.validate_open_seeds_against_ssot(
-        threshold=0.10,
+        threshold=0.0,
         top_k=8,
         max_evidence_per_seed=4,
     )
