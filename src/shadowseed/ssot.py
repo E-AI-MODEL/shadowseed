@@ -40,17 +40,73 @@ class SSOTManager:
         self.documents: dict[str, SSOTDocument] = {}
 
     @staticmethod
-    def chunk_text(text: str, max_words: int = 80) -> list[str]:
-        """Split trusted text into small searchable chunks."""
-        words = re.findall(r"\S+", text.strip())
-        if not words:
+    def split_sentences(text: str) -> list[str]:
+        normalized = re.sub(r"\s+", " ", text.strip())
+        if not normalized:
             return []
-        chunks = []
-        for start in range(0, len(words), max_words):
-            chunk = " ".join(words[start : start + max_words]).strip()
-            if chunk:
-                chunks.append(chunk)
+        return [
+            sentence.strip()
+            for sentence in re.split(r"(?<=[.!?])\s+", normalized)
+            if sentence.strip()
+        ]
+
+    @staticmethod
+    def sentence_chunks(text: str, max_words: int = 80, overlap_sentences: int = 1) -> list[str]:
+        """Split text into sentence-aware chunks without adding NLP dependencies."""
+        paragraphs = [part.strip() for part in re.split(r"\n\s*\n", text.strip()) if part.strip()]
+        chunks: list[str] = []
+        current: list[str] = []
+        current_words = 0
+
+        for paragraph in paragraphs or [text]:
+            for sentence in SSOTManager.split_sentences(paragraph):
+                sentence_words = len(re.findall(r"\S+", sentence))
+                if current and current_words + sentence_words > max_words:
+                    chunks.append(" ".join(current).strip())
+                    current = current[-overlap_sentences:] if overlap_sentences > 0 else []
+                    current_words = sum(len(re.findall(r"\S+", item)) for item in current)
+                current.append(sentence)
+                current_words += sentence_words
+
+        if current:
+            chunks.append(" ".join(current).strip())
         return chunks
+
+    @staticmethod
+    def chunk_text(text: str, max_words: int = 80) -> list[str]:
+        """Split trusted text into coherent searchable chunks."""
+        chunks = SSOTManager.sentence_chunks(text, max_words=max_words)
+        if chunks:
+            return chunks
+        words = re.findall(r"\S+", text.strip())
+        return [" ".join(words[start : start + max_words]).strip() for start in range(0, len(words), max_words)]
+
+    def _add_chunk(
+        self,
+        chunk_id: str,
+        chunk: str,
+        doc_id: str,
+        chunk_index: int,
+        source: str,
+        trust_level: str,
+        status: str,
+        created_at: str,
+    ) -> None:
+        embedding = self.ssl.get_embedding(chunk)
+        self.store.add(
+            chunk_id,
+            embedding,
+            {
+                "doc_id": doc_id,
+                "chunk_index": chunk_index,
+                "text": chunk,
+                "source": source,
+                "trust_level": trust_level,
+                "status": status,
+                "created_at": created_at,
+                "verified_at": None,
+            },
+        )
 
     def ingest_document(
         self,
@@ -67,25 +123,65 @@ class SSOTManager:
         """
         document = SSOTDocument(doc_id=doc_id, source=source, trust_level=trust_level)
         self.documents[doc_id] = document
+        status = "verified" if trust_level == "user_verified" else "proposed"
         chunk_ids: list[str] = []
         for index, chunk in enumerate(self.chunk_text(doc_text, max_words=chunk_words), start=1):
             chunk_id = f"{doc_id}::chunk_{index:03d}"
-            embedding = self.ssl.get_embedding(chunk)
-            self.store.add(
+            self._add_chunk(
                 chunk_id,
-                embedding,
-                {
-                    "doc_id": doc_id,
-                    "chunk_index": index,
-                    "text": chunk,
-                    "source": source,
-                    "trust_level": trust_level,
-                    "status": "verified",
-                    "created_at": document.created_at,
-                },
+                chunk,
+                doc_id=doc_id,
+                chunk_index=index,
+                source=source,
+                trust_level=trust_level,
+                status=status,
+                created_at=document.created_at,
             )
             chunk_ids.append(chunk_id)
         return chunk_ids
+
+    def ingest_from_llm_output(
+        self,
+        llm_output: str,
+        doc_id: str,
+        source: str = "llm_output",
+        chunk_words: int = 40,
+    ) -> list[str]:
+        """Store LLM factual claims as unverified SSOT proposals.
+
+        These chunks are searchable, but validate_open_seeds_against_ssot ignores
+        them until verify_chunk() marks them as trusted.
+        """
+        return self.ingest_document(
+            llm_output,
+            doc_id=doc_id,
+            source=source,
+            trust_level="llm_proposed",
+            chunk_words=chunk_words,
+        )
+
+    def verify_chunk(self, chunk_id: str, verifier: str = "human") -> None:
+        metadata = self.store.get_metadata(chunk_id)
+        metadata.update(
+            {
+                "trust_level": "user_verified",
+                "status": "verified",
+                "verified_by": verifier,
+                "verified_at": datetime.now().isoformat(),
+            }
+        )
+        self.store.update_metadata(chunk_id, metadata)
+
+    def reject_chunk(self, chunk_id: str, verifier: str = "human") -> None:
+        metadata = self.store.get_metadata(chunk_id)
+        metadata.update(
+            {
+                "status": "rejected",
+                "verified_by": verifier,
+                "verified_at": datetime.now().isoformat(),
+            }
+        )
+        self.store.update_metadata(chunk_id, metadata)
 
     def search(self, query_text: str, top_k: int = 5) -> list[tuple[str, float, dict[str, Any]]]:
         query_embedding = self.ssl.get_embedding(query_text)
@@ -96,7 +192,7 @@ class SSOTManager:
         return [
             {"chunk_id": chunk_id, "similarity": score, "metadata": metadata}
             for chunk_id, score, metadata in hits
-            if score >= threshold
+            if score >= threshold and metadata.get("status") == "verified"
         ]
 
     def validate_open_seeds_against_ssot(
@@ -105,7 +201,7 @@ class SSOTManager:
         top_k: int = 3,
         max_evidence_per_seed: int = 2,
     ) -> list[dict[str, Any]]:
-        """Use SSOT chunks as external evidence for open weightless seeds.
+        """Use verified SSOT chunks as external evidence for open weightless seeds.
 
         The SSOT does not directly assign weight. It supplies external evidence;
         the Validation Gate still decides whether weight can grow.
@@ -117,7 +213,11 @@ class SSOTManager:
             if seed.weight != 0.0:
                 continue
             hits = self.store.search(seed.embedding, top_k=top_k)
-            accepted_hits = [(chunk_id, score, meta) for chunk_id, score, meta in hits if score >= threshold]
+            accepted_hits = [
+                (chunk_id, score, meta)
+                for chunk_id, score, meta in hits
+                if score >= threshold and meta.get("status") == "verified"
+            ]
             applied = []
             for chunk_id, score, metadata in accepted_hits[:max_evidence_per_seed]:
                 result = self.ssl.run_validation_gate(seed_id, external_evidence=True)
