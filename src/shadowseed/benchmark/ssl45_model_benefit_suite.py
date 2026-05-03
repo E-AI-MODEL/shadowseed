@@ -100,6 +100,10 @@ def make_backend(backend: str, model_id: str | None, max_new_tokens: int) -> Mod
     raise ValueError(f"Unknown backend: {backend}")
 
 
+def word_count(text: str) -> int:
+    return len(re.findall(r"[A-Za-zÀ-ÿ0-9_]+", text))
+
+
 def answer_fragments(answer: str) -> list[str]:
     fragments = [
         part.strip()
@@ -126,6 +130,44 @@ def coverage(answer: str, expected_additions: list[str]) -> tuple[float, list[st
     if not expected_additions:
         return 1.0, covered
     return len(covered) / len(expected_additions), covered
+
+
+def blind_order(scenario_id: str) -> tuple[str, str]:
+    """Deterministically blind the pair order for review packets."""
+    checksum = sum(ord(ch) for ch in scenario_id)
+    if checksum % 2 == 0:
+        return "baseline", "ssl"
+    return "ssl", "baseline"
+
+
+def build_blind_review_item(scenario: dict, baseline_answer: str, ssl_answer: str) -> tuple[dict, dict]:
+    first, second = blind_order(scenario["id"])
+    answer_map = {"baseline": baseline_answer, "ssl": ssl_answer}
+    item = {
+        "review_id": f"review_{scenario['id']}",
+        "scenario_id": scenario["id"],
+        "question": scenario["question"],
+        "option_a": answer_map[first],
+        "option_b": answer_map[second],
+        "reviewer_instruction": (
+            "Kies welk antwoord inhoudelijk beter is. Let op juiste gap-dekking, "
+            "geen unsupported additions, helderheid en geen beloning voor lengte alleen."
+        ),
+        "scores_to_fill": {
+            "better_answer": "A/B/tie",
+            "gap_coverage_a_0_5": None,
+            "gap_coverage_b_0_5": None,
+            "unsupported_claims_a_0_5": None,
+            "unsupported_claims_b_0_5": None,
+            "notes": "",
+        },
+    }
+    key = {
+        "review_id": item["review_id"],
+        "option_a_source": first,
+        "option_b_source": second,
+    }
+    return item, key
 
 
 def build_baseline_prompt(scenario: dict) -> str:
@@ -208,8 +250,11 @@ def run_ssl45_model_benefit_suite(
     model = make_backend(backend=backend, model_id=model_id, max_new_tokens=max_new_tokens)
 
     results = []
+    blind_review_items = []
+    blind_answer_key = []
     baseline_coverages: list[float] = []
     ssl_coverages: list[float] = []
+    length_deltas: list[int] = []
     unsupported_total = 0
     promoted_total = 0
 
@@ -227,11 +272,22 @@ def run_ssl45_model_benefit_suite(
         baseline_cov, baseline_covered = coverage(baseline_answer, scenario["expected_ssl_additions"])
         ssl_cov, ssl_covered = coverage(ssl_answer, scenario["expected_ssl_additions"])
         unsupported = unsupported_additions(promoted, scenario["expected_ssl_additions"])
+        baseline_words = word_count(baseline_answer)
+        ssl_words = word_count(ssl_answer)
+        length_delta = ssl_words - baseline_words
+        coverage_delta = ssl_cov - baseline_cov
+        gain_per_100_added_words = (
+            coverage_delta / length_delta * 100 if length_delta > 0 else coverage_delta
+        )
+        blind_item, blind_key = build_blind_review_item(scenario, baseline_answer, ssl_answer)
 
         baseline_coverages.append(baseline_cov)
         ssl_coverages.append(ssl_cov)
+        length_deltas.append(length_delta)
         unsupported_total += len(unsupported)
         promoted_total += len(promoted)
+        blind_review_items.append(blind_item)
+        blind_answer_key.append(blind_key)
 
         results.append(
             {
@@ -240,7 +296,11 @@ def run_ssl45_model_benefit_suite(
                 "domain": scenario["domain"],
                 "baseline_gap_coverage": baseline_cov,
                 "ssl_gap_coverage": ssl_cov,
-                "coverage_delta": ssl_cov - baseline_cov,
+                "coverage_delta": coverage_delta,
+                "baseline_word_count": baseline_words,
+                "ssl_word_count": ssl_words,
+                "answer_length_delta_words": length_delta,
+                "coverage_gain_per_100_added_words": gain_per_100_added_words,
                 "baseline_covered": baseline_covered,
                 "ssl_covered": ssl_covered,
                 "promoted_seeds": promoted,
@@ -254,6 +314,7 @@ def run_ssl45_model_benefit_suite(
 
     baseline_mean = sum(baseline_coverages) / len(baseline_coverages)
     ssl_mean = sum(ssl_coverages) / len(ssl_coverages)
+    mean_length_delta = sum(length_deltas) / len(length_deltas)
     summary = {
         "suite_version": suite.get("version"),
         "backend": model.name,
@@ -261,19 +322,33 @@ def run_ssl45_model_benefit_suite(
         "baseline_mean_gap_coverage": baseline_mean,
         "ssl_mean_gap_coverage": ssl_mean,
         "coverage_delta": ssl_mean - baseline_mean,
+        "mean_answer_length_delta_words": mean_length_delta,
+        "coverage_delta_per_100_added_words": (
+            (ssl_mean - baseline_mean) / mean_length_delta * 100 if mean_length_delta > 0 else ssl_mean - baseline_mean
+        ),
         "promoted_seed_count": promoted_total,
         "unsupported_ssl_additions": unsupported_total,
         "unsupported_ssl_addition_rate": unsupported_total / promoted_total if promoted_total else 0.0,
         "interpretation": (
             "Phase 2 compares the same backend in baseline and SSL-guided revision modes. "
-            "The fixture backend is a CI smoke test; hf-transformers is the real local model mode."
+            "The fixture backend is a CI smoke test; hf-transformers is the real local model mode. "
+            "Blind review items are included so human judges can score quality without knowing which answer used SSL."
         ),
     }
 
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
-        json.dumps({"summary": summary, "results": results}, indent=2, ensure_ascii=False) + "\n",
+        json.dumps(
+            {
+                "summary": summary,
+                "results": results,
+                "blind_review_items": blind_review_items,
+                "blind_answer_key": blind_answer_key,
+            },
+            indent=2,
+            ensure_ascii=False,
+        ) + "\n",
         encoding="utf-8",
     )
     return output
