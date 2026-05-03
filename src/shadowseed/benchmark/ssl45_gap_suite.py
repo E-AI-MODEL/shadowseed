@@ -49,6 +49,27 @@ DOMAIN_PRIORS = {
     ],
 }
 
+LEGAL_MECHANISM_TOKENS = {
+    "rechtsbevoegdheid",
+    "toepasselijk",
+    "afdwingbaarheid",
+    "forumkeuzebeding",
+    "koopvoorwaarden",
+    "internationaal",
+    "privaatrecht",
+    "jurisdictie",
+}
+
+CROSS_BORDER_SIGNALS = {
+    "nederlandse",
+    "verenigde",
+    "staten",
+    "eu",
+    "online",
+    "retailer",
+    "consument",
+}
+
 
 @dataclass
 class SeedScore:
@@ -78,6 +99,20 @@ def jaccard(a: str, b: str) -> float:
     return len(a_tokens & b_tokens) / len(a_tokens | b_tokens)
 
 
+def is_legal_cross_border_gap(seed_tokens: set[str], input_tokens: set[str]) -> bool:
+    """Detect legal mechanisms missing from a cross-border consumer case.
+
+    This is still detection-only: it uses input signals and fixed domain priors,
+    not ground truth. The case can mention EU rights and parties while still
+    omitting the procedural mechanisms that decide whether those rights can be
+    used: jurisdiction, applicable law, enforceability, and forum clauses.
+    """
+    has_cross_border_case = len(input_tokens & CROSS_BORDER_SIGNALS) >= 3
+    mechanism_missing = not bool(input_tokens & LEGAL_MECHANISM_TOKENS)
+    candidate_is_legal_mechanism = bool(seed_tokens & LEGAL_MECHANISM_TOKENS)
+    return has_cross_border_case and mechanism_missing and candidate_is_legal_mechanism
+
+
 def detect_candidate_seeds(scenario: dict, max_seeds: int = 5) -> list[str]:
     """Deterministic free detector that mimics the SSL 4.5 detection pass.
 
@@ -93,8 +128,10 @@ def detect_candidate_seeds(scenario: dict, max_seeds: int = 5) -> list[str]:
 
     for seed in priors:
         seed_tokens = tokenize(seed)
+        if domain == "recht en jurisdictie" and is_legal_cross_border_gap(seed_tokens, input_tokens):
+            selected.append(seed)
         # Gap candidate: concept is domain-relevant but not already explicit.
-        if len(seed_tokens & input_tokens) < max(1, len(seed_tokens) // 3):
+        elif len(seed_tokens & input_tokens) < max(1, len(seed_tokens) // 3):
             selected.append(seed)
         if len(selected) >= max_seeds:
             break
