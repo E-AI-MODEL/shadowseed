@@ -3,51 +3,118 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Shadow Seed Learning 4.5 Dashboard</title>
+    <title>Does SSL improve SLM output?</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="page">
-      <section class="hero">
+      <section class="hero split">
         <div>
           <p class="eyebrow">Shadow Seed Learning 4.5</p>
-          <h1>Visueel statusdashboard</h1>
-          <p class="subtitle">Vier hoofdchecks: systeem, model, veiligheid en paper-scenario’s.</p>
+          <h1>Does SSL improve SLM output?</h1>
+          <p class="subtitle">Een simpele publieke vraag: geeft hetzelfde model completere antwoorden met SSL dan zonder SSL?</p>
+          <div class="hero-actions">
+            <a class="button" href="https://github.com/E-AI-MODEL/shadowseed/actions/workflows/retrieval-model-hf.yml">Run Model Reality Check</a>
+            <a class="button ghost" href="https://github.com/E-AI-MODEL/shadowseed/wiki">Lees de Wiki</a>
+          </div>
         </div>
-        <div class="status-card" id="overall-status">Laden...</div>
+        <div class="answer-card" id="overall-status">
+          <span>Conclusie</span>
+          <strong data-field="conclusion">Nog geen run geladen</strong>
+        </div>
       </section>
 
-      <section class="grid four">
-        <article class="card" id="card-system">
-          <span class="label">1. Full System Check</span>
-          <h2>Volledige keten</h2>
-          <p>Core tests, SSOT, vectorstores, retrieval en model-fixture.</p>
+      <section class="scoreboard">
+        <article class="score-card">
+          <span>Zonder SSL</span>
+          <strong data-field="baseline">n/a</strong>
+          <p>Baseline gap coverage</p>
+        </article>
+        <article class="score-card highlight">
+          <span>Met SSL</span>
+          <strong data-field="with_ssl">n/a</strong>
+          <p>Retrieval + SSOT gap coverage</p>
+        </article>
+        <article class="score-card">
+          <span>Verschil</span>
+          <strong data-field="delta">n/a</strong>
+          <p>Positief betekent beter</p>
+        </article>
+      </section>
+
+      <section class="panel visual-panel">
+        <div>
+          <p class="eyebrow">Wat is SSL?</p>
+          <h2>SSL zoekt niet alleen naar informatie. SSL onthoudt wat ontbreekt.</h2>
+          <p>Een modelantwoord kan goed klinken en toch een structureel punt missen. SSL legt zo’n gemis vast als een gewichtloze seed. Pas na verificatie krijgt zo’n seed invloed.</p>
+        </div>
+        <svg class="seed-svg" viewBox="0 0 560 220" role="img" aria-label="SSL seed flow">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1"><stop stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+          </defs>
+          <rect x="12" y="55" width="110" height="80" rx="16" />
+          <text x="67" y="91" text-anchor="middle">Answer</text>
+          <text x="67" y="114" text-anchor="middle">misses X</text>
+          <path d="M130 95 H205" />
+          <circle cx="245" cy="95" r="42" />
+          <text x="245" y="91" text-anchor="middle">Seed</text>
+          <text x="245" y="114" text-anchor="middle">weight 0</text>
+          <path d="M290 95 H365" />
+          <rect x="382" y="45" width="150" height="100" rx="18" />
+          <text x="457" y="86" text-anchor="middle">Validation</text>
+          <text x="457" y="110" text-anchor="middle">Gate</text>
+          <path d="M455 150 V190 H245 V143" class="dashed" />
+        </svg>
+      </section>
+
+      <section class="grid three">
+        <article class="card">
+          <span class="label">System Check</span>
+          <h2>Werkt de keten?</h2>
+          <p>Unit tests, SSOT, vectorstores, retrieval en model-fixture.</p>
           <strong class="metric" data-field="system">n/a</strong>
         </article>
-        <article class="card" id="card-model">
-          <span class="label">2. Model Reality Check</span>
-          <h2>Echt model</h2>
-          <p>HF/SLM run met baseline vs retrieval + SSOT.</p>
-          <strong class="metric" data-field="model">n/a</strong>
-        </article>
-        <article class="card" id="card-safety">
-          <span class="label">3. Safety Check</span>
+        <article class="card">
+          <span class="label">Safety Check</span>
           <h2>Niet naïef</h2>
-          <p>Falsification: proposed en rejected chunks mogen geen waarheid worden.</p>
+          <p>Proposed en rejected chunks mogen geen waarheid worden.</p>
           <strong class="metric" data-field="safety">n/a</strong>
         </article>
-        <article class="card" id="card-paper">
-          <span class="label">4. Paper Scenario Benchmark</span>
-          <h2>Papers → scenario’s</h2>
-          <p>Optionele paper-derived benchmarkcases buiten de core.</p>
+        <article class="card">
+          <span class="label">Paper Scenario Benchmark</span>
+          <h2>Papers → tests</h2>
+          <p>Optionele paper-derived scenario’s naast de core suite.</p>
           <strong class="metric" data-field="paper">n/a</strong>
         </article>
+      </section>
+
+      <section class="panel visual-panel">
+        <svg class="rag-svg" viewBox="0 0 640 220" role="img" aria-label="RAG versus SSL">
+          <text x="95" y="28" text-anchor="middle">Standard RAG</text>
+          <rect x="25" y="55" width="140" height="70" rx="14" />
+          <text x="95" y="93" text-anchor="middle">Fetch facts</text>
+          <path d="M170 90 H270" />
+          <rect x="280" y="55" width="140" height="70" rx="14" />
+          <text x="350" y="93" text-anchor="middle">Answer now</text>
+          <text x="545" y="28" text-anchor="middle">SSL 4.5</text>
+          <rect x="470" y="55" width="140" height="70" rx="14" />
+          <text x="540" y="83" text-anchor="middle">Track missing</text>
+          <text x="540" y="106" text-anchor="middle">structure</text>
+          <path d="M540 128 V170" />
+          <rect x="455" y="168" width="170" height="38" rx="12" />
+          <text x="540" y="193" text-anchor="middle">Verify before influence</text>
+        </svg>
+        <div>
+          <p class="eyebrow">Waarom dit anders is</p>
+          <h2>RAG haalt context op. SSL beheert onzekerheid.</h2>
+          <p>De publieke claim blijft smal: we meten of SSL-context de output van hetzelfde model completer maakt. Geen claim dat elk model altijd beter wordt.</p>
+        </div>
       </section>
 
       <section class="panel">
         <div class="panel-header">
           <h2>Backendvergelijking</h2>
-          <p>Memory, FAISS en Chroma naast elkaar.</p>
+          <p>Technische onderlaag. Niet de hoofdclaim, wel nuttig voor diagnose.</p>
         </div>
         <div class="table-wrap">
           <table>
@@ -62,33 +129,14 @@
                 <th>delta</th>
               </tr>
             </thead>
-            <tbody id="backend-table">
-              <tr><td colspan="7">Laden...</td></tr>
-            </tbody>
+            <tbody id="backend-table"><tr><td colspan="7">Laden...</td></tr></tbody>
           </table>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-header">
-          <h2>SSL-flow</h2>
-          <p>De lijn die de repo test.</p>
-        </div>
-        <div class="flow">
-          <span>Vraag</span>
-          <span>Seed</span>
-          <span>Vectorstore</span>
-          <span>SSOT</span>
-          <span>Validation Gate</span>
-          <span>Retrieval</span>
-          <span>Modeloutput</span>
-          <span>Benchmark</span>
         </div>
       </section>
 
       <section class="links">
         <a href="https://github.com/E-AI-MODEL/shadowseed/actions">GitHub Actions</a>
-        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki">Wiki</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Dashboard">Wiki Dashboard</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed/tree/main/results/latest">Raw JSON</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed">Repo</a>
       </section>
