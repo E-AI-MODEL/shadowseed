@@ -28,11 +28,23 @@ jobs:
         run: python -m pytest -q
       - name: Run SSL suites
         run: |
+          mkdir -p results
           python -m shadowseed.cli run-gap-suite
           python -m shadowseed.cli run-false-positive-suite
           python -m shadowseed.cli run-benefit-suite
           python -m shadowseed.cli run-model-benefit-suite --backend fixture
           python -m shadowseed.cli analyze-results
+      - name: Copy JSON to repo
+        run: |
+          mkdir -p results/latest
+          cp results/*.json results/latest/ || true
+      - name: Commit JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/latest/*.json || true
+          git commit -m "Update latest JSON results" || true
+          git push || true
       - name: Upload core artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -111,23 +123,6 @@ jobs:
           | Core tests and SSL suites | ${CORE_RESULT} |
           | Vector and SSOT backends | ${VECTOR_RESULT} |
 
-          ## Wat deze sweep draait
-
-          - volledige pytest-suite
-          - Gap-Test Suite
-          - False-positive Suite
-          - Benefit Suite
-          - Model Benefit fixture
-          - analyse-output
-          - vectorstore smoke voor memory, FAISS en Chroma
-          - SSOT smoke voor memory, FAISS en Chroma
-          - retrieval benchmark voor memory, FAISS en Chroma
-          - retrieval → model fixture benchmark voor memory, FAISS en Chroma
-
-          ## Niet inbegrepen
-
-          Echte HF/SLM-runs worden bewust niet automatisch meegedraaid. Die blijven handmatig via `Retrieval Model HF Run`, omdat modeldownloads traag en geheugenintensief kunnen zijn.
-
           ## Commit
 
           `${SHA}`
@@ -145,14 +140,9 @@ jobs:
           WIKI_URL="https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.wiki.git"
           git clone "$WIKI_URL" wiki || exit 0
           cp Full-Validation-Sweep.md wiki/.
-          if [ ! -f wiki/Home.md ]; then
-            printf '# Shadow Seed Learning 4.5\n\n- [Full Validation Sweep](Full-Validation-Sweep)\n' > wiki/Home.md
-          elif ! grep -q "Full-Validation-Sweep" wiki/Home.md; then
-            printf '\n- [Full Validation Sweep](Full-Validation-Sweep)\n' >> wiki/Home.md
-          fi
           cd wiki
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Home.md Full-Validation-Sweep.md
+          git add Full-Validation-Sweep.md
           git commit -m "Update full validation sweep report" || true
           git push || true
