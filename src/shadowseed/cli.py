@@ -9,6 +9,7 @@ from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.result_writer import ResultWriter
+from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
 from shadowseed.benchmark.run_types import RunType
 from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
 from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
@@ -87,6 +88,12 @@ def build_parser() -> argparse.ArgumentParser:
     ssot.add_argument("--output", default="results/ssot_smoke.json")
     ssot.add_argument("--backend", choices=VECTOR_BACKENDS, default="memory")
 
+    retrieval = subparsers.add_parser("run-retrieval-benchmark")
+    retrieval.add_argument("--input", default="src/shadowseed/data/retrieval_benchmark.json")
+    retrieval.add_argument("--output", default="results/retrieval_benchmark.json")
+    retrieval.add_argument("--backend", choices=VECTOR_BACKENDS, default="memory")
+    retrieval.add_argument("--k", type=int, default=3)
+
     analyze = subparsers.add_parser("analyze-results")
     analyze.add_argument("--results-dir", default="results")
     analyze.add_argument("--output-dir", default="results/analysis")
@@ -153,6 +160,16 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run-ssot-smoke":
         path = run_ssot_smoke(args.output, backend=args.backend)
+        print(path)
+        return 0
+
+    if args.command == "run-retrieval-benchmark":
+        path = run_retrieval_benchmark(
+            args.input,
+            args.output,
+            backend=args.backend,
+            k=args.k,
+        )
         print(path)
         return 0
 
