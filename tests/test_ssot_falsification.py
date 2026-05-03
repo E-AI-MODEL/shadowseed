@@ -84,11 +84,12 @@ def test_llm_proposed_chunks_do_not_validate_until_verified():
     for chunk_id in chunk_ids:
         ssot.verify_chunk(chunk_id, verifier="test_human")
 
-    validations_after_verification = ssot.validate_open_seeds_against_ssot(
-        threshold=0.0,
-        top_k=5,
-        max_evidence_per_seed=4,
-    )
+    for _ in range(4):
+        validations_after_verification = ssot.validate_open_seeds_against_ssot(
+            threshold=0.0,
+            top_k=5,
+            max_evidence_per_seed=4,
+        )
     seed_after = manager.get_seed(seed_id)
 
     assert validations_after_verification
