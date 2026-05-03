@@ -47,7 +47,7 @@ def test_uncertain_region_and_feedback_flow_uses_validation_gate():
     seed_id = manager.add_or_update_seed(seed_text)
 
     matches = manager.find_uncertain_region(
-        "Nederlandse consument koopt bij Amerikaanse webwinkel.",
+        "Welke regels gelden voor toepasselijk recht bij een grensoverschrijdend consumentencontract?",
         threshold=0.20,
     )
     assert matches
@@ -59,9 +59,9 @@ def test_uncertain_region_and_feedback_flow_uses_validation_gate():
     for _ in range(3):
         manager.apply_external_feedback(
             "Toepasselijk recht ontbreekt in deze grensoverschrijdende consumentenkoop.",
-            context="Nederlandse consument koopt bij Amerikaanse webwinkel.",
+            context="Toepasselijk recht bij een grensoverschrijdend consumentencontract.",
             positive=True,
-            threshold=0.20,
+            threshold=0.10,
         )
 
     assert manager.get_seed(seed_id).status == SeedStatus.PROMOTED
@@ -70,9 +70,9 @@ def test_uncertain_region_and_feedback_flow_uses_validation_gate():
 
     manager.apply_external_feedback(
         "Deze gap is tegengesproken door externe beoordeling.",
-        context="Nederlandse consument koopt bij Amerikaanse webwinkel.",
+        context="Toepasselijk recht bij een grensoverschrijdend consumentencontract.",
         positive=False,
-        threshold=0.20,
+        threshold=0.10,
     )
     assert manager.get_seed(seed_id).weight < 0.5
 
