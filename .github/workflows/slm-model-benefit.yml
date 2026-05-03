@@ -16,6 +16,9 @@ on:
         required: true
         default: "220"
 
+permissions:
+  contents: write
+
 jobs:
   slm-model-benefit:
     name: SLM model benefit
@@ -74,3 +77,61 @@ jobs:
           name: ssl45-slm-analysis-report
           path: results/analysis
           if-no-files-found: error
+
+      - name: Publish SLM results to GitHub Wiki
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          MODEL_ID: ${{ inputs.model_id }}
+          TURNS: ${{ inputs.turns }}
+          MAX_NEW_TOKENS: ${{ inputs.max_new_tokens }}
+        run: |
+          set -e
+          WIKI_URL="https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.wiki.git"
+          if ! git clone "$WIKI_URL" wiki; then
+            echo "Wiki repo not available. Enable Wiki in repo settings and create the first page once."
+            exit 0
+          fi
+          cp results/analysis/analysis_report.md wiki/SLM-Model-Benefit-Analysis.md
+          cp results/analysis/analysis_summary.json wiki/SLM-Model-Benefit-Analysis-Summary.json
+          cp results/analysis/coverage.svg wiki/slm_coverage.svg
+          cp results/analysis/false_positive.svg wiki/slm_false_positive.svg
+          cp results/ssl45_model_benefit_suite.json wiki/SLM-Model-Benefit-Raw.json
+          {
+            echo "# SLM Model Benefit Run"
+            echo
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Model | ${MODEL_ID} |"
+            echo "| Turns | ${TURNS} |"
+            echo "| Max new tokens | ${MAX_NEW_TOKENS} |"
+            echo "| Commit | ${SHA} |"
+            echo
+            echo "## Pages"
+            echo
+            echo "- [SLM Model Benefit Analysis](SLM-Model-Benefit-Analysis)"
+            echo "- [SLM Model Benefit Summary JSON](SLM-Model-Benefit-Analysis-Summary)"
+            echo "- [Raw model benefit JSON](SLM-Model-Benefit-Raw)"
+            echo
+            echo "## Charts"
+            echo
+            echo "![SLM coverage](slm_coverage.svg)"
+            echo
+            echo "![SLM false positives](slm_false_positive.svg)"
+          } > wiki/SLM-Model-Benefit.md
+          if [ ! -f wiki/Home.md ]; then
+            printf '# Shadow Seed Learning 4.5\n\n- [SSL 4.5 Analysis](SSL-45-Analysis)\n- [SLM Model Benefit](SLM-Model-Benefit)\n' > wiki/Home.md
+          elif ! grep -q "SLM-Model-Benefit" wiki/Home.md; then
+            printf '\n- [SLM Model Benefit](SLM-Model-Benefit)\n' >> wiki/Home.md
+          fi
+          cd wiki
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Home.md SLM-Model-Benefit.md SLM-Model-Benefit-Analysis.md SLM-Model-Benefit-Analysis-Summary.json SLM-Model-Benefit-Raw.json slm_coverage.svg slm_false_positive.svg
+          if git diff --cached --quiet; then
+            echo "No wiki changes."
+          else
+            git commit -m "Update SLM model benefit wiki (${SHA})"
+            git push
+          fi
