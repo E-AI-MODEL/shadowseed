@@ -14,6 +14,7 @@ from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
 from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
 from shadowseed.benchmark.ssl45_gap_suite import run_ssl45_gap_suite
 from shadowseed.benchmark.ssl45_model_benefit_suite import run_ssl45_model_benefit_suite
+from shadowseed.benchmark.ssot_smoke import run_ssot_smoke
 from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
 
 
@@ -78,6 +79,9 @@ def build_parser() -> argparse.ArgumentParser:
     vectorstore = subparsers.add_parser("run-vectorstore-smoke")
     vectorstore.add_argument("--output", default="results/vectorstore_smoke.json")
 
+    ssot = subparsers.add_parser("run-ssot-smoke")
+    ssot.add_argument("--output", default="results/ssot_smoke.json")
+
     analyze = subparsers.add_parser("analyze-results")
     analyze.add_argument("--results-dir", default="results")
     analyze.add_argument("--output-dir", default="results/analysis")
@@ -139,6 +143,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run-vectorstore-smoke":
         path = run_vectorstore_smoke(args.output)
+        print(path)
+        return 0
+
+    if args.command == "run-ssot-smoke":
+        path = run_ssot_smoke(args.output)
         print(path)
         return 0
 
