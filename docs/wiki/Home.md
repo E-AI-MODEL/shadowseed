@@ -8,6 +8,7 @@ SSL 4.5 onderzoekt of een model beter kan antwoorden door ontbrekende structurel
 
 De snelste en duidelijkste ingang:
 
+- [Dashboard](Dashboard)
 - [Start hier](Start-Hier)
 
 Deze pagina legt in gewone taal uit:
@@ -22,6 +23,7 @@ Deze pagina legt in gewone taal uit:
 
 ## Hoofddossiers
 
+- [Dashboard](Dashboard) — snelle status
 - [Start hier](Start-Hier) — eenvoudige instap en leesroute
 - [Eindconclusie SSL 4.5](Eindconclusie-SSL-4-5) — volledig dossier, printbaar
 - [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage) — tussenstand
