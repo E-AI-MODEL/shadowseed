@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 from typing import Protocol
 
 from shadowseed.benchmark.ssl45_gap_suite import (
@@ -68,11 +69,10 @@ class HFTransformersBackend:
         self.model_id = model_id
         self.max_new_tokens = max_new_tokens
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            torch_dtype=getattr(torch, "float16", None) if torch.cuda.is_available() else None,
-            device_map="auto" if torch.cuda.is_available() else None,
-        )
+        model_kwargs = {}
+        if torch.cuda.is_available():
+            model_kwargs = {"torch_dtype": torch.float16, "device_map": "auto"}
+        model = AutoModelForCausalLM.from_pretrained(model_id, **model_kwargs)
         self.generator = pipeline(
             "text-generation",
             model=model,
@@ -100,11 +100,29 @@ def make_backend(backend: str, model_id: str | None, max_new_tokens: int) -> Mod
     raise ValueError(f"Unknown backend: {backend}")
 
 
+def answer_fragments(answer: str) -> list[str]:
+    fragments = [
+        part.strip()
+        for part in re.split(r"[\n.;:]+", answer)
+        if part.strip()
+    ]
+    return fragments or [answer]
+
+
+def expected_is_covered(answer: str, expected: str, threshold: float = 0.70) -> bool:
+    answer_lower = answer.lower()
+    expected_lower = expected.lower()
+    if expected_lower in answer_lower:
+        return True
+    return max(jaccard(fragment, expected) for fragment in answer_fragments(answer)) >= threshold
+
+
 def coverage(answer: str, expected_additions: list[str]) -> tuple[float, list[str]]:
-    covered: list[str] = []
-    for expected in expected_additions:
-        if jaccard(answer, expected) >= 0.35:
-            covered.append(expected)
+    covered = [
+        expected
+        for expected in expected_additions
+        if expected_is_covered(answer, expected)
+    ]
     if not expected_additions:
         return 1.0, covered
     return len(covered) / len(expected_additions), covered
