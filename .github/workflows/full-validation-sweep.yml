@@ -137,15 +137,57 @@ jobs:
                   return 'n/a'
               return str(value)
 
+          backend_rows = []
+          for backend in ['memory', 'faiss', 'chroma']:
+              base = root / f'full-sweep-{backend}'
+              vector = load(base / 'vectorstore.json')
+              ssot = load(base / 'ssot.json')
+              retrieval = load(base / 'retrieval.json')
+              retrieval_model = load(base / 'retrieval_model.json')
+              backend_rows.append({
+                  'backend': backend,
+                  'vector_passed': (vector or {}).get('summary', {}).get('passed'),
+                  'ssot_passed': (ssot or {}).get('summary', {}).get('passed'),
+                  'hit': (retrieval or {}).get('metrics', {}).get('hit@k'),
+                  'avg_rank': (retrieval or {}).get('metrics', {}).get('avg_rank'),
+                  'baseline': (retrieval_model or {}).get('summary', {}).get('baseline_mean_gap_coverage'),
+                  'retrieval_cov': (retrieval_model or {}).get('summary', {}).get('retrieval_mean_gap_coverage'),
+                  'delta': (retrieval_model or {}).get('summary', {}).get('coverage_delta'),
+              })
+
+          valid = [row for row in backend_rows if isinstance(row.get('delta'), (int, float))]
+          best = max(valid, key=lambda item: item['delta']) if valid else None
+          core_status = os.environ.get('CORE_RESULT')
+          vector_status = os.environ.get('VECTOR_RESULT')
+          all_green = core_status == 'success' and vector_status == 'success'
+
+          if all_green and best:
+              tldr = f"Groen. Beste backend in deze sweep: `{best['backend']}` met retrieval→model delta `{fmt(best['delta'])}`."
+          elif all_green:
+              tldr = "Groen. Er was nog geen bruikbare backend-delta beschikbaar."
+          else:
+              tldr = "Niet groen. Kijk eerst naar de jobstatussen hieronder en daarna naar de raw artifacts."
+
           lines = [
               '# Full Validation Sweep',
+              '',
+              '## TL;DR',
+              '',
+              f'**{tldr}**',
+              '',
+              '| Vraag | Antwoord |',
+              '|---|---|',
+              f"| Werkt de core-suite? | {core_status} |",
+              f"| Werken vector + SSOT backends? | {vector_status} |",
+              f"| Beste backend deze run | {best['backend'] if best else 'n/a'} |",
+              f"| Beste retrieval→model delta | {fmt(best['delta']) if best else 'n/a'} |",
               '',
               '## Conclusie',
               '',
               '| Onderdeel | Status |',
               '|---|---|',
-              f"| Core tests and SSL suites | {os.environ.get('CORE_RESULT')} |",
-              f"| Vector and SSOT backends | {os.environ.get('VECTOR_RESULT')} |",
+              f"| Core tests and SSL suites | {core_status} |",
+              f"| Vector and SSOT backends | {vector_status} |",
               '',
               '## Compacte resultaten',
               '',
@@ -165,24 +207,6 @@ jobs:
                   lines.append(f'| `{file.name}` | {text} |')
               lines.append('')
 
-          backend_rows = []
-          for backend in ['memory', 'faiss', 'chroma']:
-              base = root / f'full-sweep-{backend}'
-              vector = load(base / 'vectorstore.json')
-              ssot = load(base / 'ssot.json')
-              retrieval = load(base / 'retrieval.json')
-              retrieval_model = load(base / 'retrieval_model.json')
-              backend_rows.append({
-                  'backend': backend,
-                  'vector_passed': (vector or {}).get('summary', {}).get('passed'),
-                  'ssot_passed': (ssot or {}).get('summary', {}).get('passed'),
-                  'hit': (retrieval or {}).get('metrics', {}).get('hit@k'),
-                  'avg_rank': (retrieval or {}).get('metrics', {}).get('avg_rank'),
-                  'baseline': (retrieval_model or {}).get('summary', {}).get('baseline_mean_gap_coverage'),
-                  'retrieval_cov': (retrieval_model or {}).get('summary', {}).get('retrieval_mean_gap_coverage'),
-                  'delta': (retrieval_model or {}).get('summary', {}).get('coverage_delta'),
-              })
-
           lines.extend([
               '### Backendvergelijking',
               '',
@@ -194,11 +218,6 @@ jobs:
                   f"| {row['backend']} | {fmt(row['vector_passed'])} | {fmt(row['ssot_passed'])} | {fmt(row['hit'])} | {fmt(row['avg_rank'])} | {fmt(row['baseline'])} | {fmt(row['retrieval_cov'])} | {fmt(row['delta'])} |"
               )
 
-          best = None
-          valid = [row for row in backend_rows if isinstance(row.get('delta'), (int, float))]
-          if valid:
-              best = max(valid, key=lambda item: item['delta'])
-
           lines.extend(['', '## Interpretatie', ''])
           if best:
               lines.append(f"De hoogste retrieval→model coverage-delta in deze sweep komt van `{best['backend']}` met delta `{fmt(best['delta'])}`.")
@@ -207,6 +226,12 @@ jobs:
           lines.extend([
               '',
               'Artifacts blijven beschikbaar als zip. De belangrijkste JSON-resultaten uit de core-suite worden ook naar `results/latest/` in de repo geschreven, zodat je ze direct kunt openen en diffen.',
+              '',
+              '## Waar kijk je bij fouten?',
+              '',
+              '- Rood bij core: begin bij `python -m pytest -q` en de core artifact.',
+              '- Rood bij vector/SSOT: kijk naar de backend-job (`memory`, `faiss` of `chroma`).',
+              '- Lage delta maar groene jobs: geen buildprobleem, maar een inhoudelijk benchmarksignaal.',
               '',
               '## Grens van de claim',
               '',
