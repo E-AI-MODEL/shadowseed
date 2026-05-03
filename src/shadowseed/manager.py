@@ -8,6 +8,7 @@ Belangrijk:
     - trace meet aanwezigheid
     - weight meet invloed
     - weight start altijd op 0.0
+    - vectorstore is een zoekindex, niet de bron van waarheid
 """
 
 from __future__ import annotations
@@ -15,11 +16,14 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Callable, Iterable
+from typing import TYPE_CHECKING, Callable, Iterable
 import math
 import re
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from shadowseed.vector_constellation import VectorConstellation
 
 
 class SeedStatus(str, Enum):
@@ -75,6 +79,7 @@ class SSLManager:
         max_trace: float = 3.0,
         reactivation_increment: float = 2.0,
         embedding_fn: Callable[[str], np.ndarray] | None = None,
+        vector_constellation: VectorConstellation | None = None,
     ):
         self._embedding_fn = embedding_fn
         self.model_name = model_name
@@ -88,6 +93,7 @@ class SSLManager:
         self.contradiction_penalty = contradiction_penalty
         self.max_trace = max_trace
         self.reactivation_increment = reactivation_increment
+        self.vector_constellation = vector_constellation
 
     def _load_embedder(self):
         if self._embedder is not None:
@@ -134,6 +140,10 @@ class SSLManager:
         word_count = len(re.findall(r"\w+", text))
         return not has_many_separators and not has_broad_terms and word_count <= 18
 
+    def _sync_vector_seed(self, seed_id: str) -> None:
+        if self.vector_constellation is not None:
+            self.vector_constellation.sync_seed(self.seeds[seed_id])
+
     def add_or_update_seed(
         self,
         text: str,
@@ -152,6 +162,7 @@ class SSLManager:
                 if seed.status != SeedStatus.PROMOTED:
                     seed.status = SeedStatus.ACTIVE
                 seed.updated_at = datetime.now().isoformat()
+                self._sync_vector_seed(seed_id)
                 return seed_id
 
         seed_id = f"ss_{len(self.seeds) + 1:03d}"
@@ -161,10 +172,11 @@ class SSLManager:
             embedding=new_emb,
             trigger_keywords=list(trigger_keywords or []),
         )
+        self._sync_vector_seed(seed_id)
         return seed_id
 
     def decay_traces(self, turns_passed: int = 1) -> None:
-        for seed in self.seeds.values():
+        for seed_id, seed in self.seeds.items():
             if seed.status == SeedStatus.EXPIRED:
                 continue
 
@@ -178,6 +190,7 @@ class SSLManager:
                 SeedStatus.DORMANT,
             }:
                 seed.status = SeedStatus.DECAYING
+            self._sync_vector_seed(seed_id)
 
     def run_validation_gate(
         self,
@@ -199,6 +212,7 @@ class SSLManager:
             seed.occurrence_count = 1
             seed.status = SeedStatus.NEW
             seed.updated_at = datetime.now().isoformat()
+            self._sync_vector_seed(seed_id)
             return False
 
         if check1 and check2 and check3:
@@ -209,8 +223,10 @@ class SSLManager:
                 else SeedStatus.ACTIVE
             )
             seed.updated_at = datetime.now().isoformat()
+            self._sync_vector_seed(seed_id)
             return True
 
+        self._sync_vector_seed(seed_id)
         return None
 
     def reactivate_by_text(self, text: str, threshold: float = 0.65) -> list[str]:
@@ -230,9 +246,96 @@ class SSLManager:
                 seed.trace = min(seed.trace + self.reactivation_increment, self.max_trace)
                 seed.status = SeedStatus.NEW
                 seed.updated_at = datetime.now().isoformat()
+                self._sync_vector_seed(seed_id)
                 reactivated.append(seed_id)
 
         return reactivated
+
+    def find_uncertain_region(
+        self,
+        text: str,
+        threshold: float = 0.85,
+        include_promoted: bool = False,
+    ) -> list[dict]:
+        """Find vector-near seeds for a new prompt or context.
+
+        This returns signals, not truth claims. Open weightless seeds can warn the
+        caller that the prompt touches a known uncertain region.
+        """
+        if self.vector_constellation is None:
+            return []
+        query_emb = self.get_embedding(text)
+        matches = self.vector_constellation.search_similar_seeds(query_emb, threshold=threshold)
+        uncertain = []
+        for seed_id, score, metadata in matches:
+            seed = self.seeds.get(seed_id)
+            if seed is None:
+                continue
+            if not include_promoted and seed.status == SeedStatus.PROMOTED:
+                continue
+            if seed.weight == 0.0:
+                uncertain.append(
+                    {
+                        "seed_id": seed_id,
+                        "similarity": score,
+                        "text": seed.text,
+                        "status": seed.status.value,
+                        "weight": seed.weight,
+                        "metadata": metadata,
+                    }
+                )
+        return uncertain
+
+    def apply_external_feedback(
+        self,
+        feedback_text: str,
+        context: str,
+        positive: bool = True,
+        threshold: float = 0.75,
+    ) -> list[dict]:
+        """Apply external feedback through similarity + Validation Gate.
+
+        Similarity selects candidate seeds. The Validation Gate still decides
+        whether weight may grow. Positive feedback increases evidence. Negative
+        feedback applies contradiction.
+        """
+        if self.vector_constellation is None:
+            return []
+        feedback_emb = self.get_embedding(f"FEEDBACK: {feedback_text} OP: {context}")
+        matches = self.vector_constellation.search_similar_seeds(feedback_emb, threshold=threshold)
+        updates = []
+        for seed_id, score, _metadata in matches:
+            if seed_id not in self.seeds:
+                continue
+            if positive:
+                result = self.run_validation_gate(seed_id, external_evidence=True)
+            else:
+                result = self.run_validation_gate(seed_id, contradiction=True)
+            self.vector_constellation.record_feedback(
+                seed_id=seed_id,
+                feedback=feedback_text,
+                is_correction=positive,
+                similarity=score,
+            )
+            updates.append(
+                {
+                    "seed_id": seed_id,
+                    "similarity": score,
+                    "gate_result": result,
+                    "seed": self.seeds[seed_id].to_dict(),
+                }
+            )
+        return updates
+
+    def expire_vector_only_open_seeds(self, max_age_days: int = 30) -> list[str]:
+        if self.vector_constellation is None:
+            return []
+        expired = self.vector_constellation.housekeeping(max_age_days=max_age_days)
+        for seed_id in expired:
+            if seed_id in self.seeds:
+                self.seeds[seed_id].status = SeedStatus.EXPIRED
+                self.seeds[seed_id].updated_at = datetime.now().isoformat()
+        return expired
 
     def find_constellations(
         self, threshold: float = 0.70, min_members: int = 3
@@ -275,4 +378,9 @@ class SSLManager:
         return {
             "seeds": [seed.to_dict() for seed in self.seeds.values()],
             "constellations": [item.to_dict() for item in self.find_constellations()],
+            "vector_constellation": (
+                self.vector_constellation.to_dict()
+                if self.vector_constellation is not None
+                else None
+            ),
         }
