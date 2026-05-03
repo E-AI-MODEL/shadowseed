@@ -22,10 +22,11 @@ Lees daarna het visuele verhaal als compacte, geïllustreerde samenvatting:
 4. [Conceptueel overzicht](Conceptueel-Overzicht)
 5. [Architectuur](Architectuur)
 6. [Benchmarks](Benchmarks)
-7. [Fase 2: SLM-runs](SLM-Runs)
-8. [Resultaten en analyse](Resultaten-en-Analyse)
-9. [Blind review protocol](Blind-Review-Protocol)
-10. [Roadmap](Roadmap)
+7. [Vectorstore en gewichtloze seeds](Vectorstore-en-Gewichtloze-Seeds)
+8. [Fase 2: SLM-runs](SLM-Runs)
+9. [Resultaten en analyse](Resultaten-en-Analyse)
+10. [Blind review protocol](Blind-Review-Protocol)
+11. [Roadmap](Roadmap)
 
 ## Automatische pagina's
 
@@ -36,6 +37,7 @@ Automatisch gegenereerd:
 - [SSL 4.5 Analysis](SSL-45-Analysis)
 - [SLM Model Benefit](SLM-Model-Benefit)
 - [SLM First Conclusion](SLM-First-Conclusion)
+- [Vectorstore Smoke](Vectorstore-Smoke)
 
 ## Belangrijkste principe
 
