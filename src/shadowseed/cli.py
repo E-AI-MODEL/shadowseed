@@ -10,6 +10,7 @@ from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
+from shadowseed.benchmark.retrieval_model_benchmark import run_retrieval_model_benchmark
 from shadowseed.benchmark.run_types import RunType
 from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
 from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
@@ -20,6 +21,7 @@ from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
 
 
 VECTOR_BACKENDS = ["memory", "faiss", "chroma"]
+MODEL_BACKENDS = ["fixture", "hf-transformers"]
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -74,7 +76,7 @@ def build_parser() -> argparse.ArgumentParser:
     model_benefit.add_argument("--turns", type=int, default=3)
     model_benefit.add_argument(
         "--backend",
-        choices=["fixture", "hf-transformers"],
+        choices=MODEL_BACKENDS,
         default="fixture",
     )
     model_benefit.add_argument("--model-id", default=None)
@@ -93,6 +95,16 @@ def build_parser() -> argparse.ArgumentParser:
     retrieval.add_argument("--output", default="results/retrieval_benchmark.json")
     retrieval.add_argument("--backend", choices=VECTOR_BACKENDS, default="memory")
     retrieval.add_argument("--k", type=int, default=3)
+
+    retrieval_model = subparsers.add_parser("run-retrieval-model-benchmark")
+    retrieval_model.add_argument("--input", default="src/shadowseed/data/retrieval_output_benchmark.json")
+    retrieval_model.add_argument("--retrieval-input", default="src/shadowseed/data/retrieval_benchmark.json")
+    retrieval_model.add_argument("--output", default="results/retrieval_model_benchmark.json")
+    retrieval_model.add_argument("--vector-backend", choices=VECTOR_BACKENDS, default="memory")
+    retrieval_model.add_argument("--model-backend", choices=MODEL_BACKENDS, default="fixture")
+    retrieval_model.add_argument("--model-id", default=None)
+    retrieval_model.add_argument("--max-new-tokens", type=int, default=220)
+    retrieval_model.add_argument("--top-k", type=int, default=3)
 
     analyze = subparsers.add_parser("analyze-results")
     analyze.add_argument("--results-dir", default="results")
@@ -169,6 +181,20 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             backend=args.backend,
             k=args.k,
+        )
+        print(path)
+        return 0
+
+    if args.command == "run-retrieval-model-benchmark":
+        path = run_retrieval_model_benchmark(
+            args.input,
+            args.retrieval_input,
+            args.output,
+            vector_backend=args.vector_backend,
+            model_backend=args.model_backend,
+            model_id=args.model_id,
+            max_new_tokens=args.max_new_tokens,
+            top_k=args.top_k,
         )
         print(path)
         return 0
