@@ -1,18 +1,15 @@
 # Resultaten
 
-Deze pagina beschrijft de actuele output van de SSL 4.5 Gap-Test Suite.
+Deze pagina beschrijft de actuele output van de SSL 4.5 benchmarkruns uit GitHub Actions artifacts.
 
-## Run
+## Runs
 
-| Veld | Waarde |
-|---|---|
-| Suite | SSL 4.5 Gap-Test Suite |
-| Versie | 4.5 |
-| Scenario's | 3 |
-| Outputbestand | `ssl45_gap_suite.json` |
-| Run-tijd in artifact | 2026-05-03T10:30:24 |
+| Suite | Outputbestand | Scenario's |
+|---|---|---:|
+| SSL 4.5 Gap-Test Suite | `ssl45_gap_suite.json` | 3 |
+| SSL 4.5 false-positive controls | `ssl45_false_positive_suite.json` | 3 |
 
-## Samenvatting
+## Positieve Gap-Test Suite
 
 | Metric | Waarde |
 |---|---:|
@@ -28,13 +25,33 @@ De score gebruikt de schaal uit de Gap-Test Suite:
 | 1 | richting klopt, maar output is te vaag of te breed |
 | 2 | atomische en structureel juiste gap gevonden |
 
-## Per scenario
+### Per scenario
 
 | Scenario | Titel | Score | Atomische hits | Promoted hits | Interpretatie |
 |---|---|---:|---:|---:|---|
 | A | Industriële Revolutie | 2 | 2 | 2 | Werkt. De detector vindt twee atomische koloniale/economische gaps. |
-| B | Grensoverschrijdende juridische casus | 2 | 4 | 4 | Werkt. De detector vindt nu rechtsbevoegdheid, toepasselijk recht, afdwingbaarheid en forumkeuze. |
+| B | Grensoverschrijdende juridische casus | 2 | 4 | 4 | Werkt. De detector vindt rechtsbevoegdheid, toepasselijk recht, afdwingbaarheid en forumkeuze. |
 | C | Software Architectuur | 2 | 4 | 4 | Werkt. De detector vindt privacy-, security- en API-gerelateerde gaps. |
+
+## False-positive controls
+
+De negatieve controles bevatten volledige antwoorden waarin de relevante gaps al expliciet aanwezig zijn. De detector hoort dan niets nieuws te detecteren of te promoten.
+
+| Metric | Waarde |
+|---|---:|
+| Candidate false positives | 0 |
+| Promoted false positives | 0 |
+| Candidate false-positive rate | 0.00 |
+| Promoted false-positive rate | 0.00 |
+| Passed | true |
+
+### Per negatieve controle
+
+| Scenario | Candidate false positives | Promoted false positives | Passed |
+|---|---:|---:|---|
+| NEG_A | 0 | 0 | true |
+| NEG_B | 0 | 0 | true |
+| NEG_C | 0 | 0 | true |
 
 ## Gepromoveerde seeds
 
@@ -59,14 +76,15 @@ De score gebruikt de schaal uit de Gap-Test Suite:
 
 ## Interpretatie
 
-De huidige run laat zien dat de pipeline vier dingen goed doet:
+De huidige runs laten zien dat de pipeline vijf dingen goed doet:
 
-1. atomische detectie in alle drie scenario's;
+1. atomische detectie in alle drie positieve scenario's;
 2. correcte scheiding tussen detectie en promotie;
 3. promotie via de Validation Gate zodra de Gate-condities zijn gehaald;
-4. herkenning van juridische procedurele gaps in een grensoverschrijdende consumentencontext.
+4. herkenning van juridische procedurele gaps in een grensoverschrijdende consumentencontext;
+5. geen false positives op drie volledige negatieve controles.
 
-Alle promoted seeds hebben in de artifact-output:
+Alle promoted seeds in de positieve suite hebben in de artifact-output:
 
 ```text
 trace = 3.0
@@ -80,11 +98,12 @@ Dat past bij SSL 4.5: seeds beginnen gewichtloos, worden drie keer herkend, krij
 
 ## Beperking
 
-Deze run gebruikt de gratis deterministische detector. De score toont dat de huidige suite volledig geraakt wordt, maar bewijst nog niet dat SSL 4.5 algemeen sterk is buiten deze drie scenario's. De volgende wetenschappelijke stap is uitbreiding met meer domeinen, meer negatieve controles en menselijke beoordeling via de templates.
+Deze runs gebruiken de gratis deterministische detector. De resultaten tonen dat de huidige kleine suite volledig geraakt wordt en dat de eerste negatieve controles schoon blijven. Dit is nog geen bewijs dat SSL 4.5 algemeen sterk is buiten deze zes scenario's.
 
 ## Volgende stap
 
 - Matrix-runs vergelijken voor turns `1`, `2`, `3`, `5` en `8`.
-- False-positive scenario's toevoegen.
+- Meer false-positive scenario's toevoegen.
+- Moeilijkere gedeeltelijk-complete antwoorden testen.
 - Beoordelingsformulier invullen met menselijke scores.
 - Daarna pas claims in paper of README sterker maken.
