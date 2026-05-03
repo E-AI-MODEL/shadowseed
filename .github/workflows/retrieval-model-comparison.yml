@@ -1,0 +1,79 @@
+name: Retrieval Model Comparison
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  retrieval-model:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test,vector]"
+
+      - name: Run combined benchmark
+        run: |
+          mkdir -p results/retrieval_model
+          for backend in memory faiss chroma; do
+            python -m shadowseed.cli run-retrieval-model-benchmark \
+              --vector-backend ${backend} \
+              --model-backend fixture \
+              --output results/retrieval_model/${backend}.json
+          done
+
+      - name: Build comparison
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          base = Path('results/retrieval_model')
+          rows = []
+
+          for b in ['memory','faiss','chroma']:
+              data = json.loads((base / f"{b}.json").read_text())
+              s = data['summary']
+              rows.append((b, s['baseline_mean_gap_coverage'], s['retrieval_mean_gap_coverage'], s['coverage_delta']))
+
+          lines = [
+              '# Retrieval → Model Impact',
+              '',
+              '| Backend | baseline | retrieval | delta |',
+              '|---|---:|---:|---:|',
+          ]
+
+          for r in rows:
+              lines.append(f"| {r[0]} | {r[1]:.2f} | {r[2]:.2f} | {r[3]:.2f} |")
+
+          Path('Retrieval-Model-Comparison.md').write_text("\n".join(lines))
+          PY
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrieval-model
+          path: results/retrieval_model
+
+      - name: Publish wiki
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git clone https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.wiki.git wiki || exit 0
+          cp Retrieval-Model-Comparison.md wiki/.
+          cd wiki
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Update retrieval model comparison" || true
+          git push || true
