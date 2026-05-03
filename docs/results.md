@@ -10,14 +10,15 @@ Deze pagina beschrijft de actuele output van de SSL 4.5 Gap-Test Suite.
 | Versie | 4.5 |
 | Scenario's | 3 |
 | Outputbestand | `ssl45_gap_suite.json` |
+| Run-tijd in artifact | 2026-05-03T10:30:24 |
 
 ## Samenvatting
 
 | Metric | Waarde |
 |---|---:|
-| Mean scenario score | 1.33 |
-| Atomische hits | 6 |
-| Promoted hits | 6 |
+| Mean scenario score | 2.00 |
+| Atomische hits | 10 |
+| Promoted hits | 10 |
 
 De score gebruikt de schaal uit de Gap-Test Suite:
 
@@ -32,8 +33,8 @@ De score gebruikt de schaal uit de Gap-Test Suite:
 | Scenario | Titel | Score | Atomische hits | Promoted hits | Interpretatie |
 |---|---|---:|---:|---:|---|
 | A | Industriële Revolutie | 2 | 2 | 2 | Werkt. De detector vindt twee atomische koloniale/economische gaps. |
-| B | Grensoverschrijdende juridische casus | 0 | 0 | 0 | Faalt. De huidige gratis detector vindt geen juridische seeds. |
-| C | Software Architectuur | 2 | 4 | 4 | Werkt sterk. De detector vindt privacy-, security- en API-gerelateerde gaps. |
+| B | Grensoverschrijdende juridische casus | 2 | 4 | 4 | Werkt. De detector vindt nu rechtsbevoegdheid, toepasselijk recht, afdwingbaarheid en forumkeuze. |
+| C | Software Architectuur | 2 | 4 | 4 | Werkt. De detector vindt privacy-, security- en API-gerelateerde gaps. |
 
 ## Gepromoveerde seeds
 
@@ -44,7 +45,10 @@ De score gebruikt de schaal uit de Gap-Test Suite:
 
 ### Scenario B
 
-Geen promoted seeds.
+- Rechtsbevoegdheid bij een geschil tussen een Nederlandse consument en een Amerikaanse webwinkel.
+- Toepasselijk recht bij een grensoverschrijdend consumentencontract.
+- Afdwingbaarheid van EU-consumentenrecht tegenover een niet-EU retailer.
+- Forumkeuzebeding in internationale online koopvoorwaarden.
 
 ### Scenario C
 
@@ -55,23 +59,32 @@ Geen promoted seeds.
 
 ## Interpretatie
 
-De huidige run laat zien dat de pipeline drie dingen goed doet:
+De huidige run laat zien dat de pipeline vier dingen goed doet:
 
-1. atomische detectie in scenario A en C;
+1. atomische detectie in alle drie scenario's;
 2. correcte scheiding tussen detectie en promotie;
-3. promotie via de Validation Gate zodra de Gate-condities zijn gehaald.
+3. promotie via de Validation Gate zodra de Gate-condities zijn gehaald;
+4. herkenning van juridische procedurele gaps in een grensoverschrijdende consumentencontext.
 
-De run laat ook een duidelijke zwakte zien:
+Alle promoted seeds hebben in de artifact-output:
 
-- scenario B wordt niet geraakt door de huidige gratis detector.
+```text
+trace = 3.0
+weight = 0.6000000000000001
+occurrence_count = 3
+evidence_count = 2
+status = PROMOTED
+```
 
-Dat betekent dat het huidige resultaat geen bewijs is dat SSL 4.5 algemeen sterk is. Het bewijst wel dat de implementatie de ontworpen lifecycle uitvoert en dat de testset echte zwakke plekken zichtbaar maakt.
+Dat past bij SSL 4.5: seeds beginnen gewichtloos, worden drie keer herkend, krijgen externe evidence en stijgen pas daarna boven de promotiedrempel.
+
+## Beperking
+
+Deze run gebruikt de gratis deterministische detector. De score toont dat de huidige suite volledig geraakt wordt, maar bewijst nog niet dat SSL 4.5 algemeen sterk is buiten deze drie scenario's. De volgende wetenschappelijke stap is uitbreiding met meer domeinen, meer negatieve controles en menselijke beoordeling via de templates.
 
 ## Volgende stap
 
-De eerstvolgende inhoudelijke verbetering is scenario B. De juridische detector moet ten minste deze twee seeds kunnen raken:
-
-- Rechtsbevoegdheid bij een geschil tussen een Nederlandse consument en een Amerikaanse webwinkel.
-- Toepasselijk recht bij een grensoverschrijdend consumentencontract.
-
-Daarna moet dezelfde run opnieuw worden gedraaid en vergeleken met deze baseline.
+- Matrix-runs vergelijken voor turns `1`, `2`, `3`, `5` en `8`.
+- False-positive scenario's toevoegen.
+- Beoordelingsformulier invullen met menselijke scores.
+- Daarna pas claims in paper of README sterker maken.
