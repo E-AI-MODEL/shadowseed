@@ -12,6 +12,7 @@ from shadowseed.benchmark.run_types import RunType
 from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
 from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
 from shadowseed.benchmark.ssl45_gap_suite import run_ssl45_gap_suite
+from shadowseed.benchmark.ssl45_model_benefit_suite import run_ssl45_model_benefit_suite
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -57,6 +58,21 @@ def build_parser() -> argparse.ArgumentParser:
     benefit.add_argument("--output", default="results/ssl45_benefit_suite.json")
     benefit.add_argument("--turns", type=int, default=3)
 
+    model_benefit = subparsers.add_parser("run-model-benefit-suite")
+    model_benefit.add_argument(
+        "--input",
+        default="src/shadowseed/data/ssl45_model_benefit_suite.json",
+    )
+    model_benefit.add_argument("--output", default="results/ssl45_model_benefit_suite.json")
+    model_benefit.add_argument("--turns", type=int, default=3)
+    model_benefit.add_argument(
+        "--backend",
+        choices=["fixture", "hf-transformers"],
+        default="fixture",
+    )
+    model_benefit.add_argument("--model-id", default=None)
+    model_benefit.add_argument("--max-new-tokens", type=int, default=220)
+
     nlp = subparsers.add_parser("run-nlp-smoke")
     nlp.add_argument("--input", default="examples/local_absencebench_sample.json")
     nlp.add_argument("--output", default="results/absencebench_smoke.json")
@@ -97,6 +113,18 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run-benefit-suite":
         path = run_ssl45_benefit_suite(args.input, args.output, turns=args.turns)
+        print(path)
+        return 0
+
+    if args.command == "run-model-benefit-suite":
+        path = run_ssl45_model_benefit_suite(
+            args.input,
+            args.output,
+            turns=args.turns,
+            backend=args.backend,
+            model_id=args.model_id,
+            max_new_tokens=args.max_new_tokens,
+        )
         print(path)
         return 0
 
