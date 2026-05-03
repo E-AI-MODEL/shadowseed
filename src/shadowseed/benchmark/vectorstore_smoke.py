@@ -8,11 +8,11 @@ from pathlib import Path
 from shadowseed.benchmark.ssl45_gap_suite import lexical_embedding
 from shadowseed.manager import SSLManager, SeedStatus
 from shadowseed.vector_constellation import VectorConstellation
-from shadowseed.vectorstore import InMemoryVectorStore
+from shadowseed.vectorstore import create_vector_store
 
 
-def run_vectorstore_smoke(output_path: str) -> Path:
-    constellation = VectorConstellation(InMemoryVectorStore())
+def run_vectorstore_smoke(output_path: str, backend: str = "memory") -> Path:
+    constellation = VectorConstellation(create_vector_store(backend=backend, dimensions=128))
     manager = SSLManager(
         embedding_fn=lexical_embedding,
         vector_constellation=constellation,
@@ -30,13 +30,14 @@ def run_vectorstore_smoke(output_path: str) -> Path:
 
     uncertainty_matches = manager.find_uncertain_region(
         "Nederlandse consument koopt bij Amerikaanse webwinkel en wil garantie afdwingen.",
-        threshold=0.20,
+        threshold=0.20 if backend != "chroma" else 0.05,
     )
 
     # Repeat detection until occurrence_count can satisfy the Validation Gate.
     manager.add_or_update_seed(seed_text)
     manager.add_or_update_seed(seed_text)
 
+    feedback_threshold = 0.20 if backend != "chroma" else 0.05
     feedback_rounds = []
     for _ in range(3):
         feedback_rounds.append(
@@ -44,7 +45,7 @@ def run_vectorstore_smoke(output_path: str) -> Path:
                 "De casus mist toepasselijk recht voor een grensoverschrijdend consumentencontract.",
                 context="Nederlandse consument koopt defecte laptop bij Amerikaanse webwinkel.",
                 positive=True,
-                threshold=0.20,
+                threshold=feedback_threshold,
             )
         )
 
@@ -54,11 +55,12 @@ def run_vectorstore_smoke(output_path: str) -> Path:
         "Deze juridische gap is niet relevant voor deze casus.",
         context="Nederlandse consument koopt defecte laptop bij Amerikaanse webwinkel.",
         positive=False,
-        threshold=0.20,
+        threshold=feedback_threshold,
     )
     contradicted_seed = manager.get_seed(seed_id).to_dict()
 
     summary = {
+        "backend": backend,
         "seed_id": seed_id,
         "vector_ids": constellation.store.get_all_ids(),
         "feedback_events": len(constellation.feedback_log),
