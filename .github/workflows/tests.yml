@@ -74,13 +74,13 @@ jobs:
 
       - name: Run NLP smoke test
         run: |
-          python -m shadowseed.cli run-nlp-smoke
+          python -m shadowseed.cli run-nlp-smoke --output absencebench_smoke.json
 
       - name: Upload NLP smoke results
         uses: actions/upload-artifact@v4
         with:
           name: nlp-smoke-results
-          path: results/absencebench_smoke.json
+          path: benchmarks/results/absencebench_smoke.json
           if-no-files-found: error
 
   benchmark-matrix:
