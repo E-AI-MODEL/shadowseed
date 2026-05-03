@@ -56,7 +56,7 @@ def test_uncertain_region_and_feedback_flow_uses_validation_gate():
 
     manager.add_or_update_seed(seed_text)
     manager.add_or_update_seed(seed_text)
-    for _ in range(3):
+    for _ in range(4):
         manager.apply_external_feedback(
             "Toepasselijk recht ontbreekt in deze grensoverschrijdende consumentenkoop.",
             context="Toepasselijk recht bij een grensoverschrijdend consumentencontract.",
