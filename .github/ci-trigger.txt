@@ -1,2 +1,2 @@
 CI trigger for SSL 4.5 benchmark pipeline.
-Triggered after aligning manager, evaluator and formula tests.
+Retriggered after adding benchmark artifacts and SSL turn matrix.
