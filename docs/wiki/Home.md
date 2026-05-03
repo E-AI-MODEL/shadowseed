@@ -23,10 +23,11 @@ Lees daarna het visuele verhaal als compacte, geïllustreerde samenvatting:
 5. [Architectuur](Architectuur)
 6. [Benchmarks](Benchmarks)
 7. [Vectorstore en gewichtloze seeds](Vectorstore-en-Gewichtloze-Seeds)
-8. [Fase 2: SLM-runs](SLM-Runs)
-9. [Resultaten en analyse](Resultaten-en-Analyse)
-10. [Blind review protocol](Blind-Review-Protocol)
-11. [Roadmap](Roadmap)
+8. [SSOT en documentvalidatie](SSOT-en-Documentvalidatie)
+9. [Fase 2: SLM-runs](SLM-Runs)
+10. [Resultaten en analyse](Resultaten-en-Analyse)
+11. [Blind review protocol](Blind-Review-Protocol)
+12. [Roadmap](Roadmap)
 
 ## Automatische pagina's
 
@@ -38,6 +39,7 @@ Automatisch gegenereerd:
 - [SLM Model Benefit](SLM-Model-Benefit)
 - [SLM First Conclusion](SLM-First-Conclusion)
 - [Vectorstore Smoke](Vectorstore-Smoke)
+- [SSOT Smoke](SSOT-Smoke)
 
 ## Belangrijkste principe
 
