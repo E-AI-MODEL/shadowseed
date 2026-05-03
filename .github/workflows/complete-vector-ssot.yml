@@ -1,0 +1,228 @@
+name: Complete Vector + SSOT Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      backend:
+        description: "Vectorstore backend"
+        required: true
+        default: "memory"
+        type: choice
+        options:
+          - memory
+          - faiss
+          - chroma
+
+permissions:
+  contents: write
+
+jobs:
+  complete-vector-ssot:
+    name: Complete vector + SSOT (${{ inputs.backend }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ "${{ inputs.backend }}" = "faiss" ]; then
+            pip install -e ".[test,vector-faiss]"
+          elif [ "${{ inputs.backend }}" = "chroma" ]; then
+            pip install -e ".[test,vector-chroma]"
+          else
+            pip install -e ".[test]"
+          fi
+
+      - name: Run complete vector and SSOT tests
+        run: |
+          python -m pytest \
+            tests/test_vectorstore_memory.py \
+            tests/test_optional_vector_backends.py \
+            tests/test_ssot_manager.py \
+            -q
+
+      - name: Run vectorstore smoke
+        run: |
+          python -m shadowseed.cli run-vectorstore-smoke \
+            --backend "${{ inputs.backend }}" \
+            --output results/vectorstore_smoke_${{ inputs.backend }}.json
+
+      - name: Run SSOT smoke
+        run: |
+          python -m shadowseed.cli run-ssot-smoke \
+            --backend "${{ inputs.backend }}" \
+            --output results/ssot_smoke_${{ inputs.backend }}.json
+
+      - name: Build complete report
+        env:
+          SHA: ${{ github.sha }}
+          BACKEND: ${{ inputs.backend }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          backend = os.environ['BACKEND']
+          vector_path = Path(f'results/vectorstore_smoke_{backend}.json')
+          ssot_path = Path(f'results/ssot_smoke_{backend}.json')
+          vector = json.loads(vector_path.read_text(encoding='utf-8'))
+          ssot = json.loads(ssot_path.read_text(encoding='utf-8'))
+          vector_summary = vector['summary']
+          ssot_summary = ssot['summary']
+          passed = bool(vector_summary.get('passed')) and bool(ssot_summary.get('passed'))
+
+          bundle = {
+              'summary': {
+                  'backend': backend,
+                  'passed': passed,
+                  'commit': os.environ.get('SHA', ''),
+                  'vectorstore_passed': vector_summary.get('passed'),
+                  'ssot_passed': ssot_summary.get('passed'),
+                  'vector_uncertain_matches': vector_summary.get('uncertain_matches'),
+                  'vector_promoted_weight': vector_summary.get('promoted_weight'),
+                  'vector_contradicted_weight': vector_summary.get('contradicted_weight'),
+                  'ssot_doc_count': ssot_summary.get('doc_count'),
+                  'ssot_chunk_count': ssot_summary.get('chunk_count'),
+                  'ssot_retrieved_context_count': ssot_summary.get('retrieved_context_count'),
+                  'ssot_after_status': ssot_summary.get('after_status'),
+                  'ssot_after_weight': ssot_summary.get('after_weight'),
+                  'ssot_after_evidence_count': ssot_summary.get('after_evidence_count'),
+              },
+              'vectorstore': vector,
+              'ssot': ssot,
+          }
+          Path('results/complete_vector_ssot.json').write_text(
+              json.dumps(bundle, indent=2, ensure_ascii=False) + '\n',
+              encoding='utf-8',
+          )
+
+          headline = (
+              'De complete Vector + SSOT-run is geslaagd.'
+              if passed else
+              'De complete Vector + SSOT-run is niet volledig geslaagd.'
+          )
+          lines = [
+              '# Complete Vector + SSOT Run',
+              '',
+              headline,
+              '',
+              '## Backend',
+              '',
+              f'`{backend}`',
+              '',
+              '## Conclusie',
+              '',
+          ]
+          if passed:
+              lines.extend([
+                  'De gekozen vectorstore-backend werkt in de volledige keten:',
+                  '',
+                  '- gewichtloze seeds worden als vector geïndexeerd;',
+                  '- vergelijkbare prompts vinden open onzekerheidsgebieden;',
+                  '- externe feedback loopt via de Validation Gate;',
+                  '- een trusted SSOT-document valideert open seeds via een aparte SSOT-vectorstore;',
+                  '- promotie blijft onder controle van `SSLManager.seeds` en de Validation Gate.',
+              ])
+          else:
+              lines.extend([
+                  'Minstens één onderdeel van de keten is niet geslaagd. Controleer het ruwe JSON-resultaat en de workflow logs.',
+              ])
+          lines.extend([
+              '',
+              '## Kerncijfers',
+              '',
+              '| Onderdeel | Metric | Waarde |',
+              '|---|---|---:|',
+              f"| Vectorstore | passed | {vector_summary.get('passed')} |",
+              f"| Vectorstore | uncertain matches | {vector_summary.get('uncertain_matches')} |",
+              f"| Vectorstore | promoted status | {vector_summary.get('promoted_status')} |",
+              f"| Vectorstore | promoted weight | {vector_summary.get('promoted_weight')} |",
+              f"| Vectorstore | contradicted weight | {vector_summary.get('contradicted_weight')} |",
+              f"| SSOT | passed | {ssot_summary.get('passed')} |",
+              f"| SSOT | documents | {ssot_summary.get('doc_count')} |",
+              f"| SSOT | chunks | {ssot_summary.get('chunk_count')} |",
+              f"| SSOT | retrieved context hits | {ssot_summary.get('retrieved_context_count')} |",
+              f"| SSOT | validations | {ssot_summary.get('validations')} |",
+              f"| SSOT | after status | {ssot_summary.get('after_status')} |",
+              f"| SSOT | after weight | {ssot_summary.get('after_weight')} |",
+              f"| SSOT | after evidence count | {ssot_summary.get('after_evidence_count')} |",
+              '',
+              '## Wat deze complete run bewijst',
+              '',
+              'Deze run bewijst niet dat SSL al op grote kennisbanken robuust is. Hij bewijst wel dat de volledige optionele keten technisch werkt:',
+              '',
+              '```text',
+              'weightless seed → vectorstore → onzekerheidsmatch → feedback → Validation Gate',
+              'trusted document → SSOT-vectorstore → seed-validatie → Validation Gate → promotie',
+              '```',
+              '',
+              '## Grens van de claim',
+              '',
+              'De gekozen backend is een zoekindex. De bron van waarheid blijft `SSLManager.seeds`. Gewicht en promotie worden niet door FAISS, Chroma of memory bepaald, maar door de bestaande SSL-lifecycle.',
+              '',
+              '## Ruwe output',
+              '',
+              '- [Complete Vector SSOT Raw](Complete-Vector-SSOT-Raw)',
+              '- [Vectorstore Smoke](Vectorstore-Smoke)',
+              '- [SSOT Smoke](SSOT-Smoke)',
+              '',
+              '## Commit',
+              '',
+              f"`{os.environ.get('SHA', '')}`",
+              '',
+          ])
+          Path('Complete-Vector-SSOT-Run.md').write_text('\n'.join(lines), encoding='utf-8')
+          PY
+
+      - name: Upload complete vector SSOT artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssl45-complete-vector-ssot-results-${{ inputs.backend }}
+          path: |
+            results/complete_vector_ssot.json
+            results/vectorstore_smoke_${{ inputs.backend }}.json
+            results/ssot_smoke_${{ inputs.backend }}.json
+            Complete-Vector-SSOT-Run.md
+          if-no-files-found: error
+
+      - name: Publish complete vector SSOT to GitHub Wiki
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          BACKEND: ${{ inputs.backend }}
+        run: |
+          set -e
+          WIKI_URL="https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.wiki.git"
+          if ! git clone "$WIKI_URL" wiki; then
+            echo "Wiki repo not available. Enable Wiki in repo settings and create the first page once."
+            exit 0
+          fi
+          cp Complete-Vector-SSOT-Run.md wiki/Complete-Vector-SSOT-Run.md
+          cp results/complete_vector_ssot.json wiki/Complete-Vector-SSOT-Raw.json
+          cp results/complete_vector_ssot.json "wiki/Complete-Vector-SSOT-Raw-${BACKEND}.json"
+          cp results/vectorstore_smoke_${BACKEND}.json "wiki/Vectorstore-Smoke-Raw-${BACKEND}.json"
+          cp results/ssot_smoke_${BACKEND}.json "wiki/SSOT-Smoke-Raw-${BACKEND}.json"
+          if [ ! -f wiki/Home.md ]; then
+            printf '# Shadow Seed Learning 4.5\n\n- [Complete Vector + SSOT Run](Complete-Vector-SSOT-Run)\n' > wiki/Home.md
+          elif ! grep -q "Complete-Vector-SSOT-Run" wiki/Home.md; then
+            printf '\n- [Complete Vector + SSOT Run](Complete-Vector-SSOT-Run)\n' >> wiki/Home.md
+          fi
+          cd wiki
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Home.md Complete-Vector-SSOT-Run.md Complete-Vector-SSOT-Raw.json "Complete-Vector-SSOT-Raw-${BACKEND}.json" "Vectorstore-Smoke-Raw-${BACKEND}.json" "SSOT-Smoke-Raw-${BACKEND}.json"
+          if git diff --cached --quiet; then
+            echo "No wiki changes."
+          else
+            git commit -m "Update complete vector SSOT wiki ${BACKEND} (${SHA})"
+            git push
+          fi
