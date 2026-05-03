@@ -4,42 +4,53 @@ Welkom bij de Wiki voor **Shadow Seed Learning (SSL) 4.5**.
 
 SSL 4.5 onderzoekt of een model beter kan antwoorden door ontbrekende structurele elementen te herkennen als **shadow seeds**. Een seed begint gewichtloos, wordt gevolgd via `trace`, en krijgt pas invloed na validatie via de Validation Gate.
 
-## Hoofddossier
+## Begin hier
 
-Start hier als je de Wiki als één volledig rapport wilt lezen of printen:
+De snelste en duidelijkste ingang:
 
-- [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage)
+- [Start hier](Start-Hier)
 
-Lees daarna het visuele verhaal als compacte, geïllustreerde samenvatting:
+Deze pagina legt in gewone taal uit:
 
-- [Visueel verhaal SSL 4.5](Visueel-Verhaal)
+- wat SSL 4.5 is;
+- wat een shadow seed is;
+- waarom seeds eerst gewichtloos blijven;
+- hoe vectorstores en SSOT erbij horen;
+- welke tests er zijn;
+- waar de resultaten staan;
+- wat je wel en niet kunt concluderen.
 
-## Leesvolgorde
+## Hoofddossiers
 
-1. [Tussentijdse rapportage](Tussentijdse-Rapportage)
-2. [Visueel verhaal](Visueel-Verhaal)
-3. [Quick Start](Quick-Start)
-4. [Conceptueel overzicht](Conceptueel-Overzicht)
-5. [Architectuur](Architectuur)
-6. [Benchmarks](Benchmarks)
-7. [Vectorstore en gewichtloze seeds](Vectorstore-en-Gewichtloze-Seeds)
-8. [SSOT en documentvalidatie](SSOT-en-Documentvalidatie)
-9. [Fase 2: SLM-runs](SLM-Runs)
-10. [Resultaten en analyse](Resultaten-en-Analyse)
-11. [Blind review protocol](Blind-Review-Protocol)
-12. [Roadmap](Roadmap)
+- [Start hier](Start-Hier) — eenvoudige instap en leesroute
+- [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage) — printbaar dossier
+- [Visueel verhaal SSL 4.5](Visueel-Verhaal) — compacte uitleg met diagrammen
 
-## Automatische pagina's
+## Technische verdieping
 
-Deze Wiki wordt deels automatisch bijgewerkt door GitHub Actions.
+- [Quick Start](Quick-Start)
+- [Conceptueel overzicht](Conceptueel-Overzicht)
+- [Architectuur](Architectuur)
+- [Benchmarks](Benchmarks)
+- [Vectorstore en gewichtloze seeds](Vectorstore-en-Gewichtloze-Seeds)
+- [SSOT en documentvalidatie](SSOT-en-Documentvalidatie)
+- [Fase 2: SLM-runs](SLM-Runs)
+- [Blind review protocol](Blind-Review-Protocol)
+- [Roadmap](Roadmap)
 
-Automatisch gegenereerd:
+## Automatische resultaten
+
+Deze pagina's worden deels of volledig door GitHub Actions bijgewerkt:
 
 - [SSL 4.5 Analysis](SSL-45-Analysis)
 - [SLM Model Benefit](SLM-Model-Benefit)
 - [SLM First Conclusion](SLM-First-Conclusion)
 - [Vectorstore Smoke](Vectorstore-Smoke)
 - [SSOT Smoke](SSOT-Smoke)
+- [Backend Comparison](Backend-Comparison)
+- [Retrieval-Comparison](Retrieval-Comparison)
+- [Retrieval Model Comparison](Retrieval-Model-Comparison)
+- [Retrieval Model HF](Retrieval-Model-HF)
 
 ## Belangrijkste principe
 
