@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 
 from shadowseed.benchmark.ssl45_gap_suite import (
     detect_candidate_seeds,
@@ -20,12 +21,35 @@ from shadowseed.benchmark.ssl45_gap_suite import (
 from shadowseed.manager import SSLManager, SeedStatus
 
 
+def answer_fragments(answer: str) -> list[str]:
+    """Split an answer into short fragments for local gap matching."""
+    fragments = [
+        part.strip()
+        for part in re.split(r"[\n.;:]+", answer)
+        if part.strip()
+    ]
+    return fragments or [answer]
+
+
+def expected_is_covered(answer: str, expected: str, threshold: float = 0.70) -> bool:
+    """Return whether an expected gap is present in the answer.
+
+    A global Jaccard score between a long answer and one short seed is too
+    diluted. Coverage is local: exact inclusion or best fragment-level match.
+    """
+    answer_lower = answer.lower()
+    expected_lower = expected.lower()
+    if expected_lower in answer_lower:
+        return True
+    return max(jaccard(fragment, expected) for fragment in answer_fragments(answer)) >= threshold
+
+
 def coverage(answer: str, expected_additions: list[str]) -> tuple[float, list[str]]:
-    covered: list[str] = []
-    for expected in expected_additions:
-        # A high lexical match means the structural gap is already present.
-        if jaccard(answer, expected) >= 0.45:
-            covered.append(expected)
+    covered = [
+        expected
+        for expected in expected_additions
+        if expected_is_covered(answer, expected)
+    ]
     if not expected_additions:
         return 1.0, covered
     return len(covered) / len(expected_additions), covered
