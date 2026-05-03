@@ -14,6 +14,8 @@ shadowseed = "shadowseed.cli:main"
 [project.optional-dependencies]
 models = [
   "sentence-transformers>=2.7",
+  "transformers>=4.40",
+  "torch>=2.2",
 ]
 test = [
   "pytest>=8.0",
