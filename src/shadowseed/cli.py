@@ -9,6 +9,7 @@ from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.run_types import RunType
+from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
 from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
 from shadowseed.benchmark.ssl45_gap_suite import run_ssl45_gap_suite
 
@@ -48,6 +49,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     fp.add_argument("--output", default="results/ssl45_false_positive_suite.json")
 
+    benefit = subparsers.add_parser("run-benefit-suite")
+    benefit.add_argument(
+        "--input",
+        default="src/shadowseed/data/ssl45_benefit_suite.json",
+    )
+    benefit.add_argument("--output", default="results/ssl45_benefit_suite.json")
+    benefit.add_argument("--turns", type=int, default=3)
+
     nlp = subparsers.add_parser("run-nlp-smoke")
     nlp.add_argument("--input", default="examples/local_absencebench_sample.json")
     nlp.add_argument("--output", default="results/absencebench_smoke.json")
@@ -83,6 +92,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run-false-positive-suite":
         path = run_ssl45_false_positive_suite(args.input, args.output)
+        print(path)
+        return 0
+
+    if args.command == "run-benefit-suite":
+        path = run_ssl45_benefit_suite(args.input, args.output, turns=args.turns)
         print(path)
         return 0
 
