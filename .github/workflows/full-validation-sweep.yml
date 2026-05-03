@@ -107,26 +107,119 @@ jobs:
     if: always()
     steps:
       - uses: actions/checkout@v4
-      - name: Build summary page
+      - name: Download sweep artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: sweep_artifacts
+      - name: Build compact summary page
         env:
           CORE_RESULT: ${{ needs.core.result }}
           VECTOR_RESULT: ${{ needs.vector-ssot.result }}
           SHA: ${{ github.sha }}
         run: |
-          cat > Full-Validation-Sweep.md <<EOF
-          # Full Validation Sweep
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
 
-          ## Conclusie
+          root = Path('sweep_artifacts')
 
-          | Onderdeel | Status |
-          |---|---|
-          | Core tests and SSL suites | ${CORE_RESULT} |
-          | Vector and SSOT backends | ${VECTOR_RESULT} |
+          def load(path):
+              try:
+                  return json.loads(Path(path).read_text(encoding='utf-8'))
+              except Exception:
+                  return None
 
-          ## Commit
+          def fmt(value):
+              if isinstance(value, float):
+                  return f'{value:.3f}'
+              if value is None:
+                  return 'n/a'
+              return str(value)
 
-          `${SHA}`
-          EOF
+          lines = [
+              '# Full Validation Sweep',
+              '',
+              '## Conclusie',
+              '',
+              '| Onderdeel | Status |',
+              '|---|---|',
+              f"| Core tests and SSL suites | {os.environ.get('CORE_RESULT')} |",
+              f"| Vector and SSOT backends | {os.environ.get('VECTOR_RESULT')} |",
+              '',
+              '## Compacte resultaten',
+              '',
+          ]
+
+          core_files = list(root.glob('full-sweep-core/*.json'))
+          if core_files:
+              lines.extend(['### Core JSON', '', '| Bestand | Belangrijkste summary |', '|---|---|'])
+              for file in sorted(core_files):
+                  data = load(file)
+                  summary = data.get('summary', data) if isinstance(data, dict) else {}
+                  if isinstance(summary, dict):
+                      keys = list(summary.keys())[:6]
+                      text = ', '.join(f'{k}: {fmt(summary.get(k))}' for k in keys)
+                  else:
+                      text = 'n/a'
+                  lines.append(f'| `{file.name}` | {text} |')
+              lines.append('')
+
+          backend_rows = []
+          for backend in ['memory', 'faiss', 'chroma']:
+              base = root / f'full-sweep-{backend}'
+              vector = load(base / 'vectorstore.json')
+              ssot = load(base / 'ssot.json')
+              retrieval = load(base / 'retrieval.json')
+              retrieval_model = load(base / 'retrieval_model.json')
+              backend_rows.append({
+                  'backend': backend,
+                  'vector_passed': (vector or {}).get('summary', {}).get('passed'),
+                  'ssot_passed': (ssot or {}).get('summary', {}).get('passed'),
+                  'hit': (retrieval or {}).get('metrics', {}).get('hit@k'),
+                  'avg_rank': (retrieval or {}).get('metrics', {}).get('avg_rank'),
+                  'baseline': (retrieval_model or {}).get('summary', {}).get('baseline_mean_gap_coverage'),
+                  'retrieval_cov': (retrieval_model or {}).get('summary', {}).get('retrieval_mean_gap_coverage'),
+                  'delta': (retrieval_model or {}).get('summary', {}).get('coverage_delta'),
+              })
+
+          lines.extend([
+              '### Backendvergelijking',
+              '',
+              '| Backend | Vector smoke | SSOT smoke | hit@k | avg rank | baseline coverage | retrieval coverage | delta |',
+              '|---|---:|---:|---:|---:|---:|---:|---:|',
+          ])
+          for row in backend_rows:
+              lines.append(
+                  f"| {row['backend']} | {fmt(row['vector_passed'])} | {fmt(row['ssot_passed'])} | {fmt(row['hit'])} | {fmt(row['avg_rank'])} | {fmt(row['baseline'])} | {fmt(row['retrieval_cov'])} | {fmt(row['delta'])} |"
+              )
+
+          best = None
+          valid = [row for row in backend_rows if isinstance(row.get('delta'), (int, float))]
+          if valid:
+              best = max(valid, key=lambda item: item['delta'])
+
+          lines.extend(['', '## Interpretatie', ''])
+          if best:
+              lines.append(f"De hoogste retrieval→model coverage-delta in deze sweep komt van `{best['backend']}` met delta `{fmt(best['delta'])}`.")
+          else:
+              lines.append('Er was nog geen bruikbare retrieval→model delta beschikbaar in de artifacts.')
+          lines.extend([
+              '',
+              'Artifacts blijven beschikbaar als zip. De belangrijkste JSON-resultaten uit de core-suite worden ook naar `results/latest/` in de repo geschreven, zodat je ze direct kunt openen en diffen.',
+              '',
+              '## Grens van de claim',
+              '',
+              'Deze tabel is een compacte run-samenvatting. Gebruik de raw JSON en de losse Wiki-pagina’s voor detailanalyse.',
+              '',
+              '## Commit',
+              '',
+              f"`{os.environ.get('SHA')}`",
+              '',
+          ])
+
+          Path('Full-Validation-Sweep.md').write_text('\n'.join(lines), encoding='utf-8')
+          PY
       - name: Upload summary artifact
         uses: actions/upload-artifact@v4
         with:
