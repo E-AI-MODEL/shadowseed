@@ -104,7 +104,7 @@ src/shadowseed/manager.py                         # SSLManager: trace, weight, V
 src/shadowseed/data/gap_test_suite_4_5.json       # canonieke SSL 4.5 Gap-Test Suite
 src/shadowseed/benchmark/ssl45_gap_suite.py       # evaluator voor de paper-test
 src/shadowseed/prompt_templates.py                # promptbibliotheek
-docs/01_framework.md                              # technische uitleg
+docs/results.md                                   # actuele benchmarkresultaten
 docs/README.md                                    # documentatie-index
 docs/EXPERIMENT.md                                # experimentopzet
 experiments/run_full.py                           # reproduceerbare run helper
@@ -112,14 +112,16 @@ experiments/run_full.py                           # reproduceerbare run helper
 
 ## Huidige onderzoeksstatus
 
-De repo is een research prototype. De huidige gratis evaluator vindt stabiel atomische gaps in scenario A en C, maar scenario B faalt nog en `promoted_hits` blijft 0. Dat betekent: detectie en scoring werken reproduceerbaar, maar het promotie-effect van de Validation Gate is nog niet overtuigend aangetoond.
+De repo is een research prototype. De actuele Gap-Test Suite-run scoort `mean_scenario_score = 2.00`, met `10` atomische hits en `10` promoted hits. Scenario A, B en C worden nu geraakt. Dit bewijst dat de huidige implementatie de ontworpen lifecycle uitvoert op deze suite; het is nog geen bewijs dat SSL 4.5 buiten deze kleine suite algemeen sterk is.
+
+Zie `docs/results.md` voor de volledige tabel en interpretatie.
 
 ## Wat dit niet claimt
 
 - geen nieuw foundation model
 - geen aanpassing van modelgewichten
 - geen claim dat SSL state-of-the-art is
-- geen bewezen promotie-effect in de huidige evaluator
+- geen bewijs buiten de huidige kleine Gap-Test Suite
 - geen verplichte LLM- of GPU-run
 
 ## Documentatie
@@ -127,6 +129,7 @@ De repo is een research prototype. De huidige gratis evaluator vindt stabiel ato
 Lees verder in:
 
 - `docs/README.md`
+- `docs/results.md`
 - `docs/01_framework.md`
 - `docs/02_atomic_seeds.md`
 - `docs/03_gap_test_suite.md`
