@@ -17,11 +17,20 @@ models = [
   "transformers>=4.40",
   "torch>=2.2",
 ]
+vector-faiss = [
+  "faiss-cpu>=1.8",
+]
+vector-chroma = [
+  "chromadb>=0.5",
+]
+vector = [
+  "shadowseed[vector-faiss,vector-chroma]",
+]
 test = [
   "pytest>=8.0",
 ]
 dev = [
-  "shadowseed[test,models]",
+  "shadowseed[test,models,vector]",
 ]
 
 [build-system]
