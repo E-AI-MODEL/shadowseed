@@ -17,6 +17,9 @@ models = [
   "transformers>=4.40",
   "torch>=2.2",
 ]
+paper = [
+  "pymupdf>=1.24",
+]
 vector-faiss = [
   "faiss-cpu>=1.8",
 ]
@@ -30,7 +33,7 @@ test = [
   "pytest>=8.0",
 ]
 dev = [
-  "shadowseed[test,models,vector]",
+  "shadowseed[test,models,vector,paper]",
 ]
 
 [build-system]
