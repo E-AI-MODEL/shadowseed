@@ -18,6 +18,9 @@ from shadowseed.benchmark.ssot_smoke import run_ssot_smoke
 from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
 
 
+VECTOR_BACKENDS = ["memory", "faiss", "chroma"]
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="shadowseed")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -78,9 +81,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     vectorstore = subparsers.add_parser("run-vectorstore-smoke")
     vectorstore.add_argument("--output", default="results/vectorstore_smoke.json")
+    vectorstore.add_argument("--backend", choices=VECTOR_BACKENDS, default="memory")
 
     ssot = subparsers.add_parser("run-ssot-smoke")
     ssot.add_argument("--output", default="results/ssot_smoke.json")
+    ssot.add_argument("--backend", choices=VECTOR_BACKENDS, default="memory")
 
     analyze = subparsers.add_parser("analyze-results")
     analyze.add_argument("--results-dir", default="results")
@@ -142,12 +147,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "run-vectorstore-smoke":
-        path = run_vectorstore_smoke(args.output)
+        path = run_vectorstore_smoke(args.output, backend=args.backend)
         print(path)
         return 0
 
     if args.command == "run-ssot-smoke":
-        path = run_ssot_smoke(args.output)
+        path = run_ssot_smoke(args.output, backend=args.backend)
         print(path)
         return 0
 
