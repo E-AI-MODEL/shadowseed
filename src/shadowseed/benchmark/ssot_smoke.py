@@ -9,7 +9,7 @@ from shadowseed.benchmark.ssl45_gap_suite import lexical_embedding
 from shadowseed.manager import SSLManager, SeedStatus
 from shadowseed.ssot import SSOTManager
 from shadowseed.vector_constellation import VectorConstellation
-from shadowseed.vectorstore import InMemoryVectorStore
+from shadowseed.vectorstore import create_vector_store
 
 
 SSOT_DOCUMENT = """
@@ -22,8 +22,8 @@ koopvoorwaarden kan invloed hebben op waar een geschil wordt behandeld.
 """.strip()
 
 
-def run_ssot_smoke(output_path: str) -> Path:
-    seed_constellation = VectorConstellation(InMemoryVectorStore())
+def run_ssot_smoke(output_path: str, backend: str = "memory") -> Path:
+    seed_constellation = VectorConstellation(create_vector_store(backend=backend, dimensions=128, collection_name="seed_smoke"))
     manager = SSLManager(
         embedding_fn=lexical_embedding,
         vector_constellation=seed_constellation,
@@ -31,7 +31,7 @@ def run_ssot_smoke(output_path: str) -> Path:
         promotion_threshold=0.5,
         validation_increment=0.2,
     )
-    ssot = SSOTManager(InMemoryVectorStore(), manager)
+    ssot = SSOTManager(create_vector_store(backend=backend, dimensions=128, collection_name="ssot_smoke"), manager)
 
     seed_text = "Toepasselijk recht bij een grensoverschrijdend consumentencontract."
     seed_id = manager.add_or_update_seed(seed_text, trigger_keywords=["toepasselijk", "recht"])
@@ -47,19 +47,21 @@ def run_ssot_smoke(output_path: str) -> Path:
         chunk_words=8,
     )
 
+    threshold = 0.10 if backend != "chroma" else 0.03
     retrieved_context = ssot.retrieve_context(
         "Welke regels gelden voor toepasselijk recht bij een Amerikaanse webwinkel?",
         top_k=3,
-        threshold=0.10,
+        threshold=threshold,
     )
     validations = ssot.validate_open_seeds_against_ssot(
-        threshold=0.10,
+        threshold=threshold,
         top_k=8,
         max_evidence_per_seed=4,
     )
     seed_after_ssot = manager.get_seed(seed_id).to_dict()
 
     summary = {
+        "backend": backend,
         "seed_id": seed_id,
         "doc_count": len(ssot.documents),
         "chunk_count": len(chunks),
