@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shadow Seed Learning 4.5 Dashboard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Shadow Seed Learning 4.5</p>
+          <h1>Visueel statusdashboard</h1>
+          <p class="subtitle">Vier hoofdchecks: systeem, model, veiligheid en paper-scenario’s.</p>
+        </div>
+        <div class="status-card" id="overall-status">Laden...</div>
+      </section>
+
+      <section class="grid four">
+        <article class="card" id="card-system">
+          <span class="label">1. Full System Check</span>
+          <h2>Volledige keten</h2>
+          <p>Core tests, SSOT, vectorstores, retrieval en model-fixture.</p>
+          <strong class="metric" data-field="system">n/a</strong>
+        </article>
+        <article class="card" id="card-model">
+          <span class="label">2. Model Reality Check</span>
+          <h2>Echt model</h2>
+          <p>HF/SLM run met baseline vs retrieval + SSOT.</p>
+          <strong class="metric" data-field="model">n/a</strong>
+        </article>
+        <article class="card" id="card-safety">
+          <span class="label">3. Safety Check</span>
+          <h2>Niet naïef</h2>
+          <p>Falsification: proposed en rejected chunks mogen geen waarheid worden.</p>
+          <strong class="metric" data-field="safety">n/a</strong>
+        </article>
+        <article class="card" id="card-paper">
+          <span class="label">4. Paper Scenario Benchmark</span>
+          <h2>Papers → scenario’s</h2>
+          <p>Optionele paper-derived benchmarkcases buiten de core.</p>
+          <strong class="metric" data-field="paper">n/a</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Backendvergelijking</h2>
+          <p>Memory, FAISS en Chroma naast elkaar.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Backend</th>
+                <th>Vector</th>
+                <th>SSOT</th>
+                <th>hit@k</th>
+                <th>avg rank</th>
+                <th>retrieval coverage</th>
+                <th>delta</th>
+              </tr>
+            </thead>
+            <tbody id="backend-table">
+              <tr><td colspan="7">Laden...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>SSL-flow</h2>
+          <p>De lijn die de repo test.</p>
+        </div>
+        <div class="flow">
+          <span>Vraag</span>
+          <span>Seed</span>
+          <span>Vectorstore</span>
+          <span>SSOT</span>
+          <span>Validation Gate</span>
+          <span>Retrieval</span>
+          <span>Modeloutput</span>
+          <span>Benchmark</span>
+        </div>
+      </section>
+
+      <section class="links">
+        <a href="https://github.com/E-AI-MODEL/shadowseed/actions">GitHub Actions</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki">Wiki</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/tree/main/results/latest">Raw JSON</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed">Repo</a>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>
