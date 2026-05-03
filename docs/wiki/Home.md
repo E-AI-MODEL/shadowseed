@@ -25,6 +25,7 @@ Deze pagina legt in gewone taal uit:
 - [Start hier](Start-Hier) — eenvoudige instap en leesroute
 - [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage) — printbaar dossier
 - [Visueel verhaal SSL 4.5](Visueel-Verhaal) — compacte uitleg met diagrammen
+- [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is) — veiligheid, Gate en falsificatie
 
 ## Technische verdieping
 
@@ -47,6 +48,8 @@ Deze pagina's worden deels of volledig door GitHub Actions bijgewerkt:
 - [SLM First Conclusion](SLM-First-Conclusion)
 - [Vectorstore Smoke](Vectorstore-Smoke)
 - [SSOT Smoke](SSOT-Smoke)
+- [SSOT Falsification](SSOT-Falsification)
+- [Full Validation Sweep](Full-Validation-Sweep)
 - [Backend Comparison](Backend-Comparison)
 - [Retrieval-Comparison](Retrieval-Comparison)
 - [Retrieval Model Comparison](Retrieval-Model-Comparison)
