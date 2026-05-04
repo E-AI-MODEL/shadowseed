@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: ["tests"]
     types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -18,7 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.event == 'push'
+      )
 
     steps:
       - uses: actions/checkout@v4
@@ -41,12 +46,12 @@ jobs:
           set -euo pipefail
           mkdir -p downloaded-artifacts
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            RUN_ID=$(gh run list --workflow tests.yml --branch main --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+            RUN_ID=$(gh run list --workflow tests.yml --branch main --event push --status success --limit 1 --json databaseId --jq '.[0].databaseId')
           else
             RUN_ID="$WORKFLOW_RUN_ID"
           fi
           if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
-            echo "No successful tests run found."
+            echo "No successful trusted tests push run found."
             exit 1
           fi
           echo "Downloading artifacts from tests run $RUN_ID"
