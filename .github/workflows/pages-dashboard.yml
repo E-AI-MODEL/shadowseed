@@ -1,11 +1,6 @@
-name: Deploy Dashboard
+name: Deploy Dashboard (manual fallback)
 
 on:
-  push:
-    paths:
-      - "site/**"
-      - "results/**"
-      - ".github/workflows/pages-dashboard.yml"
   workflow_dispatch:
 
 permissions:
@@ -18,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare site
+      - name: Prepare site from repository files
         run: |
           mkdir -p _site
           cp -r site/* _site/
