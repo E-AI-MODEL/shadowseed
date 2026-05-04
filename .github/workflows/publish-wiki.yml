@@ -1,4 +1,4 @@
-name: Publish Wiki
+name: Publiceer alleen statische Wiki-pagina's
 
 on:
   workflow_dispatch:
@@ -13,13 +13,13 @@ permissions:
 
 jobs:
   publish-wiki:
-    name: Publish static wiki pages
+    name: "Docs-only: werk vaste Wiki-pagina's bij"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish docs/wiki to GitHub Wiki
+      - name: Publiceer alleen docs/wiki naar GitHub Wiki
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
