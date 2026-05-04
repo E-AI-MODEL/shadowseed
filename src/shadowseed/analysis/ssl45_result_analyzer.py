@@ -1,15 +1,4 @@
-"""Result analyzer for SSL 4.5 benchmark artifacts.
-
-The analyzer reads benchmark JSON files and writes:
-
-- a markdown report;
-- a machine-readable summary JSON;
-- simple SVG charts;
-- a semantic seed summary grouped by scenario and domain;
-- a result-based conclusion.
-
-It intentionally avoids heavy plotting dependencies so it can run in CI.
-"""
+"""Result analyzer for SSL 4.5 benchmark artifacts."""
 
 from __future__ import annotations
 
@@ -30,6 +19,23 @@ def load_json(path: str | Path) -> ResultDict | None:
     return json.loads(file_path.read_text(encoding="utf-8"))
 
 
+def load_turn_matrix(source: Path) -> list[ResultDict]:
+    rows = []
+    for path in sorted(source.glob("ssl45_gap_suite_turns_*.json")):
+        payload = load_json(path)
+        if not payload:
+            continue
+        turns_match = re.search(r"turns_(\d+)\.json$", path.name)
+        rows.append(
+            {
+                "turns": int(turns_match.group(1)) if turns_match else None,
+                "file": path.name,
+                "summary": payload.get("summary", {}),
+            }
+        )
+    return rows
+
+
 def words(text: str) -> list[str]:
     return re.findall(r"[A-Za-zÀ-ÿ0-9_]+", text.lower())
 
@@ -42,7 +48,7 @@ def short_number(value: float | int | None) -> str:
     return f"{value:.2f}"
 
 
-def metric(payload: ResultDict | None, key: str, default: float | int | None = None) -> float | int | None:
+def metric(payload: ResultDict | None, key: str, default: float | int | str | None = None):
     if not payload:
         return default
     return payload.get("summary", {}).get(key, default)
@@ -93,7 +99,7 @@ def semantic_seed_summary(payloads: list[ResultDict | None]) -> dict[str, Any]:
         token_counter.update(token for token in words(row["seed"]) if token not in stop and len(token) > 2)
 
     return {
-        "promoted_seed_count": len(seeds),
+        "promoted_seed_mentions": len(seeds),
         "by_domain": dict(by_domain),
         "by_scenario": dict(by_scenario),
         "top_terms": token_counter.most_common(12),
@@ -105,6 +111,7 @@ def build_conclusion(
     false_positive_payload: ResultDict | None,
     benefit_payload: ResultDict | None,
     model_benefit_payload: ResultDict | None,
+    blind_payload: ResultDict | None,
 ) -> dict[str, Any]:
     """Build a cautious conclusion from the available result summaries."""
     gap_score = float(metric(gap_payload, "mean_scenario_score", 0.0) or 0.0)
@@ -114,6 +121,8 @@ def build_conclusion(
     model_delta = float(metric(model_benefit_payload, "coverage_delta", 0.0) or 0.0)
     unsupported_rate = float(metric(model_benefit_payload, "unsupported_ssl_addition_rate", 0.0) or 0.0)
     length_delta = float(metric(model_benefit_payload, "mean_answer_length_delta_words", 0.0) or 0.0)
+    blind_delta = float(metric(blind_payload, "mean_coverage_delta", 0.0) or 0.0)
+    blind_fp = int(metric(blind_payload, "total_false_positive_count", 0) or 0)
     backend = str(metric(model_benefit_payload, "backend", "unknown"))
     is_real_model = backend.startswith("hf-transformers:")
 
@@ -173,6 +182,12 @@ def build_conclusion(
     else:
         support.append("De benefit-suite laat nog geen coverage-winst zien.")
 
+    if blind_payload:
+        if blind_delta > 0 and blind_fp == 0:
+            support.append("De blinde smoke-test vindt verborgen labels zonder extra false positives in deze kleine set.")
+        else:
+            support.append("De blinde smoke-test is aanwezig, maar vraagt nog controle op coverage en false positives.")
+
     if length_delta > 0:
         support.append(
             "De SSL-antwoorden zijn langer; daarom moet coverage-winst samen met lengtecorrectie en unsupported additions worden gelezen."
@@ -191,6 +206,8 @@ def build_conclusion(
             "benefit_coverage_delta": benefit_delta,
             "model_benefit_coverage_delta": model_delta,
             "model_unsupported_ssl_addition_rate": unsupported_rate,
+            "blind_coverage_delta": blind_delta,
+            "blind_false_positive_count": blind_fp,
             "mean_answer_length_delta_words": length_delta,
         },
         "supporting_observations": support,
@@ -242,11 +259,24 @@ def escape_xml(text: str) -> str:
     )
 
 
+def add_optional_summary_rows(lines: list[str], payload: ResultDict | None, rows: list[tuple[str, str]]) -> None:
+    if not payload:
+        return
+    for label, key in rows:
+        lines.append(f"| {label} | {short_number(metric(payload, key))} |")
+
+
 def make_markdown_report(
     gap_payload: ResultDict | None,
     false_positive_payload: ResultDict | None,
     benefit_payload: ResultDict | None,
     model_benefit_payload: ResultDict | None,
+    blind_payload: ResultDict | None,
+    retrieval_payload: ResultDict | None,
+    retrieval_model_payload: ResultDict | None,
+    ssot_payload: ResultDict | None,
+    vectorstore_payload: ResultDict | None,
+    turn_matrix: list[ResultDict],
     semantic: dict[str, Any],
     conclusion: dict[str, Any],
 ) -> str:
@@ -277,14 +307,37 @@ def make_markdown_report(
             "",
             "| Suite | Belangrijkste uitkomst |",
             "|---|---:|",
-            f"| Gap-Test Suite mean score | {short_number(metric(gap_payload, 'mean_scenario_score'))} |",
-            f"| Gap-Test Suite promoted hits | {short_number(metric(gap_payload, 'promoted_hits'))} |",
+            f"| Gap Finder mean score | {short_number(metric(gap_payload, 'mean_scenario_score'))} |",
+            f"| Gap Finder promoted hits | {short_number(metric(gap_payload, 'promoted_hits'))} |",
             f"| False-positive promoted rate | {short_number(metric(false_positive_payload, 'promoted_false_positive_rate'))} |",
-            f"| Benefit coverage delta | {short_number(metric(benefit_payload, 'coverage_delta'))} |",
-            f"| Model benefit backend | {metric(model_benefit_payload, 'backend', 'n/a')} |",
-            f"| Model benefit coverage delta | {short_number(metric(model_benefit_payload, 'coverage_delta'))} |",
-            f"| Model benefit unsupported rate | {short_number(metric(model_benefit_payload, 'unsupported_ssl_addition_rate'))} |",
+            f"| Antwoordwinst coverage delta | {short_number(metric(benefit_payload, 'coverage_delta'))} |",
+            f"| Model smoke backend | {metric(model_benefit_payload, 'backend', 'n/a')} |",
+            f"| Model smoke coverage delta | {short_number(metric(model_benefit_payload, 'coverage_delta'))} |",
+            f"| Model smoke unsupported rate | {short_number(metric(model_benefit_payload, 'unsupported_ssl_addition_rate'))} |",
+            f"| Blinde smoke coverage delta | {short_number(metric(blind_payload, 'mean_coverage_delta'))} |",
+            f"| Blinde smoke false positives | {short_number(metric(blind_payload, 'total_false_positive_count'))} |",
             f"| Mean answer length delta | {short_number(metric(model_benefit_payload, 'mean_answer_length_delta_words'))} |",
+        ]
+    )
+    add_optional_summary_rows(
+        lines,
+        retrieval_model_payload,
+        [
+            ("Retrieval model baseline coverage", "baseline_mean_gap_coverage"),
+            ("Retrieval model with context coverage", "retrieval_mean_gap_coverage"),
+            ("Retrieval model coverage delta", "coverage_delta"),
+        ],
+    )
+    if retrieval_payload:
+        metrics = retrieval_payload.get("metrics", {})
+        lines.append(f"| Retrieval hit@k | {short_number(metrics.get('hit@k'))} |")
+    if ssot_payload:
+        lines.append(f"| SSOT smoke passed | {metric(ssot_payload, 'passed', 'n/a')} |")
+    if vectorstore_payload:
+        lines.append(f"| Vectorstore smoke passed | {metric(vectorstore_payload, 'passed', 'n/a')} |")
+
+    lines.extend(
+        [
             "",
             "## Grafieken",
             "",
@@ -292,9 +345,28 @@ def make_markdown_report(
             "",
             "![False positives](false_positive.svg)",
             "",
+            "## Herhalingstest",
+            "",
+        ]
+    )
+    if turn_matrix:
+        lines.extend(["| Rondes | Mean score | Promoted hits |", "|---:|---:|---:|"])
+        for row in turn_matrix:
+            summary = row.get("summary", {})
+            lines.append(
+                f"| {row.get('turns', 'n/a')} | {short_number(summary.get('mean_scenario_score'))} | {short_number(summary.get('promoted_hits'))} |"
+            )
+    else:
+        lines.append("Geen turn-matrix artifact gevonden.")
+
+    lines.extend(
+        [
+            "",
             "## Semantische seed-samenvatting",
             "",
-            f"Aantal promoted seeds in geanalyseerde positieve outputs: **{semantic['promoted_seed_count']}**.",
+            f"Aantal promoted seed-vermeldingen in geanalyseerde positieve outputs: **{semantic['promoted_seed_mentions']}**.",
+            "",
+            "Let op: dit zijn vermeldingen, geen unieke seeds. Dezelfde seed kan in meerdere suites terugkomen.",
             "",
             "### Toptermen",
             "",
@@ -317,11 +389,13 @@ def make_markdown_report(
         [
             "## Interpretatie",
             "",
-            "Deze analyse scheidt drie dingen:",
+            "Deze analyse scheidt vijf dingen:",
             "",
             "1. of SSL de juiste gaps vindt;",
             "2. of SSL geen false positives promoot;",
-            "3. of SSL-guided antwoorden meer gevalideerde gap coverage krijgen dan baseline-antwoorden.",
+            "3. of SSL-guided antwoorden meer gevalideerde gap coverage krijgen dan baseline-antwoorden;",
+            "4. of de blinde smoke-test labels gescheiden houdt van detectie;",
+            "5. of herhaalde rondes het gedrag veranderen.",
             "",
             "Een positief resultaat betekent dus niet automatisch dat SSL algemeen werkt. Het betekent dat de gemeten suite beter scoort onder de vastgelegde voorwaarden.",
         ]
@@ -341,9 +415,16 @@ def analyze_results(
     false_positive = load_json(source / "ssl45_false_positive_suite.json")
     benefit = load_json(source / "ssl45_benefit_suite.json")
     model_benefit = load_json(source / "ssl45_model_benefit_suite.json")
+    blind = load_json(source / "blind_benchmark.json")
+    retrieval = load_json(source / "retrieval_benchmark.json")
+    retrieval_model = load_json(source / "retrieval_model_benchmark.json")
+    ssot = load_json(source / "ssot_smoke.json")
+    vectorstore = load_json(source / "vectorstore_smoke.json")
+    manifest = load_json(source / "manifest.json")
+    turn_matrix = load_turn_matrix(source)
 
     semantic = semantic_seed_summary([gap, benefit, model_benefit])
-    conclusion = build_conclusion(gap, false_positive, benefit, model_benefit)
+    conclusion = build_conclusion(gap, false_positive, benefit, model_benefit, blind)
 
     coverage_values = {
         "Gap mean score": float(metric(gap, "mean_scenario_score", 0.0) or 0.0),
@@ -351,11 +432,13 @@ def analyze_results(
         "Benefit SSL": float(metric(benefit, "ssl_mean_gap_coverage", 0.0) or 0.0),
         "Model baseline": float(metric(model_benefit, "baseline_mean_gap_coverage", 0.0) or 0.0),
         "Model SSL": float(metric(model_benefit, "ssl_mean_gap_coverage", 0.0) or 0.0),
+        "Blind SSL": float(metric(blind, "mean_ssl_gap_coverage", 0.0) or 0.0),
     }
     false_positive_values = {
         "Candidate FP rate": float(metric(false_positive, "candidate_false_positive_rate", 0.0) or 0.0),
         "Promoted FP rate": float(metric(false_positive, "promoted_false_positive_rate", 0.0) or 0.0),
         "Model unsupported rate": float(metric(model_benefit, "unsupported_ssl_addition_rate", 0.0) or 0.0),
+        "Blind FP count": float(metric(blind, "total_false_positive_count", 0.0) or 0.0),
     }
 
     svg_bar_chart("Coverage metrics", coverage_values, output / "coverage.svg")
@@ -366,6 +449,13 @@ def analyze_results(
         "false_positive": false_positive.get("summary") if false_positive else None,
         "benefit": benefit.get("summary") if benefit else None,
         "model_benefit": model_benefit.get("summary") if model_benefit else None,
+        "blind": blind.get("summary") if blind else None,
+        "retrieval": retrieval.get("metrics") if retrieval else None,
+        "retrieval_model": retrieval_model.get("summary") if retrieval_model else None,
+        "ssot": ssot.get("summary") if ssot else None,
+        "vectorstore": vectorstore.get("summary") if vectorstore else None,
+        "turn_matrix": turn_matrix,
+        "manifest": manifest,
         "semantic": semantic,
         "conclusion": conclusion,
         "charts": ["coverage.svg", "false_positive.svg"],
@@ -375,7 +465,20 @@ def analyze_results(
         encoding="utf-8",
     )
     (output / "analysis_report.md").write_text(
-        make_markdown_report(gap, false_positive, benefit, model_benefit, semantic, conclusion),
+        make_markdown_report(
+            gap,
+            false_positive,
+            benefit,
+            model_benefit,
+            blind,
+            retrieval,
+            retrieval_model,
+            ssot,
+            vectorstore,
+            turn_matrix,
+            semantic,
+            conclusion,
+        ),
         encoding="utf-8",
     )
     return output / "analysis_report.md"
