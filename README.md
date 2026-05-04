@@ -72,7 +72,7 @@ De standaardworkflow heet **Checks en benchmark-resultaten**. De runnamen zijn g
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? |
 | 09 Herhalingstest | Wat gebeurt er bij meer SSL-rondes? |
 
-Na een geslaagde push naar `main` publiceert **Publish Test Results** de laatste artifacts naar Wiki en Pages. PR-runs worden niet gepubliceerd.
+Na een geslaagde push naar `main` publiceert **Publiceer testresultaten naar Wiki en Pages** de laatste artifacts naar Wiki en Pages. PR-runs worden niet gepubliceerd.
 
 ## Resultaten
 
