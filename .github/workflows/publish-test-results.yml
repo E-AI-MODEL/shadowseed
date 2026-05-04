@@ -50,6 +50,7 @@ jobs:
             exit 1
           fi
           echo "Downloading artifacts from tests run $RUN_ID"
+          echo "TEST_RUN_ID=$RUN_ID" >> "$GITHUB_ENV"
           gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --dir downloaded-artifacts
 
       - name: Build latest results folder
@@ -59,22 +60,74 @@ jobs:
           mkdir -p results/latest results/artifacts
           cp -R downloaded-artifacts/. results/artifacts/
 
-          find downloaded-artifacts -type f -name '*.json' -print | while read -r file; do
-            base=$(basename "$file")
-            cp "$file" "results/latest/$base"
-          done
+          python - <<'PY'
+          from __future__ import annotations
 
-          find downloaded-artifacts -type f \( -name '*.md' -o -name '*.svg' \) -print | while read -r file; do
-            base=$(basename "$file")
-            cp "$file" "results/latest/$base"
-          done
+          import json
+          import os
+          import re
+          import shutil
+          from pathlib import Path
+
+          source = Path("downloaded-artifacts")
+          latest = Path("results/latest")
+          latest.mkdir(parents=True, exist_ok=True)
+
+          allowed_suffixes = {".json", ".md", ".svg"}
+          manifest = {
+              "source_workflow": "tests",
+              "source_run_id": os.environ.get("TEST_RUN_ID"),
+              "repository": os.environ.get("GITHUB_REPOSITORY"),
+              "copied_files": [],
+          }
+          used_names: set[str] = set()
+
+          def safe_name(value: str) -> str:
+              cleaned = re.sub(r"[^A-Za-z0-9_.-]+", "-", value).strip("-")
+              return cleaned or "artifact"
+
+          for file_path in sorted(path for path in source.rglob("*") if path.is_file()):
+              if file_path.suffix.lower() not in allowed_suffixes:
+                  continue
+              relative = file_path.relative_to(source)
+              artifact = relative.parts[0] if relative.parts else "artifact"
+              base = file_path.name
+              target_name = base
+              if target_name in used_names:
+                  target_name = f"{safe_name(artifact)}__{base}"
+              counter = 2
+              while target_name in used_names:
+                  stem = Path(base).stem
+                  suffix = Path(base).suffix
+                  target_name = f"{safe_name(artifact)}__{stem}_{counter}{suffix}"
+                  counter += 1
+              used_names.add(target_name)
+              target = latest / target_name
+              shutil.copy2(file_path, target)
+              manifest["copied_files"].append(
+                  {
+                      "artifact": artifact,
+                      "source_path": str(relative),
+                      "latest_path": str(target.relative_to(latest.parent)),
+                      "original_artifact_path": str(Path("results/artifacts") / relative),
+                      "bytes": file_path.stat().st_size,
+                  }
+              )
+
+          (latest / "manifest.json").write_text(
+              json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+          PY
 
           cat > results/latest/README.md <<'MD'
           # Latest test artifacts
 
           Deze map is opgebouwd uit de meest recente geslaagde `tests` workflow-run.
 
-          De map bevat de JSON-, Markdown- en SVG-bestanden uit alle test-artifacts die door de workflow zijn geupload. Gebruik `results/artifacts/` voor de originele artifactstructuur.
+          De map bevat een platte kopie van de belangrijkste JSON-, Markdown- en SVG-bestanden uit de test-artifacts. Gebruik `manifest.json` om te zien uit welk artifact elk bestand komt.
+
+          Bij dubbele bestandsnamen krijgt het latere bestand een prefix met de artifactnaam. De originele artifactstructuur blijft behouden in `results/artifacts/`.
           MD
 
       - name: Regenerate combined analysis from gathered outputs
@@ -117,10 +170,11 @@ jobs:
 
           - [SSL 4.5 Analysis](SSL-45-Analysis)
           - [SSL 4.5 Analysis Summary JSON](SSL-45-Analysis-Summary)
+          - `results/latest/manifest.json`
           - `results/latest/`
           - `results/artifacts/`
 
-          De `results/artifacts/` map bewaart de originele artifactstructuur. De `results/latest/` map bevat een platte kopie van de belangrijkste JSON-, Markdown- en SVG-bestanden.
+          `results/latest/manifest.json` laat zien uit welk artifact elk gepubliceerd bestand komt. De `results/artifacts/` map bewaart de originele artifactstructuur.
           MD
           cd wiki
           git config user.name "github-actions[bot]"
