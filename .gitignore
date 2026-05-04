@@ -9,3 +9,4 @@ build/
 dist/
 runs/
 benchmarks/results/*.json
+benchmarks/private/
