@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   pytest:
@@ -176,37 +176,6 @@ jobs:
           name: ssl45-analysis-report
           path: results/analysis
           if-no-files-found: error
-
-      - name: Publish analysis to GitHub Wiki
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
-          SHA: ${{ github.sha }}
-        run: |
-          set -e
-          WIKI_URL="https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.wiki.git"
-          if ! git clone "$WIKI_URL" wiki; then
-            echo "Wiki repo not available. Enable Wiki in repo settings and create the first page once."
-            exit 0
-          fi
-          cp results/analysis/analysis_report.md wiki/SSL-45-Analysis.md
-          cp results/analysis/analysis_summary.json wiki/SSL-45-Analysis-Summary.json
-          cp results/analysis/coverage.svg wiki/coverage.svg
-          cp results/analysis/false_positive.svg wiki/false_positive.svg
-          if [ ! -f wiki/Home.md ]; then
-            printf '# Shadow Seed Learning 4.5\n\n- [SSL 4.5 Analysis](SSL-45-Analysis)\n- [SSL 4.5 Analysis Summary JSON](SSL-45-Analysis-Summary)\n' > wiki/Home.md
-          fi
-          cd wiki
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Home.md SSL-45-Analysis.md SSL-45-Analysis-Summary.json coverage.svg false_positive.svg
-          if git diff --cached --quiet; then
-            echo "No wiki changes."
-          else
-            git commit -m "Update SSL 4.5 analysis wiki (${SHA})"
-            git push
-          fi
 
   nlp-smoke:
     name: NLP AbsenceBench smoke
