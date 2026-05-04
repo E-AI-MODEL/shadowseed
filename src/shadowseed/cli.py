@@ -8,6 +8,7 @@ from shadowseed.analysis.ssl45_result_analyzer import analyze_results
 from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
+from shadowseed.benchmark.blind.runner import run_blind_benchmark
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
 from shadowseed.benchmark.retrieval_model_benchmark import run_retrieval_model_benchmark
@@ -81,6 +82,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
     model_benefit.add_argument("--model-id", default=None)
     model_benefit.add_argument("--max-new-tokens", type=int, default=220)
+
+    blind = subparsers.add_parser("run-blind-benchmark")
+    blind.add_argument(
+        "--input",
+        default="src/shadowseed/data/blind_suite_public.json",
+        help="Publieke scenario's zonder evaluator-labels.",
+    )
+    blind.add_argument(
+        "--labels",
+        required=True,
+        help="Privébestand met expected_gaps en must_not_add labels.",
+    )
+    blind.add_argument("--output", default="results/blind_benchmark.json")
+    blind.add_argument("--turns", type=int, default=3)
+    blind.add_argument("--max-seeds", type=int, default=5)
 
     vectorstore = subparsers.add_parser("run-vectorstore-smoke")
     vectorstore.add_argument("--output", default="results/vectorstore_smoke.json")
@@ -161,6 +177,17 @@ def main(argv: list[str] | None = None) -> int:
             backend=args.backend,
             model_id=args.model_id,
             max_new_tokens=args.max_new_tokens,
+        )
+        print(path)
+        return 0
+
+    if args.command == "run-blind-benchmark":
+        path = run_blind_benchmark(
+            args.input,
+            args.labels,
+            args.output,
+            turns=args.turns,
+            max_seeds=args.max_seeds,
         )
         print(path)
         return 0
