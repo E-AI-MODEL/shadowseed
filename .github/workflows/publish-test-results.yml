@@ -1,8 +1,8 @@
-name: Publish Test Results
+name: Publiceer testresultaten naar Wiki en Pages
 
 on:
   workflow_run:
-    workflows: ["tests"]
+    workflows: ["Checks en benchmark-resultaten"]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   publish:
-    name: Publish latest benchmark outputs
+    name: "Publicatie: verzamel artifacts en werk Wiki + Pages bij"
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'workflow_dispatch' ||
@@ -32,12 +32,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install deps
+      - name: Installeer pakket
         run: |
           python -m pip install --upgrade pip
           pip install -e .
 
-      - name: Download artifacts from latest tests run
+      - name: Download artifacts uit laatste standaardrun
         env:
           GH_TOKEN: ${{ github.token }}
           WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
@@ -58,7 +58,7 @@ jobs:
           echo "TEST_RUN_ID=$RUN_ID" >> "$GITHUB_ENV"
           gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --dir downloaded-artifacts
 
-      - name: Build latest results folder
+      - name: Bouw results/latest en manifest
         run: |
           set -euo pipefail
           rm -rf results/latest results/artifacts
@@ -80,7 +80,7 @@ jobs:
 
           allowed_suffixes = {".json", ".md", ".svg"}
           manifest = {
-              "source_workflow": "tests",
+              "source_workflow": "Checks en benchmark-resultaten",
               "source_run_id": os.environ.get("TEST_RUN_ID"),
               "repository": os.environ.get("GITHUB_REPOSITORY"),
               "copied_files": [],
@@ -128,14 +128,14 @@ jobs:
           cat > results/latest/README.md <<'MD'
           # Latest test artifacts
 
-          Deze map is opgebouwd uit de meest recente geslaagde `tests` workflow-run.
+          Deze map is opgebouwd uit de meest recente geslaagde standaardrun `Checks en benchmark-resultaten`.
 
           De map bevat een platte kopie van de belangrijkste JSON-, Markdown- en SVG-bestanden uit de test-artifacts. Gebruik `manifest.json` om te zien uit welk artifact elk bestand komt.
 
           Bij dubbele bestandsnamen krijgt het latere bestand een prefix met de artifactnaam. De originele artifactstructuur blijft behouden in `results/artifacts/`.
           MD
 
-      - name: Regenerate combined analysis from gathered outputs
+      - name: Maak centraal analyserapport
         run: |
           set -euo pipefail
           python -m shadowseed.cli analyze-results \
@@ -146,7 +146,7 @@ jobs:
           cp results/latest/analysis/coverage.svg results/latest/coverage.svg
           cp results/latest/analysis/false_positive.svg results/latest/false_positive.svg
 
-      - name: Publish results to GitHub Wiki
+      - name: Publiceer naar GitHub Wiki
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
@@ -169,7 +169,7 @@ jobs:
           cat > wiki/Latest-Test-Results.md <<'MD'
           # Latest Test Results
 
-          Deze pagina wordt automatisch bijgewerkt na een geslaagde `tests` workflow-run op `main`.
+          Deze pagina wordt automatisch bijgewerkt na een geslaagde standaardrun op `main`.
 
           Belangrijkste bestanden:
 
@@ -192,7 +192,7 @@ jobs:
             git push
           fi
 
-      - name: Prepare Pages site
+      - name: Bouw Pages-dashboard
         run: |
           set -euo pipefail
           rm -rf _site
@@ -205,6 +205,6 @@ jobs:
         with:
           path: _site
 
-      - name: Deploy Pages
+      - name: Zet dashboard live op GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
