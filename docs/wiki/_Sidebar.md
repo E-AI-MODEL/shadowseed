@@ -1,6 +1,8 @@
 ## Start
 
 - [Start hier](Start-Hier)
+- [Dashboard](Dashboard)
+- [Latest Test Results](Latest-Test-Results)
 
 ## Overzicht
 
@@ -14,22 +16,21 @@
 
 ## Techniek
 
+- [Benchmarks](Benchmarks)
+- [Blind Benchmark](Blind-Benchmark)
 - [Vectorstore en gewichtloze seeds](Vectorstore-en-Gewichtloze-Seeds)
 - [SSOT en documentvalidatie](SSOT-en-Documentvalidatie)
-- [Benchmarks](Benchmarks)
 - [SLM runs](SLM-Runs)
 
 ## Resultaten
 
+- [Latest Test Results](Latest-Test-Results)
 - [SSL 4.5 Analysis](SSL-45-Analysis)
-- [SLM Model Benefit](SLM-Model-Benefit)
-- [SLM First Conclusion](SLM-First-Conclusion)
-- [Vectorstore Smoke](Vectorstore-Smoke)
-- [SSOT Smoke](SSOT-Smoke)
+- [SSL 4.5 Analysis Summary](SSL-45-Analysis-Summary)
+- [Retrieval Model HF](Retrieval-Model-HF)
 - [Backend Comparison](Backend-Comparison)
 - [Retrieval-Comparison](Retrieval-Comparison)
 - [Retrieval Model Comparison](Retrieval-Model-Comparison)
-- [Retrieval Model HF](Retrieval-Model-HF)
 
 ## Overig
 
