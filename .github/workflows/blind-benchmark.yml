@@ -1,12 +1,11 @@
-name: blind-benchmark
+name: Blind test handmatig
 
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   blind-benchmark-smoke:
-    name: Blind benchmark smoke
+    name: "Blind test: labels blijven verborgen tot scoring"
     runs-on: ubuntu-latest
 
     steps:
@@ -16,12 +15,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install deps
+      - name: Installeer test-dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[test]"
 
-      - name: Create private smoke labels outside tracked data
+      - name: Maak tijdelijke private labels buiten de repo
         run: |
           mkdir -p benchmarks/private
           cat > benchmarks/private/blind_suite_labels.smoke.json <<'JSON'
@@ -81,7 +80,7 @@ jobs:
           }
           JSON
 
-      - name: Run blind benchmark
+      - name: Draai blinde benchmark
         run: |
           python -m shadowseed.cli run-blind-benchmark \
             --input src/shadowseed/data/blind_suite_public.json \
@@ -89,9 +88,9 @@ jobs:
             --output results/blind_benchmark.json \
             --turns 3
 
-      - name: Upload blind benchmark result
+      - name: Upload blinde benchmark resultaten
         uses: actions/upload-artifact@v4
         with:
-          name: blind-benchmark-results
+          name: manual-blind-benchmark-results
           path: results/blind_benchmark.json
           if-no-files-found: error
