@@ -27,6 +27,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
@@ -145,6 +147,19 @@ jobs:
           cp results/latest/analysis/analysis_report.md results/latest/analysis_report.md
           cp results/latest/analysis/coverage.svg results/latest/coverage.svg
           cp results/latest/analysis/false_positive.svg results/latest/false_positive.svg
+
+      - name: Commit results/latest terug naar main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/latest
+          if git diff --cached --quiet; then
+            echo "No results/latest changes."
+          else
+            git commit -m "Update latest test results [skip ci]"
+            git push origin HEAD:main
+          fi
 
       - name: Publiceer naar GitHub Wiki
         env:
