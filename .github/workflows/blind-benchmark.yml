@@ -1,0 +1,97 @@
+name: blind-benchmark
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  blind-benchmark-smoke:
+    name: Blind benchmark smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Create private smoke labels outside tracked data
+        run: |
+          mkdir -p benchmarks/private
+          cat > benchmarks/private/blind_suite_labels.smoke.json <<'JSON'
+          {
+            "version": "blind-0.1-smoke-labels",
+            "labels": [
+              {
+                "id": "BLIND_HIST_001",
+                "expected_gaps": [
+                  "Koloniale of internationale afhankelijkheden in de economische uitleg."
+                ],
+                "must_not_add": [
+                  "Onbewezen directe oorzaak zonder bron."
+                ]
+              },
+              {
+                "id": "BLIND_LAW_001",
+                "expected_gaps": [
+                  "Rechtsbevoegdheid bij partijen uit verschillende landen.",
+                  "Toepasselijk recht bij grensoverschrijdende afspraken."
+                ],
+                "must_not_add": [
+                  "Automatische strafrechtelijke aansprakelijkheid van de aanbieder."
+                ]
+              },
+              {
+                "id": "BLIND_ARCH_001",
+                "expected_gaps": [
+                  "Privacyrisico bij verwerking van gevoelige gebruikersdata.",
+                  "Misbruikbeperking op publieke API-endpoints."
+                ],
+                "must_not_add": [
+                  "Verplichte blockchainopslag voor medische data."
+                ]
+              },
+              {
+                "id": "BLIND_ETH_001",
+                "expected_gaps": [
+                  "Geïnformeerde toestemming van betrokken personen.",
+                  "Privacybescherming bij medische gegevensverwerking."
+                ],
+                "must_not_add": [
+                  "Toestemming is nooit nodig bij medisch onderzoek."
+                ]
+              },
+              {
+                "id": "BLIND_EDU_001",
+                "expected_gaps": [
+                  "Effect op kansengelijkheid tussen verschillende leerlinggroepen.",
+                  "Werkdruk voor docenten bij uitvoering van het beleid."
+                ],
+                "must_not_add": [
+                  "Alle leerlingen halen automatisch hogere cijfers."
+                ]
+              }
+            ]
+          }
+          JSON
+
+      - name: Run blind benchmark
+        run: |
+          python -m shadowseed.cli run-blind-benchmark \
+            --input src/shadowseed/data/blind_suite_public.json \
+            --labels benchmarks/private/blind_suite_labels.smoke.json \
+            --output results/blind_benchmark.json \
+            --turns 3
+
+      - name: Upload blind benchmark result
+        uses: actions/upload-artifact@v4
+        with:
+          name: blind-benchmark-results
+          path: results/blind_benchmark.json
+          if-no-files-found: error
