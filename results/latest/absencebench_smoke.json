@@ -1,0 +1,160 @@
+{
+  "benchmark_name": "AbsenceBench",
+  "run_type": "benchmarkscan",
+  "execution_status": "benchmarkscan",
+  "ssl_input_basis": [
+    "shadowseed-manager",
+    "local-json-or-hf-sample"
+  ],
+  "host_platform": "local",
+  "dataset_status": "lokaal",
+  "runner_status": "baseline-vs-shadowseed harness",
+  "score": 0.0,
+  "score_type": "Shadow Seed F1 against absence labels",
+  "interpretation": "Vergelijkt een lexicale baseline met de Shadow Seed pipeline. De score is de Shadow Seed F1; delta_f1 staat in de output.",
+  "limitations": [
+    "gratis lokale harness; geen betaalde LLM-calls",
+    "lexicale embedding in plaats van extern embeddingmodel",
+    "geen upstream AbsenceBench evaluator"
+  ],
+  "execution_gap": false,
+  "timestamp": "2026-05-05T21:09:15.402889+00:00",
+  "evaluation": {
+    "baseline": {
+      "true_positive": 1,
+      "false_positive": 0,
+      "true_negative": 0,
+      "false_negative": 1,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "accuracy": 0.5
+    },
+    "shadowseed": {
+      "true_positive": 0,
+      "false_positive": 0,
+      "true_negative": 0,
+      "false_negative": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "accuracy": 0.0
+    },
+    "delta_f1": -0.6666666666666666,
+    "examples": [
+      {
+        "id": "sample-001",
+        "expected_absence": true,
+        "baseline_detected": false,
+        "shadowseed_detected": false,
+        "trace": {
+          "candidate_count": 0,
+          "promoted_count": 0,
+          "rejected_candidates": [],
+          "manager": {
+            "seeds": [],
+            "constellations": [],
+            "vector_constellation": null
+          }
+        }
+      },
+      {
+        "id": "sample-002",
+        "expected_absence": true,
+        "baseline_detected": true,
+        "shadowseed_detected": false,
+        "trace": {
+          "candidate_count": 1,
+          "promoted_count": 0,
+          "rejected_candidates": [],
+          "manager": {
+            "seeds": [
+              {
+                "id": "ss_001",
+                "text": "Ontbrekend concept: bewijs",
+                "embedding": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.5773502691896258,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.5773502691896258,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.5773502691896258,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "trigger_keywords": [
+                  "bewijs"
+                ],
+                "trace": 2.0,
+                "weight": 0.2,
+                "occurrence_count": 3,
+                "evidence_count": 2,
+                "status": "ACTIVE",
+                "created_at": "2026-05-05T21:09:15.402763",
+                "updated_at": "2026-05-05T21:09:15.402779"
+              }
+            ],
+            "constellations": [],
+            "vector_constellation": null
+          }
+        }
+      }
+    ]
+  }
+}
