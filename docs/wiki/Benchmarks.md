@@ -17,6 +17,7 @@ Belangrijk: niet elke suite draagt dezelfde bewijslast. De huidige vaste scenari
 | 07 Rapport | Hoe zien de resultaten er samen uit? | `shadowseed analyze-results` | `analysis_report.md`, `summary.json` | rapportage |
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `shadowseed run-nlp-smoke` | `absencebench_smoke.json` | technische smoke |
 | 09 Herhalingstest | Wat gebeurt er bij meer rondes? | `shadowseed run-gap-suite --turns N` | `ssl45_gap_suite_turns_*.json` | gevoeligheid / regressie |
+| handmatig | Kan SSL open-set seeds produceren zonder vaste seedlijst? | `shadowseed run-open-set-seed-review` | `open_set_seed_review.json`, review-packets | open-set scaffold |
 
 ## Regressie- en kleine benchmarklaag
 
@@ -51,9 +52,10 @@ Meet:
 
 - candidate false positives;
 - promoted false positives;
-- false-positive rates.
+- false-positive rates;
+- Gate-vergelijking tegen zwakkere promotieregels op adversarial lure-candidates.
 
-Deze suite voorkomt dat SSL overal zomaar ontbrekende punten van maakt. Voor hardere claims is later nog een strengere adversarial laag nodig, inclusief vergelijking met zwakkere promotiebaselines.
+Deze suite voorkomt dat SSL overal zomaar ontbrekende punten van maakt. De strengere variant laat nu ook zien of de huidige Gate beter blokkeert dan trace-only of lichtere regels.
 
 ### Antwoordwinst
 
@@ -113,6 +115,29 @@ De standaard CI maakt tijdelijke smoke-labels. Echte labels horen niet in de rep
 
 Deze laag is belangrijk omdat ze methodologisch bewaakt dat detectie en scoring gescheiden blijven.
 
+## Open-set reviewlaag
+
+### Open-set seed review
+
+Data:
+
+```text
+src/shadowseed/data/open_set_seed_review_sample.json
+```
+
+Output:
+
+- `open_set_seed_review.json`
+- `open_set_seed_review_packets.json`
+
+Deze runner doet nog geen volledige open-world validatie. Hij bouwt wel de eerste eerlijke structuur daarvoor:
+
+- seed-output zonder vaste ground-truth seedlijst;
+- normalisatie en atomiciteitsfiltering;
+- review-packets voor menselijke scoring op atomiciteit, relevantie, toetsbaarheid, niet-trivialiteit en follow-up utility.
+
+Dit is de eerste stap weg van alleen scenario-scores.
+
 ## Retrieval en SSOT-laag
 
 | Suite | Vraag | CLI |
@@ -139,12 +164,7 @@ De standaard CI uploadt artifacts met leesbare namen:
 09-repeat-test-turns-*
 ```
 
-Na een geslaagde push naar `main` verzamelt `Publish Test Results` deze artifacts in:
-
-```text
-results/latest/
-results/artifacts/
-```
+Na een geslaagde push naar `main` verzamelt `Publish Test Results` deze artifacts in een workflow-snapshot voor Wiki en Pages.
 
 Gebruik `results/latest/manifest.json` om te zien uit welk artifact elk bestand komt.
 
@@ -165,8 +185,8 @@ Een fixture-run is nuttig als technische controle. Een echte modelclaim vraagt o
 
 Om de repo verder te professionaliseren en minder scenario-afhankelijk te maken, zijn later extra lagen nodig:
 
-- open-set seed quality review;
-- adversarial false-positive evaluatie;
+- volwassen open-set seed quality review;
+- sterkere adversarial false-positive evaluatie;
 - probe utility evaluatie;
 - domeintransfer;
 - aparte modelinterne onderzoekslijn.
