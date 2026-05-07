@@ -363,7 +363,7 @@ Op te leveren:
 - duidelijk onderscheid tussen mechanische smoke en onderzoeksbewijs
 
 Succes:
-+niemand hoeft meer te raden of fase 3 of 4 echt al bewezen zijn.
+niemand hoeft meer te raden of fase 3 of 4 echt al bewezen zijn.
 
 ## Stap 2: Degradeer scenario-suites naar regressielaag
 
