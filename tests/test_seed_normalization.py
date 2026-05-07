@@ -5,11 +5,8 @@ from shadowseed.seed_normalization import normalize_detection_candidates, split_
 def test_split_broad_seed_text_breaks_list_like_detection():
     parts = split_broad_seed_text("Security, privacy en schaalbaarheid ontbreken.")
 
-    assert parts == [
-        "Security ontbreekt.",
-        "privacy ontbreekt.",
-        "schaalbaarheid ontbreken.",
-    ] or len(parts) == 3
+    assert len(parts) == 3
+    assert all(part.endswith("ontbreekt.") for part in parts)
 
 
 def test_normalize_detection_candidates_expands_broad_candidate():
@@ -29,4 +26,4 @@ def test_manager_ingest_detection_candidates_keeps_accept_reject_split():
 
     assert len(result["accepted"]) == 1
     assert result["accepted"][0]["seed_id"] == "ss_001"
-    assert result["rejected"]
+    assert len(result["rejected"]) == 3
