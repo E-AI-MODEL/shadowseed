@@ -80,5 +80,5 @@ Deze twee regels zijn samen de kortste samenvatting van de repo.
 - Private blinde labels horen in `benchmarks/private/` en worden niet gecommit.
 - De benchmarkrunners staan in `src/shadowseed/benchmark/`.
 - De CLI staat in `src/shadowseed/cli.py`.
-- De laatste gepubliceerde resultaten komen via GitHub Actions in `results/latest/` en `results/artifacts/`.
+- De laatste gepubliceerde resultaten verschijnen via GitHub Actions in Wiki, Pages en het workflow-artifact `published-latest-results-snapshot`.
 - De standaard CI is vooral regressie- en meetketencontrole; grotere claims vragen extra evaluatielagen.
