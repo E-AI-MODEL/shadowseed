@@ -1,6 +1,6 @@
 {
   "source_workflow": "Checks en benchmark-resultaten",
-  "source_run_id": "25475627625",
+  "source_run_id": "25475656738",
   "repository": "E-AI-MODEL/shadowseed",
   "copied_files": [
     {
@@ -8,7 +8,7 @@
       "source_path": "02-gap-finder-results/ssl45_gap_suite.json",
       "latest_path": "latest/ssl45_gap_suite.json",
       "original_artifact_path": "results/artifacts/02-gap-finder-results/ssl45_gap_suite.json",
-      "bytes": 66824
+      "bytes": 66884
     },
     {
       "artifact": "03-false-positive-results",
@@ -36,7 +36,7 @@
       "source_path": "06-blind-benchmark-results/blind_benchmark.json",
       "latest_path": "latest/blind_benchmark.json",
       "original_artifact_path": "results/artifacts/06-blind-benchmark-results/blind_benchmark.json",
-      "bytes": 47085
+      "bytes": 47092
     },
     {
       "artifact": "07-analysis-report",
@@ -78,14 +78,14 @@
       "source_path": "09-repeat-test-turns-1/ssl45_gap_suite_turns_1.json",
       "latest_path": "latest/ssl45_gap_suite_turns_1.json",
       "original_artifact_path": "results/artifacts/09-repeat-test-turns-1/ssl45_gap_suite_turns_1.json",
-      "bytes": 36424
+      "bytes": 36413
     },
     {
       "artifact": "09-repeat-test-turns-2",
       "source_path": "09-repeat-test-turns-2/ssl45_gap_suite_turns_2.json",
       "latest_path": "latest/ssl45_gap_suite_turns_2.json",
       "original_artifact_path": "results/artifacts/09-repeat-test-turns-2/ssl45_gap_suite_turns_2.json",
-      "bytes": 37311
+      "bytes": 37315
     },
     {
       "artifact": "09-repeat-test-turns-3",
@@ -99,14 +99,14 @@
       "source_path": "09-repeat-test-turns-5/ssl45_gap_suite_turns_5.json",
       "latest_path": "latest/ssl45_gap_suite_turns_5.json",
       "original_artifact_path": "results/artifacts/09-repeat-test-turns-5/ssl45_gap_suite_turns_5.json",
-      "bytes": 68516
+      "bytes": 68538
     },
     {
       "artifact": "09-repeat-test-turns-8",
       "source_path": "09-repeat-test-turns-8/ssl45_gap_suite_turns_8.json",
       "latest_path": "latest/ssl45_gap_suite_turns_8.json",
       "original_artifact_path": "results/artifacts/09-repeat-test-turns-8/ssl45_gap_suite_turns_8.json",
-      "bytes": 71184
+      "bytes": 71154
     }
   ]
 }
