@@ -15,7 +15,7 @@ validation-event logs so benchmark runs can be reconstructed more honestly.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Callable, Iterable
@@ -29,6 +29,9 @@ from shadowseed.seed_normalization import normalize_detection_candidates
 
 if TYPE_CHECKING:
     from shadowseed.vector_constellation import VectorConstellation
+
+
+DEFAULT_CONFIG = SSLCoreConfig()
 
 
 class SeedStatus(str, Enum):
@@ -120,23 +123,21 @@ class SSLManager:
         vector_constellation: VectorConstellation | None = None,
         config: SSLCoreConfig | None = None,
     ):
+        base_config = config or DEFAULT_CONFIG
         self._embedding_fn = embedding_fn
         self.model_name = model_name
         self._embedder = None
         self.seeds: dict[str, ShadowSeed] = {}
-        self.config = SSLCoreConfig(
-            half_life_turns=config.half_life_turns if config and half_life_turns is None else (half_life_turns if half_life_turns is not None else SSLCoreConfig().half_life_turns),
-            dedup_threshold=config.dedup_threshold if config and dedup_threshold is None else (dedup_threshold if dedup_threshold is not None else SSLCoreConfig().dedup_threshold),
-            promotion_threshold=config.promotion_threshold if config and promotion_threshold is None else (promotion_threshold if promotion_threshold is not None else SSLCoreConfig().promotion_threshold),
-            dormant_threshold=config.dormant_threshold if config and dormant_threshold is None else (dormant_threshold if dormant_threshold is not None else SSLCoreConfig().dormant_threshold),
-            validation_increment=config.validation_increment if config and validation_increment is None else (validation_increment if validation_increment is not None else SSLCoreConfig().validation_increment),
-            contradiction_penalty=config.contradiction_penalty if config and contradiction_penalty is None else (contradiction_penalty if contradiction_penalty is not None else SSLCoreConfig().contradiction_penalty),
-            max_trace=config.max_trace if config and max_trace is None else (max_trace if max_trace is not None else SSLCoreConfig().max_trace),
-            reactivation_increment=config.reactivation_increment if config and reactivation_increment is None else (reactivation_increment if reactivation_increment is not None else SSLCoreConfig().reactivation_increment),
-            min_occurrences_for_gate=config.min_occurrences_for_gate if config else SSLCoreConfig().min_occurrences_for_gate,
-            min_evidence_for_gate=config.min_evidence_for_gate if config else SSLCoreConfig().min_evidence_for_gate,
-            min_trace_for_gate=config.min_trace_for_gate if config else SSLCoreConfig().min_trace_for_gate,
-            max_seed_words=config.max_seed_words if config else SSLCoreConfig().max_seed_words,
+        self.config = replace(
+            base_config,
+            half_life_turns=base_config.half_life_turns if half_life_turns is None else half_life_turns,
+            dedup_threshold=base_config.dedup_threshold if dedup_threshold is None else dedup_threshold,
+            promotion_threshold=base_config.promotion_threshold if promotion_threshold is None else promotion_threshold,
+            dormant_threshold=base_config.dormant_threshold if dormant_threshold is None else dormant_threshold,
+            validation_increment=base_config.validation_increment if validation_increment is None else validation_increment,
+            contradiction_penalty=base_config.contradiction_penalty if contradiction_penalty is None else contradiction_penalty,
+            max_trace=base_config.max_trace if max_trace is None else max_trace,
+            reactivation_increment=base_config.reactivation_increment if reactivation_increment is None else reactivation_increment,
         )
         self.half_life_turns = self.config.half_life_turns
         self.dedup_threshold = self.config.dedup_threshold
@@ -206,7 +207,7 @@ class SSLManager:
         word_count = len(re.findall(r"\w+", text))
         if lowered.rstrip(".") in overly_generic_short_forms:
             return False
-        return not has_many_separators and not has_broad_terms and word_count <= SSLCoreConfig().max_seed_words
+        return not has_many_separators and not has_broad_terms and word_count <= DEFAULT_CONFIG.max_seed_words
 
     def normalize_detection_candidates(self, candidates: Iterable[str]) -> list[str]:
         return normalize_detection_candidates(list(candidates))
@@ -220,7 +221,8 @@ class SSLManager:
         candidates: Iterable[str],
         trigger_keywords: Iterable[str] | None = None,
     ) -> dict[str, Any]:
-        normalized = self.normalize_detection_candidates(list(candidates))
+        raw_candidates = list(candidates)
+        normalized = self.normalize_detection_candidates(raw_candidates)
         accepted: list[dict[str, str]] = []
         rejected: list[dict[str, str]] = []
         for candidate in normalized:
@@ -230,7 +232,7 @@ class SSLManager:
             except ValueError:
                 rejected.append({"text": candidate, "reason": "not_atomic"})
         return {
-            "input_count": len(list(candidates)) if not isinstance(candidates, list) else len(candidates),
+            "input_count": len(raw_candidates),
             "normalized_candidates": normalized,
             "accepted": accepted,
             "rejected": rejected,
