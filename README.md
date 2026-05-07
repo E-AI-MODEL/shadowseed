@@ -17,14 +17,25 @@ De repo is groter geworden dan één benchmark. Begin daarom hier:
 docs/ARCHITECTURE_MAP.md
 ```
 
-Die pagina laat zien welke runs er zijn, wat ze doen en waar de resultaten staan.
-
-Voor de huidige bewijsstatus en de route weg van scenario-afhankelijkheid, lees daarna:
+Lees daarna in deze volgorde:
 
 ```text
 docs/research/current-status.md
 docs/research/scenario-independence-roadmap.md
 docs/research/evaluation-matrix.md
+```
+
+Die vier documenten samen beantwoorden:
+
+- wat de repo draait;
+- wat de huidige standaardruns werkelijk aantonen;
+- welke claims nog te groot zouden zijn;
+- hoe SSL uit scenario-afhankelijkheid moet groeien.
+
+Voor de bredere documentatiekaart:
+
+```text
+docs/README.md
 ```
 
 ## Installatie
@@ -130,6 +141,9 @@ src/shadowseed/manager.py                         # SSLManager: trace, weight, V
 src/shadowseed/benchmark/                         # alle benchmarkrunners
 src/shadowseed/data/                              # publieke testdata
 docs/ARCHITECTURE_MAP.md                          # repo-overzicht
+docs/research/current-status.md                   # wat staat er vandaag echt?
+docs/research/scenario-independence-roadmap.md    # route naar sterker bewijs
+docs/research/evaluation-matrix.md                # welke laag draagt welke claim?
 docs/wiki/Benchmarks.md                           # benchmarkuitleg
 .github/workflows/tests.yml                       # standaard CI
 .github/workflows/publish-test-results.yml        # publicatie naar Wiki en Pages
@@ -142,7 +156,7 @@ De repo is een research prototype. De huidige standaardruns laten zien dat de me
 
 De vaste scenario-suites moeten nu gelezen worden als regressie- en kleine benchmarklaag. Ze zijn nuttig om de kernmechaniek stabiel te houden, maar dragen niet zelfstandig de volledige algemene SSL-claim.
 
-Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplevert. Daarvoor zijn grotere blinde suites, meerdere echte modellen, open-set seedbeoordeling en menselijke beoordeling nodig.
+Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplevert. Daarvoor zijn grotere blinde suites, meerdere echte modellen, open-set seedbeoordeling, adversarial Gate-evaluatie en menselijke beoordeling nodig.
 
 ## Wat dit niet claimt
 
@@ -151,13 +165,14 @@ Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplever
 - geen claim dat SSL state-of-the-art is
 - geen bewijs buiten de huidige kleine suites
 - geen verplichte LLM- of GPU-run voor de standaard CI
+- geen automatische gelijkstelling van regressiesucces aan algemene validatie
 
 ## Documentatie
 
 Lees verder in:
 
-- `docs/ARCHITECTURE_MAP.md`
 - `docs/README.md`
+- `docs/ARCHITECTURE_MAP.md`
 - `docs/research/current-status.md`
 - `docs/research/scenario-independence-roadmap.md`
 - `docs/research/evaluation-matrix.md`
