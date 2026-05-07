@@ -19,6 +19,14 @@ docs/ARCHITECTURE_MAP.md
 
 Die pagina laat zien welke runs er zijn, wat ze doen en waar de resultaten staan.
 
+Voor de huidige bewijsstatus en de route weg van scenario-afhankelijkheid, lees daarna:
+
+```text
+docs/research/current-status.md
+docs/research/scenario-independence-roadmap.md
+docs/research/evaluation-matrix.md
+```
+
 ## Installatie
 
 ```bash
@@ -45,7 +53,7 @@ shadowseed analyze-results
 
 | Commando | Gewone naam | Wat test het? |
 |---|---|---|
-| `shadowseed run-gap-suite` | Gap Finder | Vindt SSL bekende ontbrekende punten? |
+| `shadowseed run-gap-suite` | Gap Finder | Vindt SSL bekende ontbrekende punten in de regressiesuite? |
 | `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust? |
 | `shadowseed run-benefit-suite` | Antwoordwinst | Wordt een antwoord completer met SSL-toevoegingen? |
 | `shadowseed run-model-benefit-suite --backend fixture` | Model smoke | Werkt de modelroute technisch zonder modeldownload? |
@@ -63,7 +71,7 @@ De standaardworkflow heet **Checks en benchmark-resultaten**. De runnamen zijn g
 | Run | Betekenis |
 |---|---|
 | 01 Codecheck | Werkt de Python-code? |
-| 02 Gap Finder | Vindt SSL ontbrekende punten? |
+| 02 Gap Finder | Regressiecheck voor bekende SSL-gaps |
 | 03 Rustig blijven | Voegt SSL geen onzin toe? |
 | 04 Antwoordwinst | Wordt een antwoord completer met SSL? |
 | 05 Model smoke | Werkt de modeltest met fixture-backend? |
@@ -132,7 +140,9 @@ site/                                             # Pages-dashboard
 
 De repo is een research prototype. De huidige standaardruns laten zien dat de meetketen werkt: detectie, false-positive controle, antwoordwinst, model-smoke, blinde smoke-test, rapportage en publicatie.
 
-Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplevert. Daarvoor zijn grotere blinde suites, meerdere echte modellen en menselijke beoordeling nodig.
+De vaste scenario-suites moeten nu gelezen worden als regressie- en kleine benchmarklaag. Ze zijn nuttig om de kernmechaniek stabiel te houden, maar dragen niet zelfstandig de volledige algemene SSL-claim.
+
+Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplevert. Daarvoor zijn grotere blinde suites, meerdere echte modellen, open-set seedbeoordeling en menselijke beoordeling nodig.
 
 ## Wat dit niet claimt
 
@@ -148,6 +158,9 @@ Lees verder in:
 
 - `docs/ARCHITECTURE_MAP.md`
 - `docs/README.md`
+- `docs/research/current-status.md`
+- `docs/research/scenario-independence-roadmap.md`
+- `docs/research/evaluation-matrix.md`
 - `docs/wiki/Home.md`
 - `docs/wiki/Benchmarks.md`
 - `docs/wiki/Blind-Benchmark.md`
