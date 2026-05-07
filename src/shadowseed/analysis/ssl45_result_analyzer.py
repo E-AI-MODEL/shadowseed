@@ -213,7 +213,7 @@ def build_conclusion(
         "supporting_observations": support,
         "claim_boundary": (
             "Deze conclusie geldt alleen voor de huidige suite, het gebruikte model en de vastgelegde prompts. "
-            "Voor een algemene claim zijn meer scenario's, meerdere modellen en blind review nodig."
+            "Voor een algemene claim zijn meer scenario's, meerdere modellen, sterkere adversarial evaluatie en blind review nodig."
         ),
     }
 
@@ -279,11 +279,14 @@ def make_markdown_report(
     turn_matrix: list[ResultDict],
     semantic: dict[str, Any],
     conclusion: dict[str, Any],
+    publish_mode: str,
 ) -> str:
     lines = [
         "# SSL 4.5 resultaatanalyse",
         "",
         "Deze analyse is automatisch gemaakt uit benchmark-JSON artifacts.",
+        "",
+        f"Publicatiemodus: **{publish_mode}**.",
         "",
         "## Conclusie",
         "",
@@ -425,6 +428,9 @@ def analyze_results(
 
     semantic = semantic_seed_summary([gap, benefit, model_benefit])
     conclusion = build_conclusion(gap, false_positive, benefit, model_benefit, blind)
+    publish_mode = "workflow snapshot"
+    if manifest and manifest.get("committed_back_to_main") is False:
+        publish_mode = "wiki/pages snapshot without main write-back"
 
     coverage_values = {
         "Gap mean score": float(metric(gap, "mean_scenario_score", 0.0) or 0.0),
@@ -456,6 +462,7 @@ def analyze_results(
         "vectorstore": vectorstore.get("summary") if vectorstore else None,
         "turn_matrix": turn_matrix,
         "manifest": manifest,
+        "publish_mode": publish_mode,
         "semantic": semantic,
         "conclusion": conclusion,
         "charts": ["coverage.svg", "false_positive.svg"],
@@ -478,6 +485,7 @@ def analyze_results(
             turn_matrix,
             semantic,
             conclusion,
+            publish_mode,
         ),
         encoding="utf-8",
     )
