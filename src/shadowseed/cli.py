@@ -10,6 +10,7 @@ from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
+from shadowseed.benchmark.probe_utility_benchmark import run_probe_utility_benchmark
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
 from shadowseed.benchmark.retrieval_model_benchmark import run_retrieval_model_benchmark
@@ -107,6 +108,10 @@ def build_parser() -> argparse.ArgumentParser:
         default="results/open_set_seed_review_packets.json",
         help="Waar de review-packets voor menselijke beoordeling worden opgeslagen.",
     )
+
+    probe = subparsers.add_parser("run-probe-utility-benchmark")
+    probe.add_argument("--input", default="src/shadowseed/data/probe_utility_benchmark.json")
+    probe.add_argument("--output", default="results/probe_utility_benchmark.json")
 
     vectorstore = subparsers.add_parser("run-vectorstore-smoke")
     vectorstore.add_argument("--output", default="results/vectorstore_smoke.json")
@@ -208,6 +213,11 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             review_packet_path=args.review_packets,
         )
+        print(path)
+        return 0
+
+    if args.command == "run-probe-utility-benchmark":
+        path = run_probe_utility_benchmark(args.input, args.output)
         print(path)
         return 0
 
