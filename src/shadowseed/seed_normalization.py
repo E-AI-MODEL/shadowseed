@@ -39,10 +39,11 @@ def maybe_expand_fragment(fragment: str) -> str:
     fragment = clean_candidate_text(fragment)
     if not fragment:
         return ""
-    if re.search(r"[.!?]$", fragment):
-        return fragment
     lowered = fragment.lower()
-    if " ontbreekt" in lowered or lowered.startswith("ontbrekend "):
+    if lowered.endswith(" ontbreken"):
+        stem = fragment[: -len(" ontbreken")].strip()
+        return f"{stem} ontbreekt."
+    if lowered.endswith(" ontbreekt"):
         return fragment + "."
     if len(fragment.split()) <= 4:
         return f"{fragment} ontbreekt."
