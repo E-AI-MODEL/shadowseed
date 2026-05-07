@@ -91,16 +91,17 @@ De standaardworkflow heet **Checks en benchmark-resultaten**. De runnamen zijn g
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? |
 | 09 Herhalingstest | Wat gebeurt er bij meer SSL-rondes? |
 
-Na een geslaagde push naar `main` publiceert **Publiceer testresultaten naar Wiki en Pages** de laatste artifacts naar Wiki en Pages. PR-runs worden niet gepubliceerd.
+Na een geslaagde push naar `main` publiceert **Publiceer testresultaten naar Wiki en Pages** de laatste artifacts naar Wiki en Pages. De workflow schrijft geen resultatensnapshot terug naar `main`. PR-runs worden niet gepubliceerd.
 
 ## Resultaten
 
 | Plek | Inhoud |
 |---|---|
-| `results/latest/summary.json` | Centrale JSON-samenvatting voor dashboard en Wiki |
-| `results/latest/analysis_report.md` | Leesbaar rapport |
+| workflow-artifact `published-latest-results-snapshot` | Platte snapshot van de gepubliceerde `results/latest` map |
+| `results/latest/summary.json` | Centrale JSON-samenvatting binnen de gepubliceerde snapshot |
+| `results/latest/analysis_report.md` | Leesbaar rapport binnen de gepubliceerde snapshot |
 | `results/latest/manifest.json` | Herkomst van elk gepubliceerd artifact |
-| `results/artifacts/` | Originele artifactstructuur uit GitHub Actions |
+| `results/artifacts/` | Originele artifactstructuur uit GitHub Actions binnen de gepubliceerde snapshot |
 | Wiki `Latest-Test-Results` | Startpunt voor gepubliceerde resultaten |
 | GitHub Pages | Publiek dashboard |
 
