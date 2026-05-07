@@ -10,7 +10,6 @@ from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
-from shadowseed.benchmark.probe_utility_benchmark import run_probe_utility_benchmark
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
 from shadowseed.benchmark.retrieval_model_benchmark import run_retrieval_model_benchmark
@@ -19,6 +18,7 @@ from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
 from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
 from shadowseed.benchmark.ssl45_gap_suite import run_ssl45_gap_suite
 from shadowseed.benchmark.ssl45_model_benefit_suite import run_ssl45_model_benefit_suite
+from shadowseed.benchmark.ssl45_probe_utility_suite import run_ssl45_probe_utility_suite
 from shadowseed.benchmark.ssot_smoke import run_ssot_smoke
 from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
 
@@ -110,8 +110,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     probe = subparsers.add_parser("run-probe-utility-benchmark")
-    probe.add_argument("--input", default="src/shadowseed/data/probe_utility_benchmark.json")
-    probe.add_argument("--output", default="results/probe_utility_benchmark.json")
+    probe.add_argument("--input", default="src/shadowseed/data/ssl45_probe_utility_suite.json")
+    probe.add_argument("--output", default="results/ssl45_probe_utility_suite.json")
 
     vectorstore = subparsers.add_parser("run-vectorstore-smoke")
     vectorstore.add_argument("--output", default="results/vectorstore_smoke.json")
@@ -217,7 +217,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "run-probe-utility-benchmark":
-        path = run_probe_utility_benchmark(args.input, args.output)
+        path = run_ssl45_probe_utility_suite(args.input, args.output)
         print(path)
         return 0
 
