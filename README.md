@@ -57,6 +57,7 @@ pytest
 shadowseed run-gap-suite
 shadowseed run-false-positive-suite
 shadowseed run-benefit-suite
+shadowseed run-open-set-seed-review
 shadowseed analyze-results
 ```
 
@@ -65,8 +66,9 @@ shadowseed analyze-results
 | Commando | Gewone naam | Wat test het? |
 |---|---|---|
 | `shadowseed run-gap-suite` | Gap Finder | Vindt SSL bekende ontbrekende punten in de regressiesuite? |
-| `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust? |
+| `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust en blokkeert de Gate misleidende lure-seeds? |
 | `shadowseed run-benefit-suite` | Antwoordwinst | Wordt een antwoord completer met SSL-toevoegingen? |
+| `shadowseed run-open-set-seed-review` | Open-set review | Maakt seed-output en review-packets zonder vaste ground-truth seedlijst |
 | `shadowseed run-model-benefit-suite --backend fixture` | Model smoke | Werkt de modelroute technisch zonder modeldownload? |
 | `shadowseed run-blind-benchmark` | Blind test | Blijven labels verborgen tot de scoring? |
 | `shadowseed run-retrieval-benchmark` | Retrieval check | Vindt de vectorstore de juiste bronstukken? |
@@ -140,7 +142,8 @@ Belangrijk: `trace` en `weight` zijn gescheiden. Een seed kan zichtbaar zijn en 
 ```text
 src/shadowseed/manager.py                         # SSLManager: trace, weight, Validation Gate
 src/shadowseed/benchmark/                         # alle benchmarkrunners
-src/shadowseed/data/                              # publieke testdata
+tests/                                            # regressie- en benchmarktests
+src/shadowseed/data/                              # publieke testdata en sample-corpora
 docs/ARCHITECTURE_MAP.md                          # repo-overzicht
 docs/research/current-status.md                   # wat staat er vandaag echt?
 docs/research/scenario-independence-roadmap.md    # route naar sterker bewijs
