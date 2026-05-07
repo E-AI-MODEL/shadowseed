@@ -2,12 +2,14 @@
 
 Deze pagina beschrijft de actuele output van de SSL 4.5 benchmarkruns uit GitHub Actions artifacts.
 
+Deze pagina is een leeswijzer voor de gepubliceerde standaardresultaten. Ze is geen zelfstandige eindconclusie over SSL 4.5 als algemeen mechanisme.
+
 ## Runs
 
-| Suite | Outputbestand | Scenario's |
-|---|---|---:|
-| SSL 4.5 Gap-Test Suite | `ssl45_gap_suite.json` | 3 |
-| SSL 4.5 false-positive controls | `ssl45_false_positive_suite.json` | 3 |
+| Suite | Outputbestand | Scenario's | Bewijssoort |
+|---|---|---:|---|
+| SSL 4.5 Gap-Test Suite | `ssl45_gap_suite.json` | 3 | kleine benchmark / regressie |
+| SSL 4.5 false-positive controls | `ssl45_false_positive_suite.json` | 3 | regressie / beperkte ruiscontrole |
 
 ## Positieve Gap-Test Suite
 
@@ -29,9 +31,9 @@ De score gebruikt de schaal uit de Gap-Test Suite:
 
 | Scenario | Titel | Score | Atomische hits | Promoted hits | Interpretatie |
 |---|---|---:|---:|---:|---|
-| A | Industriële Revolutie | 2 | 2 | 2 | Werkt. De detector vindt twee atomische koloniale/economische gaps. |
-| B | Grensoverschrijdende juridische casus | 2 | 4 | 4 | Werkt. De detector vindt rechtsbevoegdheid, toepasselijk recht, afdwingbaarheid en forumkeuze. |
-| C | Software Architectuur | 2 | 4 | 4 | Werkt. De detector vindt privacy-, security- en API-gerelateerde gaps. |
+| A | Industriële Revolutie | 2 | 2 | 2 | Werkt binnen de suite. De detector vindt twee atomische koloniale/economische gaps. |
+| B | Grensoverschrijdende juridische casus | 2 | 4 | 4 | Werkt binnen de suite. De detector vindt rechtsbevoegdheid, toepasselijk recht, afdwingbaarheid en forumkeuze. |
+| C | Software Architectuur | 2 | 4 | 4 | Werkt binnen de suite. De detector vindt privacy-, security- en API-gerelateerde gaps. |
 
 ## False-positive controls
 
@@ -52,6 +54,9 @@ De negatieve controles bevatten volledige antwoorden waarin de relevante gaps al
 | NEG_A | 0 | 0 | true |
 | NEG_B | 0 | 0 | true |
 | NEG_C | 0 | 0 | true |
+
+Belangrijk:
+dit is een nette regressie-uitkomst, maar nog geen zware adversarial Gate-evaluatie.
 
 ## Gepromoveerde seeds
 
@@ -96,14 +101,31 @@ status = PROMOTED
 
 Dat past bij SSL 4.5: seeds beginnen gewichtloos, worden drie keer herkend, krijgen externe evidence en stijgen pas daarna boven de promotiedrempel.
 
+## Wat deze pagina wel en niet laat zien
+
+Wel:
+
+- de regressielaag werkt;
+- de kleine benchmark raakt de ontworpen gaps;
+- de meetketen en rapportage zijn reproduceerbaar.
+
+Niet:
+
+- open-set seedkwaliteit buiten vaste scenario's;
+- sterke adversarial Gate-robustheid;
+- domeintransfer;
+- brede modelclaims op echte backends;
+- modelinterne validatie.
+
 ## Beperking
 
 Deze runs gebruiken de gratis deterministische detector. De resultaten tonen dat de huidige kleine suite volledig geraakt wordt en dat de eerste negatieve controles schoon blijven. Dit is nog geen bewijs dat SSL 4.5 algemeen sterk is buiten deze zes scenario's.
 
 ## Volgende stap
 
-- Matrix-runs vergelijken voor turns `1`, `2`, `3`, `5` en `8`.
-- Meer false-positive scenario's toevoegen.
-- Moeilijkere gedeeltelijk-complete antwoorden testen.
-- Beoordelingsformulier invullen met menselijke scores.
-- Daarna pas claims in paper of README sterker maken.
+- matrix-runs vergelijken voor turns `1`, `2`, `3`, `5` en `8`;
+- meer false-positive scenario's toevoegen;
+- moeilijkere gedeeltelijk-complete antwoorden testen;
+- open-set seed review toevoegen;
+- echte adversarial Gate-evaluatie toevoegen;
+- daarna pas claims in paper of README verder opschalen.
