@@ -339,6 +339,27 @@ Deze onderdelen zijn nog steeds waardevol:
 - verspreide benchmarkfuncties die dezelfde coverage- en scoringlogica herhalen;
 - documentatie die actuele resultaten en permanente specificatie door elkaar laat lopen.
 
+Belangrijk:
+hier moet consolidatie selectief zijn. Niet elke evaluatielaag moet technisch of inhoudelijk in dezelfde mal worden geduwd.
+
+Wat wel geconsolideerd kan worden:
+
+- één gedeelde resultaatsstructuur voor runs, seeds, beoordelingen en metrics;
+- één rapportagepad voor publicatie van evaluatie-uitkomsten;
+- één plek voor benchmarkloaders, runlogging en artifact-opslag;
+- één naam- en mapconventie voor evaluatielagen.
+
+Wat juist gescheiden moet blijven:
+
+- regressiebewijs versus open-world bewijs;
+- mechanische stabiliteitsmetrics versus onderzoeksmetrics;
+- automatische filters versus menselijke kwaliteitsbeoordeling;
+- domeinspecifieke hulplogica versus scenario-onafhankelijke hoofdclaims.
+
+De hoofdregel is:
+
+> consolideer infrastructuur en rapportage, maar niet ten koste van epistemische eerlijkheid.
+
 ## 5.4 Wat inhoudelijk nieuw gebouwd moet worden
 
 - open-review evaluatiepad;
@@ -346,6 +367,17 @@ Deze onderdelen zijn nog steeds waardevol:
 - probe quality evaluators;
 - domain transfer evaluatie;
 - statusdocument dat expliciet onderscheid maakt tussen bewezen, deels bewezen en nog niet bewezen.
+
+## 5.5 Wat expliciet niet moet gebeuren
+
+De repo moet niet "schoner" lijken door ongelijke bewijssoorten in één score samen te trekken.
+
+Vermijd daarom:
+
+- één totaalscore waarin regressie, open-set en behavioral metrics zonder onderscheid verdwijnen;
+- workflow-samenvoeging waarbij reviewer-artefacten en CI-smokes dezelfde status krijgen;
+- claims over scenario-onafhankelijkheid op basis van alleen scenario-stabiele regressies;
+- hergebruik van domein-priors in evaluatielagen die juist domeintransfer moeten toetsen.
 
 ## 6. Migratiepad
 
@@ -389,7 +421,9 @@ Op te leveren:
 - open corpus sample-loader;
 - review packets voor menselijke seedbeoordeling;
 - agreement-meting;
-- negatieve controles die de Gate echt belasten.
+- negatieve controles die de Gate echt belasten;
+- baselinevergelijkingen tegen minimaal `trace-only` en `trace + no contradiction check`;
+- vaste run-artifacts per evaluatie: seedlijst, reviewerscores, disagreements, false-positive log en promotiebeslissingen.
 
 Succes:
 de hoofdclaim verschuift van "seed matcht suite" naar "seed is blind beoordeeld als goed en nuttig".
@@ -421,7 +455,8 @@ Minimaal nodig:
 
 - blind menselijke scoring;
 - agreement tussen beoordelaars;
-- acceptabele atomiciteitsratio.
+- acceptabele atomiciteitsratio;
+- expliciete afwijscodes voor te brede, triviale, irrelevante en niet-toetsbare seeds.
 
 ## 7.2 Gate-waarde boven eenvoudige baselines
 
@@ -430,7 +465,8 @@ De Validation Gate moet aantoonbaar beter presteren dan eenvoudigere regels.
 Minimaal nodig:
 
 - lagere false-positive promotie dan trace-only;
-- betere netto-opbrengst dan promotie zonder contradictiecheck.
+- betere netto-opbrengst dan promotie zonder contradictiecheck;
+- zichtbare foutgevallen waarin de Gate terecht blokkeert ondanks lokkende maar niet-relevante uitbreidingen.
 
 ## 7.3 Probe utility moet meetbaar positief zijn
 
@@ -461,7 +497,8 @@ Minimaal nodig:
 - beoordelingsdata;
 - promptversies;
 - seed-output en review-output;
-- failure logging.
+- failure logging;
+- stabiele artifactnamen en rapportagevelden zodat lagen onderling vergelijkbaar blijven zonder inhoudelijk te worden vermengd.
 
 ## 8. Conclusie
 
@@ -489,4 +526,4 @@ De hoogste hefboom is nu:
 2. herlabel de huidige scenario-suite als regressielaag;
 3. ontwerp een open-review evaluatie voor seedkwaliteit zonder vaste ground truth;
 4. ontwerp een echte adversarial false-positive evaluatie voor de Validation Gate;
-5. bouw daarna pas de repo om rond deze nieuwe lagen.
+5. consolideer daarna pas reporting, workflows en artifacts rond deze nieuwe lagen.
