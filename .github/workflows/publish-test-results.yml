@@ -85,6 +85,8 @@ jobs:
               "source_workflow": "Checks en benchmark-resultaten",
               "source_run_id": os.environ.get("TEST_RUN_ID"),
               "repository": os.environ.get("GITHUB_REPOSITORY"),
+              "published_via": ["wiki", "pages"],
+              "committed_back_to_main": False,
               "copied_files": [],
           }
           used_names: set[str] = set()
@@ -130,11 +132,13 @@ jobs:
           cat > results/latest/README.md <<'MD'
           # Latest test artifacts
 
-          Deze map is opgebouwd uit de meest recente geslaagde standaardrun `Checks en benchmark-resultaten`.
+          Deze map is tijdens de publish-workflow opgebouwd uit de meest recente geslaagde standaardrun `Checks en benchmark-resultaten`.
 
           De map bevat een platte kopie van de belangrijkste JSON-, Markdown- en SVG-bestanden uit de test-artifacts. Gebruik `manifest.json` om te zien uit welk artifact elk bestand komt.
 
           Bij dubbele bestandsnamen krijgt het latere bestand een prefix met de artifactnaam. De originele artifactstructuur blijft behouden in `results/artifacts/`.
+
+          Deze snapshot wordt gepubliceerd via Wiki en Pages en niet teruggecommit naar `main`.
           MD
 
       - name: Maak centraal analyserapport
@@ -148,31 +152,12 @@ jobs:
           cp results/latest/analysis/coverage.svg results/latest/coverage.svg
           cp results/latest/analysis/false_positive.svg results/latest/false_positive.svg
 
-      - name: Commit results/latest terug naar main
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add results/latest
-          if git diff --cached --quiet; then
-            echo "No results/latest changes."
-          else
-            git commit -m "Update latest test results [skip ci]"
-            for attempt in 1 2 3; do
-              git fetch origin main
-              if git rebase origin/main; then
-                if git push origin HEAD:main; then
-                  exit 0
-                fi
-              else
-                git rebase --abort || true
-              fi
-              echo "Push failed, retrying after main changed. Attempt ${attempt}/3."
-              sleep 5
-            done
-            echo "Could not update results/latest after retries."
-            exit 1
-          fi
+      - name: Upload gepubliceerde snapshot als workflow-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-latest-results-snapshot
+          path: results/latest
+          if-no-files-found: error
 
       - name: Publiceer naar GitHub Wiki
         env:
@@ -208,6 +193,8 @@ jobs:
           - `results/artifacts/`
 
           `results/latest/manifest.json` laat zien uit welk artifact elk gepubliceerd bestand komt. De `results/artifacts/` map bewaart de originele artifactstructuur.
+
+          Deze publicatie werkt via Wiki en Pages. De workflow commit geen resultatensnapshot terug naar `main`.
           MD
           cd wiki
           git config user.name "github-actions[bot]"
