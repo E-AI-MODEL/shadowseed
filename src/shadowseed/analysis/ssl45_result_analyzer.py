@@ -274,6 +274,7 @@ def make_markdown_report(
     blind_payload: ResultDict | None,
     retrieval_payload: ResultDict | None,
     retrieval_model_payload: ResultDict | None,
+    probe_payload: ResultDict | None,
     ssot_payload: ResultDict | None,
     vectorstore_payload: ResultDict | None,
     turn_matrix: list[ResultDict],
@@ -329,6 +330,16 @@ def make_markdown_report(
             ("Retrieval model baseline coverage", "baseline_mean_gap_coverage"),
             ("Retrieval model with context coverage", "retrieval_mean_gap_coverage"),
             ("Retrieval model coverage delta", "coverage_delta"),
+        ],
+    )
+    add_optional_summary_rows(
+        lines,
+        probe_payload,
+        [
+            ("Probe utility follow-up delta", "mean_follow_up_delta"),
+            ("Probe utility retrieval delta", "mean_retrieval_delta"),
+            ("Probe utility dialectic delta", "mean_dialectic_delta"),
+            ("Probe utility overall delta", "overall_probe_utility_delta"),
         ],
     )
     if retrieval_payload:
@@ -403,6 +414,13 @@ def make_markdown_report(
             "Een positief resultaat betekent dus niet automatisch dat SSL algemeen werkt. Het betekent dat de gemeten suite beter scoort onder de vastgelegde voorwaarden.",
         ]
     )
+    if probe_payload:
+        lines.extend(
+            [
+                "",
+                "De probe-utility laag is optioneel. Als die aanwezig is, laat een positieve delta alleen zien dat seed-geleide vervolgacties scherper zijn dan brede baselines binnen deze lokale scaffold.",
+            ]
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -421,6 +439,7 @@ def analyze_results(
     blind = load_json(source / "blind_benchmark.json")
     retrieval = load_json(source / "retrieval_benchmark.json")
     retrieval_model = load_json(source / "retrieval_model_benchmark.json")
+    probe = load_json(source / "ssl45_probe_utility_suite.json")
     ssot = load_json(source / "ssot_smoke.json")
     vectorstore = load_json(source / "vectorstore_smoke.json")
     manifest = load_json(source / "manifest.json")
@@ -458,6 +477,7 @@ def analyze_results(
         "blind": blind.get("summary") if blind else None,
         "retrieval": retrieval.get("metrics") if retrieval else None,
         "retrieval_model": retrieval_model.get("summary") if retrieval_model else None,
+        "probe_utility": probe.get("summary") if probe else None,
         "ssot": ssot.get("summary") if ssot else None,
         "vectorstore": vectorstore.get("summary") if vectorstore else None,
         "turn_matrix": turn_matrix,
@@ -480,6 +500,7 @@ def analyze_results(
             blind,
             retrieval,
             retrieval_model,
+            probe,
             ssot,
             vectorstore,
             turn_matrix,
