@@ -10,7 +10,7 @@ De repo heeft niet één doel maar meerdere banen die samen moeten blijven klopp
 |---|---|---|---|
 | Core SSL | Seeds opslaan, laten uitdoven, valideren en eventueel promoten | `src/shadowseed/manager.py`, `src/shadowseed/vectorstore/`, `src/shadowseed/ssot.py` | prototype, getest |
 | Benchmarks | Meten of SSL iets vindt, niets verzint en antwoorden helpt | `src/shadowseed/benchmark/`, `src/shadowseed/data/` | CI en handmatig |
-| Rapportage | JSON-resultaten samenvatten tot rapport en grafieken | `src/shadowseed/analysis/ssl45_result_analyzer.py`, `results/latest/` | automatisch |
+| Rapportage | JSON-resultaten samenvatten tot rapport en grafieken | `src/shadowseed/analysis/ssl45_result_analyzer.py`, workflow-snapshot `results/latest/` | automatisch |
 | Publicatie | Laatste resultaten tonen op Wiki en Pages | `.github/workflows/publish-test-results.yml`, `site/`, `docs/wiki/` | automatisch na main push |
 
 ## De hoofdroute
@@ -20,11 +20,11 @@ push naar main
   -> Checks en benchmark-resultaten
   -> artifacts uploaden
   -> Publiceer testresultaten naar Wiki en Pages
-  -> results/latest + results/artifacts
-  -> Wiki + Pages
+  -> results/latest + results/artifacts als workflow-snapshot
+  -> Wiki + Pages + workflow-artifact
 ```
 
-De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden niet gepubliceerd.
+De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden niet gepubliceerd. De publish-workflow commit geen resultatensnapshot terug naar `main`.
 
 ## Welke run doet wat?
 
@@ -51,12 +51,13 @@ De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden ni
 
 ## Waar staan de resultaten?
 
-| Pad | Betekenis |
+| Plek | Betekenis |
 |---|---|
-| `results/latest/summary.json` | Centrale machineleesbare samenvatting |
-| `results/latest/analysis_report.md` | Menselijk rapport |
+| workflow-artifact `published-latest-results-snapshot` | Platte snapshot van de gepubliceerde `results/latest` map |
+| `results/latest/summary.json` | Centrale machineleesbare samenvatting binnen de gepubliceerde snapshot |
+| `results/latest/analysis_report.md` | Menselijk rapport binnen de gepubliceerde snapshot |
 | `results/latest/manifest.json` | Herkomst van elk gepubliceerd artifact |
-| `results/artifacts/` | Originele artifactstructuur uit GitHub Actions |
+| `results/artifacts/` | Originele artifactstructuur binnen de gepubliceerde snapshot |
 | GitHub Wiki `Latest-Test-Results` | Wiki-ingang naar de laatste gepubliceerde resultaten |
 | GitHub Pages | Visueel dashboard |
 
