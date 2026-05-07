@@ -19,7 +19,7 @@ Dit document scheidt daarom vier dingen:
 
 De repo staat er sterk voor als benchmark-harness voor SSL-mechaniek. De kernlogica rond atomische seeds, `trace`, `weight`, Validation Gate, blinde labelscheiding, retrieval-smokes en rapportage is aanwezig en functioneel.
 
-De repo staat er nog niet sterk genoeg voor als volledig bewijs van het hele SSL 4.5 onderzoeksprogramma. Vooral fase 1, fase 2, fase 3 en fase 4 zijn nog niet volledig afgedekt zoals de documentatie en specificatie ze formuleren.
+De repo staat er nog niet sterk genoeg voor als volledig bewijs van het hele SSL 4.5 onderzoeksprogramma. Vooral open-set validatie, adversarial Gate-evaluatie, probe utility, domeintransfer en modelinterne validatie zijn nog niet op het niveau dat een brede algemene claim zou dragen.
 
 Korte totaalscore per laag:
 
@@ -27,16 +27,17 @@ Korte totaalscore per laag:
 - kleine benchmarkvalidatie: bruikbaar
 - open-world validatie: zwak of afwezig
 - gedragsvalidatie van probes: beperkt
+- domeintransfer: zwak
 - modelinterne validatie: afwezig
 
 ## Statusoverzicht per fase
 
 | Fase | Status | Korte duiding |
 |---|---|---|
-| Fase 0: detectie | Partially implemented | Goede kleine benchmarklaag, maar nog niet alle beloofde metrics en nog niet open-world |
+| Fase 0: detectie | Partially implemented | Goede kleine benchmarklaag, maar nog niet open-set en nog niet breed genoeg voor algemene detectieclaims |
 | Fase 1: multi-turn state | Partially implemented | Antwoordwinst is meetbaar, maar de volledige conditievergelijking uit het testplan ontbreekt |
-| Fase 2: Validation Gate en probes | Partially implemented | Gate-mechaniek bestaat, maar de evaluatie is nog te vriendelijk en probekwaliteit wordt nog beperkt gemeten |
-| Fase 3: constellations | Planned / infrastructural | De bouwstenen bestaan, maar er is nog geen echte constellation-benchmark |
+| Fase 2: Validation Gate en probes | Partially implemented | Gate-mechaniek bestaat, maar evaluatie is nog te vriendelijk en probekwaliteit wordt nog beperkt gemeten |
+| Fase 3: constellations | Planned / infrastructural | Bouwstenen bestaan, maar er is nog geen echte constellation-benchmark of clusterwaarde-evaluatie |
 | Fase 4: modelinterne test | Planned | Geen operationele evaluatielaag aanwezig |
 
 ## Wat de repo vandaag hard aantoont
@@ -46,7 +47,7 @@ Korte totaalscore per laag:
 De repo toont overtuigend aan dat de volgende mechanische kern bestaat:
 
 - een seed moet atomisch zijn;
-- brede seeds kunnen worden geweigerd;
+- brede seeds kunnen worden geweigerd of gesplitst;
 - `trace` en `weight` zijn formeel gescheiden;
 - `weight` start op `0.0`;
 - promotie loopt via een Validation Gate;
@@ -192,11 +193,23 @@ Status: Strong
 
 Dit is de sterkste laag van de repo. Als doel is: regressies voorkomen, mechaniek bewaken, CI betrouwbaar houden, dan is de repo al behoorlijk volwassen.
 
+## Kleine benchmarkvalidatie
+
+Status: Usable
+
+Dit is een bruikbare tussenlaag: goed voor vaste cases, te smal voor brede claims.
+
 ## Open-world evaluatie
 
 Status: Weak
 
 Er is nog geen volwassen open-set evaluatie waarbij onbekende teksten zonder vaste ground-truth seedlijst blind beoordeeld worden op seedkwaliteit.
+
+## Adversarial Gate-evaluatie
+
+Status: Weak
+
+De repo heeft false-positive controle, maar nog geen zware vergelijking tussen de huidige Gate en zwakkere promotiebaselines onder echt misleidende inputs.
 
 ## Probe utility
 
@@ -221,7 +234,8 @@ Dat betekent concreet:
 
 - scenario-suites niet weggooien;
 - scenario-suites herlabelen als regressie en kleine benchmarkvalidatie;
-- nieuwe evaluatielagen toevoegen voor open-set kwaliteit, adversarial false positives, probe utility en domeintransfer.
+- nieuwe evaluatielagen toevoegen voor open-set kwaliteit, adversarial false positives, probe utility en domeintransfer;
+- infrastructuur en rapportage consolideren zonder ongelijke bewijssoorten inhoudelijk samen te trekken.
 
 ## Wat nu niet meer impliciet mag blijven
 
@@ -230,7 +244,8 @@ Deze uitspraken moeten in de repo expliciet worden gemaakt:
 - de standaard CI bewijst vooral de meetketen, niet algemene SSL-prestatie;
 - fixture-runs zijn technische controle, geen eindbewijs;
 - fase 3 en 4 zijn nog niet experimenteel afgedekt;
-- scenario-scores zijn bruikbaar, maar niet voldoende als eindclaim.
+- scenario-scores zijn bruikbaar, maar niet voldoende als eindclaim;
+- open-set, adversarial en behavioral evaluatie horen niet te verdwijnen in één totaalscore.
 
 ## Aanbevolen volgende documenten
 
