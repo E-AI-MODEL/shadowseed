@@ -194,18 +194,19 @@ class SSLManager:
             "perspectieven",
             "meerdere",
         ]
-        overly_generic_short_forms = {
-            "security ontbreekt",
-            "privacy ontbreekt",
-            "schaalbaarheid ontbreekt",
-            "kolonialisme ontbreekt",
-            "context ontbreekt",
-            "internationale context ontbreekt",
+        generic_category_terms = {
+            "security",
+            "privacy",
+            "schaalbaarheid",
+            "kolonialisme",
+            "context",
         }
         has_many_separators = sum(sep in lowered for sep in separators) >= 2
         has_broad_terms = any(term in lowered for term in broad_terms)
         word_count = len(re.findall(r"\w+", text))
-        if lowered.rstrip(".") in overly_generic_short_forms:
+        if word_count <= 3 and any(term in lowered for term in generic_category_terms) and (
+            "ontbreekt" in lowered or "ontbreken" in lowered
+        ):
             return False
         return not has_many_separators and not has_broad_terms and word_count <= DEFAULT_CONFIG.max_seed_words
 
