@@ -2,6 +2,8 @@
 
 De blinde benchmark test of Shadow Seed Learning ontbrekende, toetsbare relaties vindt zonder de evaluator-labels vooraf te kennen.
 
+Deze benchmark is methodologisch belangrijk, maar ook hier geldt: labelscheiding alleen is nog geen volledig bewijs van algemene SSL-kwaliteit.
+
 ## Opzet
 
 Er zijn twee soorten input:
@@ -46,14 +48,29 @@ Een sterke run heeft hogere SSL coverage, weinig false positives en geen stijgin
 
 De smoke workflow maakt een tijdelijk labelbestand aan tijdens GitHub Actions. Dat bestand is bedoeld als technische check, niet als echte blinde benchmark.
 
+## Wat deze benchmark wel en niet bewijst
+
+Wel:
+
+- detectie en scoring blijven methodologisch gescheiden;
+- de huidige benchmark kan zonder labellek worden uitgevoerd;
+- SSL kan binnen deze opzet coverage-winst laten zien.
+
+Niet automatisch:
+
+- open-set seedkwaliteit zonder vaste expected gaps;
+- sterke adversarial Gate-robustheid;
+- brede domeintransfer;
+- menselijke agreement over seedkwaliteit.
+
 ## Eerste onderzoeksrun
 
 Een serieuze eerste run kan bestaan uit:
 
-- 20 scenario's
-- 5 domeinen
-- 4 scenario's per domein
-- 5 negatieve controles
-- 3 tot 6 verborgen expected gaps per scenario
+- 20 scenario's;
+- 5 domeinen;
+- 4 scenario's per domein;
+- 5 negatieve controles;
+- 3 tot 6 verborgen expected gaps per scenario.
 
 Gebruik daarna menselijke beoordeling om de automatische scores te controleren.
