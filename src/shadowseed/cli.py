@@ -9,6 +9,7 @@ from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
+from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
 from shadowseed.benchmark.retrieval_model_benchmark import run_retrieval_model_benchmark
@@ -97,6 +98,15 @@ def build_parser() -> argparse.ArgumentParser:
     blind.add_argument("--output", default="results/blind_benchmark.json")
     blind.add_argument("--turns", type=int, default=3)
     blind.add_argument("--max-seeds", type=int, default=5)
+
+    open_set = subparsers.add_parser("run-open-set-seed-review")
+    open_set.add_argument("--input", default="src/shadowseed/data/open_set_seed_review_sample.json")
+    open_set.add_argument("--output", default="results/open_set_seed_review.json")
+    open_set.add_argument(
+        "--review-packets",
+        default="results/open_set_seed_review_packets.json",
+        help="Waar de review-packets voor menselijke beoordeling worden opgeslagen.",
+    )
 
     vectorstore = subparsers.add_parser("run-vectorstore-smoke")
     vectorstore.add_argument("--output", default="results/vectorstore_smoke.json")
@@ -188,6 +198,15 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             turns=args.turns,
             max_seeds=args.max_seeds,
+        )
+        print(path)
+        return 0
+
+    if args.command == "run-open-set-seed-review":
+        path = run_open_set_seed_review(
+            args.input,
+            args.output,
+            review_packet_path=args.review_packets,
         )
         print(path)
         return 0
