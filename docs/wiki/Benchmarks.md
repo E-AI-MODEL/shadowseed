@@ -2,12 +2,14 @@
 
 De repo gebruikt meerdere suites. Elke suite test een andere vraag.
 
+Belangrijk: niet elke suite draagt dezelfde bewijslast. De huidige vaste scenario-suites zijn vooral regressie- en kleine benchmarklagen. De algemene SSL-claim moet op termijn sterker leunen op open-set, adversarial en gedragsvalidatie.
+
 ## Overzicht in gewone taal
 
 | Naam in Actions | Vraag | CLI | Artifact |
 |---|---|---|---|
 | 01 Codecheck | Werkt de Python-code? | `pytest` | geen JSON |
-| 02 Gap Finder | Vindt SSL bekende ontbrekende punten? | `shadowseed run-gap-suite` | `ssl45_gap_suite.json` |
+| 02 Gap Finder | Vindt SSL bekende ontbrekende punten in de regressiesuite? | `shadowseed run-gap-suite` | `ssl45_gap_suite.json` |
 | 03 Rustig blijven | Laat SSL volledige antwoorden met rust? | `shadowseed run-false-positive-suite` | `ssl45_false_positive_suite.json` |
 | 04 Antwoordwinst | Wordt een antwoord completer door SSL-seeds? | `shadowseed run-benefit-suite` | `ssl45_benefit_suite.json` |
 | 05 Model smoke | Werkt dezelfde modelroute met en zonder SSL? | `shadowseed run-model-benefit-suite` | `ssl45_model_benefit_suite.json` |
@@ -16,7 +18,11 @@ De repo gebruikt meerdere suites. Elke suite test een andere vraag.
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `shadowseed run-nlp-smoke` | `absencebench_smoke.json` |
 | 09 Herhalingstest | Wat gebeurt er bij meer rondes? | `shadowseed run-gap-suite --turns N` | `ssl45_gap_suite_turns_*.json` |
 
-## Gap Finder
+## Regressie- en kleine benchmarklaag
+
+Deze laag is vandaag het sterkst uitgewerkt en draait standaard in CI.
+
+### Gap Finder
 
 Data:
 
@@ -31,9 +37,9 @@ Meet:
 - promoted hits;
 - promoted seeds.
 
-Deze suite laat zien of SSL de ontworpen gaps in de kleine vaste suite vindt.
+Deze suite laat zien of SSL de ontworpen gaps in de kleine vaste suite vindt. Dat is waardevol als regressie en kleine benchmark, maar nog geen eindbewijs voor open-world prestatie.
 
-## Rustig blijven
+### Rustig blijven
 
 Data:
 
@@ -47,9 +53,9 @@ Meet:
 - promoted false positives;
 - false-positive rates.
 
-Deze suite voorkomt dat SSL overal zomaar ontbrekende punten van maakt.
+Deze suite voorkomt dat SSL overal zomaar ontbrekende punten van maakt. Voor hardere claims is later nog een strengere adversarial laag nodig.
 
-## Antwoordwinst
+### Antwoordwinst
 
 Data:
 
@@ -64,9 +70,9 @@ Meet:
 - coverage delta;
 - unsupported additions.
 
-Dit is fase 1. Er wordt nog geen echt extern model aangeroepen.
+Dit is fase 1-achtig gedrag binnen een kleine vaste benchmarkopzet. Er wordt nog geen volledig open modelgedrag bewezen.
 
-## Model smoke
+### Model smoke
 
 Data:
 
@@ -90,7 +96,9 @@ Backends:
 
 De standaard CI gebruikt `fixture`. Dat bewijst de meetketen, niet de prestatie van een echt model.
 
-## Blind test
+## Blind benchmarklaag
+
+### Blind test
 
 Data:
 
@@ -103,7 +111,9 @@ Het publieke bestand bevat scenario's. Het private labelbestand bevat `expected_
 
 De standaard CI maakt tijdelijke smoke-labels. Echte labels horen niet in de repo.
 
-## Retrieval en SSOT
+Deze laag is belangrijk omdat ze methodologisch bewaakt dat detectie en scoring gescheiden blijven.
+
+## Retrieval en SSOT-laag
 
 | Suite | Vraag | CLI |
 |---|---|---|
@@ -150,3 +160,13 @@ Een sterke uitkomst vereist minimaal:
 - geen conclusie alleen op basis van extra lengte.
 
 Een fixture-run is nuttig als technische controle. Een echte modelclaim vraagt om `hf-transformers`, meer scenario's en blind review.
+
+## Wat er nog bij moet komen
+
+Om de repo verder te professionaliseren en minder scenario-afhankelijk te maken, zijn later extra lagen nodig:
+
+- open-set seed quality review;
+- adversarial false-positive evaluatie;
+- probe utility evaluatie;
+- domeintransfer;
+- aparte modelinterne onderzoekslijn.
