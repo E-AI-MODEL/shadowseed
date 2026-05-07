@@ -48,11 +48,13 @@ def test_detailed_validation_gate_records_reasoning():
     first = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
     second = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
     third = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
+    fourth = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
 
     assert first.verdict == "blocked"
     assert first.external_evidence_passed is False
     assert second.verdict == "validated"
-    assert third.verdict == "promoted"
+    assert third.verdict == "validated"
+    assert fourth.verdict == "promoted"
     assert manager.validation_log[-1].promoted is True
     assert manager.event_log[-1].event_type == "validated"
 
