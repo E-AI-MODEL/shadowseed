@@ -16,6 +16,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from shadowseed.benchmark.ssl45_gap_suite import detect_candidate_seeds
 from shadowseed.manager import SSLManager
 
@@ -81,7 +83,7 @@ def run_open_set_seed_review(
     domain_counts: dict[str, int] = {}
 
     for item in items:
-        manager = SSLManager(embedding_fn=lambda text: detect_embedding(text))
+        manager = SSLManager(embedding_fn=detect_embedding)
         raw_candidates = _raw_candidates(item)
         ingest = manager.ingest_detection_candidates(raw_candidates)
         raw_candidate_count += ingest["input_count"]
@@ -149,13 +151,13 @@ def run_open_set_seed_review(
     return output
 
 
-def detect_embedding(text: str) -> list[float]:
+def detect_embedding(text: str) -> np.ndarray:
     """Cheap deterministic lexical embedding for review scaffolding."""
     dims = 128
-    vector = [0.0] * dims
+    vector = np.zeros(dims, dtype=float)
     for token in text.lower().split():
         vector[hash(token) % dims] += 1.0
-    norm = sum(value * value for value in vector) ** 0.5
+    norm = np.linalg.norm(vector)
     if norm == 0:
         return vector
-    return [value / norm for value in vector]
+    return vector / norm
