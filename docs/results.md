@@ -4,6 +4,8 @@ Deze pagina beschrijft de actuele output van de SSL 4.5 benchmarkruns uit GitHub
 
 Deze pagina is een leeswijzer voor de gepubliceerde standaardresultaten. Ze is geen zelfstandige eindconclusie over SSL 4.5 als algemeen mechanisme.
 
+De actuele publicatie verschijnt via Wiki, Pages en het workflow-artifact `published-latest-results-snapshot`. De publish-workflow commit geen resultatensnapshot terug naar `main`.
+
 ## Runs
 
 | Suite | Outputbestand | Scenario's | Bewijssoort |
@@ -89,7 +91,7 @@ De huidige runs laten zien dat de pipeline vijf dingen goed doet:
 4. herkenning van juridische procedurele gaps in een grensoverschrijdende consumentencontext;
 5. geen false positives op drie volledige negatieve controles.
 
-Alle promoted seeds in de positieve suite hebben in de artifact-output:
+Alle promoted seeds in de artifact-output hebben in de positieve suite:
 
 ```text
 trace = 3.0
