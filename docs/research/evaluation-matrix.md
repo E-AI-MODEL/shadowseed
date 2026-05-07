@@ -10,6 +10,8 @@ De matrix beantwoordt per laag drie vragen:
 2. hoe meten we dat;
 3. wat is vandaag de status.
 
+De matrix is geen scorekaart die alles samenvouwt tot één getal. Ze bewaakt juist dat verschillende bewijssoorten zichtbaar gescheiden blijven.
+
 ## Overzicht
 
 | Laag | Hoofdvraag | Huidige status | Gewenste status |
@@ -89,7 +91,8 @@ Kan SSL op onbekende teksten kleine, relevante en toetsbare seeds produceren zon
 - open corpus of sampled real-world teksten;
 - seedgeneratie zonder vooraf opgeschreven expected seeds;
 - blinde menselijke scoring;
-- interbeoordelaarsovereenstemming.
+- interbeoordelaarsovereenstemming;
+- expliciete afwijscodes voor te brede, triviale, irrelevante en niet-toetsbare seeds.
 
 ### Primaire metrics
 
@@ -98,6 +101,13 @@ Kan SSL op onbekende teksten kleine, relevante en toetsbare seeds produceren zon
 - relevantieratio;
 - agreement;
 - percentage triviale seeds.
+
+### Vereiste artifacts
+
+- seed-output per run;
+- reviewformulieren of review-packets;
+- disagreement-log;
+- samenvatting per beoordelaar en per domein.
 
 ### Huidige status
 
@@ -117,13 +127,21 @@ Voorkomt SSL dat zwakke of misleidende gaps promoveren?
 
 - complete of bijna-complete teksten;
 - lokkende maar irrelevante uitbreidingskansen;
-- vergelijking tussen Gate en zwakkere baselines.
+- vergelijking tussen Gate en zwakkere baselines zoals `trace-only` en `trace + no contradiction check`.
 
 ### Primaire metrics
 
 - candidate false-positive rate;
 - promoted false-positive rate;
-- nettoverbetering van de Gate versus trace-only of lichtere promotie.
+- nettoverbetering van de Gate versus zwakkere promotie;
+- zichtbare foutgevallen waarin de Gate terecht blokkeert.
+
+### Vereiste artifacts
+
+- false-positive log;
+- promotiebeslissingen per seed;
+- vergelijking per baseline-regel;
+- voorbeelden van geblokkeerde en doorgelaten seeds.
 
 ### Huidige status
 
@@ -171,7 +189,8 @@ Blijft seedkwaliteit overeind in nieuwe domeinen en promptvormen?
 
 - extra domeinen buiten de huidige suites;
 - cross-domain holdouts;
-- meerdere tekstgenres en taakvormen.
+- meerdere tekstgenres en taakvormen;
+- expliciete scheiding tussen domeintransfer en domein-prior tuning.
 
 ### Primaire metrics
 
@@ -222,6 +241,14 @@ Deze matrix moet voor repo-beslissingen als volgt worden gelezen:
 - regressie en kleine benchmarkvalidatie houden de repo stabiel;
 - open-set, adversarial en probe utility moeten de hoofdclaim gaan dragen;
 - domeintransfer en modelinterne validatie bepalen later hoe breed de claim mag worden.
+
+## Wat niet moet gebeuren
+
+Vermijd:
+
+- één totaalscore waarin regressie, open-set en behavioral metrics verdwijnen;
+- publicatie waarin fixture-smokes dezelfde status krijgen als menselijke review;
+- domeintransferclaims op basis van alleen scenario-stabiele regressies.
 
 ## Korte prioriteitsvolgorde
 
