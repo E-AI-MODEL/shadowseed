@@ -38,6 +38,25 @@ def test_add_update_and_validation_gate_smoke():
     assert manager.seeds[seed_id].weight >= 0.4
 
 
+def test_detailed_validation_gate_records_reasoning():
+    manager = SSLManager(embedding_fn=fake_embedding)
+    seed_id = manager.add_or_update_seed(
+        "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen."
+    )
+    manager.seeds[seed_id].occurrence_count = 3
+
+    first = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
+    second = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
+    third = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
+
+    assert first.verdict == "blocked"
+    assert first.external_evidence_passed is False
+    assert second.verdict == "validated"
+    assert third.verdict == "promoted"
+    assert manager.validation_log[-1].promoted is True
+    assert manager.event_log[-1].event_type == "validated"
+
+
 def test_reactivate_dormant_seed_by_keyword():
     manager = SSLManager(embedding_fn=fake_embedding)
     seed_id = manager.add_or_update_seed(
