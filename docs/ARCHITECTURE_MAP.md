@@ -2,6 +2,8 @@
 
 Deze pagina is de kaart van de repo. Gebruik hem als startpunt als je niet meer weet welke run waarvoor is.
 
+De repo heeft niet één doel maar meerdere banen die samen moeten blijven kloppen. Juist daarom is het belangrijk om regressie, benchmark, rapportage en publicatie niet met elkaar te verwarren.
+
 ## Vier banen
 
 | Baan | Doel | Belangrijkste plekken | Status |
@@ -26,17 +28,17 @@ De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden ni
 
 ## Welke run doet wat?
 
-| Runnaam in GitHub Actions | Wat doet hij? | Uitkomst |
-|---|---|---|
-| 01 Codecheck | Controleert of de Python-code en unit tests werken | pytest-resultaat |
-| 02 Gap Finder | Test of SSL bekende ontbrekende punten vindt | `ssl45_gap_suite.json` |
-| 03 Rustig blijven | Test of SSL volledige antwoorden met rust laat | `ssl45_false_positive_suite.json` |
-| 04 Antwoordwinst | Test of SSL-toevoegingen een antwoord completer maken | `ssl45_benefit_suite.json` |
-| 05 Model smoke | Test dezelfde modelroute met fixture-backend | `ssl45_model_benefit_suite.json` |
-| 06 Blind test | Test labelscheiding: detectie ziet labels niet vooraf | `blind_benchmark.json` |
-| 07 Rapport | Vat kernresultaten samen | `analysis_report.md`, `summary.json`, grafieken |
-| 08 AbsenceBench rooktest | Controleert lokale AbsenceBench-run | `absencebench_smoke.json` |
-| 09 Herhalingstest | Draait Gap Finder met meer of minder rondes | `ssl45_gap_suite_turns_*.json` |
+| Runnaam in GitHub Actions | Wat doet hij? | Uitkomst | Bewijssoort |
+|---|---|---|---|
+| 01 Codecheck | Controleert of de Python-code en unit tests werken | pytest-resultaat | regressie |
+| 02 Gap Finder | Test of SSL bekende ontbrekende punten vindt | `ssl45_gap_suite.json` | kleine benchmark |
+| 03 Rustig blijven | Test of SSL volledige antwoorden met rust laat | `ssl45_false_positive_suite.json` | regressie / kleine benchmark |
+| 04 Antwoordwinst | Test of SSL-toevoegingen een antwoord completer maken | `ssl45_benefit_suite.json` | kleine benchmark |
+| 05 Model smoke | Test dezelfde modelroute met fixture-backend | `ssl45_model_benefit_suite.json` | technische smoke |
+| 06 Blind test | Test labelscheiding: detectie ziet labels niet vooraf | `blind_benchmark.json` | methodologische smoke |
+| 07 Rapport | Vat kernresultaten samen | `analysis_report.md`, `summary.json`, grafieken | rapportage |
+| 08 AbsenceBench rooktest | Controleert lokale dataset-run | `absencebench_smoke.json` | technische smoke |
+| 09 Herhalingstest | Draait Gap Finder met meer of minder rondes | `ssl45_gap_suite_turns_*.json` | regressie / gevoeligheid |
 
 ## Handmatige workflows
 
@@ -60,4 +62,24 @@ De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden ni
 
 ## Belangrijke grens
 
-De standaard CI gebruikt vooral kleine suites en fixture-runs. Dat bewijst dat de meetketen werkt. Echte modelclaims horen bij handmatige HF-runs, grotere suites en blind review.
+De standaard CI gebruikt vooral kleine suites en fixture-runs. Dat bewijst dat de meetketen werkt en dat regressies zichtbaar worden.
+
+De standaard CI bewijst niet automatisch:
+
+- algemene SSL-prestatie buiten de vaste suites;
+- open-set seedkwaliteit;
+- sterke adversarial Gate-robustheid;
+- brede modelclaims op echte backends;
+- domeintransfer;
+- modelinterne validatie.
+
+Voor dat soort claims zijn handmatige HF-runs, grotere suites, menselijke review en aparte evaluatielagen nodig.
+
+## Hoe deze kaart samenhangt met de research-docs
+
+Gebruik deze combinatie:
+
+- `ARCHITECTURE_MAP.md` voor de vraag: wat draait hier precies?
+- `docs/research/current-status.md` voor de vraag: wat bewijst dat vandaag echt?
+- `docs/research/scenario-independence-roadmap.md` voor de vraag: waar moet het bewijs heen?
+- `docs/research/evaluation-matrix.md` voor de vraag: welke laag draagt welke claim?
