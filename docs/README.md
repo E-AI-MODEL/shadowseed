@@ -12,6 +12,14 @@ Begin met:
 4. [Blind Benchmark](wiki/Blind-Benchmark.md)
 5. [Resultaten](results.md)
 
+## Onderzoeksstatus
+
+Deze documenten beschrijven niet alleen wat SSL inhoudelijk is, maar ook hoe sterk de repo het vandaag werkelijk aantoont.
+
+1. [Huidige status](research/current-status.md)
+2. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
+3. [Evaluatiematrix](research/evaluation-matrix.md)
+
 ## Leesvolgorde voor inhoud
 
 1. [Framework](01_framework.md)
