@@ -18,7 +18,7 @@
     "geen upstream AbsenceBench evaluator"
   ],
   "execution_gap": false,
-  "timestamp": "2026-05-07T04:23:19.716941+00:00",
+  "timestamp": "2026-05-07T04:24:38.375543+00:00",
   "evaluation": {
     "baseline": {
       "true_positive": 1,
@@ -52,8 +52,25 @@
           "promoted_count": 0,
           "rejected_candidates": [],
           "manager": {
+            "config": {
+              "trace_start": 2.0,
+              "half_life_turns": 3.0,
+              "dedup_threshold": 0.95,
+              "promotion_threshold": 0.4,
+              "dormant_threshold": 0.05,
+              "validation_increment": 0.2,
+              "contradiction_penalty": 0.3,
+              "max_trace": 3.0,
+              "reactivation_increment": 2.0,
+              "min_occurrences_for_gate": 3,
+              "min_evidence_for_gate": 2,
+              "min_trace_for_gate": 0.5,
+              "max_seed_words": 18
+            },
             "seeds": [],
             "constellations": [],
+            "validation_log": [],
+            "event_log": [],
             "vector_constellation": null
           }
         }
@@ -68,12 +85,52 @@
           "promoted_count": 0,
           "rejected_candidates": [],
           "manager": {
+            "config": {
+              "trace_start": 2.0,
+              "half_life_turns": 3.0,
+              "dedup_threshold": 0.95,
+              "promotion_threshold": 0.4,
+              "dormant_threshold": 0.05,
+              "validation_increment": 0.2,
+              "contradiction_penalty": 0.3,
+              "max_trace": 3.0,
+              "reactivation_increment": 2.0,
+              "min_occurrences_for_gate": 3,
+              "min_evidence_for_gate": 2,
+              "min_trace_for_gate": 0.5,
+              "max_seed_words": 18
+            },
             "seeds": [
               {
                 "id": "ss_001",
                 "text": "Ontbrekend concept: bewijs",
                 "embedding": [
                   0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.5773502691896258,
+                  0.0,
+                  0.5773502691896258,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
                   0.5773502691896258,
                   0.0,
                   0.0,
@@ -102,31 +159,6 @@
                   0.0,
                   0.0,
                   0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.5773502691896258,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                  0.5773502691896258,
                   0.0,
                   0.0,
                   0.0,
@@ -146,11 +178,77 @@
                 "occurrence_count": 3,
                 "evidence_count": 2,
                 "status": "ACTIVE",
-                "created_at": "2026-05-07T04:23:19.716780",
-                "updated_at": "2026-05-07T04:23:19.716816"
+                "created_at": "2026-05-07T04:24:38.375317",
+                "updated_at": "2026-05-07T04:24:38.375357"
               }
             ],
             "constellations": [],
+            "validation_log": [
+              {
+                "seed_id": "ss_001",
+                "status_before": "NEW",
+                "status_after": "NEW",
+                "weight_before": 0.0,
+                "weight_after": 0.0,
+                "occurrence_count": 3,
+                "evidence_count": 1,
+                "internal_recognition_passed": true,
+                "external_evidence_passed": false,
+                "contradiction_free": true,
+                "external_evidence_applied": true,
+                "contradiction_applied": false,
+                "promoted": false,
+                "verdict": "blocked",
+                "created_at": "2026-05-07T04:24:38.375350"
+              },
+              {
+                "seed_id": "ss_001",
+                "status_before": "NEW",
+                "status_after": "ACTIVE",
+                "weight_before": 0.0,
+                "weight_after": 0.2,
+                "occurrence_count": 3,
+                "evidence_count": 2,
+                "internal_recognition_passed": true,
+                "external_evidence_passed": true,
+                "contradiction_free": true,
+                "external_evidence_applied": true,
+                "contradiction_applied": false,
+                "promoted": false,
+                "verdict": "validated",
+                "created_at": "2026-05-07T04:24:38.375364"
+              }
+            ],
+            "event_log": [
+              {
+                "event_type": "created",
+                "seed_id": "ss_001",
+                "detail": {
+                  "text": "Ontbrekend concept: bewijs"
+                },
+                "created_at": "2026-05-07T04:24:38.375333"
+              },
+              {
+                "event_type": "validation_blocked",
+                "seed_id": "ss_001",
+                "detail": {
+                  "internal_recognition_passed": true,
+                  "external_evidence_passed": false,
+                  "contradiction_free": true
+                },
+                "created_at": "2026-05-07T04:24:38.375343"
+              },
+              {
+                "event_type": "validated",
+                "seed_id": "ss_001",
+                "detail": {
+                  "promoted": false,
+                  "weight_after": 0.2,
+                  "evidence_count": 2
+                },
+                "created_at": "2026-05-07T04:24:38.375360"
+              }
+            ],
             "vector_constellation": null
           }
         }
