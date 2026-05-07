@@ -58,6 +58,7 @@ shadowseed run-gap-suite
 shadowseed run-false-positive-suite
 shadowseed run-benefit-suite
 shadowseed run-open-set-seed-review
+shadowseed run-probe-utility-benchmark
 shadowseed analyze-results
 ```
 
@@ -69,6 +70,7 @@ shadowseed analyze-results
 | `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust en blokkeert de Gate misleidende lure-seeds? |
 | `shadowseed run-benefit-suite` | Antwoordwinst | Wordt een antwoord completer met SSL-toevoegingen? |
 | `shadowseed run-open-set-seed-review` | Open-set review | Maakt seed-output en review-packets zonder vaste ground-truth seedlijst |
+| `shadowseed run-probe-utility-benchmark` | Probe utility | Laat een promoted seed scherpere vervolgvragen, retrieval-queries en dialectische tegenvragen zien dan een brede baseline? |
 | `shadowseed run-model-benefit-suite --backend fixture` | Model smoke | Werkt de modelroute technisch zonder modeldownload? |
 | `shadowseed run-blind-benchmark` | Blind test | Blijven labels verborgen tot de scoring? |
 | `shadowseed run-retrieval-benchmark` | Retrieval check | Vindt de vectorstore de juiste bronstukken? |
@@ -92,6 +94,7 @@ De standaardworkflow heet **Checks en benchmark-resultaten**. De runnamen zijn g
 | 07 Rapport | Vat de belangrijkste resultaten samen. |
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? |
 | 09 Herhalingstest | Wat gebeurt er bij meer SSL-rondes? |
+| handmatig | Probe utility | Zijn seed-geleide vervolgacties scherper dan brede baseline-probes? |
 
 Na een geslaagde push naar `main` publiceert **Publiceer testresultaten naar Wiki en Pages** de laatste artifacts naar Wiki en Pages. De workflow schrijft geen resultatensnapshot terug naar `main`. PR-runs worden niet gepubliceerd.
 
@@ -160,7 +163,7 @@ De repo is een research prototype. De huidige standaardruns laten zien dat de me
 
 De vaste scenario-suites moeten nu gelezen worden als regressie- en kleine benchmarklaag. Ze zijn nuttig om de kernmechaniek stabiel te houden, maar dragen niet zelfstandig de volledige algemene SSL-claim.
 
-Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplevert. Daarvoor zijn grotere blinde suites, meerdere echte modellen, open-set seedbeoordeling, adversarial Gate-evaluatie en menselijke beoordeling nodig.
+Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplevert. Daarvoor zijn grotere blinde suites, meerdere echte modellen, open-set seedbeoordeling, adversarial Gate-evaluatie, probe-evaluatie met menselijke review en menselijke beoordeling nodig.
 
 ## Wat dit niet claimt
 
