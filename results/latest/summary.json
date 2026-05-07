@@ -143,7 +143,7 @@
   ],
   "manifest": {
     "source_workflow": "Checks en benchmark-resultaten",
-    "source_run_id": "25402423248",
+    "source_run_id": "25475627625",
     "repository": "E-AI-MODEL/shadowseed",
     "copied_files": [
       {
@@ -179,7 +179,7 @@
         "source_path": "06-blind-benchmark-results/blind_benchmark.json",
         "latest_path": "latest/blind_benchmark.json",
         "original_artifact_path": "results/artifacts/06-blind-benchmark-results/blind_benchmark.json",
-        "bytes": 47060
+        "bytes": 47085
       },
       {
         "artifact": "07-analysis-report",
@@ -228,28 +228,28 @@
         "source_path": "09-repeat-test-turns-2/ssl45_gap_suite_turns_2.json",
         "latest_path": "latest/ssl45_gap_suite_turns_2.json",
         "original_artifact_path": "results/artifacts/09-repeat-test-turns-2/ssl45_gap_suite_turns_2.json",
-        "bytes": 37326
+        "bytes": 37311
       },
       {
         "artifact": "09-repeat-test-turns-3",
         "source_path": "09-repeat-test-turns-3/ssl45_gap_suite_turns_3.json",
         "latest_path": "latest/ssl45_gap_suite_turns_3.json",
         "original_artifact_path": "results/artifacts/09-repeat-test-turns-3/ssl45_gap_suite_turns_3.json",
-        "bytes": 66764
+        "bytes": 66824
       },
       {
         "artifact": "09-repeat-test-turns-5",
         "source_path": "09-repeat-test-turns-5/ssl45_gap_suite_turns_5.json",
         "latest_path": "latest/ssl45_gap_suite_turns_5.json",
         "original_artifact_path": "results/artifacts/09-repeat-test-turns-5/ssl45_gap_suite_turns_5.json",
-        "bytes": 68546
+        "bytes": 68516
       },
       {
         "artifact": "09-repeat-test-turns-8",
         "source_path": "09-repeat-test-turns-8/ssl45_gap_suite_turns_8.json",
         "latest_path": "latest/ssl45_gap_suite_turns_8.json",
         "original_artifact_path": "results/artifacts/09-repeat-test-turns-8/ssl45_gap_suite_turns_8.json",
-        "bytes": 71140
+        "bytes": 71184
       }
     ]
   },
