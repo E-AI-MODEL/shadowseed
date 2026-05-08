@@ -11,6 +11,7 @@ from shadowseed.benchmark.blind.detector import detect_blind_candidates, tokeniz
 from shadowseed.benchmark.blind.loader import load_hidden_labels, load_public_suite
 from shadowseed.benchmark.blind.schemas import BlindScenarioResult
 from shadowseed.benchmark.blind.scorer import score_blind_result
+from shadowseed.hash_utils import stable_bucket_index
 from shadowseed.manager import SSLManager, SeedStatus
 
 
@@ -18,7 +19,7 @@ def lexical_embedding(text: str, dimensions: int = 128) -> np.ndarray:
     """Deterministic no-download embedding for CI-safe blind benchmark runs."""
     vector = np.zeros(dimensions, dtype=float)
     for token in tokenize(text):
-        vector[hash(token) % dimensions] += 1.0
+        vector[stable_bucket_index(token, dimensions)] += 1.0
     norm = np.linalg.norm(vector)
     if norm == 0:
         return vector
