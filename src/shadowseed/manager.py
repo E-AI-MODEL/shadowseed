@@ -399,7 +399,7 @@ class SSLManager:
     ) -> ValidationGateResult:
         self.validation_log.append(result)
         if event_type is not None:
-            self._record_and_sync(result.seed_id, event_type, **(event_detail or {}))
+            self._record_and_sync(event_type, result.seed_id, **(event_detail or {}))
         else:
             self._sync_seed(result.seed_id)
         return result
