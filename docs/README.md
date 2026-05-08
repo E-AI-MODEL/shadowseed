@@ -1,35 +1,26 @@
 # Documentatie
 
-Deze map bevat de inhoudelijke, technische en methodologische documentatie voor Shadow Seed Learning 4.5.
+Deze map bevat nu drie verschillende documentrollen die bewust uit elkaar worden gehouden.
 
-Niet elk document heeft dezelfde rol. Sommige pagina's beschrijven het mechanisme, andere leggen uit wat de repo vandaag werkelijk bewijst, en weer andere helpen je bij dagelijks gebruik van de benchmarks en resultaten.
+## 1. Canonieke bron
 
-## Start hier
+Begin voor theorie en doelbeeld hier:
 
-Als je de repo nog niet kent, lees dan in deze volgorde:
+1. [Canonieke bron: SSL 4.6](00_shadow_seed_learning_4_6.md)
 
-1. [Repo-overzicht](ARCHITECTURE_MAP.md)
-2. [Framework](01_framework.md)
-3. [Huidige status](research/current-status.md)
-4. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
-5. [Evaluatiematrix](research/evaluation-matrix.md)
-6. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
-7. [CLI command map](CLI_COMMAND_MAP.md)
+Dit document is leidend voor:
 
-Deze zeven documenten geven samen antwoord op:
+- de inhoudelijke definitie van SSL;
+- de gewenste evaluatiekoers;
+- de richting waarin de repo zich moet ontwikkelen.
 
-- wat SSL 4.5 inhoudelijk is;
-- hoe de repo is opgebouwd;
-- wat de standaardruns vandaag echt aantonen;
-- waar de grootste validatiegaten nog zitten;
-- welke volgende bewijslaag als eerste gebouwd moet worden;
-- hoe de commandostructuur gelezen moet worden.
+Praktische regel:
 
-## Twee leesroutes
+> als afgeleide docs inhoudelijk botsen met `00_shadow_seed_learning_4_6.md`, dan gaat `00_` voor op theorie en doelbeeld.
 
-## 1. Inhoud en bewijs
+## 2. Afgeleide werkdocumenten
 
-Gebruik deze route als je wilt begrijpen wat SSL claimt en hoe sterk die claim vandaag is afgedekt.
+Deze documenten zijn afgeleid van de canonieke bron en helpen bij uitleg, benchmarkgebruik en dagelijkse oriëntatie.
 
 1. [Framework](01_framework.md)
 2. [Atomische seeds](02_atomic_seeds.md)
@@ -38,12 +29,47 @@ Gebruik deze route als je wilt begrijpen wat SSL claimt en hoe sterk die claim v
 5. [Handleiding voor beoordelaars](06_handleiding_beoordelaars.md)
 6. [Reproduceerbaarheid](07_reproduceerbaarheid.md)
 7. [Referenties](08_referenties.md)
-8. [Experimentopzet](EXPERIMENT.md)
-9. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
+8. [CLI command map](CLI_COMMAND_MAP.md)
+9. [Repo-overzicht](ARCHITECTURE_MAP.md)
+10. [Resultaten](results.md)
 
-## 2. Dagelijks gebruik
+Deze documenten zijn bedoeld om delen van het systeem sneller te kunnen lezen zonder telkens de volledige bron te hoeven openen.
 
-Gebruik deze route als je de repo wilt draaien, resultaten wilt begrijpen of workflows wilt volgen.
+## 3. Research- en statusdocumenten
+
+Deze documenten zijn leidend voor de vraag wat de repo vandaag werkelijk bewijst en waar ze inhoudelijk heen wil.
+
+1. [Huidige status](research/current-status.md)
+2. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
+3. [Evaluatiematrix](research/evaluation-matrix.md)
+4. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
+
+Praktische regel:
+
+> `00_` vertelt wat SSL inhoudelijk wil zijn.
+>
+> de research-docs vertellen wat vandaag al staat en welke bewijslaag nog gebouwd moet worden.
+
+## Aanbevolen leesroutes
+
+### Route A — Volledige inhoud en doelbeeld
+
+Lees in deze volgorde:
+
+1. [Canonieke bron: SSL 4.6](00_shadow_seed_learning_4_6.md)
+2. [Huidige status](research/current-status.md)
+3. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
+4. [Evaluatiematrix](research/evaluation-matrix.md)
+
+Gebruik deze route als je wilt begrijpen:
+
+- wat SSL inhoudelijk claimt;
+- wat de repo vandaag werkelijk aantoont;
+- hoe de hoofdclaim moet verschuiven naar sterkere evaluatielagen.
+
+### Route B — Dagelijks repo-gebruik
+
+Lees in deze volgorde:
 
 1. [Repo-overzicht](ARCHITECTURE_MAP.md)
 2. [CLI command map](CLI_COMMAND_MAP.md)
@@ -51,28 +77,18 @@ Gebruik deze route als je de repo wilt draaien, resultaten wilt begrijpen of wor
 4. [Blind Benchmark](wiki/Blind-Benchmark.md)
 5. [Resultaten](results.md)
 
-## Onderzoeksstatus
+Gebruik deze route als je vooral wilt draaien, vergelijken, publiceren of benchmarkoutput interpreteren.
 
-De research-documenten hebben ieder een andere functie:
+## Leeswijzer voor waarheidstype
 
-- [Huidige status](research/current-status.md): wat staat er vandaag echt?
-- [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md): waar moet de repo inhoudelijk heen?
-- [Evaluatiematrix](research/evaluation-matrix.md): welke evaluatielagen dragen welke claim?
-- [Open-set en adversarial plan](research/open-set-adversarial-plan.md): wat is de eerstvolgende inhoudelijke verdiepingsstap?
-
-Samen voorkomen ze dat regressies, kleine benchmarkresultaten en algemene SSL-claims door elkaar gaan lopen.
-
-## Leeswijzer voor techniek
-
-| Vraag | Waar kijken? |
+| Vraag | Leidende bron |
 |---|---|
-| Welke onderdelen heeft de repo? | `ARCHITECTURE_MAP.md` |
-| Welke CLI-commando's bestaan? | `src/shadowseed/cli.py` |
-| Hoe zijn de commands ingedeeld? | `CLI_COMMAND_MAP.md` |
-| Welke tests draaien standaard? | `.github/workflows/tests.yml` |
-| Waar worden resultaten gepubliceerd? | `.github/workflows/publish-test-results.yml` |
-| Hoe werkt de analyse? | `src/shadowseed/analysis/ssl45_result_analyzer.py` |
-| Hoe werkt het dashboard? | `site/` |
+| Wat is SSL inhoudelijk en waar moet het heen? | `00_shadow_seed_learning_4_6.md` |
+| Wat bewijst de repo vandaag echt? | `research/current-status.md` |
+| Welke evaluatielagen moeten de hoofdclaim gaan dragen? | `research/evaluation-matrix.md` |
+| Hoe migreert de repo weg van scenario-afhankelijkheid? | `research/scenario-independence-roadmap.md` |
+| Welke onderdelen heeft de repo nu? | `ARCHITECTURE_MAP.md` |
+| Welke commands en workflows horen bij welke laag? | `CLI_COMMAND_MAP.md` en `.github/workflows/` |
 
 ## Kernregels
 
@@ -80,7 +96,7 @@ Samen voorkomen ze dat regressies, kleine benchmarkresultaten en algemene SSL-cl
 
 > Wat mechanisch werkt is nog niet automatisch wetenschappelijk bewezen.
 
-Deze twee regels zijn samen de kortste samenvatting van de repo.
+> Regressie, kleine benchmarkvalidatie en hoofdclaim mogen niet door elkaar lopen.
 
 ## Praktisch
 
@@ -88,5 +104,5 @@ Deze twee regels zijn samen de kortste samenvatting van de repo.
 - Private blinde labels horen in `benchmarks/private/` en worden niet gecommit.
 - De benchmarkrunners staan in `src/shadowseed/benchmark/`.
 - De CLI staat in `src/shadowseed/cli.py`.
-- De laatste gepubliceerde resultaten verschijnen via GitHub Actions in Wiki, Pages en het workflow-artifact `published-latest-results-snapshot`.
-- De standaard CI is vooral regressie- en meetketencontrole; grotere claims vragen extra evaluatielagen.
+- De standaard CI bewaakt vooral regressie en meetketenstabiliteit.
+- De volgende inhoudelijke winst moet vooral komen uit open-set review, adversarial Gate-evaluatie, probe utility en domeintransfer.
