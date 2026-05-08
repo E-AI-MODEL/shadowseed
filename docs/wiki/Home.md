@@ -11,19 +11,20 @@ De wiki heeft twee functies tegelijk:
 
 ## Begin hier
 
-De snelste ingang:
+De meest stabiele ingangen zijn nu:
 
-- [Dashboard](Dashboard)
 - [Latest Test Results](Latest-Test-Results)
+- [SSL 4.5 Analysis](SSL-45-Analysis)
+- [Dashboard](Dashboard)
 - [Benchmarks](Benchmarks)
-- [Start hier](Start-Hier)
+- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
 
 Gebruik deze volgorde als je snel overzicht wilt:
 
-1. Dashboard voor de huidige status.
-2. Latest Test Results voor de laatste gepubliceerde artifacts.
-3. Benchmarks voor uitleg per run en per bewijssoort.
-4. Start hier voor de inhoudelijke uitleg.
+1. Latest Test Results voor de laatste gepubliceerde artifacts.
+2. SSL 4.5 Analysis voor de samengevatte uitkomst.
+3. Dashboard voor de bredere handmatige checks.
+4. Benchmarks voor uitleg per run en per bewijssoort.
 
 ## Welke run doet wat?
 
@@ -39,27 +40,21 @@ Gebruik deze volgorde als je snel overzicht wilt:
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | technische smoke |
 | 09 Herhalingstest | Wat gebeurt er bij meer SSL-rondes? | gevoeligheid / regressie |
 
-## Hoofddossiers
+## Stabiele hoofdpagina's
 
-- [Dashboard](Dashboard) - snelle status
-- [Latest Test Results](Latest-Test-Results) - laatste gepubliceerde artifacts
+- [Latest Test Results](Latest-Test-Results) - ingang naar de laatste standaardpublicatie
+- [SSL 4.5 Analysis](SSL-45-Analysis) - centrale analysepagina
+- [Dashboard](Dashboard) - bredere status over handmatige en aanvullende checks
 - [Start hier](Start-Hier) - eenvoudige instap en leesroute
-- [Eindconclusie SSL 4.5](Eindconclusie-SSL-4-5) - volledig dossier, printbaar
-- [Tussentijdse rapportage SSL 4.5](Tussentijdse-Rapportage) - tussenstand
-- [Visueel verhaal SSL 4.5](Visueel-Verhaal) - compacte uitleg met diagrammen
-- [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is) - veiligheid, Gate en falsificatie
+- [Benchmarks](Benchmarks) - uitleg per suite en bewijssoort
 
-## Technische verdieping
+## Aanvullende technische checks
 
-- [Quick Start](Quick-Start)
-- [Conceptueel overzicht](Conceptueel-Overzicht)
-- [Architectuur](Architectuur)
-- [Benchmarks](Benchmarks)
+- [SSOT Falsification](SSOT-Falsification)
+- [Retrieval Model HF](Retrieval-Model-HF)
+- [Full Validation Sweep](Full-Validation-Sweep)
 - [Blind Benchmark](Blind-Benchmark)
-- [Vectorstore en gewichtloze seeds](Vectorstore-en-Gewichtloze-Seeds)
-- [SSOT en documentvalidatie](SSOT-en-Documentvalidatie)
-- [Fase 2: SLM-runs](SLM-Runs)
-- [Blind review protocol](Blind-Review-Protocol)
+- [Architectuur](Architectuur)
 - [Roadmap](Roadmap)
 
 ## Automatische resultaten
@@ -79,7 +74,6 @@ De belangrijkste automatische pagina's:
 - [Latest Test Results](Latest-Test-Results)
 - [SSL 4.5 Analysis](SSL-45-Analysis)
 - [SSL 4.5 Analysis Summary JSON](SSL-45-Analysis-Summary)
-- [Retrieval Model HF](Retrieval-Model-HF)
 
 Oudere of specifieke pagina's kunnen nog bestaan voor losse experimenten, maar de laatste standaardresultaten staan onder `Latest Test Results`.
 
