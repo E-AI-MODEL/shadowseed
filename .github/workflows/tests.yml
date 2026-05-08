@@ -262,79 +262,27 @@ jobs:
           path: downloaded-artifacts
 
       - name: Bouw provenance-veilige results-map uit artifacts
-        env:
-          SOURCE_WORKFLOW: Checks en benchmark-resultaten
-          SOURCE_RUN_ID: ${{ github.run_id }}
-          REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
           rm -rf results
-          mkdir -p results results/artifacts
-          cp -R downloaded-artifacts/. results/artifacts/
-
-          python - <<'PY'
-          from __future__ import annotations
-
-          import json
-          import os
-          import re
-          import shutil
-          from pathlib import Path
-
-          source = Path("downloaded-artifacts")
-          results = Path("results")
-
-          allowed_suffixes = {".json", ".md", ".svg"}
-          manifest = {
-              "source_workflow": os.environ.get("SOURCE_WORKFLOW"),
-              "source_run_id": os.environ.get("SOURCE_RUN_ID"),
-              "repository": os.environ.get("REPOSITORY"),
-              "published_via": ["analysis-job"],
-              "copied_files": [],
-          }
-          used_names: set[str] = set()
-
-          def safe_name(value: str) -> str:
-              cleaned = re.sub(r"[^A-Za-z0-9_.-]+", "-", value).strip("-")
-              return cleaned or "artifact"
-
-          for file_path in sorted(path for path in source.rglob("*") if path.is_file()):
-              if file_path.suffix.lower() not in allowed_suffixes:
-                  continue
-              relative = file_path.relative_to(source)
-              artifact = relative.parts[0] if relative.parts else "artifact"
-              base = file_path.name
-              target_name = base
-              if target_name in used_names:
-                  target_name = f"{safe_name(artifact)}__{base}"
-              counter = 2
-              while target_name in used_names:
-                  stem = Path(base).stem
-                  suffix = Path(base).suffix
-                  target_name = f"{safe_name(artifact)}__{stem}_{counter}{suffix}"
-                  counter += 1
-              used_names.add(target_name)
-              target = results / target_name
-              shutil.copy2(file_path, target)
-              manifest["copied_files"].append(
-                  {
-                      "artifact": artifact,
-                      "source_path": str(relative),
-                      "results_path": str(target.relative_to(results.parent)),
-                      "original_artifact_path": str(Path("results/artifacts") / relative),
-                      "bytes": file_path.stat().st_size,
-                  }
-              )
-
-          (results / "manifest.json").write_text(
-              json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
-              encoding="utf-8",
-          )
-          PY
+          python -m shadowseed.analysis.artifact_snapshot \
+            --source downloaded-artifacts \
+            --target-dir results \
+            --artifacts-dir results/artifacts \
+            --manifest-path results/manifest.json \
+            --source-workflow "Checks en benchmark-resultaten" \
+            --source-run-id "${{ github.run_id }}" \
+            --repository "${{ github.repository }}" \
+            --published-via analysis-job \
+            --path-key results_path
 
       - name: Maak analyserapport
         run: |
           python -m shadowseed.cli analyze-results
+
+      - name: Voeg manifest toe aan rapport-artifact
+        run: |
+          cp results/manifest.json results/analysis/manifest.json
 
       - name: Upload analyserapport
         uses: actions/upload-artifact@v4
