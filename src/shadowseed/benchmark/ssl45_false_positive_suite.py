@@ -84,6 +84,12 @@ def evaluate_adversarial_candidate(candidate: str, scenario: dict) -> dict:
     assert seed_id is not None
 
     contradiction = contradiction_from_complete_input(candidate, scenario["input"])
+    baseline_trace_only = trace_only_promotes(manager, seed_id)
+    baseline_trace_without_contradiction = trace_without_contradiction_promotes(
+        manager,
+        seed_id,
+        contradiction,
+    )
     gate_result = manager.run_validation_gate_detailed(
         seed_id,
         external_evidence=False,
@@ -93,12 +99,8 @@ def evaluate_adversarial_candidate(candidate: str, scenario: dict) -> dict:
     return {
         "candidate": candidate,
         "contradiction_detected": contradiction,
-        "trace_only_promoted": trace_only_promotes(manager, seed_id),
-        "trace_without_contradiction_promoted": trace_without_contradiction_promotes(
-            manager,
-            seed_id,
-            contradiction,
-        ),
+        "trace_only_promoted": baseline_trace_only,
+        "trace_without_contradiction_promoted": baseline_trace_without_contradiction,
         "current_gate_promoted": gate_result.promoted,
         "current_gate_verdict": gate_result.verdict,
         "weight_after": gate_result.weight_after,
