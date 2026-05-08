@@ -1,5 +1,7 @@
 # Conceptueel overzicht
 
+> Status: achtergrondmateriaal. Gebruik voor de actuele repo-status eerst [Home](Home), [Latest Test Results](Latest-Test-Results), [SSL 4.5 Analysis](SSL-45-Analysis) en [Dashboard](Dashboard). Deze pagina legt het basisidee uit, maar is niet de primaire statusbron.
+
 Shadow Seed Learning 4.5 gebruikt ontbrekende structurele elementen als signaal.
 
 Een modelantwoord kan correct klinken en toch een belangrijke relatie missen. SSL noemt zo'n ontbrekend element een **gap**. Als die gap klein, specifiek en toetsbaar is, kan hij worden opgeslagen als **shadow seed**.
