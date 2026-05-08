@@ -1,5 +1,10 @@
 # SSL 4.5 Framework
 
+> Afgeleid werkdocument.
+>
+> Voor de canonieke bron voor theorie en doelbeeld, lees eerst `docs/00_shadow_seed_learning_4_6.md`.
+> Als dit document inhoudelijk botst met `00_`, dan gaat `00_` voor.
+
 ## 1. Hoofdclaim
 
 Shadow Seed Learning is een methode waarmee een LLM kleine structurele afwezigheden in zijn eigen antwoord detecteert, die detecties bewaart als gewichtloze shadow seeds, en alleen gevalideerde seeds gebruikt om vervolgvragen, retrieval of interne falsificatie te sturen.
