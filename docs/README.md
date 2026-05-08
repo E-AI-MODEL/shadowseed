@@ -13,13 +13,15 @@ Als je de repo nog niet kent, lees dan in deze volgorde:
 3. [Huidige status](research/current-status.md)
 4. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
 5. [Evaluatiematrix](research/evaluation-matrix.md)
+6. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
 
-Deze vijf documenten geven samen antwoord op:
+Deze zes documenten geven samen antwoord op:
 
 - wat SSL 4.5 inhoudelijk is;
 - hoe de repo is opgebouwd;
 - wat de standaardruns vandaag echt aantonen;
-- waar de grootste validatiegaten nog zitten.
+- waar de grootste validatiegaten nog zitten;
+- welke volgende bewijslaag als eerste gebouwd moet worden.
 
 ## Twee leesroutes
 
@@ -35,6 +37,7 @@ Gebruik deze route als je wilt begrijpen wat SSL claimt en hoe sterk die claim v
 6. [Reproduceerbaarheid](07_reproduceerbaarheid.md)
 7. [Referenties](08_referenties.md)
 8. [Experimentopzet](EXPERIMENT.md)
+9. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
 
 ## 2. Dagelijks gebruik
 
@@ -52,6 +55,7 @@ De research-documenten hebben ieder een andere functie:
 - [Huidige status](research/current-status.md): wat staat er vandaag echt?
 - [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md): waar moet de repo inhoudelijk heen?
 - [Evaluatiematrix](research/evaluation-matrix.md): welke evaluatielagen dragen welke claim?
+- [Open-set en adversarial plan](research/open-set-adversarial-plan.md): wat is de eerstvolgende inhoudelijke verdiepingsstap?
 
 Samen voorkomen ze dat regressies, kleine benchmarkresultaten en algemene SSL-claims door elkaar gaan lopen.
 
