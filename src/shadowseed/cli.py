@@ -4,35 +4,11 @@ from __future__ import annotations
 
 import argparse
 
-from shadowseed.analysis.ssl45_result_analyzer import analyze_results
-from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
-from shadowseed.benchmark.absencebench_local import run_local_absencebench
-from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
-from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate_benchmark
-from shadowseed.benchmark.blind.runner import run_blind_benchmark
-from shadowseed.benchmark.open_set_review_summary import summarize_open_set_seed_review
-from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
-from shadowseed.benchmark.result_writer import ResultWriter
-from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
-from shadowseed.benchmark.retrieval_model_benchmark import run_retrieval_model_benchmark
-from shadowseed.benchmark.run_types import RunType
-from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
-from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
-from shadowseed.benchmark.ssl45_gap_suite import run_ssl45_gap_suite
-from shadowseed.benchmark.ssl45_model_benefit_suite import run_ssl45_model_benefit_suite
-from shadowseed.benchmark.ssl45_probe_utility_suite import run_ssl45_probe_utility_suite
-from shadowseed.benchmark.ssot_smoke import run_ssot_smoke
-from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
+from shadowseed.cli_dispatch import execute_command
 
 
 VECTOR_BACKENDS = ["memory", "faiss", "chroma"]
 MODEL_BACKENDS = ["fixture", "hf-transformers"]
-COMMAND_ALIASES = {
-    "prepare-absencebench": "prepare-absencebench-bundle",
-    "fetch-absencebench": "fetch-absencebench-sample",
-    "run-local-absencebench": "run-absencebench-local",
-    "run-nlp-smoke": "run-absencebench-smoke",
-}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -256,141 +232,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    args.command = COMMAND_ALIASES.get(args.command, args.command)
-
-    if args.command == "prepare-absencebench-bundle":
-        bundle = AbsenceBenchRunner().build_execution_bundle(
-            requested_run_type=RunType.PREPARATION.value
-        )
-        path = ResultWriter().write_payload(bundle.result, args.output)
-        print(path)
-        return 0
-
-    if args.command == "run-absencebench-local":
-        path = run_local_absencebench(args.input, args.output)
-        print(path)
-        return 0
-
-    if args.command == "fetch-absencebench-sample":
-        path = fetch_absencebench_sample(args.output, limit=args.limit)
-        print(path)
-        return 0
-
-    if args.command == "run-gap-suite":
-        path = run_ssl45_gap_suite(args.input, args.output, turns=args.turns)
-        print(path)
-        return 0
-
-    if args.command == "run-false-positive-suite":
-        path = run_ssl45_false_positive_suite(args.input, args.output)
-        print(path)
-        return 0
-
-    if args.command == "run-benefit-suite":
-        path = run_ssl45_benefit_suite(args.input, args.output, turns=args.turns)
-        print(path)
-        return 0
-
-    if args.command == "run-model-benefit-suite":
-        path = run_ssl45_model_benefit_suite(
-            args.input,
-            args.output,
-            turns=args.turns,
-            backend=args.backend,
-            model_id=args.model_id,
-            max_new_tokens=args.max_new_tokens,
-        )
-        print(path)
-        return 0
-
-    if args.command == "run-blind-benchmark":
-        path = run_blind_benchmark(
-            args.input,
-            args.labels,
-            args.output,
-            turns=args.turns,
-            max_seeds=args.max_seeds,
-        )
-        print(path)
-        return 0
-
-    if args.command == "run-open-set-seed-review":
-        path = run_open_set_seed_review(
-            args.input,
-            args.output,
-            review_packet_path=args.review_packets,
-        )
-        print(path)
-        return 0
-
-    if args.command == "summarize-open-set-seed-review":
-        path = summarize_open_set_seed_review(
-            args.input,
-            args.output,
-            disagreements_output_path=args.disagreements_output,
-        )
-        print(path)
-        return 0
-
-    if args.command == "run-adversarial-gate-benchmark":
-        path = run_adversarial_gate_benchmark(
-            args.input,
-            args.output,
-            casebook_path=args.casebook,
-        )
-        print(path)
-        return 0
-
-    if args.command == "run-probe-utility-benchmark":
-        path = run_ssl45_probe_utility_suite(args.input, args.output)
-        print(path)
-        return 0
-
-    if args.command == "run-vectorstore-smoke":
-        path = run_vectorstore_smoke(args.output, backend=args.backend)
-        print(path)
-        return 0
-
-    if args.command == "run-ssot-smoke":
-        path = run_ssot_smoke(args.output, backend=args.backend)
-        print(path)
-        return 0
-
-    if args.command == "run-retrieval-benchmark":
-        path = run_retrieval_benchmark(
-            args.input,
-            args.output,
-            backend=args.backend,
-            k=args.k,
-        )
-        print(path)
-        return 0
-
-    if args.command == "run-retrieval-model-benchmark":
-        path = run_retrieval_model_benchmark(
-            args.input,
-            args.retrieval_input,
-            args.output,
-            vector_backend=args.vector_backend,
-            model_backend=args.model_backend,
-            model_id=args.model_id,
-            max_new_tokens=args.max_new_tokens,
-            top_k=args.top_k,
-        )
-        print(path)
-        return 0
-
-    if args.command == "analyze-results":
-        path = analyze_results(args.results_dir, args.output_dir)
-        print(path)
-        return 0
-
-    if args.command == "run-absencebench-smoke":
-        path = run_local_absencebench(args.input, args.output)
-        print(path)
-        return 0
-
-    raise ValueError(f"Onbekend commando: {args.command}")
+    path = execute_command(args)
+    print(path)
+    return 0
 
 
 if __name__ == "__main__":

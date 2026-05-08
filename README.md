@@ -17,6 +17,15 @@ docs/00_shadow_seed_learning_4_6.md
 
 Die `4.6`-bron beschrijft niet een nieuwe mechanische kern, maar een scherpere evaluatiekoers: minder leunen op scenario-afhankelijke suiteclaims, en meer sturen op open-set seedkwaliteit, adversarial Gate-evaluatie, probe utility en domeintransfer.
 
+## Status in één oogopslag
+
+- mechanische kern: huidige repo-implementatie en standaard regressieroutes
+- canoniek doelbeeld: `docs/00_shadow_seed_learning_4_6.md`
+- standaardpad voor contributors en CI: `pip install -e ".[test]"`
+- research-verdieping: open-set review, adversarial Gate, probe utility, retrieval- en backendvergelijkingen
+
+Praktisch betekent dit: de repo is coherent als benchmark-harness, maar niet elke research-route hoort al bij dezelfde stabiele basislaag als de standaard CI.
+
 ## Eerst lezen
 
 Begin in deze volgorde:
@@ -60,6 +69,8 @@ Optioneel met echte model- of vectorbackends:
 ```bash
 pip install -e ".[test,models,vector]"
 ```
+
+Voor een bredere lokale research-omgeving kun je daarna extra profielen of losse optionele dependencies toevoegen, maar de standaard docs en CI gaan uit van de testinstallatie hierboven.
 
 ## Snel starten
 
