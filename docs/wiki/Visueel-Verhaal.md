@@ -1,5 +1,7 @@
 # Visueel verhaal SSL 4.5
 
+> Status: achtergrondmateriaal. Deze pagina vertelt het conceptuele verhaal. Gebruik voor actuele status en resultaten eerst [Latest Test Results](Latest-Test-Results), [SSL 4.5 Analysis](SSL-45-Analysis), [Dashboard](Dashboard) en het [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/).
+
 Deze pagina brengt de bruikbare elementen uit de aangeleverde SSL-decks samen in één doorlopend verhaal. De dia's zijn niet als losse slide-dump geplaatst. Ze zijn verwerkt als narratieve bouwstenen met compacte diagrammen en captions.
 
 Bronmateriaal:
@@ -167,18 +169,19 @@ flowchart LR
 
 ## 10. Bewijsvoering in deze repo
 
-De repo test niet alleen of SSL mooi klinkt. De pipeline meet of het werkt.
+De repo test niet alleen of SSL mooi klinkt. De standaardroute meet of de huidige implementatie reproduceerbare output maakt.
 
 ```mermaid
 flowchart TD
-    A[Gap-Test Suite] --> B[Vindt SSL de juiste gaps?]
-    C[False-positive controls] --> D[Laat SSL volledige antwoorden met rust?]
-    E[Benefit Suite] --> F[Verhoogt SSL gap coverage?]
-    G[Model Benefit Suite] --> H[Presteert hetzelfde model beter met SSL?]
-    I[Analyzer] --> J[Markdown, JSON, SVG, Wiki]
+    A[Checks en benchmark-resultaten] --> B[Benchmark artifacts]
+    B --> C[Analyze results]
+    C --> D[Publiceer testresultaten naar Wiki en Pages]
+    D --> E[Latest Test Results]
+    D --> F[SSL 4.5 Analysis]
+    D --> G[GitHub Pages dashboard]
 ```
 
-**Caption.** De Wiki-resultaten komen uit dezelfde JSON-output als de CI-artifacts.
+**Caption.** De Wiki-resultaten en Pages-output komen uit dezelfde artifact snapshot. De herkomst staat in `manifest.json`.
 
 ## 11. Wat SSL niet claimt
 
@@ -215,10 +218,17 @@ Daarmee blijft de visie van SSL intact: het gaat niet om meer tekst, maar om bet
 
 ## 13. Plaats in de Wiki
 
-Deze pagina hoort naast:
+Deze pagina is achtergrondmateriaal. De actuele route loopt via:
 
-- [Tussentijdse rapportage](Tussentijdse-Rapportage)
+- [Home](Home)
+- [Latest Test Results](Latest-Test-Results)
+- [SSL 4.5 Analysis](SSL-45-Analysis)
+- [Dashboard](Dashboard)
+- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+
+Gerelateerde achtergrondpagina's:
+
 - [Conceptueel overzicht](Conceptueel-Overzicht)
-- [Architectuur](Architectuur)
-- [Resultaten en analyse](Resultaten-en-Analyse)
-- [SLM First Conclusion](SLM-First-Conclusion)
+- [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is)
+- [Roadmap](Roadmap)
+- [Blind review protocol](Blind-Review-Protocol)
