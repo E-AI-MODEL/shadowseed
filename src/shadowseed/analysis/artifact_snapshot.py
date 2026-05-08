@@ -28,6 +28,7 @@ def build_artifact_snapshot(
     published_via: Iterable[str] = (),
     path_key: str = "snapshot_path",
     committed_back_to_main: bool | None = None,
+    required_files: Iterable[str] = (),
 ) -> Path:
     source = Path(source_dir)
     if not source.exists():
@@ -53,6 +54,8 @@ def build_artifact_snapshot(
     if committed_back_to_main is not None:
         manifest["committed_back_to_main"] = committed_back_to_main
 
+    required_names = {name for name in required_files if name}
+    discovered_names: set[str] = set()
     used_names: set[str] = set()
     target_root = target.parent
     artifacts_root = copied_artifacts_dir.parent if copied_artifacts_dir is not None else None
@@ -60,6 +63,7 @@ def build_artifact_snapshot(
     for file_path in sorted(path for path in source.rglob("*") if path.is_file()):
         if file_path.suffix.lower() not in ALLOWED_SUFFIXES:
             continue
+        discovered_names.add(file_path.name)
         relative = file_path.relative_to(source)
         artifact = relative.parts[0] if relative.parts else "artifact"
         base = file_path.name
@@ -86,6 +90,11 @@ def build_artifact_snapshot(
             entry["original_artifact_path"] = str((copied_artifacts_dir / relative).relative_to(artifacts_root))
         manifest["copied_files"].append(entry)
 
+    missing_required = sorted(required_names - discovered_names)
+    if missing_required:
+        missing_text = ", ".join(missing_required)
+        raise ValueError(f"Ontbrekende verplichte artifactbestanden: {missing_text}")
+
     output_manifest.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -105,6 +114,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--published-via", nargs="*", default=[])
     parser.add_argument("--path-key", default="snapshot_path")
     parser.add_argument("--committed-back-to-main", choices=["true", "false"])
+    parser.add_argument("--require-files", nargs="*", default=[])
     return parser
 
 
@@ -125,6 +135,7 @@ def main(argv: list[str] | None = None) -> int:
         published_via=args.published_via,
         path_key=args.path_key,
         committed_back_to_main=committed_back_to_main,
+        required_files=args.require_files,
     )
     print(path)
     return 0
