@@ -1,5 +1,6 @@
 import numpy as np
 
+from shadowseed.core_config import SSLCoreConfig
 from shadowseed.manager import SSLManager, SeedStatus
 
 
@@ -36,6 +37,18 @@ def test_add_update_and_validation_gate_smoke():
     assert result is True
     assert manager.seeds[seed_id].status == SeedStatus.PROMOTED
     assert manager.seeds[seed_id].weight >= 0.4
+
+
+def test_atomic_seed_respects_custom_word_limit():
+    manager = SSLManager(
+        embedding_fn=fake_embedding,
+        config=SSLCoreConfig(max_seed_words=4),
+    )
+
+    text = "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen."
+
+    assert SSLManager.is_atomic_seed(text)
+    assert not manager.is_atomic_seed(text, max_seed_words=manager.config.max_seed_words)
 
 
 def test_detailed_validation_gate_records_reasoning():
