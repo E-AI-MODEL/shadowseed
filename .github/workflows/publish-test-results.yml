@@ -64,70 +64,16 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf results/latest results/artifacts
-          mkdir -p results/latest results/artifacts
-          cp -R downloaded-artifacts/. results/artifacts/
-
-          python - <<'PY'
-          from __future__ import annotations
-
-          import json
-          import os
-          import re
-          import shutil
-          from pathlib import Path
-
-          source = Path("downloaded-artifacts")
-          latest = Path("results/latest")
-          latest.mkdir(parents=True, exist_ok=True)
-
-          allowed_suffixes = {".json", ".md", ".svg"}
-          manifest = {
-              "source_workflow": "Checks en benchmark-resultaten",
-              "source_run_id": os.environ.get("TEST_RUN_ID"),
-              "repository": os.environ.get("GITHUB_REPOSITORY"),
-              "published_via": ["wiki", "pages"],
-              "committed_back_to_main": False,
-              "copied_files": [],
-          }
-          used_names: set[str] = set()
-
-          def safe_name(value: str) -> str:
-              cleaned = re.sub(r"[^A-Za-z0-9_.-]+", "-", value).strip("-")
-              return cleaned or "artifact"
-
-          for file_path in sorted(path for path in source.rglob("*") if path.is_file()):
-              if file_path.suffix.lower() not in allowed_suffixes:
-                  continue
-              relative = file_path.relative_to(source)
-              artifact = relative.parts[0] if relative.parts else "artifact"
-              base = file_path.name
-              target_name = base
-              if target_name in used_names:
-                  target_name = f"{safe_name(artifact)}__{base}"
-              counter = 2
-              while target_name in used_names:
-                  stem = Path(base).stem
-                  suffix = Path(base).suffix
-                  target_name = f"{safe_name(artifact)}__{stem}_{counter}{suffix}"
-                  counter += 1
-              used_names.add(target_name)
-              target = latest / target_name
-              shutil.copy2(file_path, target)
-              manifest["copied_files"].append(
-                  {
-                      "artifact": artifact,
-                      "source_path": str(relative),
-                      "latest_path": str(target.relative_to(latest.parent)),
-                      "original_artifact_path": str(Path("results/artifacts") / relative),
-                      "bytes": file_path.stat().st_size,
-                  }
-              )
-
-          (latest / "manifest.json").write_text(
-              json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
-              encoding="utf-8",
-          )
-          PY
+          python -m shadowseed.analysis.artifact_snapshot \
+            --source downloaded-artifacts \
+            --target-dir results/latest \
+            --artifacts-dir results/artifacts \
+            --manifest-path results/latest/manifest.json \
+            --source-workflow "Checks en benchmark-resultaten" \
+            --source-run-id "$TEST_RUN_ID" \
+            --repository "$GITHUB_REPOSITORY" \
+            --published-via wiki pages \
+            --path-key latest_path
 
           cat > results/latest/README.md <<'MD'
           # Latest test artifacts
