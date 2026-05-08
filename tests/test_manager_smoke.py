@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from shadowseed.core_config import SSLCoreConfig
 from shadowseed.manager import SSLManager, SeedStatus
@@ -49,6 +50,9 @@ def test_atomic_seed_respects_custom_word_limit():
 
     assert SSLManager.is_atomic_seed(text)
     assert not manager.is_atomic_seed(text, max_seed_words=manager.config.max_seed_words)
+
+    with pytest.raises(ValueError, match="Seed lijkt te breed"):
+        manager.add_or_update_seed(text)
 
 
 def test_detailed_validation_gate_records_reasoning():
