@@ -69,6 +69,7 @@ shadowseed run-gap-suite
 shadowseed run-false-positive-suite
 shadowseed run-benefit-suite
 shadowseed run-open-set-seed-review
+shadowseed summarize-open-set-seed-review
 shadowseed run-adversarial-gate-benchmark
 shadowseed run-probe-utility-benchmark
 shadowseed analyze-results
@@ -93,6 +94,7 @@ De volledige indeling staat in `docs/CLI_COMMAND_MAP.md`.
 | `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust en blokkeert de Gate misleidende lure-seeds? |
 | `shadowseed run-benefit-suite` | Antwoordwinst | Wordt een antwoord completer met SSL-toevoegingen? |
 | `shadowseed run-open-set-seed-review` | Open-set review | Maakt seed-output en review-packets zonder vaste ground-truth seedlijst |
+| `shadowseed summarize-open-set-seed-review` | Open-set samenvatting | Agregeert reviewer-uitkomsten naar acceptance, agreement en disagreement-artifacts |
 | `shadowseed run-adversarial-gate-benchmark` | Adversarial Gate | Vergelijkt de huidige Gate met zwakkere promotieregels op misleidende lure-candidates |
 | `shadowseed run-probe-utility-benchmark` | Probe utility | Laat zien of promoted seeds scherpere follow-up, retrieval en dialectische probes opleveren dan brede baselines? |
 | `shadowseed run-model-benefit-suite --backend fixture` | Model smoke | Werkt de modelroute technisch zonder modeldownload? |
