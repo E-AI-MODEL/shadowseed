@@ -1,5 +1,7 @@
 # Roadmap
 
+> Status: achtergrond en planning. Gebruik voor actuele resultaten eerst [Latest Test Results](Latest-Test-Results) en [SSL 4.5 Analysis](SSL-45-Analysis).
+
 Deze roadmap houdt de claims van SSL 4.5 eerlijk en toetsbaar.
 
 ## Klaar
@@ -8,51 +10,69 @@ Deze roadmap houdt de claims van SSL 4.5 eerlijk en toetsbaar.
 - Positieve Gap-Test Suite.
 - False-positive controls.
 - Benefit Suite fase 1.
-- Model Benefit Suite fase 2 met fixture en `hf-transformers` backend.
-- CI-artifacts voor suites.
+- Model Benefit Suite met fixture en optionele `hf-transformers` backend.
+- Blind benchmark smoke-route.
+- Probe utility suite als handmatige gedragslaag.
+- CI-artifacts voor de standaard suites.
+- Centrale artifact snapshot helper met manifest en tests.
 - Analyse-laag met Markdown, JSON en SVG.
-- Wiki-publicatie voor analyse en SLM-runs.
-- Blind review protocol.
+- Publicatie naar Wiki en GitHub Pages via de standaard publish-route.
+
+## Huidige standaardroute
+
+De dagelijkse route is:
+
+```text
+Actions → Checks en benchmark-resultaten
+Actions → Publiceer testresultaten naar Wiki en Pages
+```
+
+De actuele output staat daarna op:
+
+- [Latest Test Results](Latest-Test-Results)
+- [SSL 4.5 Analysis](SSL-45-Analysis)
+- [Dashboard](Dashboard)
+- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
 
 ## Eerstvolgende stappen
 
-### 1. Echte SLM-run uitvoeren
+### 1. Reward/Penalty-validatie ontwerpen
 
-Start:
+De volgende inhoudelijke stap is SSL minder afhankelijk maken van vaste scenario-ground-truth.
 
-```text
-Actions → SLM Model Benefit Run → Run workflow
-```
-
-Gebruik eerst:
+Doel:
 
 ```text
-TinyLlama/TinyLlama-1.1B-Chat-v1.0
+seed → probe/tool/retrieval/user feedback → reward of penalty → weight update
 ```
 
-### 2. SLM-output beoordelen
+Ground truth blijft nuttig als regressielaag, maar mag niet de primaire motor van SSL blijven.
 
-Gebruik de blind-review velden uit:
+### 2. Open-set review uitbreiden
 
-```text
-SLM-Model-Benefit-Raw.json
-```
+Gebruik open inputs zonder hardcoded expected gaps.
 
-### 3. Suite uitbreiden
+Meet vooral:
 
-Voeg meer scenario's toe:
+- atomiciteit;
+- relevantie;
+- toetsbaarheid;
+- probe utility;
+- foutieve promoties;
+- nuttige latere heractivatie.
 
-- geschiedenis;
-- recht;
-- software;
-- biologie;
-- economie;
-- beleid;
-- onderwijs.
+### 3. Probe utility strenger maken
 
-### 4. Gedeeltelijk complete antwoorden
+De probe utility suite moet testen of een promoted seed leidt tot een nuttige vervolgstap, niet alleen of een tekstmatch klopt.
 
-Niet alleen volledige of duidelijk incomplete antwoorden testen, maar ook antwoorden die 1 of 2 gaps al bevatten.
+### 4. Retrieval en tool evidence koppelen aan reward
+
+Retrieval en toolcalling moeten niet automatisch valideren. Ze leveren signalen:
+
+- steun;
+- geen steun;
+- contradictie;
+- gedeeltelijke bruikbaarheid.
 
 ### 5. Meer negatieve controles
 
@@ -62,7 +82,8 @@ Test of SSL rustig blijft bij:
 - irrelevante signalen;
 - tegengestelde evidence;
 - brede vaagheden;
-- stijlproblemen die geen echte gap zijn.
+- stijlproblemen die geen echte gap zijn;
+- herhaalde maar nutteloze seeds.
 
 ### 6. Meer modellen
 
@@ -79,10 +100,10 @@ Niet model X vergelijken met model Y als bewijs voor SSL.
 
 ### Nu toegestaan
 
-> SSL 4.5 werkt intern op de huidige suite en produceert reproduceerbare benchmark- en analyse-output.
+> SSL 4.5 werkt intern op de huidige suite en produceert reproduceerbare benchmark-, analyse- en publicatie-output.
 
 ### Pas later toegestaan
 
-> SSL verbetert SLM-antwoorden gemiddeld op meerdere domeinen.
+> SSL verbetert antwoorden gemiddeld op meerdere domeinen zonder afhankelijk te zijn van vaste scenario-ground-truth.
 
-Dat mag pas na echte modelruns, uitbreiding van de suite en blind review.
+Dat mag pas na open-set evaluatie, reward/penalty-validatie, bredere modelruns en blind review.
