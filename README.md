@@ -9,28 +9,33 @@
 
 > Een seed bevat precies één gap.
 
-## Eerst lezen
-
-De repo is groter geworden dan één benchmark. Begin daarom hier:
+De huidige repo draait nog als **SSL 4.5-harness**, maar de canonieke inhoudelijke bron voor het doelbeeld staat nu in:
 
 ```text
-docs/ARCHITECTURE_MAP.md
+docs/00_shadow_seed_learning_4_6.md
 ```
 
-Lees daarna in deze volgorde:
+Die `4.6`-bron beschrijft niet een nieuwe mechanische kern, maar een scherpere evaluatiekoers: minder leunen op scenario-afhankelijke suiteclaims, en meer sturen op open-set seedkwaliteit, adversarial Gate-evaluatie, probe utility en domeintransfer.
+
+## Eerst lezen
+
+Begin in deze volgorde:
 
 ```text
+docs/00_shadow_seed_learning_4_6.md
+docs/ARCHITECTURE_MAP.md
 docs/research/current-status.md
 docs/research/scenario-independence-roadmap.md
 docs/research/evaluation-matrix.md
 ```
 
-Die vier documenten samen beantwoorden:
+Die vijf documenten samen beantwoorden:
 
-- wat de repo draait;
-- wat de huidige standaardruns werkelijk aantonen;
+- wat SSL inhoudelijk wil zijn;
+- wat de repo vandaag werkelijk draait;
+- wat de huidige standaardruns echt aantonen;
 - welke claims nog te groot zouden zijn;
-- hoe SSL uit scenario-afhankelijkheid moet groeien.
+- hoe de repo inhoudelijk naar sterker bewijs moet migreren.
 
 Voor de bredere documentatiekaart:
 
@@ -173,6 +178,7 @@ src/shadowseed/manager.py                         # SSLManager: trace, weight, V
 src/shadowseed/benchmark/                         # alle benchmarkrunners
 tests/                                            # regressie- en benchmarktests
 src/shadowseed/data/                              # publieke testdata en sample-corpora
+docs/00_shadow_seed_learning_4_6.md              # canonieke bron voor theorie en doelbeeld
 docs/ARCHITECTURE_MAP.md                          # repo-overzicht
 docs/research/current-status.md                   # wat staat er vandaag echt?
 docs/research/scenario-independence-roadmap.md    # route naar sterker bewijs
@@ -208,6 +214,7 @@ Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplever
 Lees verder in:
 
 - `docs/README.md`
+- `docs/00_shadow_seed_learning_4_6.md`
 - `docs/ARCHITECTURE_MAP.md`
 - `docs/CLI_COMMAND_MAP.md`
 - `docs/research/current-status.md`
