@@ -14,14 +14,16 @@ Als je de repo nog niet kent, lees dan in deze volgorde:
 4. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
 5. [Evaluatiematrix](research/evaluation-matrix.md)
 6. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
+7. [CLI command map](CLI_COMMAND_MAP.md)
 
-Deze zes documenten geven samen antwoord op:
+Deze zeven documenten geven samen antwoord op:
 
 - wat SSL 4.5 inhoudelijk is;
 - hoe de repo is opgebouwd;
 - wat de standaardruns vandaag echt aantonen;
 - waar de grootste validatiegaten nog zitten;
-- welke volgende bewijslaag als eerste gebouwd moet worden.
+- welke volgende bewijslaag als eerste gebouwd moet worden;
+- hoe de commandostructuur gelezen moet worden.
 
 ## Twee leesroutes
 
@@ -44,9 +46,10 @@ Gebruik deze route als je wilt begrijpen wat SSL claimt en hoe sterk die claim v
 Gebruik deze route als je de repo wilt draaien, resultaten wilt begrijpen of workflows wilt volgen.
 
 1. [Repo-overzicht](ARCHITECTURE_MAP.md)
-2. [Benchmarks in de Wiki](wiki/Benchmarks.md)
-3. [Blind Benchmark](wiki/Blind-Benchmark.md)
-4. [Resultaten](results.md)
+2. [CLI command map](CLI_COMMAND_MAP.md)
+3. [Benchmarks in de Wiki](wiki/Benchmarks.md)
+4. [Blind Benchmark](wiki/Blind-Benchmark.md)
+5. [Resultaten](results.md)
 
 ## Onderzoeksstatus
 
@@ -65,6 +68,7 @@ Samen voorkomen ze dat regressies, kleine benchmarkresultaten en algemene SSL-cl
 |---|---|
 | Welke onderdelen heeft de repo? | `ARCHITECTURE_MAP.md` |
 | Welke CLI-commando's bestaan? | `src/shadowseed/cli.py` |
+| Hoe zijn de commands ingedeeld? | `CLI_COMMAND_MAP.md` |
 | Welke tests draaien standaard? | `.github/workflows/tests.yml` |
 | Waar worden resultaten gepubliceerd? | `.github/workflows/publish-test-results.yml` |
 | Hoe werkt de analyse? | `src/shadowseed/analysis/ssl45_result_analyzer.py` |
