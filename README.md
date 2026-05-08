@@ -38,6 +38,12 @@ Voor de bredere documentatiekaart:
 docs/README.md
 ```
 
+Voor de commandostructuur:
+
+```text
+docs/CLI_COMMAND_MAP.md
+```
+
 ## Installatie
 
 ```bash
@@ -62,6 +68,17 @@ shadowseed run-adversarial-gate-benchmark
 shadowseed run-probe-utility-benchmark
 shadowseed analyze-results
 ```
+
+## Commandtiers
+
+De CLI heeft nu bewust vier lagen:
+
+- `standard`: regressie- en smoke-routes die horen bij de huidige meetketen
+- `manual research`: open-set, adversarial en probe-verdieping
+- `retrieval/backend`: diagnose- en backendroutes
+- `absencebench`: utility- en voorbereidingsroutes
+
+De volledige indeling staat in `docs/CLI_COMMAND_MAP.md`.
 
 ## Belangrijkste CLI-routes
 
@@ -161,6 +178,7 @@ docs/research/current-status.md                   # wat staat er vandaag echt?
 docs/research/scenario-independence-roadmap.md    # route naar sterker bewijs
 docs/research/evaluation-matrix.md                # welke laag draagt welke claim?
 docs/wiki/Benchmarks.md                           # benchmarkuitleg
+docs/CLI_COMMAND_MAP.md                           # indeling van commands en hun status
 .github/workflows/tests.yml                       # standaard CI
 .github/workflows/publish-test-results.yml        # publicatie naar Wiki en Pages
 site/                                             # Pages-dashboard
@@ -191,6 +209,7 @@ Lees verder in:
 
 - `docs/README.md`
 - `docs/ARCHITECTURE_MAP.md`
+- `docs/CLI_COMMAND_MAP.md`
 - `docs/research/current-status.md`
 - `docs/research/scenario-independence-roadmap.md`
 - `docs/research/evaluation-matrix.md`
