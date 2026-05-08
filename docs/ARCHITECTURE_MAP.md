@@ -28,6 +28,8 @@ De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden ni
 
 Binnen `07 Rapport` worden artifacts eerst provenance-safe verzameld: de originele artifactstructuur blijft behouden per artifact, eventuele naamconflicten krijgen een artifactprefix en `results/manifest.json` bewaart de herkomst van de analyse-input.
 
+Binnen de publish-workflow worden daarna ook expliciete guardrails afgedwongen: de run stopt als verplichte kernbestanden ontbreken, als het manifest geen `copied_files` bevat of als de centrale `summary.json` leeg of ongeldig is.
+
 ## Welke run doet wat?
 
 | Runnaam in GitHub Actions | Wat doet hij? | Uitkomst | Bewijssoort |
@@ -48,8 +50,8 @@ Binnen `07 Rapport` worden artifacts eerst provenance-safe verzameld: de origine
 |---|---|
 | Blind test handmatig | Als je alleen de blinde smoke-test opnieuw wilt draaien |
 | Model Reality Check | Als je een echte Hugging Face modelrun wilt doen |
-| Deploy Dashboard handmatig | Alleen als noodroute voor Pages |
-| Publish Static Wiki Docs | Alleen om statische wiki-pagina's opnieuw te publiceren |
+| Publiceer testresultaten naar Wiki en Pages | Als je de laatste geslaagde `main`-run opnieuw wilt publiceren zonder nieuwe test-run |
+| Publiceer alleen statische Wiki-pagina's | Alleen om statische wiki-pagina's opnieuw te publiceren |
 
 ## Waar staan de resultaten?
 
