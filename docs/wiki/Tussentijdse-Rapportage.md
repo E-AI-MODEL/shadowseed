@@ -2,11 +2,17 @@
 
 ## 1. Samenvatting
 
-Shadow Seed Learning 4.5 is in deze repo uitgewerkt van idee naar een testbare research-pipeline. De huidige stand is dat SSL intern reproduceerbaar werkt, dat de positieve en negatieve benchmarklagen draaien, dat resultaten automatisch worden geanalyseerd, en dat een eerste SLM-run via GitHub Actions kan worden uitgevoerd en gerapporteerd.
+Shadow Seed Learning 4.5 is in deze repo uitgewerkt als een toetsbare research-pipeline met een duidelijke standaardroute:
 
-De belangrijkste tussentijdse conclusie is:
+```text
+Checks en benchmark-resultaten
+  -> Publiceer testresultaten naar Wiki en Pages
+  -> Latest Test Results + SSL 4.5 Analysis + GitHub Pages
+```
 
-> SSL 4.5 is nu toetsbaar als methode. De repo kan meten of gevalideerde afwezigheden leiden tot betere antwoorden bij hetzelfde model. De eerste claims moeten beperkt blijven tot de huidige suite, de gebruikte prompts en het gekozen model.
+De belangrijkste tussentijdse conclusie is nu:
+
+> SSL 4.5 is technisch stabiel genoeg om dagelijks toetsbaar te blijven via een vaste benchmark- en publicatieketen. De huidige claims moeten nog steeds beperkt blijven tot de bestaande suites, de huidige analysemethode en de expliciet uitgevoerde modelchecks.
 
 Wat nu sterk staat:
 
@@ -15,22 +21,24 @@ Wat nu sterk staat:
 - promotie loopt via de Validation Gate;
 - positieve gaps worden getest;
 - false positives worden getest;
-- model benefit wordt getest met dezelfde baseline- en SSL-conditie;
-- analyse, grafieken en Wiki-publicatie zijn geautomatiseerd.
+- antwoordwinst wordt getest;
+- model-smoke wordt getest;
+- blinde labelscheiding wordt getest;
+- analyse, manifest, grafieken en publicatie zijn geautomatiseerd.
 
 Wat nog niet sterk genoeg is voor een brede wetenschappelijke claim:
 
 - de suite is nog klein;
 - er is nog weinig variatie in domeinen;
 - blind review moet nog structureel worden ingevuld;
-- meerdere SLM's moeten worden getest;
+- meerdere echte modellen moeten worden getest;
 - de resultaten moeten worden herhaald over meer scenario's.
 
 ## 2. Onderzoeksvraag
 
 De centrale vraag is:
 
-> Functioneert een LLM of SLM beter wanneer Shadow Seed Learning gevalideerde ontbrekende elementen gebruikt om een antwoord te verbeteren?
+> Functioneert een model beter wanneer Shadow Seed Learning gevalideerde ontbrekende elementen gebruikt om een antwoord te verbeteren?
 
 Deze vraag is opgesplitst in kleinere toetsbare vragen:
 
@@ -39,7 +47,7 @@ Deze vraag is opgesplitst in kleinere toetsbare vragen:
 3. Promoot SSL alleen seeds die aan de Gate-condities voldoen?
 4. Laat SSL volledige antwoorden met rust?
 5. Verbetert SSL de gap coverage van een antwoord?
-6. Verbetert hetzelfde model met SSL-guided rewrite ten opzichte van hetzelfde model zonder SSL?
+6. Laat dezelfde meetketen zich betrouwbaar publiceren via Wiki en Pages?
 
 ## 3. Begrippen
 
@@ -121,7 +129,9 @@ src/shadowseed/benchmark/ssl45_gap_suite.py
 src/shadowseed/benchmark/ssl45_false_positive_suite.py
 src/shadowseed/benchmark/ssl45_benefit_suite.py
 src/shadowseed/benchmark/ssl45_model_benefit_suite.py
+src/shadowseed/benchmark/blind_benchmark.py
 src/shadowseed/analysis/ssl45_result_analyzer.py
+src/shadowseed/analysis/artifact_snapshot.py
 ```
 
 Belangrijke datasets:
@@ -131,6 +141,7 @@ src/shadowseed/data/gap_test_suite_4_5.json
 src/shadowseed/data/gap_test_suite_false_positive_4_5.json
 src/shadowseed/data/ssl45_benefit_suite.json
 src/shadowseed/data/ssl45_model_benefit_suite.json
+src/shadowseed/data/blind_suite_public.json
 ```
 
 ## 5. Benchmarklagen
@@ -140,8 +151,6 @@ src/shadowseed/data/ssl45_model_benefit_suite.json
 Doel:
 
 > Testen of SSL de juiste ontbrekende structurele gaps vindt.
-
-Deze suite bevat scenario's waarin een antwoord belangrijke elementen mist. De detector moet daar atomische seeds voor maken.
 
 Belangrijke metrics:
 
@@ -155,21 +164,17 @@ Doel:
 
 > Testen of SSL niets verzint wanneer het antwoord al volledig is.
 
-Deze suite bevat volledige antwoorden waarin de relevante gaps al aanwezig zijn.
-
 Belangrijke metrics:
 
 - `candidate_false_positives`
 - `promoted_false_positives`
 - `promoted_false_positive_rate`
 
-### 5.3 Benefit Suite fase 1
+### 5.3 Benefit Suite
 
 Doel:
 
 > Testen of SSL-promoted seeds de gap coverage van een antwoord verhogen.
-
-Dit is nog geen echte modelrun. Het is een gecontroleerde test van de meetketen.
 
 Belangrijke metrics:
 
@@ -178,61 +183,84 @@ Belangrijke metrics:
 - `coverage_delta`
 - `unsupported_ssl_additions`
 
-### 5.4 Model Benefit Suite fase 2
+### 5.4 Model smoke
 
 Doel:
 
-> Testen of hetzelfde model beter antwoordt met SSL-guided rewrite dan zonder SSL.
+> Testen of dezelfde modelroute technisch werkt zonder zware modeldownload.
 
-Deze laag vergelijkt:
+De standaard CI gebruikt een fixture-backend. Dat bewijst de meetketen, niet de brede prestatie van een echt model.
 
-```text
-zelfde model zonder SSL
-zelfde model met SSL-guided rewrite
-```
+### 5.5 Blind test
 
-Belangrijke metrics:
+Doel:
 
-- `baseline_mean_gap_coverage`
-- `ssl_mean_gap_coverage`
-- `coverage_delta`
-- `mean_answer_length_delta_words`
-- `coverage_delta_per_100_added_words`
-- `unsupported_ssl_addition_rate`
+> Testen of labels verborgen blijven tot de scoring.
 
-## 6. SLM-run
+Deze laag bewaakt dat detectie en scoring gescheiden blijven.
 
-De repo bevat een handmatige workflow voor echte SLM-runs:
+## 6. Standaard publicatie
+
+De dagelijkse standaardroute is nu belangrijker dan losse experiment-workflows.
+
+De keten is:
 
 ```text
-Actions → SLM Model Benefit Run → Run workflow
+Checks en benchmark-resultaten
+  -> artifacts
+  -> Publiceer testresultaten naar Wiki en Pages
+  -> Latest Test Results
+  -> SSL 4.5 Analysis
+  -> GitHub Pages dashboard
 ```
 
-Standaardmodel:
+Belangrijke output:
 
 ```text
-TinyLlama/TinyLlama-1.1B-Chat-v1.0
+results/latest/summary.json
+results/latest/analysis_report.md
+results/latest/manifest.json
+results/artifacts/
+workflow-artifact: published-latest-results-snapshot
 ```
 
-De run doet drie dingen:
+De publish-route controleert nu ook expliciet of kernbestanden ontbreken, of het manifest leeg is, of de centrale summary ongeldig is. Daardoor stopt een halve publicatie zichtbaar in plaats van stilletjes door te lopen.
 
-1. hetzelfde model draait de baselineconditie;
-2. SSL detecteert en valideert seeds;
-3. hetzelfde model herschrijft het antwoord met SSL-guidance.
+## 7. Aanvullende handmatige checks
 
-Daarna worden de resultaten geanalyseerd en op de Wiki gezet.
+Naast de standaardroute bestaan nog aanvullende runs:
 
-Automatische Wiki-output:
+### Model Reality Check
+
+Workflow:
 
 ```text
-SLM-Model-Benefit
-SLM-Model-Benefit-Analysis
-SLM-Model-Benefit-Analysis-Summary
-SLM-Model-Benefit-Raw
-SLM-First-Conclusion
+Actions -> Model Reality Check
 ```
 
-## 7. Analyse en rapportage
+Gebruik deze run om te testen of retrieval + SSOT ook bij een echt HF-model helpt.
+
+### SSOT Falsification Run
+
+Workflow:
+
+```text
+Actions -> SSOT Falsification Run
+```
+
+Gebruik deze run om te testen of SSL niet naïef elke bron of `llm_proposed` chunk accepteert.
+
+### Full Validation Sweep
+
+Workflow:
+
+```text
+Actions -> Full Validation Sweep
+```
+
+Gebruik deze run als bredere systeem- en backendcheck. Dit is geen dagelijkse statusroute, maar een aanvullende technische sweep.
+
+## 8. Analyse en rapportage
 
 De analyse wordt gemaakt door:
 
@@ -249,57 +277,35 @@ results/analysis/coverage.svg
 results/analysis/false_positive.svg
 ```
 
-De analyse bevat:
+De publicatieroute bouwt daaruit de centrale publiekslaag:
 
-- numerieke samenvatting;
-- grafieken;
-- promoted seeds per domein;
-- toptermen;
-- automatische conclusie;
-- claimgrens.
+- `Latest Test Results`
+- `SSL 4.5 Analysis`
+- `SSL 4.5 Analysis Summary JSON`
+- GitHub Pages dashboard
 
-De Wiki wordt automatisch bijgewerkt met deze analyse.
-
-## 8. Tussentijdse conclusie
+## 9. Tussentijdse conclusie
 
 Op basis van de huidige stand is de juiste conclusie:
 
-> SSL 4.5 is nu een werkende, reproduceerbare en toetsbare research-pipeline. De methode detecteert atomische afwezigheden, houdt trace en weight gescheiden, promoot seeds pas na validatie en kan modeloutput vergelijken in baseline- en SSL-conditie.
+> SSL 4.5 is nu een werkende, reproduceerbare en publiceerbare research-pipeline. De methode detecteert atomische afwezigheden, houdt trace en weight gescheiden, promoot seeds pas na validatie en zet standaardresultaten automatisch om in een controleerbare publieke snapshot.
 
 De huidige resultaten ondersteunen deze beperkte claim:
 
-> Binnen de huidige benchmarkopzet kan SSL worden gemeten als verbetering van gap coverage, mits unsupported additions en false positives laag blijven.
+> Binnen de huidige benchmarkopzet kan SSL worden gemeten als verbetering van gap coverage, mits unsupported additions en false positives laag blijven en de publicatieketen de echte artifacts correct doorzet.
 
 De huidige resultaten ondersteunen nog niet deze brede claim:
 
-> SSL verbetert LLM's of SLM's in het algemeen.
+> SSL verbetert modellen in het algemeen.
 
 Daarvoor is meer nodig:
 
 - meer scenario's;
 - meer domeinen;
-- meerdere SLM's;
+- meerdere echte modellen;
 - herhaalde runs;
 - blind review;
 - rapportage van negatieve en gemengde resultaten.
-
-## 9. Wetenschappelijke waarde tot nu toe
-
-De waarde van de huidige repo zit niet alleen in de scores. De belangrijkste waarde is dat SSL is omgezet in een meetbare methode.
-
-Voorheen was SSL vooral een conceptuele claim:
-
-```text
-ontbrekende elementen kunnen modeloutput verbeteren
-```
-
-Nu is het een toetsbare pipeline:
-
-```text
-detectie → seed → trace → validation gate → promotion → model benefit test → analyse → Wiki
-```
-
-Dat maakt de methode controleerbaar.
 
 ## 10. Risico's en beperkingen
 
@@ -313,54 +319,36 @@ Omdat de detector nu domeinpriors gebruikt, moet worden getest of hij ook buiten
 
 ### Lengte-effect
 
-SSL-antwoorden kunnen langer zijn. Daarom meet de pipeline ook:
-
-```text
-coverage_delta_per_100_added_words
-```
-
-Verbetering door alleen langere antwoorden telt niet als sterke SSL-winst.
+SSL-antwoorden kunnen langer zijn. Daarom blijft het belangrijk om niet alleen coverage, maar ook unsupported additions en lengte-effecten mee te lezen.
 
 ### Geen automatische waarheid
 
 Een promoted seed is geen absolute waarheid. Het is een gevalideerd signaal binnen de testopzet.
 
-### SLM-run is modelafhankelijk
+### Model Reality Check is modelafhankelijk
 
-Een positief resultaat met één model geldt niet automatisch voor andere modellen.
+Een positief resultaat met één echt model geldt niet automatisch voor andere modellen.
 
 ## 11. Blind review
 
-De fase-2 output bevat blind review items:
+Blind review blijft nodig voordat claims sterker worden gemaakt.
 
-```text
-blind_review_items
-blind_answer_key
-```
+Gebruik hiervoor:
 
-De beoordelaar krijgt antwoord A en B zonder te weten welke baseline of SSL is.
-
-Te beoordelen:
-
-- welk antwoord is beter;
-- gap coverage;
-- unsupported claims;
-- helderheid;
-- toelichting.
-
-Blind review is nodig voordat claims sterker worden gemaakt.
+- [Blind review protocol](Blind-Review-Protocol)
+- de output van modelruns
+- vergelijking zonder vooraf te weten welke conditie baseline of SSL is
 
 ## 12. Volgende stappen
 
-### Stap 1: eerste SLM-conclusie vastleggen
+### Stap 1: standaardroute stabiel houden
 
-Gebruik:
+Blijf eerst de normale route gezond houden:
 
 ```text
-Actions → Publish Existing SLM Conclusion → Run workflow
+Checks en benchmark-resultaten
+-> Publiceer testresultaten naar Wiki en Pages
 ```
-
-Deze workflow pakt de bestaande SLM-run en maakt een Wiki-conclusie.
 
 ### Stap 2: scenario's uitbreiden
 
@@ -370,20 +358,18 @@ Minimaal uitbreiden naar:
 - 10 negatieve scenario's;
 - 10 gedeeltelijk complete scenario's.
 
-### Stap 3: meerdere modellen testen
+### Stap 3: meerdere echte modellen testen
 
 Altijd per model vergelijken:
 
 ```text
-model X zonder SSL
-model X met SSL
+zelfde model zonder SSL
+zelfde model met SSL
 ```
-
-Niet model X vergelijken met model Y als bewijs voor SSL.
 
 ### Stap 4: blind review uitvoeren
 
-Gebruik de reviewtemplates en de blind review output.
+Gebruik de reviewtemplates en de modeloutput.
 
 ### Stap 5: paperclaims aanpassen
 
@@ -394,23 +380,19 @@ Pas na meer runs en reviews kunnen claims in paper of README sterker worden.
 Als dit dossier wordt uitgeprint, is de kern:
 
 1. SSL 4.5 is geïmplementeerd als testbare methode.
-2. De repo bewaakt de interne methode met unit tests en formule-tests.
-3. De benchmarklaag test positieve detectie, negatieve controles en benefit.
-4. De SLM-laag test hetzelfde model zonder en met SSL.
-5. De analyse zet resultaten om in grafieken, semantiek en conclusie.
-6. De huidige claim moet beperkt blijven tot de huidige suite en runs.
-7. De volgende stap is schaalvergroting en blind review.
+2. De repo bewaakt de interne methode met regressie-, benchmark- en safety-tests.
+3. De standaard publicatieroute maakt van artifacts een controleerbare publieke snapshot.
+4. De huidige benchmarklaag test positieve detectie, negatieve controles, antwoordwinst, model-smoke en blinde labelscheiding.
+5. Aanvullende model- en safety-runs bestaan, maar zijn secundair aan de dagelijkse standaardroute.
+6. De huidige claim moet beperkt blijven tot de huidige suites en uitgevoerde runs.
+7. De volgende stap is schaalvergroting, echte modelvergelijking en blind review.
 
 ## 14. Verwijzingen binnen de Wiki
 
-- [Quick Start](Quick-Start)
-- [Conceptueel overzicht](Conceptueel-Overzicht)
-- [Architectuur](Architectuur)
+- [Latest Test Results](Latest-Test-Results)
+- [SSL 4.5 Analysis](SSL-45-Analysis)
+- [Dashboard](Dashboard)
 - [Benchmarks](Benchmarks)
-- [SLM-runs](SLM-Runs)
-- [Resultaten en analyse](Resultaten-en-Analyse)
+- [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is)
 - [Blind review protocol](Blind-Review-Protocol)
 - [Roadmap](Roadmap)
-- [SSL 4.5 Analysis](SSL-45-Analysis)
-- [SLM Model Benefit](SLM-Model-Benefit)
-- [SLM First Conclusion](SLM-First-Conclusion)
