@@ -313,7 +313,7 @@ jobs:
 
       - name: Draai AbsenceBench rooktest
         run: |
-          python -m shadowseed.cli run-nlp-smoke --output absencebench_smoke.json
+          python -m shadowseed.cli run-absencebench-smoke --output absencebench_smoke.json
 
       - name: Upload AbsenceBench resultaten
         uses: actions/upload-artifact@v4
