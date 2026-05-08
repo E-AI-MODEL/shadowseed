@@ -18,7 +18,8 @@ BROAD_PREFIXES = (
     "let op:",
 )
 
-LIST_PATTERN = re.compile(r"\s*(?:,|;|\ben\b|\bof\b)\s*", re.IGNORECASE)
+SEPARATOR_PATTERN = re.compile(r"\s*(?:,|;)\s*", re.IGNORECASE)
+CONJUNCTION_PATTERN = re.compile(r"\s*(?:\ben\b|\bof\b)\s*", re.IGNORECASE)
 
 
 def clean_candidate_text(text: str) -> str:
@@ -50,12 +51,40 @@ def maybe_expand_fragment(fragment: str) -> str:
     return fragment + "."
 
 
+def looks_like_short_category_stack(text: str) -> bool:
+    lowered = text.lower().strip()
+    if not (lowered.endswith(" ontbreekt") or lowered.endswith(" ontbreken")):
+        return False
+    if "," in lowered or ";" in lowered:
+        return False
+    return len(lowered.split()) <= 6 and (" en " in lowered or " of " in lowered)
+
+
 def split_broad_seed_text(text: str) -> list[str]:
     normalized = strip_broad_prefix(clean_candidate_text(text))
     if not normalized:
         return []
-    fragments = [maybe_expand_fragment(part) for part in LIST_PATTERN.split(normalized)]
-    return [fragment for fragment in fragments if fragment]
+
+    if "," in normalized or ";" in normalized:
+        fragments = [maybe_expand_fragment(part) for part in SEPARATOR_PATTERN.split(normalized)]
+        expanded: list[str] = []
+        for fragment in fragments:
+            if not fragment:
+                continue
+            if looks_like_short_category_stack(fragment):
+                expanded.extend(
+                    maybe_expand_fragment(part)
+                    for part in CONJUNCTION_PATTERN.split(clean_candidate_text(fragment))
+                )
+            else:
+                expanded.append(fragment)
+        return [fragment for fragment in expanded if fragment]
+
+    if looks_like_short_category_stack(normalized):
+        fragments = [maybe_expand_fragment(part) for part in CONJUNCTION_PATTERN.split(normalized)]
+        return [fragment for fragment in fragments if fragment]
+
+    return [maybe_expand_fragment(normalized)]
 
 
 def normalize_detection_candidates(candidates: list[str] | tuple[str, ...]) -> list[str]:
