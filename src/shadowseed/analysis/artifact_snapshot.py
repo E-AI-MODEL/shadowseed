@@ -27,8 +27,12 @@ def build_artifact_snapshot(
     repository: str | None = None,
     published_via: Iterable[str] = (),
     path_key: str = "snapshot_path",
+    committed_back_to_main: bool | None = None,
 ) -> Path:
     source = Path(source_dir)
+    if not source.exists():
+        raise FileNotFoundError(f"Bronmap bestaat niet: {source}")
+
     target = Path(target_dir)
     target.mkdir(parents=True, exist_ok=True)
 
@@ -46,7 +50,12 @@ def build_artifact_snapshot(
         "published_via": list(published_via),
         "copied_files": [],
     }
+    if committed_back_to_main is not None:
+        manifest["committed_back_to_main"] = committed_back_to_main
+
     used_names: set[str] = set()
+    target_root = target.parent
+    artifacts_root = copied_artifacts_dir.parent if copied_artifacts_dir is not None else None
 
     for file_path in sorted(path for path in source.rglob("*") if path.is_file()):
         if file_path.suffix.lower() not in ALLOWED_SUFFIXES:
@@ -70,11 +79,11 @@ def build_artifact_snapshot(
         entry = {
             "artifact": artifact,
             "source_path": str(relative),
-            path_key: str(snapshot_path),
+            path_key: str(snapshot_path.relative_to(target_root)),
             "bytes": file_path.stat().st_size,
         }
-        if copied_artifacts_dir is not None:
-            entry["original_artifact_path"] = str(copied_artifacts_dir / relative)
+        if copied_artifacts_dir is not None and artifacts_root is not None:
+            entry["original_artifact_path"] = str((copied_artifacts_dir / relative).relative_to(artifacts_root))
         manifest["copied_files"].append(entry)
 
     output_manifest.write_text(
@@ -95,11 +104,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--repository")
     parser.add_argument("--published-via", nargs="*", default=[])
     parser.add_argument("--path-key", default="snapshot_path")
+    parser.add_argument("--committed-back-to-main", choices=["true", "false"])
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    committed_back_to_main = None
+    if args.committed_back_to_main is not None:
+        committed_back_to_main = args.committed_back_to_main == "true"
+
     path = build_artifact_snapshot(
         args.source,
         args.target_dir,
@@ -110,6 +124,7 @@ def main(argv: list[str] | None = None) -> int:
         repository=args.repository,
         published_via=args.published_via,
         path_key=args.path_key,
+        committed_back_to_main=committed_back_to_main,
     )
     print(path)
     return 0
