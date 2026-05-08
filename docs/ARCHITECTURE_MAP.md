@@ -26,6 +26,8 @@ push naar main
 
 De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden niet gepubliceerd. De publish-workflow commit geen resultatensnapshot terug naar `main`.
 
+Binnen `07 Rapport` worden artifacts eerst provenance-safe verzameld: de originele artifactstructuur blijft behouden per artifact, eventuele naamconflicten krijgen een artifactprefix en `results/manifest.json` bewaart de herkomst van de analyse-input.
+
 ## Welke run doet wat?
 
 | Runnaam in GitHub Actions | Wat doet hij? | Uitkomst | Bewijssoort |

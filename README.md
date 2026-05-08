@@ -97,6 +97,8 @@ De standaardworkflow heet **Checks en benchmark-resultaten**. De runnamen zijn g
 
 De probe utility suite is beschikbaar als handmatige benchmarklaag. Als het resultaatbestand aanwezig is, neemt de analyzer het automatisch mee in de rapportage.
 
+In stap **07 Rapport** worden de standaard-artifacts eerst provenance-safe verzameld: de originele artifactstructuur blijft bewaard in `results/artifacts/`, naamconflicten krijgen een artifactprefix en `results/manifest.json` legt vast waar elk analybestand vandaan komt.
+
 Na een geslaagde push naar `main` publiceert **Publiceer testresultaten naar Wiki en Pages** de laatste artifacts naar Wiki en Pages. De workflow schrijft geen resultatensnapshot terug naar `main`. PR-runs worden niet gepubliceerd.
 
 ## Resultaten

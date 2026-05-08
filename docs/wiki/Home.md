@@ -68,9 +68,11 @@ De centrale route is:
 
 ```text
 Checks en benchmark-resultaten
-  -> Publish Test Results
+  -> Publiceer testresultaten naar Wiki en Pages
   -> Wiki + Pages
 ```
+
+De stap `07 Rapport` verzamelt de analyse-input conflictveilig uit artifacts. De originele artifactstructuur blijft traceerbaar, en de gepubliceerde snapshots verwijzen via een manifest terug naar de bronbestanden.
 
 De belangrijkste automatische pagina's:
 

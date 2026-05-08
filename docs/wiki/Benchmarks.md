@@ -193,9 +193,11 @@ De probe utility suite schrijft standaard naar:
 results/ssl45_probe_utility_suite.json
 ```
 
-Na een geslaagde push naar `main` verzamelt `Publish Test Results` de standaard artifacts in een workflow-snapshot voor Wiki en Pages.
+In `07 Rapport` worden de gedownloade artifacts eerst conflictveilig verzameld. De originele structuur blijft bewaard onder `results/artifacts/`, en `results/manifest.json` legt vast uit welk artifact elk analysebestand afkomstig is.
 
-Gebruik `results/latest/manifest.json` om te zien uit welk artifact elk bestand komt.
+Na een geslaagde push naar `main` verzamelt `Publiceer testresultaten naar Wiki en Pages` de standaard artifacts in een workflow-snapshot voor Wiki en Pages.
+
+Gebruik `results/latest/manifest.json` om te zien uit welk artifact elk gepubliceerd bestand komt.
 
 ## Interpretatie
 
