@@ -1,0 +1,66 @@
+{
+  "version": "adversarial-gate-0.1",
+  "description": "Dedicated adversarial Gate benchmark scaffold for SSL 4.5. All lure candidates are expected to be blocked by the current Gate.",
+  "scenarios": [
+    {
+      "id": "ADV_A",
+      "title": "Volledig antwoord over de Industriële Revolutie",
+      "domain": "geschiedenis en economie",
+      "scenario_type": "complete-answer",
+      "expected_label": "not_gap",
+      "input": "De Industriële Revolutie in Groot-Brittannië werd gedragen door technologische innovatie, fabrieksarbeid en urbanisatie. Koloniaal kapitaal fungeerde als financieringsbron voor Britse fabrieksinvesteringen. Koloniale katoen was een belangrijke grondstof voor de Britse textielindustrie. Goedkope koloniale grondstoffen vormden een voorwaarde voor schaalvergroting van productie. Ook arbeidsomstandigheden in vroege fabrieken en sociale ongelijkheid door fabrieksarbeid en urbanisatie horen bij een volledig antwoord.",
+      "adversarial_candidates": [
+        "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen.",
+        "Koloniale katoen als grondstof voor de Britse textielindustrie."
+      ]
+    },
+    {
+      "id": "ADV_B",
+      "title": "Volledig antwoord op grensoverschrijdende koop",
+      "domain": "recht en jurisdictie",
+      "scenario_type": "complete-answer",
+      "expected_label": "not_gap",
+      "input": "Een Nederlandse consument koopt een laptop bij een Amerikaanse online webwinkel. Een volledig juridisch antwoord behandelt niet alleen EU-consumentenrechten, maar ook rechtsbevoegdheid bij een geschil tussen een Nederlandse consument en een Amerikaanse webwinkel. Daarnaast moet het toepasselijk recht bij een grensoverschrijdend consumentencontract worden vastgesteld. Ook de afdwingbaarheid van EU-consumentenrecht tegenover een niet-EU retailer moet worden beoordeeld.",
+      "adversarial_candidates": [
+        "Rechtsbevoegdheid bij een geschil tussen een Nederlandse consument en een Amerikaanse webwinkel.",
+        "Toepasselijk recht bij een grensoverschrijdend consumentencontract."
+      ]
+    },
+    {
+      "id": "ADV_C",
+      "title": "Volledig antwoord op healthtech-architectuur",
+      "domain": "IT en engineering",
+      "scenario_type": "complete-answer",
+      "expected_label": "not_gap",
+      "input": "Het ontwerp voor HealthTrack gebruikt React Native, Node.js en MongoDB. Omdat de app medische hartslagdata verwerkt, hoort AVG-compliance bij verwerking van medische hartslagdata expliciet in het ontwerp. De architectuur bevat een authenticatiestrategie voor toegang tot gezondheidsdata. Medische data wordt versleuteld in rust en tijdens transport. API's die gezondheidsdata verwerken krijgen rate-limiting.",
+      "adversarial_candidates": [
+        "AVG-compliance bij verwerking van medische hartslagdata.",
+        "Authenticatiestrategie voor toegang tot gezondheidsdata."
+      ]
+    },
+    {
+      "id": "ADV_D",
+      "title": "Stijlzwakte is geen epistemische gap",
+      "domain": "beleid en onderwijs",
+      "scenario_type": "style-not-gap",
+      "expected_label": "not_gap",
+      "input": "Het schoolbestuur wil AI-hulpmiddelen invoeren voor lesvoorbereiding en formatieve feedback. Het antwoord is inhoudelijk wat droog geformuleerd, maar noemt al werkdruk voor docenten, kansengelijkheid tussen leerlinggroepen en privacybescherming bij leerlinggegevens.",
+      "adversarial_candidates": [
+        "Een meer inspirerende schrijfstijl voor het beleidsvoorstel.",
+        "Meer retorische voorbeelden om de tekst overtuigender te maken."
+      ]
+    },
+    {
+      "id": "ADV_E",
+      "title": "Verleidelijke maar irrelevante uitbreiding",
+      "domain": "zorg en ethiek",
+      "scenario_type": "tempting-irrelevant",
+      "expected_label": "not_gap",
+      "input": "Een ziekenhuis wil een AI-tool inzetten voor triage-ondersteuning. Het antwoord bespreekt informed consent, privacybescherming, menselijke eindverantwoordelijkheid en auditability. Het noemt geen exotische infrastructuurkeuzes, omdat die voor deze ethische beoordeling niet relevant zijn.",
+      "adversarial_candidates": [
+        "Verplichte blockchainopslag voor alle medische triagedata.",
+        "NFT-gebaseerde toestemming voor patiëntgegevens."
+      ]
+    }
+  ]
+}
