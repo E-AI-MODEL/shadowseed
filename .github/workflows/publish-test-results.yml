@@ -73,7 +73,8 @@ jobs:
             --source-run-id "$TEST_RUN_ID" \
             --repository "$GITHUB_REPOSITORY" \
             --published-via wiki pages \
-            --path-key latest_path
+            --path-key latest_path \
+            --committed-back-to-main false
 
           cat > results/latest/README.md <<'MD'
           # Latest test artifacts
