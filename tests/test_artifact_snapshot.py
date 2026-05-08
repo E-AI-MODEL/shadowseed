@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from shadowseed.analysis.artifact_snapshot import build_artifact_snapshot, main
 
 
@@ -54,6 +56,20 @@ def test_build_artifact_snapshot_preserves_artifact_provenance(tmp_path: Path) -
     }
 
 
+def test_build_artifact_snapshot_requires_expected_files(tmp_path: Path) -> None:
+    source = tmp_path / "downloaded-artifacts"
+    artifact = source / "02-gap-finder-results"
+    artifact.mkdir(parents=True)
+    (artifact / "ssl45_gap_suite.json").write_text('{"ok": true}\n', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="ssl45_false_positive_suite.json"):
+        build_artifact_snapshot(
+            source,
+            tmp_path / "latest",
+            required_files=["ssl45_gap_suite.json", "ssl45_false_positive_suite.json"],
+        )
+
+
 def test_artifact_snapshot_cli_writes_manifest(tmp_path: Path) -> None:
     source = tmp_path / "downloaded-artifacts"
     artifact = source / "07-analysis-report"
@@ -78,6 +94,8 @@ def test_artifact_snapshot_cli_writes_manifest(tmp_path: Path) -> None:
             "latest_path",
             "--committed-back-to-main",
             "false",
+            "--require-files",
+            "analysis_report.md",
         ]
     )
 
