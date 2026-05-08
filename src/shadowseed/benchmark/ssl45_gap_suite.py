@@ -15,6 +15,7 @@ import re
 
 import numpy as np
 
+from shadowseed.hash_utils import stable_bucket_index
 from shadowseed.manager import SSLManager, SeedStatus
 
 
@@ -87,7 +88,7 @@ def tokenize(text: str) -> set[str]:
 def lexical_embedding(text: str, dimensions: int = 128) -> np.ndarray:
     vector = np.zeros(dimensions, dtype=float)
     for token in tokenize(text):
-        vector[hash(token) % dimensions] += 1.0
+        vector[stable_bucket_index(token, dimensions)] += 1.0
     return vector
 
 
