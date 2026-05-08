@@ -101,6 +101,10 @@ In stap **07 Rapport** worden de standaard-artifacts eerst provenance-safe verza
 
 Na een geslaagde push naar `main` publiceert **Publiceer testresultaten naar Wiki en Pages** de laatste artifacts naar Wiki en Pages. De workflow schrijft geen resultatensnapshot terug naar `main`. PR-runs worden niet gepubliceerd.
 
+De publicatieroute faalt nu ook expliciet als een verwachte kernoutput ontbreekt, als `results/latest/manifest.json` leeg is of als `results/latest/summary.json` geen bruikbare JSON bevat. Daardoor zie je sneller het verschil tussen een echte publicatie en een stil halve run.
+
+Handmatig opnieuw publiceren zonder nieuwe test-run kan via `workflow_dispatch` op **Publiceer testresultaten naar Wiki en Pages**. Die pakt de laatst geslaagde `push`-run op `main` en bouwt daar opnieuw de Wiki- en Pages-snapshot van.
+
 ## Resultaten
 
 | Plek | Inhoud |
