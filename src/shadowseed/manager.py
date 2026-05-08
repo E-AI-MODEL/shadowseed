@@ -181,7 +181,7 @@ class SSLManager:
         return embedding / norm
 
     @staticmethod
-    def is_atomic_seed(text: str) -> bool:
+    def is_atomic_seed(text: str, max_seed_words: int | None = None) -> bool:
         """Heuristic filter. Human review is still needed."""
         lowered = text.lower().strip()
         separators = [",", ";", " en ", " of ", "zoals", "bijvoorbeeld"]
@@ -201,6 +201,7 @@ class SSLManager:
             "kolonialisme",
             "context",
         }
+        word_limit = DEFAULT_CONFIG.max_seed_words if max_seed_words is None else max_seed_words
         has_many_separators = sum(sep in lowered for sep in separators) >= 2
         has_broad_terms = any(term in lowered for term in broad_terms)
         word_count = len(re.findall(r"\w+", text))
@@ -208,7 +209,7 @@ class SSLManager:
             "ontbreekt" in lowered or "ontbreken" in lowered
         ):
             return False
-        return not has_many_separators and not has_broad_terms and word_count <= DEFAULT_CONFIG.max_seed_words
+        return not has_many_separators and not has_broad_terms and word_count <= word_limit
 
     def normalize_detection_candidates(self, candidates: Iterable[str]) -> list[str]:
         return normalize_detection_candidates(list(candidates))
@@ -244,7 +245,7 @@ class SSLManager:
         text: str,
         trigger_keywords: Iterable[str] | None = None,
     ) -> str:
-        if not self.is_atomic_seed(text):
+        if not self.is_atomic_seed(text, max_seed_words=self.config.max_seed_words):
             raise ValueError("Seed lijkt te breed. Splits eerst naar atomische seeds.")
 
         new_emb = self.get_embedding(text)
