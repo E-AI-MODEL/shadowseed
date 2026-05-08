@@ -13,6 +13,19 @@ De repo heeft niet één doel maar meerdere banen die samen moeten blijven klopp
 | Rapportage | JSON-resultaten samenvatten tot rapport en grafieken | `src/shadowseed/analysis/ssl45_result_analyzer.py`, workflow-snapshot `results/latest/` | automatisch |
 | Publicatie | Laatste resultaten tonen op Wiki en Pages | `.github/workflows/publish-test-results.yml`, `site/`, `docs/wiki/` | automatisch na main push |
 
+## Commandkaart
+
+Naast deze vier repo-banen gebruikt de CLI nu ook expliciete commandtiers.
+
+Gebruik `docs/CLI_COMMAND_MAP.md` voor de vraag:
+
+- wat hoort bij de standaardroute;
+- wat is handmatige research;
+- wat is retrieval of backenddiagnose;
+- wat zijn AbsenceBench-utility routes.
+
+Dat voorkomt dat nieuwe workflows te snel op een verkeerde commandlaag landen.
+
 ## De hoofdroute
 
 ```text
@@ -85,6 +98,7 @@ Voor dat soort claims zijn handmatige HF-runs, grotere suites, menselijke review
 Gebruik deze combinatie:
 
 - `ARCHITECTURE_MAP.md` voor de vraag: wat draait hier precies?
+- `docs/CLI_COMMAND_MAP.md` voor de vraag: welke commandlaag hoort bij welke route?
 - `docs/research/current-status.md` voor de vraag: wat bewijst dat vandaag echt?
 - `docs/research/scenario-independence-roadmap.md` voor de vraag: waar moet het bewijs heen?
 - `docs/research/evaluation-matrix.md` voor de vraag: welke laag draagt welke claim?
