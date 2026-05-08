@@ -76,6 +76,21 @@ def test_detailed_validation_gate_records_reasoning():
     assert manager.event_log[-1].event_type == "validated"
 
 
+def test_blocked_validation_records_block_event():
+    manager = SSLManager(embedding_fn=fake_embedding)
+    seed_id = manager.add_or_update_seed(
+        "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen."
+    )
+    manager.seeds[seed_id].occurrence_count = 3
+
+    result = manager.run_validation_gate_detailed(seed_id, external_evidence=True)
+
+    assert result.verdict == "blocked"
+    assert result.status_before == SeedStatus.NEW.value
+    assert result.status_after == SeedStatus.NEW.value
+    assert manager.event_log[-1].event_type == "validation_blocked"
+
+
 def test_reactivate_dormant_seed_by_keyword():
     manager = SSLManager(embedding_fn=fake_embedding)
     seed_id = manager.add_or_update_seed(
@@ -104,6 +119,22 @@ def test_contradiction_resets_weight_and_status():
     assert manager.seeds[seed_id].status == SeedStatus.NEW
     assert manager.seeds[seed_id].occurrence_count == 1
     assert manager.seeds[seed_id].weight < 0.6
+
+
+def test_contradiction_detailed_result_records_reset():
+    manager = SSLManager(embedding_fn=fake_embedding)
+    seed_id = manager.add_or_update_seed(
+        "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen."
+    )
+    manager.seeds[seed_id].weight = 0.6
+    manager.seeds[seed_id].occurrence_count = 4
+
+    result = manager.run_validation_gate_detailed(seed_id, contradiction=True)
+
+    assert result.verdict == "contradicted"
+    assert result.contradiction_applied is True
+    assert result.status_after == SeedStatus.NEW.value
+    assert manager.event_log[-1].event_type == "contradicted"
 
 
 def test_constellations_group_promoted_seeds():
