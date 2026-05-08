@@ -58,6 +58,7 @@ shadowseed run-gap-suite
 shadowseed run-false-positive-suite
 shadowseed run-benefit-suite
 shadowseed run-open-set-seed-review
+shadowseed run-adversarial-gate-benchmark
 shadowseed run-probe-utility-benchmark
 shadowseed analyze-results
 ```
@@ -70,6 +71,7 @@ shadowseed analyze-results
 | `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust en blokkeert de Gate misleidende lure-seeds? |
 | `shadowseed run-benefit-suite` | Antwoordwinst | Wordt een antwoord completer met SSL-toevoegingen? |
 | `shadowseed run-open-set-seed-review` | Open-set review | Maakt seed-output en review-packets zonder vaste ground-truth seedlijst |
+| `shadowseed run-adversarial-gate-benchmark` | Adversarial Gate | Vergelijkt de huidige Gate met zwakkere promotieregels op misleidende lure-candidates |
 | `shadowseed run-probe-utility-benchmark` | Probe utility | Laat zien of promoted seeds scherpere follow-up, retrieval en dialectische probes opleveren dan brede baselines? |
 | `shadowseed run-model-benefit-suite --backend fixture` | Model smoke | Werkt de modelroute technisch zonder modeldownload? |
 | `shadowseed run-blind-benchmark` | Blind test | Blijven labels verborgen tot de scoring? |
@@ -95,7 +97,7 @@ De standaardworkflow heet **Checks en benchmark-resultaten**. De runnamen zijn g
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? |
 | 09 Herhalingstest | Wat gebeurt er bij meer SSL-rondes? |
 
-De probe utility suite is beschikbaar als handmatige benchmarklaag. Als het resultaatbestand aanwezig is, neemt de analyzer het automatisch mee in de rapportage.
+De open-set review, adversarial Gate-benchmark en probe utility suite zijn beschikbaar als handmatige benchmarklagen. Als resultaatbestanden aanwezig zijn, kan de repo ze apart meenemen of publiceren, zonder ze dezelfde status te geven als de standaard regressieruggengraat.
 
 In stap **07 Rapport** worden de standaard-artifacts eerst provenance-safe verzameld: de originele artifactstructuur blijft bewaard in `results/artifacts/`, naamconflicten krijgen een artifactprefix en `results/manifest.json` legt vast waar elk analybestand vandaan komt.
 
@@ -170,6 +172,8 @@ De repo is een research prototype. De huidige standaardruns laten zien dat de me
 
 De vaste scenario-suites moeten nu gelezen worden als regressie- en kleine benchmarklaag. Ze zijn nuttig om de kernmechaniek stabiel te houden, maar dragen niet zelfstandig de volledige algemene SSL-claim.
 
+De handmatige open-set review, adversarial Gate-benchmark en probe utility suite zijn de eerste verdiepingslagen bovenop die regressieruggengraat. Ze maken de repo inhoudelijk eerlijker, maar zijn nog niet hetzelfde als brede eindvalidatie.
+
 Dit is nog geen algemene claim dat SSL 4.5 altijd betere modelantwoorden oplevert. Daarvoor zijn grotere blinde suites, meerdere echte modellen, open-set seedbeoordeling, adversarial Gate-evaluatie, probe-evaluatie met menselijke review en menselijke beoordeling nodig.
 
 ## Wat dit niet claimt
@@ -190,6 +194,7 @@ Lees verder in:
 - `docs/research/current-status.md`
 - `docs/research/scenario-independence-roadmap.md`
 - `docs/research/evaluation-matrix.md`
+- `docs/research/open-set-adversarial-plan.md`
 - `docs/wiki/Home.md`
 - `docs/wiki/Benchmarks.md`
 - `docs/wiki/Blind-Benchmark.md`
