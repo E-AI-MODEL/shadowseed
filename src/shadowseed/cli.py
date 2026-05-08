@@ -8,6 +8,7 @@ from shadowseed.analysis.ssl45_result_analyzer import analyze_results
 from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
+from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate_benchmark
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
 from shadowseed.benchmark.result_writer import ResultWriter
@@ -107,6 +108,21 @@ def build_parser() -> argparse.ArgumentParser:
         "--review-packets",
         default="results/open_set_seed_review_packets.json",
         help="Waar de review-packets voor menselijke beoordeling worden opgeslagen.",
+    )
+
+    adversarial = subparsers.add_parser("run-adversarial-gate-benchmark")
+    adversarial.add_argument(
+        "--input",
+        default="src/shadowseed/data/adversarial_gate_benchmark.json",
+    )
+    adversarial.add_argument(
+        "--output",
+        default="results/adversarial_gate_benchmark.json",
+    )
+    adversarial.add_argument(
+        "--casebook",
+        default="results/adversarial_gate_casebook.md",
+        help="Waar de leesbare casebook met baseline-vs-gate blokkades wordt opgeslagen.",
     )
 
     probe = subparsers.add_parser("run-probe-utility-benchmark")
@@ -212,6 +228,15 @@ def main(argv: list[str] | None = None) -> int:
             args.input,
             args.output,
             review_packet_path=args.review_packets,
+        )
+        print(path)
+        return 0
+
+    if args.command == "run-adversarial-gate-benchmark":
+        path = run_adversarial_gate_benchmark(
+            args.input,
+            args.output,
+            casebook_path=args.casebook,
         )
         print(path)
         return 0
