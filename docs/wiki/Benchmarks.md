@@ -18,6 +18,7 @@ Belangrijk: niet elke suite draagt dezelfde bewijslast. De huidige vaste scenari
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `shadowseed run-nlp-smoke` | `absencebench_smoke.json` | technische smoke |
 | 09 Herhalingstest | Wat gebeurt er bij meer rondes? | `shadowseed run-gap-suite --turns N` | `ssl45_gap_suite_turns_*.json` | gevoeligheid / regressie |
 | handmatig | Kan SSL open-set seeds produceren zonder vaste seedlijst? | `shadowseed run-open-set-seed-review` | `open_set_seed_review.json`, review-packets | open-set scaffold |
+| handmatig | Blokkeert de huidige Gate meer misleidende lure-seeds dan zwakkere promotieregels? | `shadowseed run-adversarial-gate-benchmark` | `adversarial_gate_benchmark.json`, casebook | adversarial scaffold |
 | handmatig | Levert SSL scherpere vervolgprobes op dan brede baseline-probes? | `shadowseed run-probe-utility-benchmark` | `ssl45_probe_utility_suite.json` | gedragsmatige scaffold |
 
 ## Regressie- en kleine benchmarklaag
@@ -116,7 +117,7 @@ De standaard CI maakt tijdelijke smoke-labels. Echte labels horen niet in de rep
 
 Deze laag is belangrijk omdat ze methodologisch bewaakt dat detectie en scoring gescheiden blijven.
 
-## Open-set en gedragslaag
+## Open-set en adversarial laag
 
 ### Open-set seed review
 
@@ -138,6 +139,33 @@ Deze runner doet nog geen volledige open-world validatie. Hij bouwt wel de eerst
 - review-packets voor menselijke scoring op atomiciteit, relevantie, toetsbaarheid, niet-trivialiteit en follow-up utility.
 
 Dit is de eerste stap weg van alleen scenario-scores.
+
+### Adversarial Gate benchmark
+
+Data:
+
+```text
+src/shadowseed/data/adversarial_gate_benchmark.json
+```
+
+Output:
+
+- `adversarial_gate_benchmark.json`
+- `adversarial_gate_casebook.md`
+
+Deze runner trekt de Gate-stresstest los uit de bredere false-positive suite en maakt de baselinevergelijking zichtbaar:
+
+- `current_gate`
+- `trace_only`
+- `trace_without_contradiction_check`
+
+De suite bevat drie soorten negatieve gevallen:
+
+- complete antwoorden waarin de lure-seed al gedekt is;
+- stijlzwaktes die geen epistemische gap zijn;
+- verleidelijke maar irrelevante uitbreidingen.
+
+De JSON-samenvatting laat de deltas per baseline zien. De casebook maakt de concrete blokkades leesbaar per scenario en seed.
 
 ### Probe utility
 
@@ -187,9 +215,13 @@ De standaard CI uploadt artifacts met leesbare namen:
 09-repeat-test-turns-*
 ```
 
-De probe utility suite schrijft standaard naar:
+De handmatige verdiepingslagen schrijven standaard naar:
 
 ```text
+results/open_set_seed_review.json
+results/open_set_seed_review_packets.json
+results/adversarial_gate_benchmark.json
+results/adversarial_gate_casebook.md
 results/ssl45_probe_utility_suite.json
 ```
 
@@ -212,12 +244,18 @@ Een sterke uitkomst vereist minimaal:
 
 Een fixture-run is nuttig als technische controle. Een echte modelclaim vraagt om `hf-transformers`, meer scenario's en blind review.
 
+Voor de handmatige open-set, adversarial en probe-lagen geldt extra voorzichtigheid:
+
+- het zijn nog scaffolds, geen eindbewijs;
+- de belangrijkste winst is dat de repo eerlijker en toetsbaarder wordt;
+- hun artefacts moeten apart gelezen worden, niet als één totaalscore met regressieruns.
+
 ## Wat er nog bij moet komen
 
 Om de repo verder te professionaliseren en minder scenario-afhankelijk te maken, zijn later extra lagen nodig:
 
 - volwassen open-set seed quality review;
-- sterkere adversarial false-positive evaluatie;
+- zwaardere adversarial false-positive evaluatie met menselijke review;
 - probe utility evaluatie met menselijke review;
 - domeintransfer;
 - aparte modelinterne onderzoekslijn.
