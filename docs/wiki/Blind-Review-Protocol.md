@@ -1,5 +1,7 @@
 # Blind review protocol
 
+> Status: secundair protocol. Dit document is nuttig voor handmatige review, maar is niet de primaire statusbron. Gebruik voor de laatste resultaten eerst [Latest Test Results](Latest-Test-Results) en [SSL 4.5 Analysis](SSL-45-Analysis).
+
 Blind review is nodig om te voorkomen dat beoordelaars automatisch het SSL-antwoord beter vinden omdat ze weten dat het SSL is.
 
 ## Doel
@@ -13,7 +15,7 @@ SSL-guided rewrite
 
 ## Waar staan de review-items?
 
-De fase-2 model benefit output bevat:
+Model benefit output kan reviewvelden bevatten zoals:
 
 ```text
 blind_review_items
