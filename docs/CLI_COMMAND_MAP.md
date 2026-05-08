@@ -41,6 +41,7 @@ Deze commands verdiepen het bewijs, maar zijn nog niet dezelfde soort stabiele r
 | Command | Rol | Verwachte status |
 |---|---|---|
 | `run-open-set-seed-review` | open-set scaffold met review-packets | handmatig |
+| `summarize-open-set-seed-review` | reviewer-uitkomsten aggregeren tot acceptance, agreement en disagreement-artifacts | handmatig |
 | `run-adversarial-gate-benchmark` | vergelijk current Gate met zwakkere promotiebaselines | handmatig |
 | `run-probe-utility-benchmark` | gedragsmatige scaffold voor follow-up, retrieval en dialectiek | handmatig |
 

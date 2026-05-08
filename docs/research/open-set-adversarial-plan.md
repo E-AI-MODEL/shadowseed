@@ -110,6 +110,17 @@ open_set_review_summary.json
 open_set_disagreements.json
 ```
 
+De eerste twee artifacts bestaan al als generatielaag. De volgende praktische stap is dat reviewer-uitkomsten niet alleen los worden ingevuld, maar ook geaggregeerd kunnen worden tot acceptance-, agreement- en disagreement-signalen.
+
+Daarvoor hoort nu expliciet een samenvattingsstap bij:
+
+```text
+shadowseed summarize-open-set-seed-review \
+  --input results/open_set_seed_review_packets.json \
+  --output results/open_set_seed_review_summary.json \
+  --disagreements-output results/open_set_seed_review_disagreements.json
+```
+
 ## 6. Primaire metrics
 
 De eerste versie hoeft nog niet perfect te zijn, maar moet wel deze signalen kunnen laten zien:

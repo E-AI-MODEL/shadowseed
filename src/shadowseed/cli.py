@@ -10,6 +10,7 @@ from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate_benchmark
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
+from shadowseed.benchmark.open_set_review_summary import summarize_open_set_seed_review
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
 from shadowseed.benchmark.result_writer import ResultWriter
 from shadowseed.benchmark.retrieval_benchmark import run_retrieval_benchmark
@@ -152,6 +153,26 @@ def build_parser() -> argparse.ArgumentParser:
         "--review-packets",
         default="results/open_set_seed_review_packets.json",
         help="Waar de review-packets voor menselijke beoordeling worden opgeslagen.",
+    )
+
+    open_set_summary = subparsers.add_parser(
+        "summarize-open-set-seed-review",
+        help="[manual/reporting] vat ingevulde open-set review-packets samen",
+    )
+    open_set_summary.add_argument(
+        "--input",
+        default="results/open_set_seed_review_packets.json",
+        help="JSON-bestand met ingevulde review-packets.",
+    )
+    open_set_summary.add_argument(
+        "--output",
+        default="results/open_set_seed_review_summary.json",
+        help="Waar de geaggregeerde review-samenvatting wordt opgeslagen.",
+    )
+    open_set_summary.add_argument(
+        "--disagreements-output",
+        default="results/open_set_seed_review_disagreements.json",
+        help="Waar seed-level disagreements voor handmatige follow-up worden opgeslagen.",
     )
 
     adversarial = subparsers.add_parser(
@@ -298,6 +319,15 @@ def main(argv: list[str] | None = None) -> int:
             args.input,
             args.output,
             review_packet_path=args.review_packets,
+        )
+        print(path)
+        return 0
+
+    if args.command == "summarize-open-set-seed-review":
+        path = summarize_open_set_seed_review(
+            args.input,
+            args.output,
+            disagreements_output_path=args.disagreements_output,
         )
         print(path)
         return 0

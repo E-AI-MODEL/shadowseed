@@ -29,6 +29,15 @@ REVIEW_CRITERIA = [
     "non_triviality",
     "follow_up_utility",
 ]
+REJECT_CODES = [
+    "too_broad",
+    "too_vague",
+    "trivial",
+    "not_relevant",
+    "not_testable",
+    "duplicate",
+    "style_not_gap",
+]
 
 
 def _scenario_like_record(item: dict[str, Any]) -> dict[str, Any]:
@@ -60,8 +69,10 @@ def _review_entry(item: dict[str, Any], seed_row: dict[str, Any]) -> dict[str, A
         "source_excerpt": excerpt,
         "seed_id": seed_row.get("seed_id"),
         "seed_text": seed_row.get("text"),
+        "reviewer_id": None,
         "review_fields": {criterion: None for criterion in REVIEW_CRITERIA},
         "review_status": "pending",
+        "reject_reason": None,
         "reviewer_notes": "",
     }
 
@@ -119,6 +130,7 @@ def run_open_set_seed_review(
         "domain_accept_counts": domain_counts,
         "review_packet_count": len(review_packets),
         "review_criteria": REVIEW_CRITERIA,
+        "reject_codes": REJECT_CODES,
         "status": "review_pending",
     }
 
@@ -138,6 +150,7 @@ def run_open_set_seed_review(
                     "item_count": len(items),
                     "packet_count": len(review_packets),
                     "criteria": REVIEW_CRITERIA,
+                    "reject_codes": REJECT_CODES,
                     "instructions": "Score each seed on atomicity, relevance, testability, non-triviality and follow-up utility.",
                 },
                 "packets": review_packets,

@@ -20,5 +20,8 @@ def test_open_set_seed_review_outputs_packets(tmp_path: Path) -> None:
     assert payload["summary"]["item_count"] == 3
     assert payload["summary"]["accepted_count"] > 0
     assert payload["summary"]["rejected_count"] > 0
-    assert review_payload["summary"]["packet_count"] == payload["summary"]["review_packet_count"]
+    assert payload["summary"]["review_packet_count"] == review_payload["summary"]["packet_count"]
+    assert review_payload["summary"]["reject_codes"]
     assert review_payload["packets"][0]["review_status"] == "pending"
+    assert "reviewer_id" in review_payload["packets"][0]
+    assert "reject_reason" in review_payload["packets"][0]
