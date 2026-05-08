@@ -52,7 +52,8 @@ def maybe_expand_fragment(fragment: str) -> str:
 
 
 def looks_like_short_category_stack(text: str) -> bool:
-    lowered = text.lower().strip()
+    cleaned = clean_candidate_text(text)
+    lowered = cleaned.lower()
     if not (lowered.endswith(" ontbreekt") or lowered.endswith(" ontbreken")):
         return False
     if "," in lowered or ";" in lowered:
@@ -66,18 +67,18 @@ def split_broad_seed_text(text: str) -> list[str]:
         return []
 
     if "," in normalized or ";" in normalized:
-        fragments = [maybe_expand_fragment(part) for part in SEPARATOR_PATTERN.split(normalized)]
+        raw_fragments = [clean_candidate_text(part) for part in SEPARATOR_PATTERN.split(normalized)]
         expanded: list[str] = []
-        for fragment in fragments:
-            if not fragment:
+        for raw_fragment in raw_fragments:
+            if not raw_fragment:
                 continue
-            if looks_like_short_category_stack(fragment):
+            if looks_like_short_category_stack(raw_fragment):
                 expanded.extend(
                     maybe_expand_fragment(part)
-                    for part in CONJUNCTION_PATTERN.split(clean_candidate_text(fragment))
+                    for part in CONJUNCTION_PATTERN.split(clean_candidate_text(raw_fragment))
                 )
             else:
-                expanded.append(fragment)
+                expanded.append(maybe_expand_fragment(raw_fragment))
         return [fragment for fragment in expanded if fragment]
 
     if looks_like_short_category_stack(normalized):
