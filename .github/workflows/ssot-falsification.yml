@@ -9,6 +9,9 @@ on:
       - "tests/test_ssot_falsification.py"
       - ".github/workflows/ssot-falsification.yml"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: write
 
