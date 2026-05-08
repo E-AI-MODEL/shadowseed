@@ -15,11 +15,35 @@ Belangrijk: niet elke suite draagt dezelfde bewijslast. De huidige vaste scenari
 | 05 Model smoke | Werkt dezelfde modelroute met en zonder SSL? | `shadowseed run-model-benefit-suite` | `ssl45_model_benefit_suite.json` | technische smoke |
 | 06 Blind test | Ziet de detector de labels niet vooraf? | `shadowseed run-blind-benchmark` | `blind_benchmark.json` | methodologische smoke |
 | 07 Rapport | Hoe zien de resultaten er samen uit? | `shadowseed analyze-results` | `analysis_report.md`, `summary.json` | rapportage |
-| 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `shadowseed run-nlp-smoke` | `absencebench_smoke.json` | technische smoke |
+| 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `shadowseed run-absencebench-smoke` | `absencebench_smoke.json` | technische smoke |
 | 09 Herhalingstest | Wat gebeurt er bij meer rondes? | `shadowseed run-gap-suite --turns N` | `ssl45_gap_suite_turns_*.json` | gevoeligheid / regressie |
 | handmatig | Kan SSL open-set seeds produceren zonder vaste seedlijst? | `shadowseed run-open-set-seed-review` | `open_set_seed_review.json`, review-packets | open-set scaffold |
 | handmatig | Blokkeert de huidige Gate meer misleidende lure-seeds dan zwakkere promotieregels? | `shadowseed run-adversarial-gate-benchmark` | `adversarial_gate_benchmark.json`, casebook | adversarial scaffold |
 | handmatig | Levert SSL scherpere vervolgprobes op dan brede baseline-probes? | `shadowseed run-probe-utility-benchmark` | `ssl45_probe_utility_suite.json` | gedragsmatige scaffold |
+
+## Command-audit in het kort
+
+De CLI gebruikt nu drie commandolagen:
+
+- standaard regressie- en smoke-routes;
+- handmatige research-routes;
+- AbsenceBench-utility routes.
+
+De canonieke AbsenceBench-commands zijn nu:
+
+- `shadowseed prepare-absencebench-bundle`
+- `shadowseed fetch-absencebench-sample`
+- `shadowseed run-absencebench-local`
+- `shadowseed run-absencebench-smoke`
+
+Legacy aliases blijven voorlopig werken:
+
+- `prepare-absencebench`
+- `fetch-absencebench`
+- `run-local-absencebench`
+- `run-nlp-smoke`
+
+Zo wordt de naamgeving consistenter zonder bestaande scripts direct te breken.
 
 ## Regressie- en kleine benchmarklaag
 
