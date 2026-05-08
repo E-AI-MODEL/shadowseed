@@ -26,6 +26,12 @@ from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
 
 VECTOR_BACKENDS = ["memory", "faiss", "chroma"]
 MODEL_BACKENDS = ["fixture", "hf-transformers"]
+COMMAND_ALIASES = {
+    "prepare-absencebench": "prepare-absencebench-bundle",
+    "fetch-absencebench": "fetch-absencebench-sample",
+    "run-local-absencebench": "run-absencebench-local",
+    "run-nlp-smoke": "run-absencebench-smoke",
+}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -229,6 +235,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    args.command = COMMAND_ALIASES.get(args.command, args.command)
 
     if args.command == "prepare-absencebench-bundle":
         bundle = AbsenceBenchRunner().build_execution_bundle(
