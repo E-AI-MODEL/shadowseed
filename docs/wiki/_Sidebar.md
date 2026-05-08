@@ -1,6 +1,6 @@
 # Shadow Seed Learning 4.5
 
-## Snel naar
+## Actuele ingang
 
 - [Home](Home)
 - [Latest Test Results](Latest-Test-Results)
@@ -16,9 +16,17 @@
 - [Architectuur](Architectuur)
 - [Quick Start](Quick-Start)
 
-## Verdere checks
+## Aanvullende checks
 
 - [SSOT Falsification](SSOT-Falsification)
 - [Retrieval Model HF](Retrieval-Model-HF)
 - [Full Validation Sweep](Full-Validation-Sweep)
+
+## Achtergrond en ontwikkeling
+
+- [Tussentijdse rapportage](Tussentijdse-Rapportage)
+- [Visueel verhaal](Visueel-Verhaal)
+- [Conceptueel overzicht](Conceptueel-Overzicht)
+- [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is)
+- [Blind review protocol](Blind-Review-Protocol)
 - [Roadmap](Roadmap)
