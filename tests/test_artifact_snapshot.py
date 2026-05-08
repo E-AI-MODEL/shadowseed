@@ -48,6 +48,10 @@ def test_build_artifact_snapshot_preserves_artifact_provenance(tmp_path: Path) -
 
     copied_names = {Path(item["results_path"]).name for item in manifest["copied_files"]}
     assert copied_names == {"summary.json", "06-blind-benchmark-results__summary.json"}
+    assert {item["original_artifact_path"] for item in manifest["copied_files"]} == {
+        "artifacts/02-gap-finder-results/summary.json",
+        "artifacts/06-blind-benchmark-results/summary.json",
+    }
 
 
 def test_artifact_snapshot_cli_writes_manifest(tmp_path: Path) -> None:
@@ -72,10 +76,13 @@ def test_artifact_snapshot_cli_writes_manifest(tmp_path: Path) -> None:
             "pages",
             "--path-key",
             "latest_path",
+            "--committed-back-to-main",
+            "false",
         ]
     )
 
     assert exit_code == 0
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["published_via"] == ["wiki", "pages"]
-    assert manifest["copied_files"][0]["latest_path"].endswith("analysis_report.md")
+    assert manifest["committed_back_to_main"] is False
+    assert manifest["copied_files"][0]["latest_path"] == "latest/analysis_report.md"
