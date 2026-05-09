@@ -112,6 +112,7 @@ def build_conclusion(
     benefit_payload: ResultDict | None,
     model_benefit_payload: ResultDict | None,
     blind_payload: ResultDict | None,
+    adversarial_payload: ResultDict | None,
 ) -> dict[str, Any]:
     """Build a cautious conclusion from the available result summaries."""
     gap_score = float(metric(gap_payload, "mean_scenario_score", 0.0) or 0.0)
@@ -123,6 +124,9 @@ def build_conclusion(
     length_delta = float(metric(model_benefit_payload, "mean_answer_length_delta_words", 0.0) or 0.0)
     blind_delta = float(metric(blind_payload, "mean_coverage_delta", 0.0) or 0.0)
     blind_fp = int(metric(blind_payload, "total_false_positive_count", 0) or 0)
+    adversarial_gate_fp = float(metric(adversarial_payload, "current_gate_false_promotion_rate", 0.0) or 0.0)
+    adversarial_trace_fp = float(metric(adversarial_payload, "trace_only_false_promotion_rate", 0.0) or 0.0)
+    adversarial_delta = float(metric(adversarial_payload, "gate_vs_trace_only_delta", 0.0) or 0.0)
     backend = str(metric(model_benefit_payload, "backend", "unknown"))
     is_real_model = backend.startswith("hf-transformers:")
 
@@ -177,6 +181,14 @@ def build_conclusion(
     else:
         support.append("Er zijn promoted false positives gevonden; conclusies moeten worden beperkt.")
 
+    if adversarial_payload:
+        if adversarial_gate_fp == 0.0 and adversarial_delta > 0:
+            support.append("De adversarial Gate-laag laat zien dat de huidige Gate lure-promoties blokkeert die trace-only nog zou doorlaten.")
+        elif adversarial_trace_fp > adversarial_gate_fp:
+            support.append("De adversarial Gate-laag is aanwezig en laat een kleinere false-promotion rate zien dan trace-only, maar nog niet volledig schoon.")
+        else:
+            support.append("De adversarial Gate-laag vraagt nog scherper verschil met zwakkere baselines.")
+
     if benefit_delta > 0:
         support.append("De benefit-suite laat hogere gap coverage zien na SSL-toevoegingen.")
     else:
@@ -203,6 +215,9 @@ def build_conclusion(
             "gap_mean_scenario_score": gap_score,
             "gap_promoted_hits": promoted_hits,
             "promoted_false_positive_rate": fp_rate,
+            "adversarial_current_gate_false_promotion_rate": adversarial_gate_fp,
+            "adversarial_trace_only_false_promotion_rate": adversarial_trace_fp,
+            "adversarial_gate_vs_trace_only_delta": adversarial_delta,
             "benefit_coverage_delta": benefit_delta,
             "model_benefit_coverage_delta": model_delta,
             "model_unsupported_ssl_addition_rate": unsupported_rate,
@@ -272,6 +287,7 @@ def make_markdown_report(
     benefit_payload: ResultDict | None,
     model_benefit_payload: ResultDict | None,
     blind_payload: ResultDict | None,
+    adversarial_payload: ResultDict | None,
     retrieval_payload: ResultDict | None,
     retrieval_model_payload: ResultDict | None,
     probe_payload: ResultDict | None,
@@ -314,6 +330,9 @@ def make_markdown_report(
             f"| Gap Finder mean score | {short_number(metric(gap_payload, 'mean_scenario_score'))} |",
             f"| Gap Finder promoted hits | {short_number(metric(gap_payload, 'promoted_hits'))} |",
             f"| False-positive promoted rate | {short_number(metric(false_positive_payload, 'promoted_false_positive_rate'))} |",
+            f"| Adversarial Gate current FP rate | {short_number(metric(adversarial_payload, 'current_gate_false_promotion_rate'))} |",
+            f"| Adversarial Gate trace-only FP rate | {short_number(metric(adversarial_payload, 'trace_only_false_promotion_rate'))} |",
+            f"| Adversarial Gate reduction vs trace-only | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_only'))} |",
             f"| Antwoordwinst coverage delta | {short_number(metric(benefit_payload, 'coverage_delta'))} |",
             f"| Model smoke backend | {metric(model_benefit_payload, 'backend', 'n/a')} |",
             f"| Model smoke coverage delta | {short_number(metric(model_benefit_payload, 'coverage_delta'))} |",
@@ -372,6 +391,25 @@ def make_markdown_report(
             )
     else:
         lines.append("Geen turn-matrix artifact gevonden.")
+
+    if adversarial_payload:
+        lines.extend(
+            [
+                "",
+                "## Adversarial Gate-laag",
+                "",
+                "| Metric | Waarde |",
+                "|---|---:|",
+                f"| Candidates | {short_number(metric(adversarial_payload, 'candidate_count'))} |",
+                f"| Current Gate false-promotion rate | {short_number(metric(adversarial_payload, 'current_gate_false_promotion_rate'))} |",
+                f"| Trace-only false-promotion rate | {short_number(metric(adversarial_payload, 'trace_only_false_promotion_rate'))} |",
+                f"| Trace zonder contradictie false-promotion rate | {short_number(metric(adversarial_payload, 'trace_without_contradiction_false_promotion_rate'))} |",
+                f"| Gate reductie vs trace-only | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_only'))} |",
+                f"| Gate reductie vs trace zonder contradictiecheck | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_without_contradiction'))} |",
+                "",
+                "Deze laag blijft een deterministische scaffold, maar laat nu expliciet zien hoeveel lure-promoties de Gate voorkomt ten opzichte van zwakkere regels.",
+            ]
+        )
 
     lines.extend(
         [
@@ -437,6 +475,7 @@ def analyze_results(
     benefit = load_json(source / "ssl45_benefit_suite.json")
     model_benefit = load_json(source / "ssl45_model_benefit_suite.json")
     blind = load_json(source / "blind_benchmark.json")
+    adversarial = load_json(source / "adversarial_gate_benchmark.json")
     retrieval = load_json(source / "retrieval_benchmark.json")
     retrieval_model = load_json(source / "retrieval_model_benchmark.json")
     probe = load_json(source / "ssl45_probe_utility_suite.json")
@@ -446,7 +485,7 @@ def analyze_results(
     turn_matrix = load_turn_matrix(source)
 
     semantic = semantic_seed_summary([gap, benefit, model_benefit])
-    conclusion = build_conclusion(gap, false_positive, benefit, model_benefit, blind)
+    conclusion = build_conclusion(gap, false_positive, benefit, model_benefit, blind, adversarial)
     publish_mode = "workflow snapshot"
     if manifest and manifest.get("committed_back_to_main") is False:
         publish_mode = "wiki/pages snapshot without main write-back"
@@ -462,6 +501,8 @@ def analyze_results(
     false_positive_values = {
         "Candidate FP rate": float(metric(false_positive, "candidate_false_positive_rate", 0.0) or 0.0),
         "Promoted FP rate": float(metric(false_positive, "promoted_false_positive_rate", 0.0) or 0.0),
+        "Adversarial Gate FP rate": float(metric(adversarial, "current_gate_false_promotion_rate", 0.0) or 0.0),
+        "Adversarial trace-only FP rate": float(metric(adversarial, "trace_only_false_promotion_rate", 0.0) or 0.0),
         "Model unsupported rate": float(metric(model_benefit, "unsupported_ssl_addition_rate", 0.0) or 0.0),
         "Blind FP count": float(metric(blind, "total_false_positive_count", 0.0) or 0.0),
     }
@@ -475,6 +516,7 @@ def analyze_results(
         "benefit": benefit.get("summary") if benefit else None,
         "model_benefit": model_benefit.get("summary") if model_benefit else None,
         "blind": blind.get("summary") if blind else None,
+        "adversarial_gate": adversarial.get("summary") if adversarial else None,
         "retrieval": retrieval.get("metrics") if retrieval else None,
         "retrieval_model": retrieval_model.get("summary") if retrieval_model else None,
         "probe_utility": probe.get("summary") if probe else None,
@@ -498,6 +540,7 @@ def analyze_results(
             benefit,
             model_benefit,
             blind,
+            adversarial,
             retrieval,
             retrieval_model,
             probe,
