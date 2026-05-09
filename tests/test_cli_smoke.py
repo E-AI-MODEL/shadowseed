@@ -85,6 +85,11 @@ def test_cli_open_set_defaults() -> None:
     assert summary_args.report_output == "results/open_review/open_set_review_report.md"
 
 
+def test_cli_absencebench_smoke_default_output_matches_result_writer_root() -> None:
+    args = build_parser().parse_args(["run-absencebench-smoke"])
+    assert args.output == "absencebench_smoke.json"
+
+
 def test_cli_open_set_review_summary(tmp_path):
     review_packets = {
         "summary": {"packet_count": 1},
