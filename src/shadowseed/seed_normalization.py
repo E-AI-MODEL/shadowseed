@@ -61,6 +61,14 @@ def looks_like_short_category_stack(text: str) -> bool:
     return len(lowered.split()) <= 6 and (" en " in lowered or " of " in lowered)
 
 
+def looks_like_short_category_fragment(text: str) -> bool:
+    cleaned = clean_candidate_text(text)
+    lowered = cleaned.lower()
+    if "," in lowered or ";" in lowered:
+        return False
+    return len(lowered.split()) <= 4 and (" en " in lowered or " of " in lowered)
+
+
 def split_broad_seed_text(text: str) -> list[str]:
     normalized = strip_broad_prefix(clean_candidate_text(text))
     if not normalized:
@@ -72,7 +80,7 @@ def split_broad_seed_text(text: str) -> list[str]:
         for raw_fragment in raw_fragments:
             if not raw_fragment:
                 continue
-            if looks_like_short_category_stack(raw_fragment):
+            if looks_like_short_category_stack(raw_fragment) or looks_like_short_category_fragment(raw_fragment):
                 expanded.extend(
                     maybe_expand_fragment(part)
                     for part in CONJUNCTION_PATTERN.split(clean_candidate_text(raw_fragment))

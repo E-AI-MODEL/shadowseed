@@ -18,9 +18,9 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable, Iterable
 import math
 import re
+from typing import TYPE_CHECKING, Any, Callable, Iterable
 
 import numpy as np
 
@@ -107,6 +107,13 @@ class ValidationGateResult:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class ValidationGateFlags:
+    internal_recognition_passed: bool
+    external_evidence_passed: bool
+    contradiction_free: bool
+
+
 class SSLManager:
     def __init__(
         self,
@@ -132,12 +139,20 @@ class SSLManager:
             base_config,
             half_life_turns=base_config.half_life_turns if half_life_turns is None else half_life_turns,
             dedup_threshold=base_config.dedup_threshold if dedup_threshold is None else dedup_threshold,
-            promotion_threshold=base_config.promotion_threshold if promotion_threshold is None else promotion_threshold,
+            promotion_threshold=base_config.promotion_threshold
+            if promotion_threshold is None
+            else promotion_threshold,
             dormant_threshold=base_config.dormant_threshold if dormant_threshold is None else dormant_threshold,
-            validation_increment=base_config.validation_increment if validation_increment is None else validation_increment,
-            contradiction_penalty=base_config.contradiction_penalty if contradiction_penalty is None else contradiction_penalty,
+            validation_increment=base_config.validation_increment
+            if validation_increment is None
+            else validation_increment,
+            contradiction_penalty=base_config.contradiction_penalty
+            if contradiction_penalty is None
+            else contradiction_penalty,
             max_trace=base_config.max_trace if max_trace is None else max_trace,
-            reactivation_increment=base_config.reactivation_increment if reactivation_increment is None else reactivation_increment,
+            reactivation_increment=base_config.reactivation_increment
+            if reactivation_increment is None
+            else reactivation_increment,
         )
         self.half_life_turns = self.config.half_life_turns
         self.dedup_threshold = self.config.dedup_threshold
@@ -151,8 +166,23 @@ class SSLManager:
         self.validation_log: list[ValidationGateResult] = []
         self.event_log: list[SeedEvent] = []
 
+    @staticmethod
+    def _now_iso() -> str:
+        return datetime.now().isoformat()
+
     def _record_event(self, event_type: str, seed_id: str, **detail: Any) -> None:
         self.event_log.append(SeedEvent(event_type=event_type, seed_id=seed_id, detail=detail))
+
+    def _touch_seed(self, seed: ShadowSeed) -> None:
+        seed.updated_at = self._now_iso()
+
+    def _sync_seed(self, seed_id: str) -> None:
+        if self.vector_constellation is not None:
+            self.vector_constellation.sync_seed(self.seeds[seed_id])
+
+    def _record_and_sync(self, event_type: str, seed_id: str, **detail: Any) -> None:
+        self._record_event(event_type, seed_id, **detail)
+        self._sync_seed(seed_id)
 
     def _load_embedder(self):
         if self._embedder is not None:
@@ -214,10 +244,6 @@ class SSLManager:
     def normalize_detection_candidates(self, candidates: Iterable[str]) -> list[str]:
         return normalize_detection_candidates(list(candidates))
 
-    def _sync_vector_seed(self, seed_id: str) -> None:
-        if self.vector_constellation is not None:
-            self.vector_constellation.sync_seed(self.seeds[seed_id])
-
     def ingest_detection_candidates(
         self,
         candidates: Iterable[str],
@@ -240,6 +266,46 @@ class SSLManager:
             "rejected": rejected,
         }
 
+    def _maybe_deduplicate_seed(self, new_embedding: np.ndarray) -> tuple[str, float] | None:
+        for seed_id, seed in self.seeds.items():
+            similarity = float(np.dot(new_embedding, seed.embedding))
+            if similarity >= self.dedup_threshold:
+                return seed_id, similarity
+        return None
+
+    def _activate_existing_seed(self, seed_id: str, similarity: float) -> str:
+        seed = self.seeds[seed_id]
+        seed.occurrence_count += 1
+        seed.trace = min(seed.trace + 0.5, self.max_trace)
+        if seed.status != SeedStatus.PROMOTED:
+            seed.status = SeedStatus.ACTIVE
+        self._touch_seed(seed)
+        self._record_and_sync(
+            "deduplicated",
+            seed_id,
+            similarity=similarity,
+            occurrence_count=seed.occurrence_count,
+            trace=seed.trace,
+        )
+        return seed_id
+
+    def _create_seed(
+        self,
+        text: str,
+        embedding: np.ndarray,
+        trigger_keywords: Iterable[str] | None,
+    ) -> str:
+        seed_id = f"ss_{len(self.seeds) + 1:03d}"
+        self.seeds[seed_id] = ShadowSeed(
+            id=seed_id,
+            text=text,
+            embedding=embedding,
+            trigger_keywords=list(trigger_keywords or []),
+            trace=self.config.trace_start,
+        )
+        self._record_and_sync("created", seed_id, text=text)
+        return seed_id
+
     def add_or_update_seed(
         self,
         text: str,
@@ -248,37 +314,23 @@ class SSLManager:
         if not self.is_atomic_seed(text, max_seed_words=self.config.max_seed_words):
             raise ValueError("Seed lijkt te breed. Splits eerst naar atomische seeds.")
 
-        new_emb = self.get_embedding(text)
+        new_embedding = self.get_embedding(text)
+        deduplicated = self._maybe_deduplicate_seed(new_embedding)
+        if deduplicated is not None:
+            seed_id, similarity = deduplicated
+            return self._activate_existing_seed(seed_id, similarity)
 
-        for seed_id, seed in self.seeds.items():
-            sim = float(np.dot(new_emb, seed.embedding))
-            if sim >= self.dedup_threshold:
-                seed.occurrence_count += 1
-                seed.trace = min(seed.trace + 0.5, self.max_trace)
-                if seed.status != SeedStatus.PROMOTED:
-                    seed.status = SeedStatus.ACTIVE
-                seed.updated_at = datetime.now().isoformat()
-                self._record_event(
-                    "deduplicated",
-                    seed_id,
-                    similarity=sim,
-                    occurrence_count=seed.occurrence_count,
-                    trace=seed.trace,
-                )
-                self._sync_vector_seed(seed_id)
-                return seed_id
+        return self._create_seed(text, new_embedding, trigger_keywords)
 
-        seed_id = f"ss_{len(self.seeds) + 1:03d}"
-        self.seeds[seed_id] = ShadowSeed(
-            id=seed_id,
-            text=text,
-            embedding=new_emb,
-            trigger_keywords=list(trigger_keywords or []),
-            trace=self.config.trace_start,
-        )
-        self._record_event("created", seed_id, text=text)
-        self._sync_vector_seed(seed_id)
-        return seed_id
+    def _status_after_decay(self, seed: ShadowSeed) -> SeedStatus:
+        if seed.trace < self.dormant_threshold and seed.weight == 0.0:
+            return SeedStatus.DORMANT
+        if seed.trace < self.config.min_trace_for_gate and seed.status not in {
+            SeedStatus.PROMOTED,
+            SeedStatus.DORMANT,
+        }:
+            return SeedStatus.DECAYING
+        return seed.status
 
     def decay_traces(self, turns_passed: int = 1) -> None:
         for seed_id, seed in self.seeds.items():
@@ -287,16 +339,9 @@ class SSLManager:
 
             before_trace = seed.trace
             seed.trace *= math.exp(-turns_passed / self.half_life_turns)
-            seed.updated_at = datetime.now().isoformat()
-
-            if seed.trace < self.dormant_threshold and seed.weight == 0.0:
-                seed.status = SeedStatus.DORMANT
-            elif seed.trace < 0.5 and seed.status not in {
-                SeedStatus.PROMOTED,
-                SeedStatus.DORMANT,
-            }:
-                seed.status = SeedStatus.DECAYING
-            self._record_event(
+            seed.status = self._status_after_decay(seed)
+            self._touch_seed(seed)
+            self._record_and_sync(
                 "trace_decayed",
                 seed_id,
                 turns_passed=turns_passed,
@@ -304,7 +349,103 @@ class SSLManager:
                 trace_after=seed.trace,
                 status=seed.status.value,
             )
-            self._sync_vector_seed(seed_id)
+
+    def _validation_flags(self, seed: ShadowSeed, contradiction: bool) -> ValidationGateFlags:
+        return ValidationGateFlags(
+            internal_recognition_passed=(
+                seed.occurrence_count >= self.config.min_occurrences_for_gate
+                and seed.trace > self.config.min_trace_for_gate
+            ),
+            external_evidence_passed=seed.evidence_count >= self.config.min_evidence_for_gate,
+            contradiction_free=not contradiction,
+        )
+
+    def _build_validation_result(
+        self,
+        *,
+        seed_id: str,
+        seed: ShadowSeed,
+        status_before: str,
+        weight_before: float,
+        flags: ValidationGateFlags,
+        external_evidence: bool,
+        contradiction: bool,
+        promoted: bool,
+        verdict: str,
+    ) -> ValidationGateResult:
+        return ValidationGateResult(
+            seed_id=seed_id,
+            status_before=status_before,
+            status_after=seed.status.value,
+            weight_before=weight_before,
+            weight_after=seed.weight,
+            occurrence_count=seed.occurrence_count,
+            evidence_count=seed.evidence_count,
+            internal_recognition_passed=flags.internal_recognition_passed,
+            external_evidence_passed=flags.external_evidence_passed,
+            contradiction_free=flags.contradiction_free,
+            external_evidence_applied=external_evidence,
+            contradiction_applied=contradiction,
+            promoted=promoted,
+            verdict=verdict,
+        )
+
+    def _finalize_validation_result(
+        self,
+        result: ValidationGateResult,
+        *,
+        event_type: str | None = None,
+        event_detail: dict[str, Any] | None = None,
+    ) -> ValidationGateResult:
+        self.validation_log.append(result)
+        if event_type is not None:
+            self._record_and_sync(event_type, result.seed_id, **(event_detail or {}))
+        else:
+            self._sync_seed(result.seed_id)
+        return result
+
+    def _apply_contradiction(
+        self,
+        *,
+        seed_id: str,
+        seed: ShadowSeed,
+        status_before: str,
+        weight_before: float,
+        flags: ValidationGateFlags,
+        external_evidence: bool,
+    ) -> ValidationGateResult:
+        seed.weight = max(0.0, seed.weight - self.contradiction_penalty)
+        seed.occurrence_count = 1
+        seed.status = SeedStatus.NEW
+        self._touch_seed(seed)
+        result = self._build_validation_result(
+            seed_id=seed_id,
+            seed=seed,
+            status_before=status_before,
+            weight_before=weight_before,
+            flags=flags,
+            external_evidence=external_evidence,
+            contradiction=True,
+            promoted=False,
+            verdict="contradicted",
+        )
+        return self._finalize_validation_result(
+            result,
+            event_type="contradicted",
+            event_detail={"weight_after": seed.weight},
+        )
+
+    def _apply_successful_validation(self, *, seed: ShadowSeed) -> tuple[bool, str]:
+        seed.weight = min(1.0, seed.weight + self.validation_increment)
+        seed.status = (
+            SeedStatus.PROMOTED
+            if seed.weight >= self.promotion_threshold
+            else SeedStatus.ACTIVE
+        )
+        self._touch_seed(seed)
+        promoted = seed.status == SeedStatus.PROMOTED
+        verdict = "promoted" if promoted else "validated"
+        return promoted, verdict
 
     def run_validation_gate_detailed(
         self,
@@ -319,86 +460,65 @@ class SSLManager:
         if external_evidence:
             seed.evidence_count += 1
 
-        internal_recognition_passed = (
-            seed.occurrence_count >= self.config.min_occurrences_for_gate
-            and seed.trace > self.config.min_trace_for_gate
-        )
-        external_evidence_passed = seed.evidence_count >= self.config.min_evidence_for_gate
-        contradiction_free = not contradiction
+        flags = self._validation_flags(seed, contradiction)
 
         if contradiction:
-            seed.weight = max(0.0, seed.weight - self.contradiction_penalty)
-            seed.occurrence_count = 1
-            seed.status = SeedStatus.NEW
-            seed.updated_at = datetime.now().isoformat()
-            result = ValidationGateResult(
+            return self._apply_contradiction(
                 seed_id=seed_id,
+                seed=seed,
                 status_before=status_before,
-                status_after=seed.status.value,
                 weight_before=weight_before,
-                weight_after=seed.weight,
-                occurrence_count=seed.occurrence_count,
-                evidence_count=seed.evidence_count,
-                internal_recognition_passed=internal_recognition_passed,
-                external_evidence_passed=external_evidence_passed,
-                contradiction_free=False,
-                external_evidence_applied=external_evidence,
-                contradiction_applied=True,
-                promoted=False,
-                verdict="contradicted",
+                flags=flags,
+                external_evidence=external_evidence,
             )
-            self.validation_log.append(result)
-            self._record_event("contradicted", seed_id, weight_after=seed.weight)
-            self._sync_vector_seed(seed_id)
-            return result
 
-        promoted = False
-        verdict = "blocked"
-        if internal_recognition_passed and external_evidence_passed and contradiction_free:
-            seed.weight = min(1.0, seed.weight + self.validation_increment)
-            seed.status = (
-                SeedStatus.PROMOTED
-                if seed.weight >= self.promotion_threshold
-                else SeedStatus.ACTIVE
-            )
-            seed.updated_at = datetime.now().isoformat()
-            promoted = seed.status == SeedStatus.PROMOTED
-            verdict = "promoted" if promoted else "validated"
-            self._record_event(
-                "validated",
-                seed_id,
+        if (
+            flags.internal_recognition_passed
+            and flags.external_evidence_passed
+            and flags.contradiction_free
+        ):
+            promoted, verdict = self._apply_successful_validation(seed=seed)
+            result = self._build_validation_result(
+                seed_id=seed_id,
+                seed=seed,
+                status_before=status_before,
+                weight_before=weight_before,
+                flags=flags,
+                external_evidence=external_evidence,
+                contradiction=False,
                 promoted=promoted,
-                weight_after=seed.weight,
-                evidence_count=seed.evidence_count,
+                verdict=verdict,
             )
-        else:
-            self._record_event(
-                "validation_blocked",
-                seed_id,
-                internal_recognition_passed=internal_recognition_passed,
-                external_evidence_passed=external_evidence_passed,
-                contradiction_free=contradiction_free,
+            return self._finalize_validation_result(
+                result,
+                event_type="validated",
+                event_detail={
+                    "promoted": promoted,
+                    "weight_after": seed.weight,
+                    "evidence_count": seed.evidence_count,
+                },
             )
 
-        result = ValidationGateResult(
+        result = self._build_validation_result(
             seed_id=seed_id,
+            seed=seed,
             status_before=status_before,
-            status_after=seed.status.value,
             weight_before=weight_before,
-            weight_after=seed.weight,
-            occurrence_count=seed.occurrence_count,
-            evidence_count=seed.evidence_count,
-            internal_recognition_passed=internal_recognition_passed,
-            external_evidence_passed=external_evidence_passed,
-            contradiction_free=contradiction_free,
-            external_evidence_applied=external_evidence,
-            contradiction_applied=False,
-            promoted=promoted,
-            verdict=verdict,
+            flags=flags,
+            external_evidence=external_evidence,
+            contradiction=False,
+            promoted=False,
+            verdict="blocked",
         )
-        self.validation_log.append(result)
-        self._sync_vector_seed(seed_id)
-        return result
+        return self._finalize_validation_result(
+            result,
+            event_type="validation_blocked",
+            event_detail={
+                "internal_recognition_passed": flags.internal_recognition_passed,
+                "external_evidence_passed": flags.external_evidence_passed,
+                "contradiction_free": flags.contradiction_free,
+            },
+        )
 
     def run_validation_gate(
         self,
@@ -425,23 +545,22 @@ class SSLManager:
             if seed.status != SeedStatus.DORMANT:
                 continue
 
-            sim = float(np.dot(query_emb, seed.embedding))
+            similarity = float(np.dot(query_emb, seed.embedding))
             keyword_hit = any(
                 keyword.lower() in text.lower() for keyword in seed.trigger_keywords
             )
 
-            if sim >= threshold or keyword_hit:
+            if similarity >= threshold or keyword_hit:
                 seed.trace = min(seed.trace + self.reactivation_increment, self.max_trace)
                 seed.status = SeedStatus.NEW
-                seed.updated_at = datetime.now().isoformat()
-                self._record_event(
+                self._touch_seed(seed)
+                self._record_and_sync(
                     "reactivated",
                     seed_id,
-                    similarity=sim,
+                    similarity=similarity,
                     keyword_hit=keyword_hit,
                     trace=seed.trace,
                 )
-                self._sync_vector_seed(seed_id)
                 reactivated.append(seed_id)
 
         return reactivated
@@ -519,7 +638,7 @@ class SSLManager:
         for seed_id in expired:
             if seed_id in self.seeds:
                 self.seeds[seed_id].status = SeedStatus.EXPIRED
-                self.seeds[seed_id].updated_at = datetime.now().isoformat()
+                self._touch_seed(self.seeds[seed_id])
                 self._record_event("expired", seed_id, max_age_days=max_age_days)
         return expired
 
@@ -535,8 +654,8 @@ class SSLManager:
         for index, seed in enumerate(promoted):
             cluster = [seed]
             for other in promoted[index + 1 :]:
-                sim = float(np.dot(seed.embedding, other.embedding))
-                if sim >= threshold:
+                similarity = float(np.dot(seed.embedding, other.embedding))
+                if similarity >= threshold:
                     cluster.append(other)
 
             if len(cluster) >= min_members:
@@ -549,9 +668,7 @@ class SSLManager:
                     Constellation(
                         members=list(member_ids),
                         centroid=centroid.tolist(),
-                        combined_weight=float(
-                            np.mean([item.weight for item in cluster])
-                        ),
+                        combined_weight=float(np.mean([item.weight for item in cluster])),
                     )
                 )
 
