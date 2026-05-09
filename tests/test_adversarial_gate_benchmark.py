@@ -80,3 +80,46 @@ def test_analyze_results_includes_adversarial_gate_metrics(tmp_path: Path) -> No
     assert "Adversarial Gate current FP rate" in report_text
     assert "Gate reductie vs trace-only" in report_text
     assert "De adversarial Gate-laag laat zien" in report_text
+
+
+def test_analyze_results_includes_open_set_review_metrics(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    output_dir = tmp_path / "analysis"
+    results_dir.mkdir()
+
+    open_set_payload = {
+        "summary": {
+            "packet_count": 6,
+            "completed_packet_count": 6,
+            "accepted_packet_count": 4,
+            "rejected_packet_count": 2,
+            "unique_seed_count": 3,
+            "accepted_seed_count": 2,
+            "rejected_seed_count": 1,
+            "mixed_seed_count": 0,
+            "pending_seed_count": 0,
+            "seed_acceptance_rate": 0.6666666667,
+            "seed_rejection_rate": 0.3333333333,
+            "agreement_eligible_seed_count": 3,
+            "unanimous_seed_count": 2,
+            "unanimous_verdict_rate": 0.6666666667,
+            "pairwise_decision_agreement_rate": 0.8333333333,
+            "status": "review_complete",
+        },
+        "results": [],
+    }
+    (results_dir / "open_set_seed_review_summary.json").write_text(
+        json.dumps(open_set_payload, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    report_path = analyze_results(str(results_dir), str(output_dir))
+    report_text = report_path.read_text(encoding="utf-8")
+    summary_payload = json.loads((output_dir / "analysis_summary.json").read_text(encoding="utf-8"))
+
+    assert summary_payload["open_set_review"]["seed_acceptance_rate"] == open_set_payload["summary"]["seed_acceptance_rate"]
+    assert summary_payload["conclusion"]["metrics"]["open_set_unanimous_verdict_rate"] == open_set_payload["summary"]["unanimous_verdict_rate"]
+    assert "Open-set seed acceptance rate" in report_text
+    assert "Open-set unanimous verdict rate" in report_text
+    assert "## Open-set review" in report_text
+    assert "reviewer-consensus" in report_text
