@@ -13,6 +13,23 @@ Beoordelen of SSL op onbekende teksten kleine, relevante, toetsbare en niet-triv
 - meerdere tekstvormen
 - geen vooraf uitgeschreven expected seedlijst als primaire waarheid
 
+Een praktische eerste route is nu beschikbaar via Hugging Face intake:
+
+```bash
+shadowseed fetch-open-set-hf-batch \
+  --source-id ag_news_test \
+  --output benchmarks/open_review/input/hf_ag_news_test_batch.json
+```
+
+Daarna kan dezelfde batch direct de reviewflow in:
+
+```bash
+shadowseed run-open-set-seed-review \
+  --input benchmarks/open_review/input/hf_ag_news_test_batch.json \
+  --output results/open_set_seed_output.json \
+  --review-packets results/open_set_review_packets.json
+```
+
 ## Verwachte artifacts
 
 - `open_set_seed_output.json`

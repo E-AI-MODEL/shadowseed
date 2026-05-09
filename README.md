@@ -51,6 +51,9 @@ shadowseed run-false-positive-suite
 shadowseed run-benefit-suite
 shadowseed run-model-benefit-suite --backend fixture
 shadowseed run-blind-benchmark --labels benchmarks/private/blind_suite_labels.json
+shadowseed fetch-open-set-hf-batch --source-id ag_news_test --output benchmarks/open_review/input/hf_ag_news_test_batch.json
+shadowseed run-open-set-seed-review --input benchmarks/open_review/input/hf_ag_news_test_batch.json
+shadowseed summarize-open-set-seed-review
 shadowseed run-adversarial-gate-benchmark
 shadowseed run-probe-utility-benchmark
 shadowseed analyze-results
@@ -68,6 +71,25 @@ shadowseed run-open-set-seed-review \
   --output results/open_set_seed_output.json \
   --review-packets results/open_set_review_packets.json
 ```
+## Belangrijkste CLI-routes
+
+| Commando | Gewone naam | Wat test het? |
+|---|---|---|
+| `shadowseed run-gap-suite` | Gap Finder | Vindt SSL bekende ontbrekende punten in de regressiesuite? |
+| `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust en blokkeert de Gate misleidende lure-seeds? |
+| `shadowseed run-benefit-suite` | Antwoordwinst | Wordt een antwoord completer met SSL-toevoegingen? |
+| `shadowseed fetch-open-set-hf-batch` | Open-set intake | Haalt een kleine HF-batch op en normaliseert die naar reviewbare open-set input? |
+| `shadowseed run-open-set-seed-review` | Open-set review | Maakt seed-output en review-packets zonder vaste ground-truth seedlijst |
+| `shadowseed summarize-open-set-seed-review` | Open-set samenvatting | Agregeert reviewer-uitkomsten naar acceptance, agreement en disagreement-artifacts |
+| `shadowseed run-adversarial-gate-benchmark` | Adversarial Gate | Vergelijkt de huidige Gate met zwakkere promotieregels op misleidende lure-candidates |
+| `shadowseed run-probe-utility-benchmark` | Probe utility | Laat zien of promoted seeds scherpere follow-up, retrieval en dialectische probes opleveren dan brede baselines? |
+| `shadowseed run-model-benefit-suite --backend fixture` | Model smoke | Werkt de modelroute technisch zonder modeldownload? |
+| `shadowseed run-blind-benchmark` | Blind test | Blijven labels verborgen tot de scoring? |
+| `shadowseed run-retrieval-benchmark` | Retrieval check | Vindt de vectorstore de juiste bronstukken? |
+| `shadowseed run-retrieval-model-benchmark` | Retrieval modelcheck | Helpt opgehaalde SSOT-context het modelantwoord? |
+| `shadowseed run-ssot-smoke` | SSOT check | Werkt bronstatus en falsificatiebasis? |
+| `shadowseed run-vectorstore-smoke` | Vectorstore check | Werkt opslag en zoeken in de gekozen backend? |
+| `shadowseed analyze-results` | Rapport | Maakt Markdown, JSON en SVG-grafieken uit resultaten. |
 
 Deze open-set route hoort niet bij de standaard CI. Daarvoor is nog handmatige review nodig.
 

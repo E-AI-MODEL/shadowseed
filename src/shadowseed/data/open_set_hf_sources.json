@@ -1,0 +1,25 @@
+{
+  "version": "hf-open-set-sources-0.1",
+  "sources": [
+    {
+      "id": "ag_news_test",
+      "dataset": "szhuggingface/ag_news",
+      "config": "default",
+      "split": "test",
+      "revision": "main",
+      "license": "apache-2.0",
+      "text_field": "text",
+      "label_field": "label",
+      "label_names": {
+        "0": "World",
+        "1": "Sports",
+        "2": "Business",
+        "3": "Sci/Tech"
+      },
+      "domain_template": "nieuws - {label_name}",
+      "title_template": "AG News {label_name} #{row_idx}",
+      "min_text_length": 120,
+      "notes": "Lichte, publiek toegankelijke nieuwsset met meerdere domeincategorieen voor een eerste open-set reviewbatch. De huidige adapter gebruikt de Hugging Face Datasets Server rows-endpoint en registreert de gewenste revision in metadata."
+    }
+  ]
+}
