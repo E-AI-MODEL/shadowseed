@@ -16,6 +16,11 @@ from pathlib import Path
 import re
 from typing import Protocol
 
+from shadowseed.benchmark.ssl45_benefit_suite import (
+    UNSUPPORTED_ADDITION_PENALTY_WEIGHT,
+    coverage_delta_per_100_added_words,
+    penalized_coverage_delta,
+)
 from shadowseed.benchmark.ssl45_gap_suite import (
     detect_candidate_seeds,
     jaccard,
@@ -276,9 +281,8 @@ def run_ssl45_model_benefit_suite(
         ssl_words = word_count(ssl_answer)
         length_delta = ssl_words - baseline_words
         coverage_delta = ssl_cov - baseline_cov
-        gain_per_100_added_words = (
-            coverage_delta / length_delta * 100 if length_delta > 0 else coverage_delta
-        )
+        gain_per_100_added_words = coverage_delta_per_100_added_words(coverage_delta, length_delta)
+        unsupported_rate = len(unsupported) / len(promoted) if promoted else 0.0
         blind_item, blind_key = build_blind_review_item(scenario, baseline_answer, ssl_answer)
 
         baseline_coverages.append(baseline_cov)
@@ -297,10 +301,13 @@ def run_ssl45_model_benefit_suite(
                 "baseline_gap_coverage": baseline_cov,
                 "ssl_gap_coverage": ssl_cov,
                 "coverage_delta": coverage_delta,
+                "coverage_delta_raw": coverage_delta,
                 "baseline_word_count": baseline_words,
                 "ssl_word_count": ssl_words,
                 "answer_length_delta_words": length_delta,
-                "coverage_gain_per_100_added_words": gain_per_100_added_words,
+                "coverage_delta_per_100_added_words": gain_per_100_added_words,
+                "unsupported_ssl_addition_rate": unsupported_rate,
+                "penalized_coverage_delta": penalized_coverage_delta(coverage_delta, unsupported_rate),
                 "baseline_covered": baseline_covered,
                 "ssl_covered": ssl_covered,
                 "promoted_seeds": promoted,
@@ -315,22 +322,26 @@ def run_ssl45_model_benefit_suite(
     baseline_mean = sum(baseline_coverages) / len(baseline_coverages)
     ssl_mean = sum(ssl_coverages) / len(ssl_coverages)
     mean_length_delta = sum(length_deltas) / len(length_deltas)
+    coverage_delta = ssl_mean - baseline_mean
+    unsupported_rate = unsupported_total / promoted_total if promoted_total else 0.0
     summary = {
         "suite_version": suite.get("version"),
         "backend": model.name,
         "scenario_count": len(suite["scenarios"]),
         "baseline_mean_gap_coverage": baseline_mean,
         "ssl_mean_gap_coverage": ssl_mean,
-        "coverage_delta": ssl_mean - baseline_mean,
+        "coverage_delta": coverage_delta,
+        "coverage_delta_raw": coverage_delta,
         "mean_answer_length_delta_words": mean_length_delta,
-        "coverage_delta_per_100_added_words": (
-            (ssl_mean - baseline_mean) / mean_length_delta * 100 if mean_length_delta > 0 else ssl_mean - baseline_mean
-        ),
+        "coverage_delta_per_100_added_words": coverage_delta_per_100_added_words(coverage_delta, mean_length_delta),
+        "unsupported_penalty_weight": UNSUPPORTED_ADDITION_PENALTY_WEIGHT,
+        "penalized_coverage_delta": penalized_coverage_delta(coverage_delta, unsupported_rate),
         "promoted_seed_count": promoted_total,
         "unsupported_ssl_additions": unsupported_total,
-        "unsupported_ssl_addition_rate": unsupported_total / promoted_total if promoted_total else 0.0,
+        "unsupported_ssl_addition_rate": unsupported_rate,
         "interpretation": (
             "Phase 2 compares the same backend in baseline and SSL-guided revision modes. "
+            "Coverage delta is reported raw and length-aware; length-aware values must be read when SSL answers are longer. "
             "The fixture backend is a CI smoke test; hf-transformers is the real local model mode. "
             "Blind review items are included so human judges can score quality without knowing which answer used SSL."
         ),
