@@ -19,6 +19,14 @@ def load_json(path: str | Path) -> ResultDict | None:
     return json.loads(file_path.read_text(encoding="utf-8"))
 
 
+def load_first_json(paths: list[Path]) -> ResultDict | None:
+    for path in paths:
+        payload = load_json(path)
+        if payload is not None:
+            return payload
+    return None
+
+
 def load_turn_matrix(source: Path) -> list[ResultDict]:
     rows = []
     for path in sorted(source.glob("ssl45_gap_suite_turns_*.json")):
@@ -553,7 +561,12 @@ def analyze_results(
     model_benefit = load_json(source / "ssl45_model_benefit_suite.json")
     blind = load_json(source / "blind_benchmark.json")
     adversarial = load_json(source / "adversarial_gate_benchmark.json")
-    open_set_review = load_json(source / "open_set_seed_review_summary.json")
+    open_set_review = load_first_json(
+        [
+            source / "open_review" / "open_set_review_summary.json",
+            source / "open_set_seed_review_summary.json",
+        ]
+    )
     retrieval = load_json(source / "retrieval_benchmark.json")
     retrieval_model = load_json(source / "retrieval_model_benchmark.json")
     probe = load_json(source / "ssl45_probe_utility_suite.json")
