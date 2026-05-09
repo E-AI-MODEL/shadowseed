@@ -35,6 +35,28 @@ def test_cli_local(tmp_path):
     assert result.returncode == 0
 
 
+def test_cli_absencebench_smoke(tmp_path):
+    data = {"scenarios": [{"detected": True}, {"detected": False}]}
+    input_file = tmp_path / "input.json"
+    input_file.write_text(json.dumps(data))
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "shadowseed.cli",
+            "run-absencebench-smoke",
+            "--input",
+            str(input_file),
+            "--output",
+            "smoke.json",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0
+
+
 def test_cli_open_set_review_summary(tmp_path):
     review_packets = {
         "summary": {"packet_count": 1},
