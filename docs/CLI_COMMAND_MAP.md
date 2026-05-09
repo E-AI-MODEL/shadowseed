@@ -34,20 +34,61 @@ Deze commands horen direct bij de huidige standaard meetketen of bij de standaar
 | `run-absencebench-smoke` | technische smoke voor lokale AbsenceBench-route | standaard |
 | `analyze-results` | rapportage uit resultaatbestanden | standaard |
 
+Deze laag is bedoeld om twee dingen te doen:
+
+- mechaniek heel houden;
+- bekende kleine benchmarksignalen zichtbaar houden.
+
+Niet om de volledige SSL-hoofdclaim te dragen.
+
 ## 2. Handmatige research-routes
 
 Deze commands verdiepen het bewijs, maar zijn nog niet dezelfde soort stabiele regressielaag als de standaardroutes.
 
-| Command | Rol | Verwachte status |
-|---|---|---|
-| `run-open-set-seed-review` | open-set scaffold met review-packets | handmatig |
-| `summarize-open-set-seed-review` | reviewer-uitkomsten aggregeren tot acceptance, agreement en disagreement-artifacts | handmatig |
-| `run-adversarial-gate-benchmark` | vergelijk current Gate met zwakkere promotiebaselines | handmatig |
-| `run-probe-utility-benchmark` | gedragsmatige scaffold voor follow-up, retrieval en dialectiek | handmatig |
+| Command | Bewijslaag | Rol | Verwachte status |
+|---|---|---|---|
+| `run-open-set-seed-review` | open-set seedkwaliteit | open-set scaffold met review-packets | handmatig |
+| `summarize-open-set-seed-review` | open-set seedkwaliteit | reviewer-uitkomsten aggregeren tot acceptance, agreement en disagreement-artifacts | handmatig |
+| `run-adversarial-gate-benchmark` | adversarial ruiscontrole | vergelijk current Gate met zwakkere promotiebaselines | handmatig |
+| `run-probe-utility-benchmark` | probe utility | gedragsmatige scaffold voor follow-up, retrieval en dialectiek | handmatig |
 
 Hoofdregel:
 
 > deze commands mogen pas standaard-CI worden als hun output stabieler, eerlijker en inhoudelijk volwassener is dan nu.
+
+## Graduation path voor research-commands
+
+Een research-command schuift pas door richting een zwaardere status als hij drie sprongen haalt.
+
+### Fase A — Scaffold
+
+- output bestaat
+- artifactnaam ligt vast
+- mens kan de uitkomst lezen
+- nog geen sterke bewijsclaim
+
+### Fase B — Bruikbare evaluatielaag
+
+- metrics zijn helder
+- artifacts zijn stabiel
+- failure modes zijn zichtbaar
+- reviewers of baselines zijn geen losse bijzaak meer
+
+### Fase C — Kandidaat voor standaardroute
+
+- runs zijn stabiel genoeg voor frequente uitvoering
+- output wordt niet snel verkeerd gelezen als eindbewijs
+- artifacts sluiten aan op rapportage zonder bewijssoorten te vermengen
+- de route heeft een duidelijke regressie- of kwaliteitsfunctie
+
+De verwachte volgorde is:
+
+1. open-set seedkwaliteit
+2. adversarial Gate-laag
+3. probe utility
+4. domeintransfer
+
+Niet alles tegelijk.
 
 ## 3. Retrieval- en backend-routes
 
@@ -59,6 +100,8 @@ Deze commands zijn nuttig voor diagnose, backend-checks en verdiepende runs, maa
 | `run-retrieval-model-benchmark` | effect van opgehaalde context op modelantwoord | handmatig |
 | `run-ssot-smoke` | SSOT en falsificatiebasis smoke-test | handmatig |
 | `run-vectorstore-smoke` | vectorstore backend smoke-test | handmatig |
+
+Deze laag is ondersteunend. Ze helpt de andere lagen scherper te maken, maar is niet zelf de hoofdclaim.
 
 ## 4. AbsenceBench-utility routes
 
