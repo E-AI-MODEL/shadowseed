@@ -84,6 +84,9 @@ jobs:
               ssl45_benefit_suite.json \
               ssl45_model_benefit_suite.json \
               blind_benchmark.json \
+              adversarial_gate_benchmark.json \
+              adversarial_gate_casebook.md \
+              ssl45_probe_utility_suite.json \
               analysis_report.md \
               analysis_summary.json \
               coverage.svg \
@@ -147,6 +150,10 @@ jobs:
               raise SystemExit("Publish manifest is missing source_run_id.")
           if not isinstance(summary, dict) or not summary:
               raise SystemExit("Publish summary is empty or invalid JSON.")
+          if summary.get("adversarial_gate") is None:
+              raise SystemExit("Publish summary is missing adversarial_gate metrics.")
+          if summary.get("probe_utility") is None:
+              raise SystemExit("Publish summary is missing probe_utility metrics.")
           PY
 
       - name: Upload gepubliceerde snapshot als workflow-artifact
