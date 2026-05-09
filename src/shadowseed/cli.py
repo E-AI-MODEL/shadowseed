@@ -167,7 +167,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     open_set_summary.add_argument(
         "--output",
-        default="results/open_review/open_set_seed_review_summary.json",
+        default="results/open_set_seed_review_summary.json",
         help="Waar de geaggregeerde review-samenvatting wordt opgeslagen.",
     )
     open_set_summary.add_argument(
