@@ -47,6 +47,7 @@ Deze commands verdiepen het bewijs, maar zijn nog niet dezelfde soort stabiele r
 
 | Command | Bewijslaag | Rol | Verwachte status |
 |---|---|---|---|
+| `fetch-open-set-hf-batch` | open-set seedkwaliteit | haal een kleine HF-batch op en normaliseer die naar reviewbare input | handmatig |
 | `run-open-set-seed-review` | open-set seedkwaliteit | open-set scaffold met review-packets | handmatig |
 | `summarize-open-set-seed-review` | open-set seedkwaliteit | reviewer-uitkomsten aggregeren tot acceptance, agreement en disagreement-artifacts | handmatig |
 | `run-adversarial-gate-benchmark` | adversarial ruiscontrole | vergelijk current Gate met zwakkere promotiebaselines | handmatig |
