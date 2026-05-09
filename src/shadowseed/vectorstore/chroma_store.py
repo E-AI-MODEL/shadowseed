@@ -5,7 +5,9 @@ Install with:
     pip install -e ".[vector-chroma]"
 
 The adapter stores vectors and metadata in a Chroma collection while keeping the
-same VectorStore interface used by the rest of SSL.
+same VectorStore interface used by the rest of SSL. When a persistent Chroma
+collection is opened, existing ids and metadata are hydrated back into the
+adapter cache so the public VectorStore methods remain valid after restart.
 """
 
 from __future__ import annotations
@@ -37,6 +39,7 @@ class ChromaVectorStore(VectorStore):
         )
         self._metadata: dict[str, dict[str, Any]] = {}
         self._embeddings: dict[str, np.ndarray] = {}
+        self._hydrate_cache_from_collection()
 
     @staticmethod
     def _normalize(embedding: np.ndarray) -> list[float]:
@@ -56,6 +59,39 @@ class ChromaVectorStore(VectorStore):
                 clean[key] = str(value)
         return clean
 
+    def _collection_count(self) -> int:
+        try:
+            return int(self.collection.count())
+        except Exception:  # pragma: no cover - defensive around optional backend versions
+            return len(self._metadata)
+
+    def _hydrate_cache_from_collection(self) -> None:
+        """Load ids and metadata from the backing Chroma collection.
+
+        Chroma is optional and versioned independently from the rest of the repo,
+        so this method is deliberately conservative: metadata hydration is enough
+        for the VectorStore contract, while embeddings are only cached when the
+        backend returns them.
+        """
+        try:
+            payload = self.collection.get(include=["metadatas", "embeddings"])
+        except Exception:  # pragma: no cover - optional backend compatibility
+            try:
+                payload = self.collection.get(include=["metadatas"])
+            except Exception:
+                return
+
+        ids = payload.get("ids") or []
+        metadatas = payload.get("metadatas") or []
+        embeddings = payload.get("embeddings") or []
+
+        for id, metadata in zip(ids, metadatas):
+            self._metadata[str(id)] = dict(metadata or {})
+
+        for id, embedding in zip(ids, embeddings):
+            if embedding is not None:
+                self._embeddings[str(id)] = np.asarray(embedding, dtype=float)
+
     def add(self, id: str, embedding: np.ndarray, metadata: dict[str, Any]) -> None:
         vector = self._normalize(embedding)
         self.delete(id)
@@ -69,46 +105,53 @@ class ChromaVectorStore(VectorStore):
         self._embeddings[id] = np.asarray(vector, dtype=float)
 
     def search(self, query_embedding: np.ndarray, top_k: int = 5) -> list[SearchResult]:
-        if top_k <= 0 or not self._metadata:
+        count = self._collection_count()
+        if top_k <= 0 or count <= 0:
             return []
         query = self._normalize(query_embedding)
         results = self.collection.query(
             query_embeddings=[query],
-            n_results=min(top_k, len(self._metadata)),
+            n_results=min(top_k, count),
             include=["metadatas", "distances"],
         )
         ids = results.get("ids", [[]])[0]
         distances = results.get("distances", [[]])[0]
+        metadatas = results.get("metadatas", [[]])[0]
         output: list[SearchResult] = []
-        for id, distance in zip(ids, distances):
+        for id, distance, metadata in zip(ids, distances, metadatas):
+            id = str(id)
+            merged_metadata = dict(metadata or self._metadata.get(id, {}))
+            self._metadata[id] = merged_metadata
             # Chroma returns distance. Convert to a bounded similarity-like score.
             similarity = 1.0 / (1.0 + float(distance))
-            output.append((id, similarity, dict(self._metadata[id])))
+            output.append((id, similarity, dict(merged_metadata)))
         output.sort(key=lambda item: item[1], reverse=True)
         return output
 
     def update_metadata(self, id: str, metadata: dict[str, Any]) -> None:
-        if id not in self._metadata:
-            raise KeyError(f"Unknown vector id: {id}")
-        self._metadata[id].update(metadata)
+        current = self.get_metadata(id)
+        current.update(metadata)
         self.collection.update(
             ids=[id],
-            metadatas=[self._to_chroma_metadata(self._metadata[id])],
+            metadatas=[self._to_chroma_metadata(current)],
         )
+        self._metadata[id] = current
 
     def get_metadata(self, id: str) -> dict[str, Any]:
+        if id not in self._metadata:
+            self._hydrate_cache_from_collection()
         if id not in self._metadata:
             raise KeyError(f"Unknown vector id: {id}")
         return dict(self._metadata[id])
 
     def get_all_ids(self) -> list[str]:
+        self._hydrate_cache_from_collection()
         return list(self._metadata.keys())
 
     def delete(self, id: str) -> None:
-        if id in self._metadata:
-            try:
-                self.collection.delete(ids=[id])
-            except Exception:
-                pass
+        try:
+            self.collection.delete(ids=[id])
+        except Exception:
+            pass
         self._metadata.pop(id, None)
         self._embeddings.pop(id, None)
