@@ -2,6 +2,16 @@
 
 Dit is de kortste uitleg van wat de workflows in deze repo doen.
 
+## Welke workflow hoort bij welk bewijsblok?
+
+| Workflow | Hoofdrol | Primair bewijsblok |
+|---|---|---|
+| `Checks en benchmark-resultaten` | standaard gezondheid en rapportage | interne logica |
+| `Publiceer testresultaten naar Wiki en Pages` | publiceert de laatste standaardresultaten | publicatie, geen nieuw bewijs |
+| `Publiceer alleen statische Wiki-pagina's` | synchroniseert alleen wiki-tekst | documentatie, geen nieuw bewijs |
+| `Full Validation Sweep` | brede backend- en retrievaloriëntatie | configuratierobustheid |
+| `SSOT Falsification Run` | gerichte veiligheidscheck | interne logica |
+
 ## 1. Checks en benchmark-resultaten
 
 Dit is de **standaard workflow**.
@@ -20,7 +30,11 @@ Doet:
 - AbsenceBench smoke
 - herhalingstest
 
-Gebruik deze workflow als je wilt weten of de repo mechanisch gezond is en of de standaard benchmarklaag nog klopt.
+Belangrijk:
+
+- het grootste deel hiervan test de interne logica
+- delen van benefit en probe raken output-effect
+- het is nog steeds niet hetzelfde als open-set bewijs of brede modelgeldigheid
 
 ## 2. Publiceer testresultaten naar Wiki en Pages
 
@@ -56,7 +70,7 @@ Doet:
 - retrieval en retrieval-model vergelijkingen
 - compacte samenvatting naar de wiki
 
-Gebruik deze workflow niet als dagelijkse check, maar voor bredere backend- en retrievaloriëntatie.
+Dit is dus veel meer een configuratierobustheid-check dan een simpele dagelijkse health check.
 
 ## 5. SSOT Falsification Run
 
@@ -73,8 +87,8 @@ Gebruik deze workflow als je aan SSOT-validatie, chunkverificatie of bronbetrouw
 
 | Vraag | Workflow |
 |---|---|
-| Is de repo standaard nog gezond? | `Checks en benchmark-resultaten` |
+| Is de repo mechanisch nog gezond? | `Checks en benchmark-resultaten` |
 | Waarom zie ik nog geen nieuwe resultaten op wiki/pages? | `Publiceer testresultaten naar Wiki en Pages` |
 | Ik heb alleen wiki-tekst aangepast | `Publiceer alleen statische Wiki-pagina's` |
-| Ik wil bredere backend/retrieval-checks | `Full Validation Sweep` |
+| Ik wil weten of effect overeind blijft over backends | `Full Validation Sweep` |
 | Ik heb aan SSOT-validatie gewerkt | `SSOT Falsification Run` |
