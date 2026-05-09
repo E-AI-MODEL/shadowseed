@@ -10,8 +10,8 @@ De repo zelf is nog een **4.5 harness**. Het inhoudelijke doelbeeld staat in [`d
 
 ## Wat je hier krijgt
 
-- een stabiele regressie- en smoke-laag voor de mechaniek
-- handmatige research-routes voor open-set, adversarial en probe-evaluatie
+- een standaard benchmark- en rapportageketen voor interne logica en kleine outputchecks
+- een aparte open-set researchroute voor handmatige seed review
 - automatische publicatie van standaardresultaten naar Wiki en Pages
 
 ## Begin hier
@@ -42,7 +42,7 @@ pip install -e ".[test,models,vector]"
 
 ## Snelle routes
 
-### Standaard mechanische checks
+### Standaard workflow-keten
 
 ```bash
 pytest
@@ -51,6 +51,8 @@ shadowseed run-false-positive-suite
 shadowseed run-benefit-suite
 shadowseed run-model-benefit-suite --backend fixture
 shadowseed run-blind-benchmark --labels benchmarks/private/blind_suite_labels.json
+shadowseed run-adversarial-gate-benchmark
+shadowseed run-probe-utility-benchmark
 shadowseed analyze-results
 ```
 
@@ -67,18 +69,13 @@ shadowseed run-open-set-seed-review \
   --review-packets results/open_set_review_packets.json
 ```
 
-### Adversarial en probe
-
-```bash
-shadowseed run-adversarial-gate-benchmark
-shadowseed run-probe-utility-benchmark
-```
+Deze open-set route hoort niet bij de standaard CI. Daarvoor is nog handmatige review nodig.
 
 ## Workflows in het kort
 
 | Workflow | Rol |
 |---|---|
-| `Checks en benchmark-resultaten` | standaard regressie-, smoke- en rapportageketen |
+| `Checks en benchmark-resultaten` | standaard regressie-, benchmark- en rapportageketen |
 | `Publiceer testresultaten naar Wiki en Pages` | publiceert de laatste standaardresultaten |
 | `Publiceer alleen statische Wiki-pagina's` | synchroniseert alleen `docs/wiki/` |
 | `Full Validation Sweep` | handmatige brede backend- en retrievalrun |
