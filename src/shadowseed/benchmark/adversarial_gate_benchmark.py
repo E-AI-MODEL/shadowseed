@@ -23,6 +23,16 @@ from typing import Any
 from shadowseed.benchmark.ssl45_false_positive_suite import evaluate_adversarial_candidate
 
 
+def _safe_rate(numerator: int, denominator: int) -> float:
+    return (numerator / denominator) if denominator else 0.0
+
+
+def _relative_reduction(baseline_count: int, gate_count: int) -> float:
+    if baseline_count <= 0:
+        return 0.0
+    return (baseline_count - gate_count) / baseline_count
+
+
 def _casebook_markdown(payload: dict[str, Any]) -> str:
     lines = [
         "# Adversarial Gate Casebook",
@@ -37,6 +47,8 @@ def _casebook_markdown(payload: dict[str, Any]) -> str:
         f"- Trace zonder contradictiecheck promoties: {payload['summary']['trace_without_contradiction_promoted_count']}",
         f"- Gate-promoties: {payload['summary']['gate_promoted_count']}",
         f"- Baseline-only blokkades: {payload['summary']['baseline_only_blocked_count']}",
+        f"- Gate reductie vs trace-only: {payload['summary']['gate_relative_reduction_vs_trace_only']:.2f}",
+        f"- Gate reductie vs trace zonder contradictiecheck: {payload['summary']['gate_relative_reduction_vs_trace_without_contradiction']:.2f}",
         "",
     ]
 
@@ -65,6 +77,32 @@ def _casebook_markdown(payload: dict[str, Any]) -> str:
                 ]
             )
     return "\n".join(lines) + "\n"
+
+
+def _build_false_positive_log(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for scenario in results:
+        for check in scenario["candidate_checks"]:
+            rows.append(
+                {
+                    "scenario_id": scenario["scenario_id"],
+                    "title": scenario["title"],
+                    "domain": scenario["domain"],
+                    "scenario_type": scenario["scenario_type"],
+                    "expected_label": scenario["expected_label"],
+                    "candidate": check["candidate"],
+                    "contradiction_detected": check["contradiction_detected"],
+                    "trace_only_promoted": check["trace_only_promoted"],
+                    "trace_without_contradiction_promoted": check["trace_without_contradiction_promoted"],
+                    "current_gate_promoted": check["current_gate_promoted"],
+                    "current_gate_verdict": check["current_gate_verdict"],
+                    "baseline_only_blocked": (
+                        (check["trace_only_promoted"] or check["trace_without_contradiction_promoted"])
+                        and not check["current_gate_promoted"]
+                    ),
+                }
+            )
+    return rows
 
 
 def run_adversarial_gate_benchmark(
@@ -114,6 +152,7 @@ def run_adversarial_gate_benchmark(
             }
         )
 
+    false_positive_log = _build_false_positive_log(results)
     summary = {
         "suite_version": suite.get("version"),
         "scenario_count": len(suite["scenarios"]),
@@ -125,20 +164,53 @@ def run_adversarial_gate_benchmark(
         "contradiction_case_count": contradiction_case_count,
         "no_contradiction_case_count": no_contradiction_case_count,
         "baseline_only_blocked_count": baseline_only_blocked_count,
-        "gate_block_rate": (gate_blocked_count / candidate_count) if candidate_count else 0.0,
+        "trace_only_false_promotion_rate": _safe_rate(trace_only_promoted_count, candidate_count),
+        "trace_without_contradiction_false_promotion_rate": _safe_rate(
+            trace_without_contradiction_promoted_count,
+            candidate_count,
+        ),
+        "current_gate_false_promotion_rate": _safe_rate(gate_promoted_count, candidate_count),
+        "gate_block_rate": _safe_rate(gate_blocked_count, candidate_count),
         "gate_vs_trace_only_delta": trace_only_promoted_count - gate_promoted_count,
         "gate_vs_trace_without_contradiction_delta": (
             trace_without_contradiction_promoted_count - gate_promoted_count
         ),
+        "gate_relative_reduction_vs_trace_only": _relative_reduction(
+            trace_only_promoted_count,
+            gate_promoted_count,
+        ),
+        "gate_relative_reduction_vs_trace_without_contradiction": _relative_reduction(
+            trace_without_contradiction_promoted_count,
+            gate_promoted_count,
+        ),
         "passed": gate_promoted_count == 0 and baseline_only_blocked_count > 0,
         "interpretation": (
-            "Positive deltas mean weaker baselines would promote lure seeds that the current Gate blocks in this deterministic scaffold."
+            "Positive deltas and reduction rates mean weaker baselines would promote lure seeds that the current Gate blocks in this deterministic scaffold."
         ),
+    }
+    baseline_summaries = {
+        "current_gate": {
+            "promoted_count": gate_promoted_count,
+            "false_promotion_rate": summary["current_gate_false_promotion_rate"],
+        },
+        "trace_only": {
+            "promoted_count": trace_only_promoted_count,
+            "false_promotion_rate": summary["trace_only_false_promotion_rate"],
+        },
+        "trace_without_contradiction": {
+            "promoted_count": trace_without_contradiction_promoted_count,
+            "false_promotion_rate": summary["trace_without_contradiction_false_promotion_rate"],
+        },
     }
 
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
-    payload = {"summary": summary, "results": results}
+    payload = {
+        "summary": summary,
+        "baseline_summaries": baseline_summaries,
+        "false_positive_log": false_positive_log,
+        "results": results,
+    }
     output.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
