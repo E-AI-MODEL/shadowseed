@@ -1,0 +1,87 @@
+name: Open-set HF review batch
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_id:
+        description: "Bron-id uit src/shadowseed/data/open_set_hf_sources.json"
+        required: true
+        default: "ag_news_test"
+        type: string
+      limit:
+        description: "Aantal items in de batch"
+        required: true
+        default: "12"
+        type: string
+      offset:
+        description: "Start-offset in de dataset"
+        required: true
+        default: "0"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  open-set-review:
+    name: "Open-set HF intake en review-packets"
+    runs-on: ubuntu-latest
+    env:
+      HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installeer pakket
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Haal HF open-set batch op
+        run: |
+          python -m shadowseed.cli fetch-open-set-hf-batch \
+            --source-id "${{ inputs.source_id }}" \
+            --limit "${{ inputs.limit }}" \
+            --offset "${{ inputs.offset }}" \
+            --output benchmarks/open_review/input/hf_batch.json
+
+      - name: Bouw open-set review-packets
+        run: |
+          python -m shadowseed.cli run-open-set-seed-review \
+            --input benchmarks/open_review/input/hf_batch.json \
+            --output results/open_review/open_set_seed_output.json \
+            --review-packets results/open_review/open_set_review_packets.json
+
+      - name: Schrijf korte run-uitleg
+        run: |
+          cat > results/open_review/README.md <<'MD'
+          # Open-set HF review batch
+
+          Deze artifactset komt uit een handmatige workflow met Hugging Face intake.
+
+          Inhoud:
+
+          - `open_set_seed_output.json`: de seed-output per item
+          - `open_set_review_packets.json`: review-packets voor menselijke beoordeling
+
+          Interpretatie:
+
+          - dit is een aanvullende evidencelaag
+          - dit is geen standaard regressierun
+          - deze output moet gelezen worden samen met menselijke review
+          MD
+
+      - name: Upload open-set review artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-set-hf-review-batch
+          path: |
+            benchmarks/open_review/input/hf_batch.json
+            results/open_review/open_set_seed_output.json
+            results/open_review/open_set_review_packets.json
+            results/open_review/README.md
+          if-no-files-found: error

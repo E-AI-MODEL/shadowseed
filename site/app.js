@@ -25,55 +25,43 @@ function metric(summary, group, key, fallback = null) {
 
 async function init() {
   const summary = await loadJSON('./results/latest/summary.json');
-  const retrieval = await loadJSON('./results/latest/retrieval_model_benchmark.json')
-    || await loadJSON('./results/latest/retrieval_model.json');
-  const ssot = await loadJSON('./results/latest/ssot_smoke.json')
-    || await loadJSON('./results/latest/ssot_falsification.json');
-  const paper = await loadJSON('./results/latest/paper_scenario_suite.json')
-    || await loadJSON('./results/paper_scenario_suite.json');
-
   const conclusion = summary?.conclusion;
   const modelBenefit = summary?.model_benefit;
   const benefit = summary?.benefit;
   const falsePositive = summary?.false_positive;
+  const adversarial = summary?.adversarial_gate;
+  const probe = summary?.probe_utility;
 
   setField('conclusion', conclusion?.headline || 'Nog geen analyse geladen');
-  setField('baseline', fmt(metric(modelBenefit, 'summary', 'baseline_mean_gap_coverage', modelBenefit?.baseline_mean_gap_coverage)));
-  setField('with_ssl', fmt(metric(modelBenefit, 'summary', 'ssl_mean_gap_coverage', modelBenefit?.ssl_mean_gap_coverage)));
+  setField(
+    'baseline',
+    fmt(metric(modelBenefit, 'summary', 'baseline_mean_gap_coverage', modelBenefit?.baseline_mean_gap_coverage))
+  );
+  setField(
+    'with_ssl',
+    fmt(metric(modelBenefit, 'summary', 'ssl_mean_gap_coverage', modelBenefit?.ssl_mean_gap_coverage))
+  );
   setField('delta', fmt(metric(modelBenefit, 'summary', 'coverage_delta', modelBenefit?.coverage_delta)));
 
-  const systemOk = Boolean(summary?.gap && falsePositive?.passed !== false);
-  setField('system', systemOk ? 'OK' : '?');
-  setField('safety', falsePositive?.promoted_false_positive_rate === 0 ? 'OK' : fmt(falsePositive?.promoted_false_positive_rate));
-  setField('paper', fmt(paper?.summary?.coverage_delta ?? benefit?.coverage_delta));
+  const systemOk = Boolean(summary?.gap && falsePositive?.promoted_false_positive_rate === 0);
+  setField('system', systemOk ? 'stabiel' : 'controle nodig');
 
-  const table = document.getElementById('backend-table');
-  if (!table) return;
-
-  if (retrieval?.backends?.length) {
-    table.innerHTML = '';
-    for (const backend of retrieval.backends) {
-      const row = `<tr>
-        <td>${backend.name ?? 'n/a'}</td>
-        <td>${backend.vector ?? 'n/a'}</td>
-        <td>${backend.ssot ?? 'n/a'}</td>
-        <td>${fmt(backend.hit_at_k)}</td>
-        <td>${fmt(backend.avg_rank)}</td>
-        <td>${fmt(backend.retrieval_coverage)}</td>
-        <td>${fmt(backend.delta)}</td>
-      </tr>`;
-      table.insertAdjacentHTML('beforeend', row);
-    }
+  if (falsePositive?.promoted_false_positive_rate === 0) {
+    setField('safety', 'schoon');
   } else {
-    table.innerHTML = `<tr>
-      <td>Core SSL</td>
-      <td>n/a</td>
-      <td>${ssot?.summary?.passed ? 'OK' : 'n/a'}</td>
-      <td>n/a</td>
-      <td>n/a</td>
-      <td>${fmt(modelBenefit?.ssl_mean_gap_coverage)}</td>
-      <td>${fmt(modelBenefit?.coverage_delta)}</td>
-    </tr>`;
+    setField('safety', `fp ${fmt(falsePositive?.promoted_false_positive_rate)}`);
+  }
+
+  if (adversarial && probe) {
+    setField('paper', 'adversarial + probe');
+  } else if (adversarial) {
+    setField('paper', 'adversarial zichtbaar');
+  } else if (probe) {
+    setField('paper', 'probe zichtbaar');
+  } else if (benefit?.coverage_delta !== undefined) {
+    setField('paper', `delta ${fmt(benefit.coverage_delta)}`);
+  } else {
+    setField('paper', 'nog beperkt');
   }
 }
 
