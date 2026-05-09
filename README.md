@@ -81,7 +81,8 @@ pytest
 shadowseed run-gap-suite
 shadowseed run-false-positive-suite
 shadowseed run-benefit-suite
-shadowseed run-open-set-seed-review
+shadowseed fetch-open-set-hf-batch --source-id ag_news_test --output benchmarks/open_review/input/hf_ag_news_test_batch.json
+shadowseed run-open-set-seed-review --input benchmarks/open_review/input/hf_ag_news_test_batch.json
 shadowseed summarize-open-set-seed-review
 shadowseed run-adversarial-gate-benchmark
 shadowseed run-probe-utility-benchmark
@@ -106,6 +107,7 @@ De volledige indeling staat in `docs/CLI_COMMAND_MAP.md`.
 | `shadowseed run-gap-suite` | Gap Finder | Vindt SSL bekende ontbrekende punten in de regressiesuite? |
 | `shadowseed run-false-positive-suite` | Rustig blijven | Laat SSL volledige antwoorden met rust en blokkeert de Gate misleidende lure-seeds? |
 | `shadowseed run-benefit-suite` | Antwoordwinst | Wordt een antwoord completer met SSL-toevoegingen? |
+| `shadowseed fetch-open-set-hf-batch` | Open-set intake | Haalt een kleine HF-batch op en normaliseert die naar reviewbare open-set input? |
 | `shadowseed run-open-set-seed-review` | Open-set review | Maakt seed-output en review-packets zonder vaste ground-truth seedlijst |
 | `shadowseed summarize-open-set-seed-review` | Open-set samenvatting | Agregeert reviewer-uitkomsten naar acceptance, agreement en disagreement-artifacts |
 | `shadowseed run-adversarial-gate-benchmark` | Adversarial Gate | Vergelijkt de huidige Gate met zwakkere promotieregels op misleidende lure-candidates |
