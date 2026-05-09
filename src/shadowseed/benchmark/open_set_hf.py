@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import re
 from typing import Any
 from urllib.parse import urlencode
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 
 ROWS_ENDPOINT = "https://datasets-server.huggingface.co/rows"
 DEFAULT_SOURCE_REGISTRY = "src/shadowseed/data/open_set_hf_sources.json"
+HF_TOKEN_ENV_VARS = ("HUGGINGFACE_TOKEN", "HF_TOKEN")
 
 
 def _clean_text(value: Any) -> str:
@@ -101,6 +103,16 @@ def _row_to_item(source_id: str, source: dict[str, Any], row_idx: int, row: dict
     }
 
 
+def _hf_headers() -> dict[str, str]:
+    headers = {"User-Agent": "shadowseed-open-set-intake/0.2"}
+    for env_var in HF_TOKEN_ENV_VARS:
+        token = (os.getenv(env_var) or "").strip()
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+            break
+    return headers
+
+
 def fetch_open_set_hf_batch(
     output_path: str,
     *,
@@ -120,6 +132,7 @@ def fetch_open_set_hf_batch(
     items: list[dict[str, Any]] = []
     cursor = offset
     seen_ids: set[int] = set()
+    headers = _hf_headers()
 
     while len(items) < limit:
         batch_size = min(max((limit - len(items)) * 2, 10), 100)
@@ -132,7 +145,8 @@ def fetch_open_set_hf_batch(
                 "length": batch_size,
             }
         )
-        with urlopen(f"{ROWS_ENDPOINT}?{query}", timeout=30) as response:
+        request = Request(f"{ROWS_ENDPOINT}?{query}", headers=headers)
+        with urlopen(request, timeout=30) as response:
             payload = json.loads(response.read().decode("utf-8"))
 
         rows = payload.get("rows", [])
@@ -171,6 +185,7 @@ def fetch_open_set_hf_batch(
                     "requested_limit": limit,
                     "requested_offset": offset,
                     "returned_count": len(items),
+                    "authenticated": "Authorization" in headers,
                 },
                 "items": items,
             },
