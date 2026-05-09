@@ -21,6 +21,8 @@ class SSLCoreConfig:
     dormant_threshold: float = 0.05
     validation_increment: float = 0.2
     contradiction_penalty: float = 0.3
+    reward_step: float = 0.1
+    penalty_step: float = 0.2
     max_trace: float = 3.0
     reactivation_increment: float = 2.0
     min_occurrences_for_gate: int = 3
