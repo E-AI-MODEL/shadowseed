@@ -1,68 +1,22 @@
 # Repo-overzicht
 
-Deze pagina is de kaart van de repo. Gebruik hem als startpunt als je niet meer weet welke run waarvoor is.
+Deze pagina is de kaart van de repo.
 
-De repo heeft niet één doel maar meerdere banen die samen moeten blijven kloppen. Juist daarom is het belangrijk om regressie, benchmark, rapportage en publicatie niet met elkaar te verwarren.
+Gebruik haar voor drie vragen:
+
+- wat doet de repo technisch?
+- welke resultaten zijn standaard?
+- welke resultaten zijn aanvullend bewijs?
 
 ## Vijf banen
 
 | Baan | Doel | Belangrijkste plekken | Status |
 |---|---|---|---|
-| Core SSL | Seeds opslaan, laten uitdoven, valideren en eventueel promoten | `src/shadowseed/manager.py`, `src/shadowseed/vectorstore/`, `src/shadowseed/ssot.py` | prototype, getest |
-| Regressie en kleine benchmark | Mechaniek bewaken en bekende vaste cases volgen | `src/shadowseed/benchmark/`, `src/shadowseed/data/`, `tests/` | CI en handmatig |
-| Nieuwe evaluatielagen | Open-set, adversarial, behavioral en transfer bewijs opbouwen | `src/shadowseed/evaluation/README.md`, `benchmarks/open_review/`, `benchmarks/adversarial/`, `benchmarks/transfer/` | deels gepland, deels in opbouw |
-| Rapportage | JSON-resultaten samenvatten tot rapport en grafieken | `src/shadowseed/analysis/ssl45_result_analyzer.py`, workflow-snapshot `results/latest/` | automatisch |
-| Publicatie | Laatste resultaten tonen op Wiki en Pages | `.github/workflows/publish-test-results.yml`, `site/`, `docs/wiki/` | automatisch na main push |
-
-## Huidige versus gewenste vorm
-
-De repo is vandaag inhoudelijk verder dan haar mapstructuur.
-
-Dat betekent:
-
-- de docs weten al goed welke bewijs-lagen bestaan;
-- de codebasis draait al een sterke regressieruggengraat;
-- maar open-set, adversarial, probe utility en transfer zijn nog niet overal even zichtbaar als aparte technische banen.
-
-De eerstvolgende alignmentstap is daarom niet "meer benchmarkvarianten", maar:
-
-- explicieter scheiden van regressie en hoofdclaim;
-- aparte werkvakken maken voor open-set, adversarial en transfer;
-- rapportage en artifactnamen daarop voorbereiden.
-
-## Doelstructuur voor de volgende fase
-
-```text
-src/shadowseed/
-  benchmark/                  # bestaande regressie- en kleine benchmarklaag
-  evaluation/
-    README.md                 # contract voor de nieuwe bewijs-lagen
-
-tests/                        # unit, regressie en benchmarktests
-
-benchmarks/
-  open_review/
-    README.md                 # open-set review datasets, packets en summaries
-  adversarial/
-    README.md                 # Gate-comparison datasets, baselines en casebooks
-  transfer/
-    README.md                 # domeintransfer-holdouts en extra domeinen
-```
-
-Dit is bewust een tussenstap. Niet alles hoeft meteen te worden verhuisd. Het doel is eerst zichtbaar maken welke laag waarvoor dient.
-
-## Commandkaart
-
-Naast deze repo-banen gebruikt de CLI expliciete commandtiers.
-
-Gebruik `docs/CLI_COMMAND_MAP.md` voor de vraag:
-
-- wat hoort bij de standaardroute;
-- wat is handmatige research;
-- wat is retrieval of backenddiagnose;
-- wat zijn AbsenceBench-utility routes.
-
-Dat voorkomt dat nieuwe workflows te snel op een verkeerde commandlaag landen.
+| Core SSL | seeds opslaan, laten uitdoven, valideren en eventueel promoten | `src/shadowseed/manager.py`, `src/shadowseed/vectorstore/`, `src/shadowseed/ssot.py` | prototype, getest |
+| Standaard meetketen | regressie, smoke en kleine benchmarks draaien | `src/shadowseed/benchmark/`, `tests/`, `.github/workflows/tests.yml` | standaard |
+| Aanvullende evidencelagen | open-set, adversarial, probe utility en later transfer zichtbaar maken | `src/shadowseed/evaluation/README.md`, `benchmarks/open_review/`, `benchmarks/adversarial/`, `benchmarks/transfer/` | deels operationeel |
+| Rapportage | artifacts samenvatten tot een begrijpelijk rapport | `src/shadowseed/analysis/ssl45_result_analyzer.py` | automatisch |
+| Publicatie | laatste resultaten tonen aan repo- en wiki-bezoekers | `.github/workflows/publish-test-results.yml`, `docs/wiki/`, `site/` | automatisch |
 
 ## De hoofdroute
 
@@ -75,69 +29,73 @@ push naar main
   -> Wiki + Pages + workflow-artifact
 ```
 
-De hoofdroute gebruikt alleen geslaagde `push`-runs op `main`. PR-runs worden niet gepubliceerd. De publish-workflow commit geen resultatensnapshot terug naar `main`.
+De publicatieroute is bedoeld voor buitenstaanders.
+Daarom moet ze niet alleen artifacts tonen, maar ook uitleggen wat die artifacts zijn.
 
-Binnen `07 Rapport` worden artifacts eerst provenance-safe verzameld: de originele artifactstructuur blijft behouden per artifact, eventuele naamconflicten krijgen een artifactprefix en `results/manifest.json` bewaart de herkomst van de analyse-input.
+## Welke standaardruns staan in de hoofdroute?
 
-Binnen de publish-workflow worden daarna ook expliciete guardrails afgedwongen: de run stopt als verplichte kernbestanden ontbreken, als het manifest geen `copied_files` bevat of als de centrale `summary.json` leeg of ongeldig is.
+| Run | Vraag | Bewijssoort |
+|---|---|---|
+| 01 Codecheck | werkt de Python-code? | regressie |
+| 02 Gap Finder | vindt SSL bekende ontbrekende punten? | kleine benchmark |
+| 03 Rustig blijven | voegt SSL geen onzin toe? | regressie / beperkte ruiscontrole |
+| 04 Antwoordwinst | wordt een antwoord completer door SSL? | kleine benchmark |
+| 05 Model smoke | werkt de modelroute technisch? | technische smoke |
+| 06 Blind test | blijven labels verborgen tot scoring? | methodologische smoke |
+| 06b Adversarial Gate | blokkeert de Gate misleidende lure-seeds? | aanvullende evidencelaag |
+| 06c Probe utility | helpen promoted seeds bij scherpere vervolgacties? | aanvullende evidencelaag |
+| 07 Rapport | hoe ziet de samenvatting eruit? | rapportage |
+| 08 AbsenceBench rooktest | werkt de lokale dataset-run? | technische smoke |
+| 09 Herhalingstest | wat gebeurt er bij meer rondes? | gevoeligheid / regressie |
 
-## Welke run doet wat?
+## Wat is standaard en wat niet?
 
-| Runnaam in GitHub Actions | Wat doet hij? | Uitkomst | Bewijssoort |
-|---|---|---|---|
-| 01 Codecheck | Controleert of de Python-code en unit tests werken | pytest-resultaat | regressie |
-| 02 Gap Finder | Test of SSL bekende ontbrekende punten vindt | `ssl45_gap_suite.json` | kleine benchmark |
-| 03 Rustig blijven | Test of SSL volledige antwoorden met rust laat | `ssl45_false_positive_suite.json` | regressie / kleine benchmark |
-| 04 Antwoordwinst | Test of SSL-toevoegingen een antwoord completer maken | `ssl45_benefit_suite.json` | kleine benchmark |
-| 05 Model smoke | Test dezelfde modelroute met fixture-backend | `ssl45_model_benefit_suite.json` | technische smoke |
-| 06 Blind test | Test labelscheiding: detectie ziet labels niet vooraf | `blind_benchmark.json` | methodologische smoke |
-| 07 Rapport | Vat kernresultaten samen | `analysis_report.md`, `summary.json`, grafieken | rapportage |
-| 08 AbsenceBench rooktest | Controleert lokale dataset-run | `absencebench_smoke.json` | technische smoke |
-| 09 Herhalingstest | Draait Gap Finder met meer of minder rondes | `ssl45_gap_suite_turns_*.json` | regressie / gevoeligheid |
+### Standaardpublicatie
 
-## Handmatige workflows
+Dit hoort vandaag bij de standaardpublicatie:
 
-| Workflow | Wanneer gebruiken? |
-|---|---|
-| Blind test handmatig | Als je alleen de blinde smoke-test opnieuw wilt draaien |
-| Model Reality Check | Als je een echte Hugging Face modelrun wilt doen |
-| Publiceer testresultaten naar Wiki en Pages | Als je de laatste geslaagde `main`-run opnieuw wilt publiceren zonder nieuwe test-run |
-| Publiceer alleen statische Wiki-pagina's | Alleen om statische wiki-pagina's opnieuw te publiceren |
+- regressieruns;
+- smoke-runs;
+- kleine benchmarkruns;
+- aanvullende evidencelagen voor adversarial Gate en probe utility.
 
-## Waar staan de resultaten?
+### Handmatige of optionele routes
 
-| Plek | Betekenis |
-|---|---|
-| workflow-artifact `published-latest-results-snapshot` | Platte snapshot van de gepubliceerde `results/latest` map |
-| `results/latest/summary.json` | Centrale machineleesbare samenvatting binnen de gepubliceerde snapshot |
-| `results/latest/analysis_report.md` | Menselijk rapport binnen de gepubliceerde snapshot |
-| `results/latest/manifest.json` | Herkomst van elk gepubliceerd artifact |
-| `results/artifacts/` | Originele artifactstructuur binnen de gepubliceerde snapshot |
-| GitHub Wiki `Latest-Test-Results` | Wiki-ingang naar de laatste gepubliceerde resultaten |
-| GitHub Pages | Visueel dashboard |
+Deze routes zijn nuttig, maar horen niet automatisch bij elke standaardpublicatie:
 
-## Belangrijke grens
+- open-set review via Hugging Face intake;
+- retrieval- en vectorstoreruns;
+- complete vector + SSOT runs.
 
-De standaard CI gebruikt vooral kleine suites en fixture-runs. Dat bewijst dat de meetketen werkt en dat regressies zichtbaar worden.
+## Bevestigde handmatige workflows
 
-De standaard CI bewijst niet automatisch:
+De actuele repo bevat in elk geval deze handmatige workflows:
 
-- algemene SSL-prestatie buiten de vaste suites;
-- open-set seedkwaliteit;
-- sterke adversarial Gate-robustheid;
-- brede modelclaims op echte backends;
-- domeintransfer;
-- modelinterne validatie.
+- `Vectorstore Smoke Run`
+- `Complete Vector + SSOT Run`
+- `Publiceer testresultaten naar Wiki en Pages` via `workflow_dispatch`
 
-Voor dat soort claims zijn handmatige HF-runs, grotere suites, menselijke review en aparte evaluatielagen nodig.
+## Waarom deze scheiding belangrijk is
 
-## Hoe deze kaart samenhangt met de research-docs
+De repo probeert twee fouten tegelijk te vermijden:
 
-Gebruik deze combinatie:
+- alles opblazen tot een te grote claim;
+- extra bewijs verstoppen alsof alleen regressie telt.
 
-- `ARCHITECTURE_MAP.md` voor de vraag: wat draait hier precies?
-- `docs/CLI_COMMAND_MAP.md` voor de vraag: welke commandlaag hoort bij welke route?
-- `docs/research/current-status.md` voor de vraag: wat bewijst dat vandaag echt?
-- `docs/research/scenario-independence-roadmap.md` voor de vraag: waar moet het bewijs heen?
-- `docs/research/evaluation-matrix.md` voor de vraag: welke laag draagt welke claim?
-- `docs/research/next-phase-implementation.md` voor de vraag: wat bouwen we nu eerst?
+Daarom gebruikt de repo nu bewust drie lagen in de publieke presentatie:
+
+1. basis werkt nog
+2. kleine benchmark geeft richting
+3. aanvullende evidencelaag laat extra inhoudelijk gedrag zien
+
+## Waar bezoekers meestal moeten beginnen
+
+- `README.md`
+- `docs/wiki/Home.md`
+- `Latest-Test-Results` in de wiki
+- `SSL-45-Analysis` in de wiki
+- `site/` voor GitHub Pages
+
+## Korte samenvatting
+
+De repo is vandaag het best te begrijpen als een werkende SSL-harness met een publieke standaardpublicatie die mechanische stabiliteit, kleine benchmarksignalen en eerste aanvullende evidencelagen naast elkaar laat zien zonder ze als hetzelfde bewijs te presenteren.
