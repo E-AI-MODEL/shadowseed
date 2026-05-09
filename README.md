@@ -103,6 +103,11 @@ Lokaal:
 2. zet daar je echte token in
 3. exporteer `HUGGINGFACE_TOKEN` in je shell of laad `.env` lokaal
 
+In GitHub Actions:
+
+- gebruik de repository secret `HUGGINGFACE_TOKEN`
+- start daarna handmatig de workflow `Open-set HF review batch` voor intake en review-packets
+
 Belangrijk:
 
 - commit nooit een echte token;
