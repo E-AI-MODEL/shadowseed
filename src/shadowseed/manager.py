@@ -639,7 +639,7 @@ class SSLManager:
             if seed_id in self.seeds:
                 self.seeds[seed_id].status = SeedStatus.EXPIRED
                 self._touch_seed(self.seeds[seed_id])
-                self._record_and_sync("expired", seed_id, max_age_days=max_age_days)
+                self._record_event("expired", seed_id, max_age_days=max_age_days)
         return expired
 
     def find_constellations(
