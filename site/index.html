@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Does SSL improve SLM output?</title>
+    <title>Shadow Seed Learning 4.5</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -11,15 +11,15 @@
       <section class="hero split">
         <div>
           <p class="eyebrow">Shadow Seed Learning 4.5</p>
-          <h1>Does SSL improve SLM output?</h1>
-          <p class="subtitle">Een simpele publieke vraag: geeft hetzelfde model completere antwoorden met SSL dan zonder SSL?</p>
+          <h1>SSL probeert zichtbaar te maken wat een antwoord nog mist.</h1>
+          <p class="subtitle">Deze pagina is de publieke ingang naar de standaardresultaten. Je ziet hier regressie, smoke-tests, kleine benchmarks en aanvullende evidencelagen naast elkaar.</p>
           <div class="hero-actions">
             <a class="button" href="https://github.com/E-AI-MODEL/shadowseed/wiki/Latest-Test-Results">Latest Test Results</a>
             <a class="button ghost" href="https://github.com/E-AI-MODEL/shadowseed/wiki/SSL-45-Analysis">Lees de analyse</a>
           </div>
         </div>
         <div class="answer-card" id="overall-status">
-          <span>Conclusie</span>
+          <span>Wat zegt de laatste publicatie?</span>
           <strong data-field="conclusion">Nog geen run geladen</strong>
         </div>
       </section>
@@ -33,20 +33,20 @@
         <article class="score-card highlight">
           <span>Met SSL</span>
           <strong data-field="with_ssl">n/a</strong>
-          <p>Retrieval + SSOT gap coverage</p>
+          <p>SSL gap coverage</p>
         </article>
         <article class="score-card">
           <span>Verschil</span>
           <strong data-field="delta">n/a</strong>
-          <p>Positief betekent beter</p>
+          <p>Alleen zinvol binnen de huidige suite</p>
         </article>
       </section>
 
       <section class="panel visual-panel">
         <div>
           <p class="eyebrow">Wat is SSL?</p>
-          <h2>SSL zoekt niet alleen naar informatie. SSL onthoudt wat ontbreekt.</h2>
-          <p>Een modelantwoord kan goed klinken en toch een structureel punt missen. SSL legt zo’n gemis vast als een gewichtloze seed. Pas na verificatie krijgt zo’n seed invloed.</p>
+          <h2>Niet alleen meer context, maar beter zicht op ontbrekende structuur.</h2>
+          <p>Een antwoord kan goed klinken en toch een klein maar belangrijk punt missen. SSL legt zo'n gemis vast als een gewichtloze seed en laat die pas na validatie meewegen.</p>
         </div>
         <svg class="seed-svg" viewBox="0 0 560 220" role="img" aria-label="SSL seed flow">
           <defs>
@@ -69,34 +69,34 @@
 
       <section class="grid three">
         <article class="card">
-          <span class="label">System Check</span>
-          <h2>Werkt de keten?</h2>
-          <p>Unit tests, SSOT, vectorstores, retrieval en model-fixture.</p>
+          <span class="label">Standaard</span>
+          <h2>Werkt de basis?</h2>
+          <p>Python, benchmarkmechaniek en artifactketen.</p>
           <strong class="metric" data-field="system">n/a</strong>
         </article>
         <article class="card">
-          <span class="label">Safety Check</span>
-          <h2>Niet naïef</h2>
-          <p>Proposed en rejected chunks mogen geen waarheid worden.</p>
+          <span class="label">Veiligheid</span>
+          <h2>Blijft SSL terughoudend?</h2>
+          <p>False positives en misleidende promoties moeten beperkt blijven.</p>
           <strong class="metric" data-field="safety">n/a</strong>
         </article>
         <article class="card">
-          <span class="label">Paper Scenario Benchmark</span>
-          <h2>Papers → tests</h2>
-          <p>Optionele paper-derived scenario’s naast de core suite.</p>
+          <span class="label">Aanvullend bewijs</span>
+          <h2>Meer dan alleen smoke?</h2>
+          <p>Adversarial Gate en probe utility helpen de hoofdclaim eerlijker te begrenzen.</p>
           <strong class="metric" data-field="paper">n/a</strong>
         </article>
       </section>
 
       <section class="panel visual-panel">
         <svg class="rag-svg" viewBox="0 0 640 220" role="img" aria-label="RAG versus SSL">
-          <text x="95" y="28" text-anchor="middle">Standard RAG</text>
+          <text x="95" y="28" text-anchor="middle">Standaard context</text>
           <rect x="25" y="55" width="140" height="70" rx="14" />
           <text x="95" y="93" text-anchor="middle">Fetch facts</text>
           <path d="M170 90 H270" />
           <rect x="280" y="55" width="140" height="70" rx="14" />
           <text x="350" y="93" text-anchor="middle">Answer now</text>
-          <text x="545" y="28" text-anchor="middle">SSL 4.5</text>
+          <text x="545" y="28" text-anchor="middle">SSL</text>
           <rect x="470" y="55" width="140" height="70" rx="14" />
           <text x="540" y="83" text-anchor="middle">Track missing</text>
           <text x="540" y="106" text-anchor="middle">structure</text>
@@ -105,40 +105,40 @@
           <text x="540" y="193" text-anchor="middle">Verify before influence</text>
         </svg>
         <div>
-          <p class="eyebrow">Waarom dit anders is</p>
-          <h2>RAG haalt context op. SSL beheert onzekerheid.</h2>
-          <p>De publieke claim blijft smal: we meten of SSL-context de output van hetzelfde model completer maakt. Geen claim dat elk model altijd beter wordt.</p>
+          <p class="eyebrow">Hoe lees je dit?</p>
+          <h2>Eerst zien wat de basis doet, daarna pas naar bredere claims kijken.</h2>
+          <p>De publieke resultaten combineren meerdere bewijssoorten. Daarom moet je eerst letten op de labelsoort van een run: regressie, smoke, kleine benchmark of aanvullende evidencelaag.</p>
         </div>
       </section>
 
       <section class="panel">
         <div class="panel-header">
-          <h2>Backendvergelijking</h2>
-          <p>Technische onderlaag. Niet de hoofdclaim, wel nuttig voor diagnose.</p>
+          <h2>Wat je hier wel en niet moet lezen</h2>
+          <p>De standaardpublicatie is bedoeld om eerlijk te zijn over zowel kracht als grens.</p>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Backend</th>
-                <th>Vector</th>
-                <th>SSOT</th>
-                <th>hit@k</th>
-                <th>avg rank</th>
-                <th>retrieval coverage</th>
-                <th>delta</th>
+                <th>Vraag</th>
+                <th>Antwoord</th>
               </tr>
             </thead>
-            <tbody id="backend-table"><tr><td colspan="7">Laden...</td></tr></tbody>
+            <tbody>
+              <tr><td>Werkt de basis van SSL?</td><td>Ja, dat is precies wat regressie- en smoke-lagen zichtbaar maken.</td></tr>
+              <tr><td>Is alles al volledig bewezen?</td><td>Nee. Open-set, transfer en brede modelclaims vragen nog zwaarder bewijs.</td></tr>
+              <tr><td>Waarom extra lagen tonen?</td><td>Omdat bezoekers meteen moeten zien dat de repo verder kijkt dan alleen fixtures en kleine scenario-suites.</td></tr>
+            </tbody>
           </table>
         </div>
       </section>
 
       <section class="links">
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Start-Hier">Start hier</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Latest-Test-Results">Latest Test Results</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/SSL-45-Analysis">SSL 4.5 Analysis</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Benchmarks">Benchmarks</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed/actions">GitHub Actions</a>
-        <a href="https://github.com/E-AI-MODEL/shadowseed/tree/main/results/latest">Raw JSON</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed">Repo</a>
       </section>
     </main>
