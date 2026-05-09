@@ -43,12 +43,13 @@ Deze documenten zijn leidend voor de vraag wat de repo vandaag werkelijk bewijst
 2. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
 3. [Evaluatiematrix](research/evaluation-matrix.md)
 4. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
+5. [Evaluation layer target architecture](research/evaluation-layer-target-architecture.md)
 
 Praktische regel:
 
 > `00_` vertelt wat SSL inhoudelijk wil zijn.
 >
-> de research-docs vertellen wat vandaag al staat en welke bewijslaag nog gebouwd moet worden.
+> de research-docs vertellen wat vandaag al staat, welke bewijslaag nog gebouwd moet worden, en hoe die lagen straks in code, CLI en artifacts zichtbaar moeten worden.
 
 ## Aanbevolen leesroutes
 
@@ -60,12 +61,14 @@ Lees in deze volgorde:
 2. [Huidige status](research/current-status.md)
 3. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
 4. [Evaluatiematrix](research/evaluation-matrix.md)
+5. [Evaluation layer target architecture](research/evaluation-layer-target-architecture.md)
 
 Gebruik deze route als je wilt begrijpen:
 
 - wat SSL inhoudelijk claimt;
 - wat de repo vandaag werkelijk aantoont;
-- hoe de hoofdclaim moet verschuiven naar sterkere evaluatielagen.
+- hoe de hoofdclaim moet verschuiven naar sterkere evaluatielagen;
+- welke repo-structuur nodig is om regressie, open review, adversarial, behavioral en transfer niet te vermengen.
 
 ### Route B — Dagelijks repo-gebruik
 
@@ -87,6 +90,7 @@ Gebruik deze route als je vooral wilt draaien, vergelijken, publiceren of benchm
 | Wat bewijst de repo vandaag echt? | `research/current-status.md` |
 | Welke evaluatielagen moeten de hoofdclaim gaan dragen? | `research/evaluation-matrix.md` |
 | Hoe migreert de repo weg van scenario-afhankelijkheid? | `research/scenario-independence-roadmap.md` |
+| Hoe moeten evaluatielagen straks zichtbaar worden in code, CLI en artifacts? | `research/evaluation-layer-target-architecture.md` |
 | Welke onderdelen heeft de repo nu? | `ARCHITECTURE_MAP.md` |
 | Welke commands en workflows horen bij welke laag? | `CLI_COMMAND_MAP.md` en `.github/workflows/` |
 
