@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from shadowseed.benchmark.open_set_seed_review import REVIEW_CRITERIA
+from shadowseed.benchmark.open_set_seed_review import EVIDENCE_LAYER, REVIEW_CRITERIA
 
 
 ACCEPT_STATES = {"accept", "accepted", "approved", "pass", "passed"}
@@ -70,10 +70,70 @@ def _pairwise_agreement_ratio(values: list[str]) -> float | None:
     return (matching_pairs / total_pairs) if total_pairs else None
 
 
+def _render_report(summary: dict[str, Any], disagreements_path: Path) -> str:
+    reject_counts = summary.get("reject_reason_counts", {})
+    reject_lines = "\n".join(
+        f"- `{reason}`: {count}" for reason, count in sorted(reject_counts.items())
+    ) or "- none"
+    criterion_lines = "\n".join(
+        f"- `{criterion}`: {summary['criterion_pass_rates'][criterion]:.2f}"
+        for criterion in REVIEW_CRITERIA
+    )
+    domain_lines = "\n".join(
+        f"- `{domain}`: {count}" for domain, count in sorted(summary.get("domain_seed_counts", {}).items())
+    ) or "- none"
+
+    return "\n".join(
+        [
+            "# Open-set Seed Review Report",
+            "",
+            f"Evidence layer: `{summary['evidence_layer']}`",
+            f"Status: `{summary['status']}`",
+            "",
+            "## Overview",
+            "",
+            f"- packets: {summary['packet_count']}",
+            f"- completed packets: {summary['completed_packet_count']}",
+            f"- unique seeds: {summary['unique_seed_count']}",
+            f"- accepted seeds: {summary['accepted_seed_count']}",
+            f"- rejected seeds: {summary['rejected_seed_count']}",
+            f"- mixed seeds: {summary['mixed_seed_count']}",
+            f"- pending seeds: {summary['pending_seed_count']}",
+            "",
+            "## Core Rates",
+            "",
+            f"- packet acceptance rate: {summary['packet_acceptance_rate']:.2f}",
+            f"- seed acceptance rate: {summary['seed_acceptance_rate']:.2f}",
+            f"- seed rejection rate: {summary['seed_rejection_rate']:.2f}",
+            f"- unanimous verdict rate: {summary['unanimous_verdict_rate']:.2f}",
+            f"- pairwise decision agreement rate: {summary['pairwise_decision_agreement_rate']:.2f}",
+            "",
+            "## Criterion Pass Rates",
+            "",
+            criterion_lines,
+            "",
+            "## Reject Reasons",
+            "",
+            reject_lines,
+            "",
+            "## Domain Coverage",
+            "",
+            domain_lines,
+            "",
+            "## Follow-up",
+            "",
+            f"- disagreements artifact: `{disagreements_path}`",
+            "- read disagreements first when mixed verdicts are non-trivial",
+            "- do not collapse this layer into the standard regression score",
+        ]
+    ) + "\n"
+
+
 def summarize_open_set_seed_review(
     review_packet_path: str,
     output_path: str,
     disagreements_output_path: str | None = None,
+    report_output_path: str | None = None,
 ) -> Path:
     payload = json.loads(Path(review_packet_path).read_text(encoding="utf-8"))
     packets = payload.get("packets", [])
@@ -206,6 +266,7 @@ def summarize_open_set_seed_review(
         aggregated_results.append(entry)
 
     summary = {
+        "evidence_layer": EVIDENCE_LAYER,
         "packet_count": packet_count,
         "completed_packet_count": completed_packet_count,
         "pending_packet_count": packet_count - completed_packet_count,
@@ -240,17 +301,27 @@ def summarize_open_set_seed_review(
 
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
+    disagreements_output = Path(disagreements_output_path) if disagreements_output_path else output.with_name(output.stem + "_disagreements.json")
+    disagreements_output.parent.mkdir(parents=True, exist_ok=True)
+    report_output = Path(report_output_path) if report_output_path else output.with_name(output.stem + "_report.md")
+    report_output.parent.mkdir(parents=True, exist_ok=True)
+
+    summary["artifacts"] = {
+        "summary": str(output),
+        "disagreements": str(disagreements_output),
+        "report": str(report_output),
+    }
+
     output.write_text(
         json.dumps({"summary": summary, "results": aggregated_results}, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
 
-    disagreements_output = Path(disagreements_output_path) if disagreements_output_path else output.with_name(output.stem + "_disagreements.json")
-    disagreements_output.parent.mkdir(parents=True, exist_ok=True)
     disagreements_output.write_text(
         json.dumps(
             {
                 "summary": {
+                    "evidence_layer": EVIDENCE_LAYER,
                     "disagreement_count": len(disagreements),
                     "agreement_eligible_seed_count": agreement_eligible_seed_count,
                     "unanimous_verdict_rate": summary["unanimous_verdict_rate"],
@@ -264,5 +335,7 @@ def summarize_open_set_seed_review(
         + "\n",
         encoding="utf-8",
     )
+
+    report_output.write_text(_render_report(summary, disagreements_output), encoding="utf-8")
 
     return output

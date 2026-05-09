@@ -17,11 +17,20 @@ def test_open_set_seed_review_outputs_packets(tmp_path: Path) -> None:
     payload = json.loads(output.read_text(encoding="utf-8"))
     review_payload = json.loads(packets.read_text(encoding="utf-8"))
 
+    assert payload["summary"]["evidence_layer"] == "open_set_seed_quality"
+    assert payload["summary"]["artifact_contract_version"] == "open-review-0.2"
     assert payload["summary"]["item_count"] == 3
     assert payload["summary"]["accepted_count"] > 0
     assert payload["summary"]["rejected_count"] > 0
     assert payload["summary"]["review_packet_count"] == review_payload["summary"]["packet_count"]
+    assert payload["summary"]["artifacts"]["seed_output"] == str(output)
+    assert payload["summary"]["artifacts"]["review_packets"] == str(packets)
     assert review_payload["summary"]["reject_codes"]
+    assert review_payload["summary"]["expected_summary_artifacts"] == [
+        "open_set_review_summary.json",
+        "open_set_disagreements.json",
+        "open_set_review_report.md",
+    ]
     assert review_payload["packets"][0]["review_status"] == "pending"
     assert "reviewer_id" in review_payload["packets"][0]
     assert "reject_reason" in review_payload["packets"][0]

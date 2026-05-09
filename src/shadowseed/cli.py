@@ -149,10 +149,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="[manual] open-set scaffold met review-packets",
     )
     open_set.add_argument("--input", default="src/shadowseed/data/open_set_seed_review_sample.json")
-    open_set.add_argument("--output", default="results/open_set_seed_review.json")
+    open_set.add_argument("--output", default="results/open_review/open_set_seed_output.json")
     open_set.add_argument(
         "--review-packets",
-        default="results/open_set_seed_review_packets.json",
+        default="results/open_review/open_set_review_packets.json",
         help="Waar de review-packets voor menselijke beoordeling worden opgeslagen.",
     )
 
@@ -162,18 +162,23 @@ def build_parser() -> argparse.ArgumentParser:
     )
     open_set_summary.add_argument(
         "--input",
-        default="results/open_set_seed_review_packets.json",
+        default="results/open_review/open_set_review_packets.json",
         help="JSON-bestand met ingevulde review-packets.",
     )
     open_set_summary.add_argument(
         "--output",
-        default="results/open_set_seed_review_summary.json",
+        default="results/open_review/open_set_review_summary.json",
         help="Waar de geaggregeerde review-samenvatting wordt opgeslagen.",
     )
     open_set_summary.add_argument(
         "--disagreements-output",
-        default="results/open_set_seed_review_disagreements.json",
+        default="results/open_review/open_set_disagreements.json",
         help="Waar seed-level disagreements voor handmatige follow-up worden opgeslagen.",
+    )
+    open_set_summary.add_argument(
+        "--report-output",
+        default="results/open_review/open_set_review_report.md",
+        help="Waar de leesbare open-set samenvatting wordt opgeslagen.",
     )
 
     adversarial = subparsers.add_parser(

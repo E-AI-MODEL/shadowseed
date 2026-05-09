@@ -29,6 +29,8 @@ REJECT_CODES = [
     "duplicate",
     "style_not_gap",
 ]
+EVIDENCE_LAYER = "open_set_seed_quality"
+ARTIFACT_CONTRACT_VERSION = "open-review-0.2"
 
 
 def _scenario_like_record(item: dict[str, Any]) -> dict[str, Any]:
@@ -81,7 +83,8 @@ def run_open_set_seed_review(
     normalized_candidate_count = 0
     accepted_count = 0
     rejected_count = 0
-    domain_counts: dict[str, int] = {}
+    domain_accept_counts: dict[str, int] = {}
+    domain_item_counts: dict[str, int] = {}
 
     for item in items:
         manager = SSLManager(embedding_fn=detect_embedding)
@@ -92,7 +95,8 @@ def run_open_set_seed_review(
         accepted_count += len(ingest["accepted"])
         rejected_count += len(ingest["rejected"])
         domain = item.get("domain", "unknown")
-        domain_counts[domain] = domain_counts.get(domain, 0) + len(ingest["accepted"])
+        domain_item_counts[domain] = domain_item_counts.get(domain, 0) + 1
+        domain_accept_counts[domain] = domain_accept_counts.get(domain, 0) + len(ingest["accepted"])
 
         for accepted in ingest["accepted"]:
             review_packets.append(_review_entry(item, accepted))
@@ -109,7 +113,14 @@ def run_open_set_seed_review(
             }
         )
 
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    review_packet_file = Path(review_packet_path) if review_packet_path else output.with_name(output.stem + "_review_packets.json")
+    review_packet_file.parent.mkdir(parents=True, exist_ok=True)
+
     summary = {
+        "evidence_layer": EVIDENCE_LAYER,
+        "artifact_contract_version": ARTIFACT_CONTRACT_VERSION,
         "corpus_version": payload.get("version"),
         "item_count": len(items),
         "raw_candidate_count": raw_candidate_count,
@@ -117,28 +128,38 @@ def run_open_set_seed_review(
         "accepted_count": accepted_count,
         "rejected_count": rejected_count,
         "acceptance_rate": (accepted_count / normalized_candidate_count) if normalized_candidate_count else 0.0,
-        "domain_accept_counts": domain_counts,
+        "domain_item_counts": domain_item_counts,
+        "domain_accept_counts": domain_accept_counts,
         "review_packet_count": len(review_packets),
         "review_criteria": REVIEW_CRITERIA,
         "reject_codes": REJECT_CODES,
         "status": "review_pending",
+        "next_step": "Fill review packets and run summarize-open-set-seed-review.",
+        "artifacts": {
+            "seed_output": str(output),
+            "review_packets": str(review_packet_file),
+        },
     }
 
-    output = Path(output_path)
-    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps({"summary": summary, "results": results}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    review_packet_file = Path(review_packet_path) if review_packet_path else output.with_name(output.stem + "_review_packets.json")
-    review_packet_file.parent.mkdir(parents=True, exist_ok=True)
     review_packet_file.write_text(
         json.dumps(
             {
                 "summary": {
+                    "evidence_layer": EVIDENCE_LAYER,
+                    "artifact_contract_version": ARTIFACT_CONTRACT_VERSION,
                     "item_count": len(items),
                     "packet_count": len(review_packets),
                     "criteria": REVIEW_CRITERIA,
                     "reject_codes": REJECT_CODES,
                     "instructions": "Score each seed on atomicity, relevance, testability, non-triviality and follow-up utility.",
+                    "status": "review_pending",
+                    "expected_summary_artifacts": [
+                        "open_set_review_summary.json",
+                        "open_set_disagreements.json",
+                        "open_set_review_report.md",
+                    ],
                 },
                 "packets": review_packets,
             },

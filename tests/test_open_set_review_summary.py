@@ -10,6 +10,7 @@ def test_open_set_review_summary_aggregates_packets_and_disagreements(tmp_path: 
     packets_path = tmp_path / "review_packets.json"
     summary_path = tmp_path / "review_summary.json"
     disagreements_path = tmp_path / "review_disagreements.json"
+    report_path = tmp_path / "review_report.md"
 
     packets_payload = {
         "summary": {
@@ -85,11 +86,14 @@ def test_open_set_review_summary_aggregates_packets_and_disagreements(tmp_path: 
         str(packets_path),
         str(summary_path),
         disagreements_output_path=str(disagreements_path),
+        report_output_path=str(report_path),
     )
 
     summary_payload = json.loads(summary_path.read_text(encoding="utf-8"))
     disagreements_payload = json.loads(disagreements_path.read_text(encoding="utf-8"))
+    report_text = report_path.read_text(encoding="utf-8")
 
+    assert summary_payload["summary"]["evidence_layer"] == "open_set_seed_quality"
     assert summary_payload["summary"]["packet_count"] == 3
     assert summary_payload["summary"]["completed_packet_count"] == 3
     assert summary_payload["summary"]["accepted_packet_count"] == 2
@@ -103,9 +107,12 @@ def test_open_set_review_summary_aggregates_packets_and_disagreements(tmp_path: 
     assert summary_payload["summary"]["pairwise_decision_agreement_rate"] == 0.0
     assert summary_payload["summary"]["reject_reason_counts"]["not_relevant"] == 1
     assert summary_payload["summary"]["reviewer_ids"] == ["reviewer_a", "reviewer_b"]
+    assert summary_payload["summary"]["artifacts"]["report"] == str(report_path)
     assert summary_payload["results"][0]["aggregate_verdict"] in {"accepted", "mixed", "rejected", "pending"}
     assert summary_payload["results"][0]["pairwise_decision_agreement"] in {None, 0.0, 1.0}
     assert disagreements_payload["summary"]["disagreement_count"] == 1
     assert disagreements_payload["summary"]["unanimous_verdict_rate"] == 0.0
     assert disagreements_payload["summary"]["pairwise_decision_agreement_rate"] == 0.0
     assert disagreements_payload["disagreements"][0]["seed_text"] == "AVG-compliance bij verwerking van medische hartslagdata."
+    assert "# Open-set Seed Review Report" in report_text
+    assert "Evidence layer: `open_set_seed_quality`" in report_text

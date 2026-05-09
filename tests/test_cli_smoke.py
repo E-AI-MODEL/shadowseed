@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 import subprocess
 import sys
 
@@ -74,6 +73,18 @@ def test_cli_fetch_open_set_hf_batch_parser() -> None:
     assert args.limit == 8
 
 
+def test_cli_open_set_defaults() -> None:
+    args = build_parser().parse_args(["run-open-set-seed-review"])
+    assert args.output == "results/open_review/open_set_seed_output.json"
+    assert args.review_packets == "results/open_review/open_set_review_packets.json"
+
+    summary_args = build_parser().parse_args(["summarize-open-set-seed-review"])
+    assert summary_args.input == "results/open_review/open_set_review_packets.json"
+    assert summary_args.output == "results/open_review/open_set_review_summary.json"
+    assert summary_args.disagreements_output == "results/open_review/open_set_disagreements.json"
+    assert summary_args.report_output == "results/open_review/open_set_review_report.md"
+
+
 def test_cli_open_set_review_summary(tmp_path):
     review_packets = {
         "summary": {"packet_count": 1},
@@ -101,6 +112,7 @@ def test_cli_open_set_review_summary(tmp_path):
     input_file = tmp_path / "review_packets.json"
     output_file = tmp_path / "review_summary.json"
     disagreements_file = tmp_path / "review_disagreements.json"
+    report_file = tmp_path / "review_report.md"
     input_file.write_text(json.dumps(review_packets), encoding="utf-8")
 
     result = subprocess.run(
@@ -115,6 +127,8 @@ def test_cli_open_set_review_summary(tmp_path):
             str(output_file),
             "--disagreements-output",
             str(disagreements_file),
+            "--report-output",
+            str(report_file),
         ],
         capture_output=True,
         text=True,
@@ -122,3 +136,4 @@ def test_cli_open_set_review_summary(tmp_path):
     assert result.returncode == 0
     assert output_file.exists()
     assert disagreements_file.exists()
+    assert report_file.exists()

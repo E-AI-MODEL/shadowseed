@@ -11,7 +11,6 @@ from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate_benchmark
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
-from shadowseed.benchmark.open_set_hf import fetch_open_set_hf_batch
 from shadowseed.benchmark.open_set_review_summary import summarize_open_set_seed_review
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
 from shadowseed.benchmark.result_writer import ResultWriter
@@ -91,6 +90,13 @@ def _run_blind_benchmark(args: argparse.Namespace) -> str:
 
 
 def _fetch_open_set_hf_batch(args: argparse.Namespace) -> str:
+    try:
+        from shadowseed.benchmark.open_set_hf import fetch_open_set_hf_batch
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "HF open-set intake is not available in this checkout. "
+            "Merge or restore src/shadowseed/benchmark/open_set_hf.py first."
+        ) from exc
     return str(
         fetch_open_set_hf_batch(
             args.output,
@@ -115,6 +121,7 @@ def _summarize_open_set_seed_review(args: argparse.Namespace) -> str:
         args.input,
         args.output,
         disagreements_output_path=args.disagreements_output,
+        report_output_path=args.report_output,
     )
 
 
