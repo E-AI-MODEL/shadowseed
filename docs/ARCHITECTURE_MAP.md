@@ -4,18 +4,56 @@ Deze pagina is de kaart van de repo. Gebruik hem als startpunt als je niet meer 
 
 De repo heeft niet één doel maar meerdere banen die samen moeten blijven kloppen. Juist daarom is het belangrijk om regressie, benchmark, rapportage en publicatie niet met elkaar te verwarren.
 
-## Vier banen
+## Vijf banen
 
 | Baan | Doel | Belangrijkste plekken | Status |
 |---|---|---|---|
 | Core SSL | Seeds opslaan, laten uitdoven, valideren en eventueel promoten | `src/shadowseed/manager.py`, `src/shadowseed/vectorstore/`, `src/shadowseed/ssot.py` | prototype, getest |
-| Benchmarks | Meten of SSL iets vindt, niets verzint en antwoorden helpt | `src/shadowseed/benchmark/`, `src/shadowseed/data/` | CI en handmatig |
+| Regressie en kleine benchmark | Mechaniek bewaken en bekende vaste cases volgen | `src/shadowseed/benchmark/`, `src/shadowseed/data/`, `tests/` | CI en handmatig |
+| Nieuwe evaluatielagen | Open-set, adversarial, behavioral en transfer bewijs opbouwen | `src/shadowseed/evaluation/README.md`, `benchmarks/open_review/`, `benchmarks/adversarial/`, `benchmarks/transfer/` | deels gepland, deels in opbouw |
 | Rapportage | JSON-resultaten samenvatten tot rapport en grafieken | `src/shadowseed/analysis/ssl45_result_analyzer.py`, workflow-snapshot `results/latest/` | automatisch |
 | Publicatie | Laatste resultaten tonen op Wiki en Pages | `.github/workflows/publish-test-results.yml`, `site/`, `docs/wiki/` | automatisch na main push |
 
+## Huidige versus gewenste vorm
+
+De repo is vandaag inhoudelijk verder dan haar mapstructuur.
+
+Dat betekent:
+
+- de docs weten al goed welke bewijs-lagen bestaan;
+- de codebasis draait al een sterke regressieruggengraat;
+- maar open-set, adversarial, probe utility en transfer zijn nog niet overal even zichtbaar als aparte technische banen.
+
+De eerstvolgende alignmentstap is daarom niet "meer benchmarkvarianten", maar:
+
+- explicieter scheiden van regressie en hoofdclaim;
+- aparte werkvakken maken voor open-set, adversarial en transfer;
+- rapportage en artifactnamen daarop voorbereiden.
+
+## Doelstructuur voor de volgende fase
+
+```text
+src/shadowseed/
+  benchmark/                  # bestaande regressie- en kleine benchmarklaag
+  evaluation/
+    README.md                 # contract voor de nieuwe bewijs-lagen
+
+tests/                        # unit, regressie en benchmarktests
+
+benchmarks/
+  open_review/
+    README.md                 # open-set review datasets, packets en summaries
+  adversarial/
+    README.md                 # Gate-comparison datasets, baselines en casebooks
+  transfer/
+    README.md                 # domeintransfer-holdouts en extra domeinen
+```
+
+Dit is bewust een tussenstap. Niet alles hoeft meteen te worden verhuisd. Het doel is eerst zichtbaar maken welke laag waarvoor dient.
+
 ## Commandkaart
 
-Naast deze vier repo-banen gebruikt de CLI nu ook expliciete commandtiers.
+Naast deze repo-banen gebruikt de CLI expliciete commandtiers.
 
 Gebruik `docs/CLI_COMMAND_MAP.md` voor de vraag:
 
@@ -102,3 +140,4 @@ Gebruik deze combinatie:
 - `docs/research/current-status.md` voor de vraag: wat bewijst dat vandaag echt?
 - `docs/research/scenario-independence-roadmap.md` voor de vraag: waar moet het bewijs heen?
 - `docs/research/evaluation-matrix.md` voor de vraag: welke laag draagt welke claim?
+- `docs/research/next-phase-implementation.md` voor de vraag: wat bouwen we nu eerst?
