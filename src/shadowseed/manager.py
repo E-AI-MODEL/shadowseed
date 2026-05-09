@@ -20,7 +20,7 @@ from datetime import datetime
 from enum import Enum
 import math
 import re
-from typing import TYPE_CHECKING, Any, Callable, Iterable
+from typing import TYPE_CHECKING, Any, Callable, Iterable, Literal
 
 import numpy as np
 
@@ -114,6 +114,50 @@ class ValidationGateFlags:
     contradiction_free: bool
 
 
+class ProbeType(str, Enum):
+    """Which probe instrument produced the outcome."""
+
+    FOLLOW_UP = "follow_up"
+    RETRIEVAL = "retrieval"
+    DIALECTIC = "dialectic"
+    GENERAL = "general"
+
+
+class ProbeOutcome(str, Enum):
+    """Outcome of a probe evaluation.
+
+    Probe feedback is deliberately weaker than the Validation Gate. A probe may
+    nudge a seed's weight up or down, but it cannot promote a seed on its own.
+    It can demote a promoted seed back to ACTIVE when repeated poor outcomes
+    drive the weight back below the promotion threshold.
+    """
+
+    REWARD = "reward"
+    PENALTY = "penalty"
+    NEUTRAL = "neutral"
+
+
+@dataclass
+class ProbeFeedbackResult:
+    """Structured record of a single probe-feedback event."""
+
+    seed_id: str
+    probe_type: str
+    outcome: str
+    weight_before: float
+    weight_after: float
+    delta_applied: float
+    status_before: str
+    status_after: str
+    demoted: bool
+    skipped: bool
+    skip_reason: str
+    created_at: str = field(default_factory=lambda: datetime.now().isoformat())
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
 class SSLManager:
     def __init__(
         self,
@@ -162,9 +206,12 @@ class SSLManager:
         self.contradiction_penalty = self.config.contradiction_penalty
         self.max_trace = self.config.max_trace
         self.reactivation_increment = self.config.reactivation_increment
+        self.reward_step = self.config.reward_step
+        self.penalty_step = self.config.penalty_step
         self.vector_constellation = vector_constellation
         self.validation_log: list[ValidationGateResult] = []
         self.event_log: list[SeedEvent] = []
+        self.feedback_log: list[ProbeFeedbackResult] = []
 
     @staticmethod
     def _now_iso() -> str:
@@ -677,6 +724,93 @@ class SSLManager:
     def get_seed(self, seed_id: str) -> ShadowSeed:
         return self.seeds[seed_id]
 
+    def apply_probe_feedback(
+        self,
+        seed_id: str,
+        outcome: ProbeOutcome | Literal["reward", "penalty", "neutral"],
+        probe_type: ProbeType | Literal["follow_up", "retrieval", "dialectic", "general"] = ProbeType.GENERAL,
+    ) -> ProbeFeedbackResult:
+        """Apply bounded probe feedback to an existing seed.
+
+        Probe feedback is a weaker signal than the Validation Gate. It can only
+        adjust weight for ACTIVE or PROMOTED seeds. It cannot promote a seed on
+        its own, but it can demote a PROMOTED seed back to ACTIVE when repeated
+        penalties push weight below the promotion threshold.
+        """
+        if seed_id not in self.seeds:
+            raise KeyError(f"Seed '{seed_id}' bestaat niet.")
+
+        seed = self.seeds[seed_id]
+        outcome_enum = ProbeOutcome(outcome)
+        probe_type_enum = ProbeType(probe_type)
+
+        status_before = seed.status.value
+        weight_before = seed.weight
+
+        feedbackable = {SeedStatus.ACTIVE, SeedStatus.PROMOTED}
+        if seed.status not in feedbackable:
+            result = ProbeFeedbackResult(
+                seed_id=seed_id,
+                probe_type=probe_type_enum.value,
+                outcome=outcome_enum.value,
+                weight_before=weight_before,
+                weight_after=weight_before,
+                delta_applied=0.0,
+                status_before=status_before,
+                status_after=status_before,
+                demoted=False,
+                skipped=True,
+                skip_reason=f"status '{seed.status.value}' is niet feedbackable",
+            )
+            self.feedback_log.append(result)
+            return result
+
+        delta_map: dict[ProbeOutcome, float] = {
+            ProbeOutcome.REWARD: self.reward_step,
+            ProbeOutcome.PENALTY: -self.penalty_step,
+            ProbeOutcome.NEUTRAL: 0.0,
+        }
+        delta_requested = delta_map[outcome_enum]
+        new_weight = max(0.0, min(1.0, seed.weight + delta_requested))
+
+        demoted = (
+            seed.status == SeedStatus.PROMOTED
+            and new_weight < self.promotion_threshold
+        )
+
+        seed.weight = new_weight
+        if demoted:
+            seed.status = SeedStatus.ACTIVE
+        self._touch_seed(seed)
+
+        delta_applied = seed.weight - weight_before
+        result = ProbeFeedbackResult(
+            seed_id=seed_id,
+            probe_type=probe_type_enum.value,
+            outcome=outcome_enum.value,
+            weight_before=weight_before,
+            weight_after=seed.weight,
+            delta_applied=delta_applied,
+            status_before=status_before,
+            status_after=seed.status.value,
+            demoted=demoted,
+            skipped=False,
+            skip_reason="",
+        )
+        self.feedback_log.append(result)
+        self._record_and_sync(
+            "probe_feedback",
+            seed_id,
+            probe_type=probe_type_enum.value,
+            outcome=outcome_enum.value,
+            weight_before=weight_before,
+            weight_after=seed.weight,
+            delta_requested=delta_requested,
+            delta_applied=delta_applied,
+            demoted=demoted,
+        )
+        return result
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "config": self.config.to_dict(),
@@ -684,6 +818,7 @@ class SSLManager:
             "constellations": [item.to_dict() for item in self.find_constellations()],
             "validation_log": [item.to_dict() for item in self.validation_log],
             "event_log": [item.to_dict() for item in self.event_log],
+            "feedback_log": [item.to_dict() for item in self.feedback_log],
             "vector_constellation": (
                 self.vector_constellation.to_dict()
                 if self.vector_constellation is not None
