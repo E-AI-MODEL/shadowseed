@@ -1,14 +1,4 @@
-"""Open-set seed quality review scaffold for SSL 4.5.
-
-This runner is intentionally simple. It does not claim to solve open-world
-validation; it creates the first honest bridge away from fixed ground-truth
-scenario scoring by producing:
-
-- candidate seeds for unknown texts;
-- normalization and atomicity filtering results;
-- reviewer packets with explicit scoring fields;
-- run artifacts that can be compared across domains.
-"""
+"""Open-set seed quality review scaffold for SSL 4.5."""
 
 from __future__ import annotations
 
@@ -19,6 +9,7 @@ from typing import Any
 import numpy as np
 
 from shadowseed.benchmark.ssl45_gap_suite import detect_candidate_seeds
+from shadowseed.hash_utils import stable_bucket_index
 from shadowseed.manager import SSLManager
 
 
@@ -86,7 +77,6 @@ def run_open_set_seed_review(
     items = payload.get("items", [])
     results = []
     review_packets = []
-
     raw_candidate_count = 0
     normalized_candidate_count = 0
     accepted_count = 0
@@ -136,10 +126,7 @@ def run_open_set_seed_review(
 
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(
-        json.dumps({"summary": summary, "results": results}, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
+    output.write_text(json.dumps({"summary": summary, "results": results}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     review_packet_file = Path(review_packet_path) if review_packet_path else output.with_name(output.stem + "_review_packets.json")
     review_packet_file.parent.mkdir(parents=True, exist_ok=True)
@@ -169,7 +156,7 @@ def detect_embedding(text: str) -> np.ndarray:
     dims = 128
     vector = np.zeros(dims, dtype=float)
     for token in text.lower().split():
-        vector[hash(token) % dims] += 1.0
+        vector[stable_bucket_index(token, dims)] += 1.0
     norm = np.linalg.norm(vector)
     if norm == 0:
         return vector
