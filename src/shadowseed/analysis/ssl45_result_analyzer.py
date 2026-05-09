@@ -113,6 +113,7 @@ def build_conclusion(
     model_benefit_payload: ResultDict | None,
     blind_payload: ResultDict | None,
     adversarial_payload: ResultDict | None,
+    open_set_payload: ResultDict | None,
 ) -> dict[str, Any]:
     """Build a cautious conclusion from the available result summaries."""
     gap_score = float(metric(gap_payload, "mean_scenario_score", 0.0) or 0.0)
@@ -127,6 +128,11 @@ def build_conclusion(
     adversarial_gate_fp = float(metric(adversarial_payload, "current_gate_false_promotion_rate", 0.0) or 0.0)
     adversarial_trace_fp = float(metric(adversarial_payload, "trace_only_false_promotion_rate", 0.0) or 0.0)
     adversarial_delta = float(metric(adversarial_payload, "gate_vs_trace_only_delta", 0.0) or 0.0)
+    open_set_seed_acceptance_rate = float(metric(open_set_payload, "seed_acceptance_rate", 0.0) or 0.0)
+    open_set_unanimous_verdict_rate = float(metric(open_set_payload, "unanimous_verdict_rate", 0.0) or 0.0)
+    open_set_pairwise_decision_agreement_rate = float(
+        metric(open_set_payload, "pairwise_decision_agreement_rate", 0.0) or 0.0
+    )
     backend = str(metric(model_benefit_payload, "backend", "unknown"))
     is_real_model = backend.startswith("hf-transformers:")
 
@@ -181,6 +187,20 @@ def build_conclusion(
     else:
         support.append("Er zijn promoted false positives gevonden; conclusies moeten worden beperkt.")
 
+    if open_set_payload:
+        if open_set_seed_acceptance_rate > 0.0 and open_set_unanimous_verdict_rate > 0.0:
+            support.append(
+                "De open-set review laat zien dat een deel van de seeds door reviewers wordt geaccepteerd, met expliciete agreement-metrieken voor consensuscontrole."
+            )
+        elif open_set_seed_acceptance_rate > 0.0:
+            support.append(
+                "De open-set review levert geaccepteerde seeds op, maar de reviewer-consensus vraagt nog scherpere opvolging."
+            )
+        else:
+            support.append(
+                "De open-set review is aanwezig, maar laat nog geen overtuigende geaccepteerde seeds zien."
+            )
+
     if adversarial_payload:
         if adversarial_gate_fp == 0.0 and adversarial_delta > 0:
             support.append("De adversarial Gate-laag laat zien dat de huidige Gate lure-promoties blokkeert die trace-only nog zou doorlaten.")
@@ -215,6 +235,9 @@ def build_conclusion(
             "gap_mean_scenario_score": gap_score,
             "gap_promoted_hits": promoted_hits,
             "promoted_false_positive_rate": fp_rate,
+            "open_set_seed_acceptance_rate": open_set_seed_acceptance_rate,
+            "open_set_unanimous_verdict_rate": open_set_unanimous_verdict_rate,
+            "open_set_pairwise_decision_agreement_rate": open_set_pairwise_decision_agreement_rate,
             "adversarial_current_gate_false_promotion_rate": adversarial_gate_fp,
             "adversarial_trace_only_false_promotion_rate": adversarial_trace_fp,
             "adversarial_gate_vs_trace_only_delta": adversarial_delta,
@@ -288,6 +311,7 @@ def make_markdown_report(
     model_benefit_payload: ResultDict | None,
     blind_payload: ResultDict | None,
     adversarial_payload: ResultDict | None,
+    open_set_payload: ResultDict | None,
     retrieval_payload: ResultDict | None,
     retrieval_model_payload: ResultDict | None,
     probe_payload: ResultDict | None,
@@ -330,6 +354,9 @@ def make_markdown_report(
             f"| Gap Finder mean score | {short_number(metric(gap_payload, 'mean_scenario_score'))} |",
             f"| Gap Finder promoted hits | {short_number(metric(gap_payload, 'promoted_hits'))} |",
             f"| False-positive promoted rate | {short_number(metric(false_positive_payload, 'promoted_false_positive_rate'))} |",
+            f"| Open-set seed acceptance rate | {short_number(metric(open_set_payload, 'seed_acceptance_rate'))} |",
+            f"| Open-set unanimous verdict rate | {short_number(metric(open_set_payload, 'unanimous_verdict_rate'))} |",
+            f"| Open-set pairwise agreement rate | {short_number(metric(open_set_payload, 'pairwise_decision_agreement_rate'))} |",
             f"| Adversarial Gate current FP rate | {short_number(metric(adversarial_payload, 'current_gate_false_promotion_rate'))} |",
             f"| Adversarial Gate trace-only FP rate | {short_number(metric(adversarial_payload, 'trace_only_false_promotion_rate'))} |",
             f"| Adversarial Gate reduction vs trace-only | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_only'))} |",
@@ -391,6 +418,26 @@ def make_markdown_report(
             )
     else:
         lines.append("Geen turn-matrix artifact gevonden.")
+
+    if open_set_payload:
+        lines.extend(
+            [
+                "",
+                "## Open-set review",
+                "",
+                "| Metric | Waarde |",
+                "|---|---:|",
+                f"| Review packets | {short_number(metric(open_set_payload, 'packet_count'))} |",
+                f"| Unique seeds | {short_number(metric(open_set_payload, 'unique_seed_count'))} |",
+                f"| Seed acceptance rate | {short_number(metric(open_set_payload, 'seed_acceptance_rate'))} |",
+                f"| Seed rejection rate | {short_number(metric(open_set_payload, 'seed_rejection_rate'))} |",
+                f"| Agreement-eligible seeds | {short_number(metric(open_set_payload, 'agreement_eligible_seed_count'))} |",
+                f"| Unanimous verdict rate | {short_number(metric(open_set_payload, 'unanimous_verdict_rate'))} |",
+                f"| Pairwise decision agreement rate | {short_number(metric(open_set_payload, 'pairwise_decision_agreement_rate'))} |",
+                "",
+                "Deze laag maakt zichtbaar hoeveel open-set seeds reviewbaar overeind blijven, en hoeveel reviewer-consensus er echt is in plaats van alleen ruwe acceptatie.",
+            ]
+        )
 
     if adversarial_payload:
         lines.extend(
@@ -476,6 +523,7 @@ def analyze_results(
     model_benefit = load_json(source / "ssl45_model_benefit_suite.json")
     blind = load_json(source / "blind_benchmark.json")
     adversarial = load_json(source / "adversarial_gate_benchmark.json")
+    open_set_review = load_json(source / "open_set_seed_review_summary.json")
     retrieval = load_json(source / "retrieval_benchmark.json")
     retrieval_model = load_json(source / "retrieval_model_benchmark.json")
     probe = load_json(source / "ssl45_probe_utility_suite.json")
@@ -485,7 +533,7 @@ def analyze_results(
     turn_matrix = load_turn_matrix(source)
 
     semantic = semantic_seed_summary([gap, benefit, model_benefit])
-    conclusion = build_conclusion(gap, false_positive, benefit, model_benefit, blind, adversarial)
+    conclusion = build_conclusion(gap, false_positive, benefit, model_benefit, blind, adversarial, open_set_review)
     publish_mode = "workflow snapshot"
     if manifest and manifest.get("committed_back_to_main") is False:
         publish_mode = "wiki/pages snapshot without main write-back"
@@ -517,6 +565,7 @@ def analyze_results(
         "model_benefit": model_benefit.get("summary") if model_benefit else None,
         "blind": blind.get("summary") if blind else None,
         "adversarial_gate": adversarial.get("summary") if adversarial else None,
+        "open_set_review": open_set_review.get("summary") if open_set_review else None,
         "retrieval": retrieval.get("metrics") if retrieval else None,
         "retrieval_model": retrieval_model.get("summary") if retrieval_model else None,
         "probe_utility": probe.get("summary") if probe else None,
@@ -541,6 +590,7 @@ def analyze_results(
             model_benefit,
             blind,
             adversarial,
+            open_set_review,
             retrieval,
             retrieval_model,
             probe,
