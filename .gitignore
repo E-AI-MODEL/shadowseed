@@ -10,3 +10,7 @@ dist/
 runs/
 benchmarks/results/*.json
 benchmarks/private/
+.env
+.env.*
+!.env.example
+.secrets/
