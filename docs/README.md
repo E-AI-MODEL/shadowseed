@@ -44,6 +44,7 @@ Deze documenten zijn leidend voor de vraag wat de repo vandaag werkelijk bewijst
 3. [Evaluatiematrix](research/evaluation-matrix.md)
 4. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
 5. [Evaluation layer target architecture](research/evaluation-layer-target-architecture.md)
+6. [Workflow evidence taxonomy](research/workflow-evidence-taxonomy.md)
 
 Praktische regel:
 
@@ -62,6 +63,7 @@ Lees in deze volgorde:
 3. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
 4. [Evaluatiematrix](research/evaluation-matrix.md)
 5. [Evaluation layer target architecture](research/evaluation-layer-target-architecture.md)
+6. [Workflow evidence taxonomy](research/workflow-evidence-taxonomy.md)
 
 Gebruik deze route als je wilt begrijpen:
 
@@ -91,6 +93,7 @@ Gebruik deze route als je vooral wilt draaien, vergelijken, publiceren of benchm
 | Welke evaluatielagen moeten de hoofdclaim gaan dragen? | `research/evaluation-matrix.md` |
 | Hoe migreert de repo weg van scenario-afhankelijkheid? | `research/scenario-independence-roadmap.md` |
 | Hoe moeten evaluatielagen straks zichtbaar worden in code, CLI en artifacts? | `research/evaluation-layer-target-architecture.md` |
+| Hoe moeten workflows, benchmarkruns en evidence-lagen benoemd worden? | `research/workflow-evidence-taxonomy.md` |
 | Welke onderdelen heeft de repo nu? | `ARCHITECTURE_MAP.md` |
 | Welke commands en workflows horen bij welke laag? | `CLI_COMMAND_MAP.md` en `.github/workflows/` |
 
