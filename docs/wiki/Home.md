@@ -1,98 +1,80 @@
 # Shadow Seed Learning 4.5
 
-Welkom bij de Wiki voor **Shadow Seed Learning (SSL) 4.5**.
+Welkom. Deze wiki is nu ook bedoeld voor bezoekers die het project voor het eerst zien.
 
-SSL 4.5 onderzoekt of een model beter kan antwoorden door ontbrekende structurele elementen te herkennen als **shadow seeds**. Een seed begint gewichtloos, wordt gevolgd via `trace`, en krijgt pas invloed na validatie via de Validation Gate.
+De kernvraag van SSL is eenvoudig:
 
-De wiki heeft twee functies tegelijk:
+> kan een model betere antwoorden geven als het niet alleen kijkt naar aanwezige informatie, maar ook naar structurele afwezigheden?
 
-- snel toegang geven tot de laatste resultaten;
-- uitleggen wat die resultaten wel en niet betekenen.
+SSL slaat zo'n afwezigheid op als een seed. Die seed begint gewichtloos. Pas na validatie via de Validation Gate mag hij invloed krijgen.
 
-## Begin hier
+## Lees dit eerst
 
-De meest stabiele ingangen zijn nu:
+Als je snel wilt begrijpen wat je bekijkt, gebruik deze volgorde:
 
-- [Latest Test Results](Latest-Test-Results)
-- [SSL 4.5 Analysis](SSL-45-Analysis)
-- [Dashboard](Dashboard)
-- [Benchmarks](Benchmarks)
-- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+1. [Start hier](Start-Hier)
+2. [Latest Test Results](Latest-Test-Results)
+3. [SSL 4.5 Analysis](SSL-45-Analysis)
+4. [Benchmarks](Benchmarks)
+5. [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
 
-Gebruik deze volgorde als je snel overzicht wilt:
+## Wat bezoekers meestal willen weten
 
-1. Latest Test Results voor de laatste gepubliceerde artifacts.
-2. SSL 4.5 Analysis voor de samengevatte uitkomst.
-3. Dashboard voor de bredere handmatige checks.
-4. Benchmarks voor uitleg per run en per bewijssoort.
+### 1. Wat is SSL?
 
-## Welke run doet wat?
+SSL is geen nieuw foundation model en geen modeltraining.
+Het is een evaluatie- en navigatielaag die probeert kleine, toetsbare ontbrekende punten in antwoorden vast te leggen en pas na validatie te gebruiken.
 
-| Naam in Actions | Gewone betekenis | Bewijssoort |
-|---|---|---|
-| 01 Codecheck | Werkt de Python-code? | regressie |
-| 02 Gap Finder | Vindt SSL ontbrekende punten? | kleine benchmark |
-| 03 Rustig blijven | Voegt SSL geen onzin toe? | regressie / beperkte ruiscontrole |
-| 04 Antwoordwinst | Wordt een antwoord completer met SSL? | kleine benchmark |
-| 05 Model smoke | Werkt de modelroute technisch? | technische smoke |
-| 06 Blind test | Blijven labels verborgen tot scoring? | methodologische smoke |
-| 07 Rapport | Vat de resultaten samen. | rapportage |
-| 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | technische smoke |
-| 09 Herhalingstest | Wat gebeurt er bij meer SSL-rondes? | gevoeligheid / regressie |
+### 2. Wat bekijk ik hier?
 
-## Stabiele hoofdpagina's
+De standaardpublicatie bestaat uit:
 
-- [Latest Test Results](Latest-Test-Results) - ingang naar de laatste standaardpublicatie
-- [SSL 4.5 Analysis](SSL-45-Analysis) - centrale analysepagina
-- [Dashboard](Dashboard) - bredere status over handmatige en aanvullende checks
-- [Start hier](Start-Hier) - eenvoudige instap en leesroute
-- [Benchmarks](Benchmarks) - uitleg per suite en bewijssoort
+- regressietests;
+- technische en methodologische smoke-tests;
+- kleine benchmarklagen;
+- aanvullende evidencelagen voor adversarial Gate-gedrag en probe utility.
 
-## Aanvullende technische checks
+### 3. Wat bewijst dit wel?
 
-- [SSOT Falsification](SSOT-Falsification)
-- [Retrieval Model HF](Retrieval-Model-HF)
-- [Full Validation Sweep](Full-Validation-Sweep)
-- [Blind Benchmark](Blind-Benchmark)
-- [Architectuur](Architectuur)
-- [Roadmap](Roadmap)
+De repo laat nu overtuigend zien dat:
 
-## Automatische resultaten
+- de mechanische SSL-kern werkt;
+- de standaard meetketen draait;
+- aanvullende evidencelagen zichtbaar gemaakt kunnen worden zonder ze te vermengen met de basisregressies.
 
-De centrale route is:
+### 4. Wat bewijst dit nog niet?
 
-```text
-Checks en benchmark-resultaten
-  -> Publiceer testresultaten naar Wiki en Pages
-  -> Wiki + Pages
-```
+De repo bewijst nog niet automatisch:
 
-De stap `07 Rapport` verzamelt de analyse-input conflictveilig uit artifacts. De originele artifactstructuur blijft traceerbaar, en de gepubliceerde snapshots verwijzen via een manifest terug naar de bronbestanden.
-
-De belangrijkste automatische pagina's:
-
-- [Latest Test Results](Latest-Test-Results)
-- [SSL 4.5 Analysis](SSL-45-Analysis)
-- [SSL 4.5 Analysis Summary JSON](SSL-45-Analysis-Summary)
-
-Oudere of specifieke pagina's kunnen nog bestaan voor losse experimenten, maar de laatste standaardresultaten staan onder `Latest Test Results`.
-
-## Belangrijke grens
-
-De standaardresultaten laten vooral zien dat de meetketen werkt en dat de huidige kleine benchmarklaag bruikbaar is.
-
-Ze bewijzen niet automatisch:
-
-- open-set seedkwaliteit;
-- sterke adversarial Gate-robustheid;
-- brede modelprestatie buiten de kleine suites;
-- domeintransfer;
+- algemene modelprestatie buiten kleine suites;
+- volledige open-set validatie;
+- brede domeintransfer;
 - modelinterne validatie.
 
-Voor zulke claims zijn grotere suites, menselijke review en aparte evaluatielagen nodig.
+## Waar kijk je het best naar?
 
-## Belangrijkste principe
+- [Latest Test Results](Latest-Test-Results): de laatste gepubliceerde snapshot
+- [SSL 4.5 Analysis](SSL-45-Analysis): de centrale samenvatting
+- [Benchmarks](Benchmarks): uitleg per testlaag
+- [Architectuur](Architectuur): technische kaart van de repo
+
+## Praktische leesregel
+
+Als een pagina resultaatcijfers toont, let dan altijd eerst op de bewijssoort:
+
+- regressie
+- technische smoke
+- methodologische smoke
+- kleine benchmark
+- aanvullende evidencelaag
+
+Niet elke pagina draagt dezelfde claim.
+
+## Hoofdprincipe
 
 > Een seed bevat precies één gap.
 
-SSL is geen prompttruc en geen modeltraining. Het is een laag die gevalideerde afwezigheden gebruikt als toetsbare navigatiesignalen.
+Dat principe houdt SSL tegelijk simpel en complex:
+
+- simpel, omdat elke seed klein en toetsbaar moet blijven;
+- complex, omdat de totale keten daarna detectie, validatie, retrieval, falsificatie en rapportage kan combineren.
