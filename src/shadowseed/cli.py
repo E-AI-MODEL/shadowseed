@@ -28,6 +28,7 @@ def build_parser() -> argparse.ArgumentParser:
         aliases=["prepare-absencebench"],
         help="[absencebench] bouw een preparation bundle",
     )
+    prepare.set_defaults(command="prepare-absencebench-bundle")
     prepare.add_argument(
         "--output",
         default="absencebench/preparation_result.json",
@@ -39,6 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
         aliases=["run-local-absencebench"],
         help="[absencebench] draai een lokale AbsenceBench-run",
     )
+    local.set_defaults(command="run-absencebench-local")
     local.add_argument("--input", required=True, help="JSON-bestand met lokale scenario's.")
     local.add_argument(
         "--output",
@@ -51,6 +53,7 @@ def build_parser() -> argparse.ArgumentParser:
         aliases=["fetch-absencebench"],
         help="[absencebench] haal een sample op voor lokale inspectie",
     )
+    hf.set_defaults(command="fetch-absencebench-sample")
     hf.add_argument("--output", default="data/absencebench_sample.json")
     hf.add_argument("--limit", type=int, default=10)
 
@@ -224,6 +227,7 @@ def build_parser() -> argparse.ArgumentParser:
         aliases=["run-nlp-smoke"],
         help="[standard] technische smoke voor de lokale AbsenceBench-route",
     )
+    nlp.set_defaults(command="run-absencebench-smoke")
     nlp.add_argument("--input", default="examples/local_absencebench_sample.json")
     nlp.add_argument("--output", default="results/absencebench_smoke.json")
 
