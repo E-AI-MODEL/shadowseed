@@ -48,6 +48,10 @@ def _run_absencebench_local(args: argparse.Namespace) -> str:
     return run_local_absencebench(args.input, args.output)
 
 
+def _run_absencebench_smoke(args: argparse.Namespace) -> str:
+    return run_local_absencebench(args.input, args.output)
+
+
 def _fetch_absencebench_sample(args: argparse.Namespace) -> str:
     return fetch_absencebench_sample(args.output, limit=args.limit)
 
@@ -165,7 +169,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "run-retrieval-benchmark": _run_retrieval_benchmark,
     "run-retrieval-model-benchmark": _run_retrieval_model_benchmark,
     "analyze-results": _analyze_results,
-    "run-absencebench-smoke": _run_absencebench_local,
+    "run-absencebench-smoke": _run_absencebench_smoke,
 }
 
 
