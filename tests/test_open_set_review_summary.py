@@ -99,8 +99,13 @@ def test_open_set_review_summary_aggregates_packets_and_disagreements(tmp_path: 
     assert summary_payload["summary"]["mixed_seed_count"] == 1
     assert summary_payload["summary"]["agreement_eligible_seed_count"] == 1
     assert summary_payload["summary"]["unanimous_seed_count"] == 0
+    assert summary_payload["summary"]["unanimous_verdict_rate"] == 0.0
+    assert summary_payload["summary"]["pairwise_decision_agreement_rate"] == 0.0
     assert summary_payload["summary"]["reject_reason_counts"]["not_relevant"] == 1
     assert summary_payload["summary"]["reviewer_ids"] == ["reviewer_a", "reviewer_b"]
     assert summary_payload["results"][0]["aggregate_verdict"] in {"accepted", "mixed", "rejected", "pending"}
+    assert summary_payload["results"][0]["pairwise_decision_agreement"] in {None, 0.0, 1.0}
     assert disagreements_payload["summary"]["disagreement_count"] == 1
+    assert disagreements_payload["summary"]["unanimous_verdict_rate"] == 0.0
+    assert disagreements_payload["summary"]["pairwise_decision_agreement_rate"] == 0.0
     assert disagreements_payload["disagreements"][0]["seed_text"] == "AVG-compliance bij verwerking van medische hartslagdata."
