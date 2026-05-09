@@ -3,6 +3,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+from shadowseed.cli import build_parser
+
 
 def test_cli_prepare(tmp_path):
     result = subprocess.run(
@@ -55,6 +57,21 @@ def test_cli_absencebench_smoke(tmp_path):
         text=True,
     )
     assert result.returncode == 0
+
+
+def test_cli_fetch_open_set_hf_batch_parser() -> None:
+    args = build_parser().parse_args(
+        [
+            "fetch-open-set-hf-batch",
+            "--source-id",
+            "ag_news_test",
+            "--limit",
+            "8",
+        ]
+    )
+    assert args.command == "fetch-open-set-hf-batch"
+    assert args.source_id == "ag_news_test"
+    assert args.limit == 8
 
 
 def test_cli_open_set_review_summary(tmp_path):

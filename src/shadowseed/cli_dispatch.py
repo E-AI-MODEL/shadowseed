@@ -11,6 +11,7 @@ from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate_benchmark
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
+from shadowseed.benchmark.open_set_hf import fetch_open_set_hf_batch
 from shadowseed.benchmark.open_set_review_summary import summarize_open_set_seed_review
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
 from shadowseed.benchmark.result_writer import ResultWriter
@@ -89,6 +90,18 @@ def _run_blind_benchmark(args: argparse.Namespace) -> str:
     )
 
 
+def _fetch_open_set_hf_batch(args: argparse.Namespace) -> str:
+    return str(
+        fetch_open_set_hf_batch(
+            args.output,
+            source_id=args.source_id,
+            registry_path=args.registry,
+            limit=args.limit,
+            offset=args.offset,
+        )
+    )
+
+
 def _run_open_set_seed_review(args: argparse.Namespace) -> str:
     return run_open_set_seed_review(
         args.input,
@@ -160,6 +173,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "run-benefit-suite": _run_benefit_suite,
     "run-model-benefit-suite": _run_model_benefit_suite,
     "run-blind-benchmark": _run_blind_benchmark,
+    "fetch-open-set-hf-batch": _fetch_open_set_hf_batch,
     "run-open-set-seed-review": _run_open_set_seed_review,
     "summarize-open-set-seed-review": _summarize_open_set_seed_review,
     "run-adversarial-gate-benchmark": _run_adversarial_gate_benchmark,
