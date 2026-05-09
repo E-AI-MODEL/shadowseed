@@ -80,7 +80,7 @@ def test_cli_open_set_defaults() -> None:
 
     summary_args = build_parser().parse_args(["summarize-open-set-seed-review"])
     assert summary_args.input == "results/open_review/open_set_review_packets.json"
-    assert summary_args.output == "results/open_review/open_set_review_summary.json"
+    assert summary_args.output == "results/open_review/open_set_seed_review_summary.json"
     assert summary_args.disagreements_output == "results/open_review/open_set_disagreements.json"
     assert summary_args.report_output == "results/open_review/open_set_review_report.md"
 
