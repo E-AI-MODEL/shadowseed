@@ -19,6 +19,7 @@ from typing import Any
 import numpy as np
 
 from shadowseed.benchmark.ssl45_gap_suite import detect_candidate_seeds
+from shadowseed.hash_utils import stable_bucket_index
 from shadowseed.manager import SSLManager
 
 
@@ -169,7 +170,7 @@ def detect_embedding(text: str) -> np.ndarray:
     dims = 128
     vector = np.zeros(dims, dtype=float)
     for token in text.lower().split():
-        vector[hash(token) % dims] += 1.0
+        vector[stable_bucket_index(token, dims)] += 1.0
     norm = np.linalg.norm(vector)
     if norm == 0:
         return vector
