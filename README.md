@@ -5,7 +5,7 @@
 ![Status](https://img.shields.io/badge/status-research%20prototype-orange)
 ![Cost](https://img.shields.io/badge/run-free-brightgreen)
 
-**Shadow Seed Learning (SSL) 4.5** is een research prototype voor het herkennen van kleine structurele afwezigheden in antwoorden. Zo'n afwezigheid wordt opgeslagen als een gewichtloze seed. Pas na validatie mag zo'n seed invloed krijgen op vervolgvragen, retrieval of falsificatie.
+**Shadow Seed Learning (SSL) 4.5** --> 4.6,is een research prototype voor het herkennen van kleine structurele afwezigheden in antwoorden. Zo'n afwezigheid wordt opgeslagen als een gewichtloze seed. Pas na validatie mag zo'n seed invloed krijgen op vervolgvragen, retrieval of falsificatie.
 
 > Een seed bevat precies één gap.
 
