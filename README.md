@@ -36,15 +36,17 @@ docs/ARCHITECTURE_MAP.md
 docs/research/current-status.md
 docs/research/scenario-independence-roadmap.md
 docs/research/evaluation-matrix.md
+docs/research/next-phase-implementation.md
 ```
 
-Die vijf documenten samen beantwoorden:
+Die zes documenten samen beantwoorden:
 
 - wat SSL inhoudelijk wil zijn;
 - wat de repo vandaag werkelijk draait;
 - wat de huidige standaardruns echt aantonen;
 - welke claims nog te groot zouden zijn;
-- hoe de repo inhoudelijk naar sterker bewijs moet migreren.
+- hoe de repo inhoudelijk naar sterker bewijs moet migreren;
+- welke concrete uitvoervolgorde nu de hoogste hefboom heeft.
 
 Voor de bredere documentatiekaart:
 
@@ -189,13 +191,18 @@ Belangrijk: `trace` en `weight` zijn gescheiden. Een seed kan zichtbaar zijn en 
 ```text
 src/shadowseed/manager.py                         # SSLManager: trace, weight, Validation Gate
 src/shadowseed/benchmark/                         # alle benchmarkrunners
+src/shadowseed/evaluation/README.md              # doelstructuur voor volgende bewijs-lagen
 tests/                                            # regressie- en benchmarktests
 src/shadowseed/data/                              # publieke testdata en sample-corpora
+benchmarks/open_review/README.md                  # geplande open-set artifacts en datasets
+benchmarks/adversarial/README.md                  # geplande Gate-comparison datasets
+benchmarks/transfer/README.md                     # geplande domeintransfer-holdouts
 docs/00_shadow_seed_learning_4_6.md              # canonieke bron voor theorie en doelbeeld
 docs/ARCHITECTURE_MAP.md                          # repo-overzicht
 docs/research/current-status.md                   # wat staat er vandaag echt?
 docs/research/scenario-independence-roadmap.md    # route naar sterker bewijs
 docs/research/evaluation-matrix.md                # welke laag draagt welke claim?
+docs/research/next-phase-implementation.md        # concrete uitvoervolgorde vanaf de huidige harness
 docs/wiki/Benchmarks.md                           # benchmarkuitleg
 docs/CLI_COMMAND_MAP.md                           # indeling van commands en hun status
 .github/workflows/tests.yml                       # standaard CI
@@ -234,6 +241,7 @@ Lees verder in:
 - `docs/research/scenario-independence-roadmap.md`
 - `docs/research/evaluation-matrix.md`
 - `docs/research/open-set-adversarial-plan.md`
+- `docs/research/next-phase-implementation.md`
 - `docs/wiki/Home.md`
 - `docs/wiki/Benchmarks.md`
 - `docs/wiki/Blind-Benchmark.md`
