@@ -324,6 +324,21 @@ jobs:
         with:
           path: downloaded-artifacts
 
+      - name: Voeg open-set summary toe aan artifact-bundel indien aanwezig
+        run: |
+          # De open-set HF workflow is een aparte workflow_dispatch-run.
+          # Als die eerder een summary heeft gecommit, staat die nu in de
+          # checkout. Kopieer hem naar downloaded-artifacts zodat
+          # artifact_snapshot hem meeneemt. Dit is passthrough, geen generate.
+          summary="results/open_review/open_set_seed_review_summary.json"
+          if [ -f "$summary" ]; then
+            mkdir -p downloaded-artifacts/open-set-passthrough
+            cp "$summary" downloaded-artifacts/open-set-passthrough/
+            echo "open-set summary toegevoegd aan bundel."
+          else
+            echo "Geen open-set summary gevonden — open-set metrics blijven n/a."
+          fi
+
       - name: Bouw provenance-veilige results-map uit artifacts
         run: |
           set -euo pipefail
