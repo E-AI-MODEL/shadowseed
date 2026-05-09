@@ -21,6 +21,13 @@ from shadowseed.benchmark.ssl45_gap_suite import (
 from shadowseed.manager import SSLManager, SeedStatus
 
 
+UNSUPPORTED_ADDITION_PENALTY_WEIGHT = 1.0
+
+
+def word_count(text: str) -> int:
+    return len(re.findall(r"[A-Za-zÀ-ÿ0-9_]+", text))
+
+
 def answer_fragments(answer: str) -> list[str]:
     """Split an answer into short fragments for local gap matching."""
     fragments = [
@@ -55,6 +62,20 @@ def coverage(answer: str, expected_additions: list[str]) -> tuple[float, list[st
     return len(covered) / len(expected_additions), covered
 
 
+def coverage_delta_per_100_added_words(coverage_delta: float, answer_length_delta_words: int | float) -> float:
+    if answer_length_delta_words > 0:
+        return coverage_delta / answer_length_delta_words * 100
+    return coverage_delta
+
+
+def penalized_coverage_delta(
+    coverage_delta: float,
+    unsupported_addition_rate: float,
+    penalty_weight: float = UNSUPPORTED_ADDITION_PENALTY_WEIGHT,
+) -> float:
+    return coverage_delta - (unsupported_addition_rate * penalty_weight)
+
+
 def build_ssl_revision(baseline_answer: str, promoted_seeds: list[str]) -> str:
     if not promoted_seeds:
         return baseline_answer
@@ -68,6 +89,7 @@ def run_ssl45_benefit_suite(input_path: str, output_path: str, turns: int = 3) -
 
     baseline_coverages: list[float] = []
     ssl_coverages: list[float] = []
+    length_deltas: list[int] = []
     unsupported_additions_total = 0
     promoted_total = 0
 
@@ -124,9 +146,15 @@ def run_ssl45_benefit_suite(input_path: str, output_path: str, turns: int = 3) -
         ssl_answer = build_ssl_revision(baseline_answer, promoted_seeds)
         baseline_cov, baseline_covered = coverage(baseline_answer, expected_additions)
         ssl_cov, ssl_covered = coverage(ssl_answer, expected_additions)
+        coverage_delta = ssl_cov - baseline_cov
+        baseline_words = word_count(baseline_answer)
+        ssl_words = word_count(ssl_answer)
+        length_delta = ssl_words - baseline_words
+        unsupported_rate = len(unsupported_additions) / len(promoted_seeds) if promoted_seeds else 0.0
 
         baseline_coverages.append(baseline_cov)
         ssl_coverages.append(ssl_cov)
+        length_deltas.append(length_delta)
         unsupported_additions_total += len(unsupported_additions)
         promoted_total += len(promoted_seeds)
 
@@ -137,7 +165,14 @@ def run_ssl45_benefit_suite(input_path: str, output_path: str, turns: int = 3) -
                 "domain": scenario["domain"],
                 "baseline_gap_coverage": baseline_cov,
                 "ssl_gap_coverage": ssl_cov,
-                "coverage_delta": ssl_cov - baseline_cov,
+                "coverage_delta": coverage_delta,
+                "coverage_delta_raw": coverage_delta,
+                "baseline_word_count": baseline_words,
+                "ssl_word_count": ssl_words,
+                "answer_length_delta_words": length_delta,
+                "coverage_delta_per_100_added_words": coverage_delta_per_100_added_words(coverage_delta, length_delta),
+                "unsupported_ssl_addition_rate": unsupported_rate,
+                "penalized_coverage_delta": penalized_coverage_delta(coverage_delta, unsupported_rate),
                 "baseline_covered": baseline_covered,
                 "ssl_covered": ssl_covered,
                 "promoted_seeds": promoted_seeds,
@@ -150,16 +185,27 @@ def run_ssl45_benefit_suite(input_path: str, output_path: str, turns: int = 3) -
 
     baseline_mean = sum(baseline_coverages) / len(baseline_coverages)
     ssl_mean = sum(ssl_coverages) / len(ssl_coverages)
+    coverage_delta = ssl_mean - baseline_mean
+    mean_length_delta = sum(length_deltas) / len(length_deltas)
+    unsupported_rate = unsupported_additions_total / promoted_total if promoted_total else 0.0
     summary = {
         "suite_version": suite.get("version"),
         "scenario_count": len(suite["scenarios"]),
         "baseline_mean_gap_coverage": baseline_mean,
         "ssl_mean_gap_coverage": ssl_mean,
-        "coverage_delta": ssl_mean - baseline_mean,
+        "coverage_delta": coverage_delta,
+        "coverage_delta_raw": coverage_delta,
+        "mean_answer_length_delta_words": mean_length_delta,
+        "coverage_delta_per_100_added_words": coverage_delta_per_100_added_words(coverage_delta, mean_length_delta),
+        "unsupported_penalty_weight": UNSUPPORTED_ADDITION_PENALTY_WEIGHT,
+        "penalized_coverage_delta": penalized_coverage_delta(coverage_delta, unsupported_rate),
         "promoted_seed_count": promoted_total,
         "unsupported_ssl_additions": unsupported_additions_total,
-        "unsupported_ssl_addition_rate": (
-            unsupported_additions_total / promoted_total if promoted_total else 0.0
+        "unsupported_ssl_addition_rate": unsupported_rate,
+        "interpretation": (
+            "Coverage delta is reported both raw and length-aware. "
+            "coverage_delta_per_100_added_words should be read when SSL answers are longer, "
+            "and penalized_coverage_delta subtracts unsupported additions from the raw gain."
         ),
     }
 
