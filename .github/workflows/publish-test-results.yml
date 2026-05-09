@@ -96,13 +96,18 @@ jobs:
           cat > results/latest/README.md <<'MD'
           # Latest test artifacts
 
-          Deze map is tijdens de publish-workflow opgebouwd uit de meest recente geslaagde standaardrun `Checks en benchmark-resultaten`.
+          Deze map is opgebouwd uit de meest recente geslaagde standaardrun `Checks en benchmark-resultaten`.
 
-          De map bevat een platte kopie van de belangrijkste JSON-, Markdown- en SVG-bestanden uit de test-artifacts. Gebruik `manifest.json` om te zien uit welk artifact elk bestand komt.
+          Wat je hier ziet:
 
-          Bij dubbele bestandsnamen krijgt het latere bestand een prefix met de artifactnaam. De originele artifactstructuur blijft behouden in `results/artifacts/`.
+          - regressie-uitvoer
+          - smoke-uitvoer
+          - kleine benchmarkuitvoer
+          - aanvullende evidencelagen voor adversarial Gate en probe utility
 
-          Deze snapshot wordt gepubliceerd via Wiki en Pages en niet teruggecommit naar `main`.
+          Gebruik `manifest.json` om te zien uit welk artifact elk bestand komt.
+          De originele artifactstructuur blijft zichtbaar in `results/artifacts/`.
+          Deze snapshot wordt gepubliceerd via Wiki en Pages en niet teruggeschreven naar `main`.
           MD
 
       - name: Maak centraal analyserapport
@@ -188,7 +193,23 @@ jobs:
 
           Deze pagina wordt automatisch bijgewerkt na een geslaagde standaardrun op `main`.
 
-          Belangrijkste bestanden:
+          ## Wat bekijk je nu?
+
+          Dit is de laatste publieke snapshot van:
+
+          - regressietests
+          - technische en methodologische smoke-tests
+          - kleine benchmarklagen
+          - aanvullende evidencelagen voor adversarial Gate en probe utility
+
+          ## Leesvolgorde
+
+          1. `SSL 4.5 Analysis` voor de korte samenvatting
+          2. `results/latest/summary.json` voor machineleesbare kerncijfers
+          3. `results/latest/manifest.json` om herkomst van bestanden te controleren
+          4. `results/artifacts/` voor de originele artifactstructuur
+
+          ## Belangrijke links
 
           - [SSL 4.5 Analysis](SSL-45-Analysis)
           - [SSL 4.5 Analysis Summary JSON](SSL-45-Analysis-Summary)
@@ -196,9 +217,11 @@ jobs:
           - `results/latest/`
           - `results/artifacts/`
 
-          `results/latest/manifest.json` laat zien uit welk artifact elk gepubliceerd bestand komt. De `results/artifacts/` map bewaart de originele artifactstructuur.
+          ## Wat dit wel en niet betekent
 
-          Deze publicatie werkt via Wiki en Pages. De workflow commit geen resultatensnapshot terug naar `main`.
+          Deze pagina laat zien hoe de huidige standaardpublicatie eruitziet.
+          Ze laat niet automatisch zien dat het hele SSL-programma al volledig gevalideerd is.
+          Lees aanvullende evidencelagen dus als extra inhoudelijk signaal, niet als volledige eindclaim.
           MD
           cd wiki
           git config user.name "github-actions[bot]"
