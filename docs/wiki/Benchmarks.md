@@ -2,50 +2,104 @@
 
 Niet elke suite draagt dezelfde bewijslast. Dat is de hoofdregel.
 
-## Snelle indeling
+## De vier bewijsblokken
 
-| Laag | Doel | Voorbeelden |
-|---|---|---|
-| standaard regressie en smoke | mechaniek heel houden | Gap Finder, false-positive, benefit, model smoke, blind smoke |
-| handmatige research | sterkere bewijssoorten bouwen | open-set review, adversarial Gate, probe utility |
-| extra technische checks | backend en veiligheidscontroles | retrieval, vectorstore, SSOT, full sweep |
+### 1. Interne logica
+
+Vraag:
+
+- werkt de mechaniek nog?
+- blijft de Gate gedisciplineerd?
+- gaat de meetketen niet stuk?
+
+Voorbeelden:
+
+- gap suite
+- false-positive suite
+- blind smoke
+- adversarial Gate
+- SSOT falsification
+
+### 2. Open-set seedkwaliteit
+
+Vraag:
+
+- kan SSL op onbekende teksten bruikbare seeds maken zonder vaste seedlijst?
+
+Voorbeelden:
+
+- HF intake
+- open-set review
+- review-packets
+- agreement en disagreements
+
+### 3. Output-effect
+
+Vraag:
+
+- wordt output echt beter, completer of bruikbaarder?
+
+Voorbeelden:
+
+- benefit suite
+- model benefit
+- probe utility
+- unsupported additions
+
+### 4. Robustheid over configuraties
+
+Vraag:
+
+- blijft het effect overeind over meerdere modellen, modelgroottes en vectorbackends?
+
+Voorbeelden:
+
+- retrieval-model vergelijkingen
+- vectorstore backends
+- full validation sweep
+
+Kernregel:
+
+> een sterke stresstest van de interne logica is nog geen bewijs van effect op vrije output
 
 ## Standaard Actions-runs
 
-| Run | Vraag | Hoofdartifact | Type |
-|---|---|---|---|
-| 01 Codecheck | Werkt de Python-code? | geen JSON | regressie |
-| 02 Gap Finder | Vindt SSL bekende ontbrekende punten? | `ssl45_gap_suite.json` | regressie / kleine benchmark |
-| 03 Rustig blijven | Laat SSL volledige antwoorden met rust? | `ssl45_false_positive_suite.json` | regressie |
-| 04 Antwoordwinst | Wordt een antwoord completer met SSL? | `ssl45_benefit_suite.json` | kleine benchmark |
-| 05 Model smoke | Werkt de modelroute technisch? | `ssl45_model_benefit_suite.json` | technische smoke |
-| 06 Blind test | Blijven labels verborgen tot scoring? | `blind_benchmark.json` | methodologische smoke |
-| 07 Rapport | Hoe zien de resultaten er samen uit? | `analysis_report.md`, `summary.json` | rapportage |
-| 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `absencebench_smoke.json` | technische smoke |
-| 09 Herhalingstest | Wat gebeurt er bij meer rondes? | `ssl45_gap_suite_turns_*.json` | gevoeligheid |
+| Run | Hoofdvraag | Type |
+|---|---|---|
+| 01 Codecheck | Werkt de Python-code? | regressie |
+| 02 Gap Finder | Werkt de detectie op bekende gaps nog? | interne logica |
+| 03 Rustig blijven | Blijft de Gate onzin blokkeren? | interne logica |
+| 04 Antwoordwinst | Wordt een antwoord completer met SSL? | output-effect |
+| 05 Model smoke | Werkt de modelroute technisch? | technische smoke |
+| 06 Blind test | Blijven labels verborgen tot scoring? | interne logica |
+| 07 Rapport | Hoe zien de resultaten er samen uit? | rapportage |
+| 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | technische smoke |
+| 09 Herhalingstest | Blijft gedrag stabiel over meerdere rondes? | interne logica |
 
 ## Handmatige research-routes
 
-| Route | Artifact | Rol |
+| Route | Hoofdrol | Bewijsblok |
 |---|---|---|
-| open-set review | `open_set_seed_review.json`, review-packets | seedkwaliteit zonder vaste seedlijst |
-| adversarial Gate | `adversarial_gate_benchmark.json`, casebook | vergelijking met zwakkere promotieregels |
-| probe utility | `ssl45_probe_utility_suite.json` | scherpte van vervolgacties |
+| open-set review | seedkwaliteit zonder vaste seedlijst | open-set seedkwaliteit |
+| adversarial Gate | vergelijking met zwakkere promotieregels | interne logica |
+| probe utility | scherpte van vervolgacties | output-effect |
+| retrieval en full sweep | backend- en modelvergelijkingen | configuratierobustheid |
 
 ## Hoe je dit moet lezen
 
-### De standaardlaag zegt vooral
+### Als een interne logica-test sterk is
+
+Dan weet je vooral:
 
 - de mechaniek werkt nog
-- kleine benchmarksignalen zijn stabiel
-- rapportage en publicatie lopen mee
+- de Gate lijkt gedisciplineerd
+- de benchmarklaag is niet direct stuk
 
-### De standaardlaag zegt niet automatisch
+### Dan weet je nog niet automatisch
 
-- dat SSL sterk is in open-set situaties
-- dat de Gate breed robuust is
-- dat modelprestatie buiten de kleine suites bewezen is
-- dat menselijke reviewers seedkwaliteit breed onderschrijven
+- dat SSL op onbekende teksten goede seeds maakt
+- dat LLM-output breed beter wordt
+- dat het effect overeind blijft bij andere modellen of vectorbackends
 
 ## Belangrijke aanvullende pagina's
 
@@ -53,3 +107,4 @@ Niet elke suite draagt dezelfde bewijslast. Dat is de hoofdregel.
 - [Blind Benchmark](Blind-Benchmark)
 - [Latest Test Results](Latest-Test-Results)
 - [SSL 4.5 Analysis](SSL-45-Analysis)
+- [Full Validation Sweep](Full-Validation-Sweep)
