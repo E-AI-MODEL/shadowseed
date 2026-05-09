@@ -122,6 +122,28 @@ def build_parser() -> argparse.ArgumentParser:
     blind.add_argument("--turns", type=int, default=3)
     blind.add_argument("--max-seeds", type=int, default=5)
 
+    open_set_hf = subparsers.add_parser(
+        "fetch-open-set-hf-batch",
+        help="[manual] haal een kleine HF-batch op voor open-set seed review",
+    )
+    open_set_hf.add_argument(
+        "--source-id",
+        default="ag_news_test",
+        help="Bron-id uit de open-set HF source registry.",
+    )
+    open_set_hf.add_argument(
+        "--registry",
+        default="src/shadowseed/data/open_set_hf_sources.json",
+        help="JSON-bestand met brondefinities voor HF open-set intake.",
+    )
+    open_set_hf.add_argument(
+        "--output",
+        default="benchmarks/open_review/input/hf_ag_news_test_batch.json",
+        help="Waar de genormaliseerde open-set batch wordt opgeslagen.",
+    )
+    open_set_hf.add_argument("--limit", type=int, default=12)
+    open_set_hf.add_argument("--offset", type=int, default=0)
+
     open_set = subparsers.add_parser(
         "run-open-set-seed-review",
         help="[manual] open-set scaffold met review-packets",
