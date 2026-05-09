@@ -135,36 +135,58 @@ def build_conclusion(
     )
     backend = str(metric(model_benefit_payload, "backend", "unknown"))
     is_real_model = backend.startswith("hf-transformers:")
+    has_open_set = bool(open_set_payload)
+    has_adversarial = bool(adversarial_payload)
 
-    if not model_benefit_payload:
+    if has_open_set and has_adversarial:
+        headline = "De standaardpublicatie laat nu meer zien dan alleen regressie en smoke-tests."
+        verdict = "supplemented_standard_publication"
+        body = (
+            "Naast de stabiele basislaag bevat deze publicatie nu ook aanvullende evidencelagen voor open-set seedkwaliteit "
+            "en adversarial Gate-gedrag. Dat maakt de repo inhoudelijk sterker en eerlijker, zonder al te doen alsof "
+            "het hele SSL-programma volledig gevalideerd is."
+        )
+    elif has_adversarial:
+        headline = "De standaardpublicatie combineert de basislaag nu met een zichtbare adversarial Gate-laag."
+        verdict = "supplemented_with_adversarial"
+        body = (
+            "De repo laat niet alleen zien dat de meetketen werkt, maar ook of de huidige Gate misleidende lure-seeds beter blokkeert "
+            "dan zwakkere regels. Dat is aanvullend bewijs, geen volledige eindvalidatie."
+        )
+    elif has_open_set:
+        headline = "De standaardpublicatie combineert de basislaag nu met een zichtbare open-set reviewlaag."
+        verdict = "supplemented_with_open_set"
+        body = (
+            "De repo laat niet alleen vaste scenario-uitkomsten zien, maar ook of open-set seeds reviewbaar overeind blijven. "
+            "Dat is inhoudelijk sterker dan alleen kleine suites, maar nog geen volledige eindvalidatie."
+        )
+    elif not model_benefit_payload:
         headline = "Nog geen model-benefit conclusie beschikbaar."
         verdict = "incomplete"
         body = (
             "Er is nog geen model-benefit output gevonden. Draai eerst `shadowseed run-model-benefit-suite` "
-            "of de handmatige SLM-workflow."
+            "of een handmatige modelroute."
         )
     elif model_delta > 0 and unsupported_rate == 0.0:
         if is_real_model:
-            headline = "SSL verbetert in deze SLM-run de gemeten gap coverage zonder unsupported additions."
+            headline = "SSL verbetert in deze modelrun de gemeten gap coverage zonder unsupported additions."
             verdict = "positive_slm_run"
             body = (
-                "Binnen deze kleine suite presteert hetzelfde SLM beter met SSL-guided rewrite dan zonder SSL. "
-                "De verbetering zit in extra dekking van gevalideerde gaps, niet in een ander model. "
-                "Dit is positief bewijs voor deze run, maar nog geen algemene claim buiten de geteste scenario's."
+                "Binnen deze kleine suite presteert hetzelfde model beter met SSL-guided rewrite dan zonder SSL. "
+                "Dit is positief bewijs voor deze run, maar geen brede claim buiten de geteste scenario's."
             )
         else:
             headline = "De fixture-run bevestigt dat de model-benefit harness werkt."
             verdict = "positive_fixture_smoke"
             body = (
                 "De fixture-backend laat zien dat de meetketen werkt: baseline coverage stijgt na SSL-guided rewrite "
-                "zonder unsupported additions. Dit is een technische smoke-test, geen echte SLM-claim."
+                "zonder unsupported additions. Dit blijft een technische smoke-test."
             )
     elif model_delta > 0 and unsupported_rate > 0.0:
         headline = "SSL verhoogt gap coverage, maar introduceert ook unsupported additions."
         verdict = "mixed"
         body = (
-            "De run laat verbetering zien, maar niet schoon genoeg. De volgende stap is analyseren welke seeds of revisies "
-            "unsupported claims veroorzaken."
+            "De run laat verbetering zien, maar niet schoon genoeg. De volgende stap is analyseren welke seeds of revisies unsupported claims veroorzaken."
         )
     else:
         headline = "Er is in deze run geen meetbare modelverbetering door SSL gevonden."
@@ -187,7 +209,7 @@ def build_conclusion(
     else:
         support.append("Er zijn promoted false positives gevonden; conclusies moeten worden beperkt.")
 
-    if open_set_payload:
+    if has_open_set:
         if open_set_seed_acceptance_rate > 0.0 and open_set_unanimous_verdict_rate > 0.0:
             support.append(
                 "De open-set review laat zien dat een deel van de seeds door reviewers wordt geaccepteerd, met expliciete agreement-metrieken voor consensuscontrole."
@@ -201,7 +223,7 @@ def build_conclusion(
                 "De open-set review is aanwezig, maar laat nog geen overtuigende geaccepteerde seeds zien."
             )
 
-    if adversarial_payload:
+    if has_adversarial:
         if adversarial_gate_fp == 0.0 and adversarial_delta > 0:
             support.append("De adversarial Gate-laag laat zien dat de huidige Gate lure-promoties blokkeert die trace-only nog zou doorlaten.")
         elif adversarial_trace_fp > adversarial_gate_fp:
@@ -250,8 +272,8 @@ def build_conclusion(
         },
         "supporting_observations": support,
         "claim_boundary": (
-            "Deze conclusie geldt alleen voor de huidige suite, het gebruikte model en de vastgelegde prompts. "
-            "Voor een algemene claim zijn meer scenario's, meerdere modellen, sterkere adversarial evaluatie en blind review nodig."
+            "Deze conclusie geldt alleen voor de huidige publicatievorm: regressie, smoke, kleine benchmarks en eventuele aanvullende evidencelagen. "
+            "Voor een brede algemene claim zijn meer scenario's, meerdere modellen, sterkere open-set review, transfer en bredere menselijke beoordeling nodig."
         ),
     }
 
@@ -328,6 +350,17 @@ def make_markdown_report(
         "Deze analyse is automatisch gemaakt uit benchmark-JSON artifacts.",
         "",
         f"Publicatiemodus: **{publish_mode}**.",
+        "",
+        "## Wat bekijk je nu?",
+        "",
+        "Deze publicatie combineert, voor zover aanwezig:",
+        "",
+        "- regressie-uitvoer",
+        "- technische en methodologische smoke-tests",
+        "- kleine benchmarklagen",
+        "- aanvullende evidencelagen zoals open-set review, adversarial Gate en probe utility",
+        "",
+        "Lees aanvullende evidencelagen als extra inhoudelijk signaal, niet als volledige eindvalidatie.",
         "",
         "## Conclusie",
         "",
@@ -454,7 +487,7 @@ def make_markdown_report(
                 f"| Gate reductie vs trace-only | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_only'))} |",
                 f"| Gate reductie vs trace zonder contradictiecheck | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_without_contradiction'))} |",
                 "",
-                "Deze laag blijft een deterministische scaffold, maar laat nu expliciet zien hoeveel lure-promoties de Gate voorkomt ten opzichte van zwakkere regels.",
+                "Deze laag laat zien hoeveel lure-promoties de Gate voorkomt ten opzichte van zwakkere regels.",
             ]
         )
 
@@ -488,22 +521,19 @@ def make_markdown_report(
         [
             "## Interpretatie",
             "",
-            "Deze analyse scheidt vijf dingen:",
+            "Lees deze analyse in lagen:",
             "",
-            "1. of SSL de juiste gaps vindt;",
-            "2. of SSL geen false positives promoot;",
-            "3. of SSL-guided antwoorden meer gevalideerde gap coverage krijgen dan baseline-antwoorden;",
-            "4. of de blinde smoke-test labels gescheiden houdt van detectie;",
-            "5. of herhaalde rondes het gedrag veranderen.",
-            "",
-            "Een positief resultaat betekent dus niet automatisch dat SSL algemeen werkt. Het betekent dat de gemeten suite beter scoort onder de vastgelegde voorwaarden.",
+            "1. werkt de basis nog;",
+            "2. zie je winst op kleine benchmarks;",
+            "3. zie je aanvullende evidencelagen buiten alleen smoke en scenario-suites;",
+            "4. blijft de claimgrens expliciet genoeg."
         ]
     )
     if probe_payload:
         lines.extend(
             [
                 "",
-                "De probe-utility laag is optioneel. Als die aanwezig is, laat een positieve delta alleen zien dat seed-geleide vervolgacties scherper zijn dan brede baselines binnen deze lokale scaffold.",
+                "De probe-utility laag is aanvullend bewijs. Een positieve delta betekent hier alleen dat seed-geleide vervolgacties scherper zijn dan brede baselines binnen deze lokale scaffold.",
             ]
         )
     return "\n".join(lines) + "\n"
