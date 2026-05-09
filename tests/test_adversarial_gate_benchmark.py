@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from shadowseed.analysis.ssl45_result_analyzer import analyze_results
 from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate_benchmark
 
 
@@ -39,3 +40,43 @@ def test_adversarial_gate_benchmark_blocks_lures_and_writes_casebook(tmp_path: P
     assert "Adversarial Gate Casebook" in casebook_text
     assert "Trace-only promoted" in casebook_text
     assert "Gate reductie vs trace-only" in casebook_text
+
+
+def test_analyze_results_includes_adversarial_gate_metrics(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    output_dir = tmp_path / "analysis"
+    results_dir.mkdir()
+
+    adversarial_payload = {
+        "summary": {
+            "scenario_count": 2,
+            "candidate_count": 4,
+            "current_gate_false_promotion_rate": 0.0,
+            "trace_only_false_promotion_rate": 0.5,
+            "trace_without_contradiction_false_promotion_rate": 0.25,
+            "gate_relative_reduction_vs_trace_only": 1.0,
+            "gate_relative_reduction_vs_trace_without_contradiction": 1.0,
+            "gate_vs_trace_only_delta": 2,
+        },
+        "baseline_summaries": {
+            "current_gate": {"promoted_count": 0, "false_promotion_rate": 0.0},
+            "trace_only": {"promoted_count": 2, "false_promotion_rate": 0.5},
+            "trace_without_contradiction": {"promoted_count": 1, "false_promotion_rate": 0.25},
+        },
+        "false_positive_log": [],
+        "results": [],
+    }
+    (results_dir / "adversarial_gate_benchmark.json").write_text(
+        json.dumps(adversarial_payload, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    report_path = analyze_results(str(results_dir), str(output_dir))
+    report_text = report_path.read_text(encoding="utf-8")
+    summary_payload = json.loads((output_dir / "analysis_summary.json").read_text(encoding="utf-8"))
+
+    assert summary_payload["adversarial_gate"]["current_gate_false_promotion_rate"] == 0.0
+    assert summary_payload["conclusion"]["metrics"]["adversarial_trace_only_false_promotion_rate"] == 0.5
+    assert "Adversarial Gate current FP rate" in report_text
+    assert "Gate reductie vs trace-only" in report_text
+    assert "De adversarial Gate-laag laat zien" in report_text
