@@ -1,285 +1,99 @@
 # Benchmarks
 
-De repo gebruikt meerdere suites. Elke suite test een andere vraag.
+Deze pagina legt in gewone taal uit welke soorten tests de repo gebruikt.
 
-Belangrijk: niet elke suite draagt dezelfde bewijslast. De huidige vaste scenario-suites zijn vooral regressie- en kleine benchmarklagen. De algemene SSL-claim moet op termijn sterker leunen op open-set, adversarial en gedragsvalidatie.
+Belangrijk:
 
-## Overzicht in gewone taal
+> niet elke test draagt dezelfde bewijslast.
 
-| Naam in Actions | Vraag | CLI | Artifact | Bewijssoort |
-|---|---|---|---|---|
-| 01 Codecheck | Werkt de Python-code? | `pytest` | geen JSON | regressie |
-| 02 Gap Finder | Vindt SSL bekende ontbrekende punten in de regressiesuite? | `shadowseed run-gap-suite` | `ssl45_gap_suite.json` | kleine benchmark / regressie |
-| 03 Rustig blijven | Laat SSL volledige antwoorden met rust? | `shadowseed run-false-positive-suite` | `ssl45_false_positive_suite.json` | regressie / beperkte ruiscontrole |
-| 04 Antwoordwinst | Wordt een antwoord completer door SSL-seeds? | `shadowseed run-benefit-suite` | `ssl45_benefit_suite.json` | kleine benchmark |
-| 05 Model smoke | Werkt dezelfde modelroute met en zonder SSL? | `shadowseed run-model-benefit-suite` | `ssl45_model_benefit_suite.json` | technische smoke |
-| 06 Blind test | Ziet de detector de labels niet vooraf? | `shadowseed run-blind-benchmark` | `blind_benchmark.json` | methodologische smoke |
-| 07 Rapport | Hoe zien de resultaten er samen uit? | `shadowseed analyze-results` | `analysis_report.md`, `summary.json` | rapportage |
-| 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `shadowseed run-absencebench-smoke` | `absencebench_smoke.json` | technische smoke |
-| 09 Herhalingstest | Wat gebeurt er bij meer rondes? | `shadowseed run-gap-suite --turns N` | `ssl45_gap_suite_turns_*.json` | gevoeligheid / regressie |
-| handmatig | Kan SSL open-set seeds produceren zonder vaste seedlijst? | `shadowseed run-open-set-seed-review` | `open_set_seed_review.json`, review-packets | open-set scaffold |
-| handmatig | Blokkeert de huidige Gate meer misleidende lure-seeds dan zwakkere promotieregels? | `shadowseed run-adversarial-gate-benchmark` | `adversarial_gate_benchmark.json`, casebook | adversarial scaffold |
-| handmatig | Levert SSL scherpere vervolgprobes op dan brede baseline-probes? | `shadowseed run-probe-utility-benchmark` | `ssl45_probe_utility_suite.json` | gedragsmatige scaffold |
+Sommige tests bewaken vooral de mechaniek. Andere tests geven een eerste inhoudelijke indicatie. Weer andere tests zijn aanvullende evidencelagen die iets laten zien buiten de kleinste basislaag.
 
-## Command-audit in het kort
+## Overzicht
 
-De CLI gebruikt nu drie commandolagen:
+| Naam in Actions | Vraag | Artifact | Bewijssoort |
+|---|---|---|---|
+| 01 Codecheck | Werkt de Python-code? | geen JSON | regressie |
+| 02 Gap Finder | Vindt SSL bekende ontbrekende punten? | `ssl45_gap_suite.json` | kleine benchmark |
+| 03 Rustig blijven | Laat SSL volledige antwoorden met rust? | `ssl45_false_positive_suite.json` | regressie / beperkte ruiscontrole |
+| 04 Antwoordwinst | Wordt een antwoord completer door SSL? | `ssl45_benefit_suite.json` | kleine benchmark |
+| 05 Model smoke | Werkt dezelfde modelroute technisch? | `ssl45_model_benefit_suite.json` | technische smoke |
+| 06 Blind test | Blijven labels verborgen tot scoring? | `blind_benchmark.json` | methodologische smoke |
+| 06b Adversarial Gate | Blokkeert de Gate misleidende lure-seeds? | `adversarial_gate_benchmark.json`, casebook | aanvullende evidencelaag |
+| 06c Probe utility | Helpen promoted seeds bij scherpere vervolgacties? | `ssl45_probe_utility_suite.json` | aanvullende evidencelaag |
+| 07 Rapport | Hoe zien de resultaten er samen uit? | `analysis_report.md`, `summary.json` | rapportage |
+| 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | `absencebench_smoke.json` | technische smoke |
+| 09 Herhalingstest | Wat gebeurt er bij meer rondes? | `ssl45_gap_suite_turns_*.json` | gevoeligheid / regressie |
+| handmatig | Kan SSL onbekende teksten reviewbaar samenvatten zonder vaste seedlijst? | open-set review artifacts | aanvullende evidencelaag |
 
-- standaard regressie- en smoke-routes;
-- handmatige research-routes;
-- AbsenceBench-utility routes.
+## Wat betekent elke bewijssoort?
 
-De canonieke AbsenceBench-commands zijn nu:
+### Regressie
 
-- `shadowseed prepare-absencebench-bundle`
-- `shadowseed fetch-absencebench-sample`
-- `shadowseed run-absencebench-local`
-- `shadowseed run-absencebench-smoke`
+Een regressietest zegt vooral:
 
-Legacy aliases blijven voorlopig werken:
+- de basis werkt nog;
+- een refactor heeft de kern niet stukgemaakt.
 
-- `prepare-absencebench`
-- `fetch-absencebench`
-- `run-local-absencebench`
-- `run-nlp-smoke`
+### Technische smoke
 
-Zo wordt de naamgeving consistenter zonder bestaande scripts direct te breken.
+Een technische smoke-test zegt:
 
-## Regressie- en kleine benchmarklaag
+- een route werkt technisch;
+- maar de inhoudelijke claim blijft nog beperkt.
 
-Deze laag is vandaag het sterkst uitgewerkt en draait standaard in CI.
+### Methodologische smoke
 
-### Gap Finder
+Een methodologische smoke-test zegt:
 
-Data:
+- de meetmethode blijft eerlijk;
+- bijvoorbeeld doordat labels niet vooraf in de detectielaag terechtkomen.
 
-```text
-src/shadowseed/data/gap_test_suite_4_5.json
-```
+### Kleine benchmark
 
-Meet:
+Een kleine benchmark zegt:
 
-- scenario score;
-- atomische hits;
-- promoted hits;
-- promoted seeds.
+- er is meetbare winst of verlies op een kleine vaste set;
+- maar nog niet automatisch buiten die vaste set.
 
-Deze suite laat zien of SSL de ontworpen gaps in de kleine vaste suite vindt. Dat is waardevol als regressie en kleine benchmark, maar nog geen eindbewijs voor open-world prestatie.
+### Aanvullende evidencelaag
 
-### Rustig blijven
+Een aanvullende evidencelaag zegt:
 
-Data:
+- hier probeert de repo inhoudelijk verder te gaan dan alleen fixture- en scenario-smokes;
+- maar ook deze laag moet nog voorzichtig gelezen worden.
 
-```text
-src/shadowseed/data/gap_test_suite_false_positive_4_5.json
-```
+## Wat bezoekers het vaakst verkeerd lezen
 
-Meet:
+### "Model smoke" is geen grote modelclaim
 
-- candidate false positives;
-- promoted false positives;
-- false-positive rates;
-- Gate-vergelijking tegen zwakkere promotieregels op adversarial lure-candidates.
+De standaard CI draait `fixture` om de meetketen te testen.
+Dat is nuttig, maar geen brede claim over echte modelprestatie.
 
-Deze suite voorkomt dat SSL overal zomaar ontbrekende punten van maakt. De strengere variant laat nu ook zien of de huidige Gate beter blokkeert dan trace-only of lichtere regels.
+### Adversarial en probe utility zijn belangrijk, maar nog niet alles
 
-### Antwoordwinst
+Deze twee lagen staan nu bewust in de standaardpublicatie omdat ze publiek zichtbaar moeten zijn.
+Ze moeten nog steeds gelezen worden als aanvullende evidencelagen en niet als volledig eindbewijs.
 
-Data:
+### Open-set review is inhoudelijk belangrijker dan alleen meer scenario's
 
-```text
-src/shadowseed/data/ssl45_benefit_suite.json
-```
+Open-set review probeert te meten of SSL ook buiten een vaste seedlijst nog kleine, relevante en toetsbare seeds maakt.
+Dat is een sterkere richting dan alleen nog meer vaste suites toevoegen.
 
-Meet:
+## Hoe lees je de standaardpublicatie verstandig?
 
-- baseline gap coverage;
-- SSL gap coverage;
-- coverage delta;
-- unsupported additions.
+Lees in deze volgorde:
 
-Dit is fase 1-achtig gedrag binnen een kleine vaste benchmarkopzet. Er wordt nog geen volledig open modelgedrag bewezen.
+1. regressie en smoke: werkt de basis?
+2. kleine benchmarks: zie je winst op de vaste set?
+3. aanvullende evidencelagen: zie je extra bewijs buiten de kleinste basislaag?
+4. claimgrens: wat is nog niet bewezen?
 
-### Model smoke
+## Belangrijkste grens
 
-Data:
+De standaardpublicatie is vandaag bedoeld om drie dingen tegelijk zichtbaar te maken:
 
-```text
-src/shadowseed/data/ssl45_model_benefit_suite.json
-```
+- mechanische stabiliteit;
+- kleine benchmarksignalen;
+- eerste aanvullende bewijslagen.
 
-Meet hetzelfde model in twee condities:
-
-```text
-baseline
-SSL-guided rewrite
-```
-
-Backends:
-
-| Backend | Doel |
-|---|---|
-| `fixture` | snelle CI-smoke zonder modeldownload |
-| `hf-transformers` | echte lokale of handmatige SLM-run |
-
-De standaard CI gebruikt `fixture`. Dat bewijst de meetketen, niet de prestatie van een echt model.
-
-## Blind benchmarklaag
-
-### Blind test
-
-Data:
-
-```text
-src/shadowseed/data/blind_suite_public.json
-benchmarks/private/blind_suite_labels.json
-```
-
-Het publieke bestand bevat scenario's. Het private labelbestand bevat `expected_gaps` en `must_not_add` en wordt pas bij scoring gebruikt.
-
-De standaard CI maakt tijdelijke smoke-labels. Echte labels horen niet in de repo.
-
-Deze laag is belangrijk omdat ze methodologisch bewaakt dat detectie en scoring gescheiden blijven.
-
-## Open-set en adversarial laag
-
-### Open-set seed review
-
-Data:
-
-```text
-src/shadowseed/data/open_set_seed_review_sample.json
-```
-
-Output:
-
-- `open_set_seed_review.json`
-- `open_set_seed_review_packets.json`
-
-Deze runner doet nog geen volledige open-world validatie. Hij bouwt wel de eerste eerlijke structuur daarvoor:
-
-- seed-output zonder vaste ground-truth seedlijst;
-- normalisatie en atomiciteitsfiltering;
-- review-packets voor menselijke scoring op atomiciteit, relevantie, toetsbaarheid, niet-trivialiteit en follow-up utility.
-
-Dit is de eerste stap weg van alleen scenario-scores.
-
-### Adversarial Gate benchmark
-
-Data:
-
-```text
-src/shadowseed/data/adversarial_gate_benchmark.json
-```
-
-Output:
-
-- `adversarial_gate_benchmark.json`
-- `adversarial_gate_casebook.md`
-
-Deze runner trekt de Gate-stresstest los uit de bredere false-positive suite en maakt de baselinevergelijking zichtbaar:
-
-- `current_gate`
-- `trace_only`
-- `trace_without_contradiction_check`
-
-De suite bevat drie soorten negatieve gevallen:
-
-- complete antwoorden waarin de lure-seed al gedekt is;
-- stijlzwaktes die geen epistemische gap zijn;
-- verleidelijke maar irrelevante uitbreidingen.
-
-De JSON-samenvatting laat de deltas per baseline zien. De casebook maakt de concrete blokkades leesbaar per scenario en seed.
-
-### Probe utility
-
-Data:
-
-```text
-src/shadowseed/data/ssl45_probe_utility_suite.json
-```
-
-Output:
-
-- `ssl45_probe_utility_suite.json`
-
-Deze suite vergelijkt per scenario drie soorten vervolgacties:
-
-- socratische follow-up;
-- retrieval-query;
-- dialectische tegenvraag.
-
-Per laag vergelijkt de suite een brede baseline met een seed-geleide variant. De score beloont verwachte domeintermen en straft brede stopwoorden of vage termen. Een positieve delta betekent hier dus niet dat de vraag menselijk perfect is, maar wel dat de promoted seed concreter stuurt dan de baseline.
-
-De suite draait nog niet standaard in CI, maar als het resultaatbestand aanwezig is, neemt de analyzer deze laag wel mee in de samenvatting en rapportage.
-
-## Retrieval en SSOT-laag
-
-| Suite | Vraag | CLI |
-|---|---|---|
-| Retrieval check | Vindt de vectorstore de juiste bronstukken? | `shadowseed run-retrieval-benchmark` |
-| Retrieval modelcheck | Helpt opgehaalde SSOT-context het modelantwoord? | `shadowseed run-retrieval-model-benchmark` |
-| SSOT check | Werkt bronstatus en falsificatiebasis? | `shadowseed run-ssot-smoke` |
-| Vectorstore check | Werkt opslag en zoeken? | `shadowseed run-vectorstore-smoke` |
-
-Deze runs zijn nuttig voor diagnose en echte modelruns, maar niet elke run zit in de standaard CI.
-
-## Artifacts
-
-De standaard CI uploadt artifacts met leesbare namen:
-
-```text
-02-gap-finder-results
-03-false-positive-results
-04-answer-benefit-results
-05-model-smoke-results
-06-blind-benchmark-results
-07-analysis-report
-08-absencebench-smoke-results
-09-repeat-test-turns-*
-```
-
-De handmatige verdiepingslagen schrijven standaard naar:
-
-```text
-results/open_set_seed_review.json
-results/open_set_seed_review_packets.json
-results/adversarial_gate_benchmark.json
-results/adversarial_gate_casebook.md
-results/ssl45_probe_utility_suite.json
-```
-
-In `07 Rapport` worden de gedownloade artifacts eerst conflictveilig verzameld. De originele structuur blijft bewaard onder `results/artifacts/`, en `results/manifest.json` legt vast uit welk artifact elk analysebestand afkomstig is.
-
-Na een geslaagde push naar `main` verzamelt `Publiceer testresultaten naar Wiki en Pages` de standaard artifacts in een workflow-snapshot voor Wiki en Pages.
-
-Gebruik `results/latest/manifest.json` om te zien uit welk artifact elk gepubliceerd bestand komt.
-
-## Interpretatie
-
-Een sterke uitkomst vereist minimaal:
-
-- hogere gap coverage met SSL;
-- geen stijging in unsupported additions;
-- lage false-positive rate;
-- hetzelfde model in baseline en SSL-conditie;
-- labels gescheiden bij blinde tests;
-- geen conclusie alleen op basis van extra lengte.
-
-Een fixture-run is nuttig als technische controle. Een echte modelclaim vraagt om `hf-transformers`, meer scenario's en blind review.
-
-Voor de handmatige open-set, adversarial en probe-lagen geldt extra voorzichtigheid:
-
-- het zijn nog scaffolds, geen eindbewijs;
-- de belangrijkste winst is dat de repo eerlijker en toetsbaarder wordt;
-- hun artefacts moeten apart gelezen worden, niet als één totaalscore met regressieruns.
-
-## Wat er nog bij moet komen
-
-Om de repo verder te professionaliseren en minder scenario-afhankelijk te maken, zijn later extra lagen nodig:
-
-- volwassen open-set seed quality review;
-- zwaardere adversarial false-positive evaluatie met menselijke review;
-- probe utility evaluatie met menselijke review;
-- domeintransfer;
-- aparte modelinterne onderzoekslijn.
+Ze is nog niet bedoeld als definitieve eindvalidatie van het hele SSL-programma.
