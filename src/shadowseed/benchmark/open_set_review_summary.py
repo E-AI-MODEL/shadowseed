@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -55,6 +55,19 @@ def _packet_decision(packet: dict[str, Any]) -> str:
     if any(value is False for value in normalized):
         return "rejected"
     return "pending"
+
+
+def _pairwise_agreement_ratio(values: list[str]) -> float | None:
+    if len(values) < 2:
+        return None
+    total_pairs = 0
+    matching_pairs = 0
+    for index, left in enumerate(values):
+        for right in values[index + 1 :]:
+            total_pairs += 1
+            if left == right:
+                matching_pairs += 1
+    return (matching_pairs / total_pairs) if total_pairs else None
 
 
 def summarize_open_set_seed_review(
@@ -141,6 +154,7 @@ def summarize_open_set_seed_review(
     pending_seed_count = 0
     unanimous_seed_count = 0
     agreement_eligible_seed_count = 0
+    pairwise_decision_agreement_sum = 0.0
     disagreements: list[dict[str, Any]] = []
     aggregated_results: list[dict[str, Any]] = []
 
@@ -162,11 +176,16 @@ def summarize_open_set_seed_review(
             verdict = "mixed"
             mixed_seed_count += 1
 
+        pairwise_decision_agreement = _pairwise_agreement_ratio(decisions)
         if len(decisions) >= 2:
             agreement_eligible_seed_count += 1
             if len(set(decisions)) == 1:
                 unanimous_seed_count += 1
+            if pairwise_decision_agreement is not None:
+                pairwise_decision_agreement_sum += pairwise_decision_agreement
             else:
+                pairwise_decision_agreement = 0.0
+            if len(set(decisions)) != 1:
                 disagreements.append(
                     {
                         "item_id": entry["item_id"],
@@ -175,6 +194,7 @@ def summarize_open_set_seed_review(
                         "seed_id": entry["seed_id"],
                         "seed_text": entry["seed_text"],
                         "decisions": decisions,
+                        "pairwise_decision_agreement": pairwise_decision_agreement,
                         "reviewers": entry["reviewers"],
                     }
                 )
@@ -182,6 +202,7 @@ def summarize_open_set_seed_review(
         entry["completed_reviewer_count"] = len(decisions)
         entry["reviewer_count"] = len(entry["reviewers"])
         entry["aggregate_verdict"] = verdict
+        entry["pairwise_decision_agreement"] = pairwise_decision_agreement
         aggregated_results.append(entry)
 
     summary = {
@@ -200,7 +221,10 @@ def summarize_open_set_seed_review(
         "seed_rejection_rate": (rejected_seed_count / len(aggregated_results)) if aggregated_results else 0.0,
         "agreement_eligible_seed_count": agreement_eligible_seed_count,
         "unanimous_seed_count": unanimous_seed_count,
-        "agreement_rate": (unanimous_seed_count / agreement_eligible_seed_count) if agreement_eligible_seed_count else 0.0,
+        "unanimous_verdict_rate": (unanimous_seed_count / agreement_eligible_seed_count) if agreement_eligible_seed_count else 0.0,
+        "pairwise_decision_agreement_rate": (
+            pairwise_decision_agreement_sum / agreement_eligible_seed_count
+        ) if agreement_eligible_seed_count else 0.0,
         "criteria": REVIEW_CRITERIA,
         "criterion_pass_rates": {
             criterion: (criterion_true_counts[criterion] / criterion_completed_counts[criterion])
@@ -229,7 +253,8 @@ def summarize_open_set_seed_review(
                 "summary": {
                     "disagreement_count": len(disagreements),
                     "agreement_eligible_seed_count": agreement_eligible_seed_count,
-                    "agreement_rate": summary["agreement_rate"],
+                    "unanimous_verdict_rate": summary["unanimous_verdict_rate"],
+                    "pairwise_decision_agreement_rate": summary["pairwise_decision_agreement_rate"],
                 },
                 "disagreements": disagreements,
             },
