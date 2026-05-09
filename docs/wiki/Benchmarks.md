@@ -72,17 +72,17 @@ Kernregel:
 | 04 Antwoordwinst | Wordt een antwoord completer met SSL? | output-effect |
 | 05 Model smoke | Werkt de modelroute technisch? | technische smoke |
 | 06 Blind test | Blijven labels verborgen tot scoring? | interne logica |
+| 06b Adversarial Gate | Blokkeert de Gate misleidende lure-seeds beter dan zwakkere regels? | interne logica |
+| 06c Probe utility | Helpen promoted seeds bij scherpere vervolgacties? | output-effect |
 | 07 Rapport | Hoe zien de resultaten er samen uit? | rapportage |
 | 08 AbsenceBench rooktest | Werkt de lokale dataset-run? | technische smoke |
 | 09 Herhalingstest | Blijft gedrag stabiel over meerdere rondes? | interne logica |
 
-## Handmatige research-routes
+## Aanvullende research-routes
 
 | Route | Hoofdrol | Bewijsblok |
 |---|---|---|
 | open-set review | seedkwaliteit zonder vaste seedlijst | open-set seedkwaliteit |
-| adversarial Gate | vergelijking met zwakkere promotieregels | interne logica |
-| probe utility | scherpte van vervolgacties | output-effect |
 | retrieval en full sweep | backend- en modelvergelijkingen | configuratierobustheid |
 
 ## Hoe je dit moet lezen
