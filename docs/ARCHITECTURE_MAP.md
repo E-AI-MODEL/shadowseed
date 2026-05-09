@@ -71,6 +71,7 @@ Deze routes zijn nuttig, maar horen niet automatisch bij elke standaardpublicati
 
 De actuele repo bevat in elk geval deze handmatige workflows:
 
+- `Open-set HF review batch`
 - `Vectorstore Smoke Run`
 - `Complete Vector + SSOT Run`
 - `Publiceer testresultaten naar Wiki en Pages` via `workflow_dispatch`
