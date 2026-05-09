@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from shadowseed.analysis.ssl45_result_analyzer import analyze_results
@@ -36,3 +37,36 @@ def test_result_analyzer_writes_report_json_and_charts(tmp_path: Path):
     assert (output_dir / "coverage.svg").exists()
     assert (output_dir / "false_positive.svg").exists()
     assert "SSL 4.5 resultaatanalyse" in report.read_text(encoding="utf-8")
+
+
+def test_result_analyzer_reads_open_review_summary_from_nested_path(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    output_dir = results_dir / "analysis"
+    open_review_dir = results_dir / "open_review"
+    open_review_dir.mkdir(parents=True)
+    (open_review_dir / "open_set_review_summary.json").write_text(
+        json.dumps(
+            {
+                "summary": {
+                    "packet_count": 2,
+                    "unique_seed_count": 1,
+                    "seed_acceptance_rate": 0.5,
+                    "seed_rejection_rate": 0.5,
+                    "agreement_eligible_seed_count": 1,
+                    "unanimous_verdict_rate": 1.0,
+                    "pairwise_decision_agreement_rate": 1.0,
+                }
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    analyze_results(str(results_dir), str(output_dir))
+
+    summary = json.loads((output_dir / "analysis_summary.json").read_text(encoding="utf-8"))
+    report_text = (output_dir / "analysis_report.md").read_text(encoding="utf-8")
+
+    assert summary["open_set_review"]["seed_acceptance_rate"] == 0.5
+    assert "## Open-set review" in report_text
