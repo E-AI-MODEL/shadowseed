@@ -77,6 +77,18 @@ def test_cli_open_set_defaults() -> None:
     args = build_parser().parse_args(["run-open-set-seed-review"])
     assert args.output == "results/open_review/open_set_seed_output.json"
     assert args.review_packets == "results/open_review/open_set_review_packets.json"
+    assert args.reviewer_ids is None
+
+    custom_args = build_parser().parse_args(
+        [
+            "run-open-set-seed-review",
+            "--reviewer-id",
+            "alpha",
+            "--reviewer-id",
+            "beta",
+        ]
+    )
+    assert custom_args.reviewer_ids == ["alpha", "beta"]
 
     summary_args = build_parser().parse_args(["summarize-open-set-seed-review"])
     assert summary_args.input == "results/open_review/open_set_review_packets.json"
