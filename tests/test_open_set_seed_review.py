@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from shadowseed.benchmark.open_set_candidate_adapter import detect_open_set_candidates
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
 
 
@@ -32,10 +33,18 @@ def test_open_set_seed_review_outputs_packets(tmp_path: Path) -> None:
     assert payload["summary"]["review_packet_count"] == payload["summary"]["accepted_count"] * 2
     assert payload["summary"]["artifacts"]["seed_output"] == str(output)
     assert payload["summary"]["artifacts"]["review_packets"] == str(packets)
+    assert payload["summary"]["fixed_scenario_priors_used"] is False
+    assert payload["summary"]["expected_gaps_used"] is False
+    assert payload["summary"]["ground_truth_seeds_used"] is False
+    assert payload["summary"]["regression_gap_detector_used"] is False
     assert review_payload["summary"]["reject_codes"]
     assert review_payload["summary"]["seed_count"] == payload["summary"]["accepted_count"]
     assert review_payload["summary"]["reviewer_ids"] == ["reviewer_a", "reviewer_b"]
     assert review_payload["summary"]["reviewer_count"] == 2
+    assert review_payload["summary"]["fixed_scenario_priors_used"] is False
+    assert review_payload["summary"]["expected_gaps_used"] is False
+    assert review_payload["summary"]["ground_truth_seeds_used"] is False
+    assert review_payload["summary"]["regression_gap_detector_used"] is False
     assert review_payload["summary"]["expected_summary_artifacts"] == [
         "open_set_seed_review_summary.json",
         "open_set_disagreements.json",
@@ -81,3 +90,71 @@ def test_open_set_seed_review_accepts_custom_reviewer_ids(tmp_path: Path) -> Non
         reviewers_by_seed.setdefault(_seed_key(packet), set()).add(packet["reviewer_id"])
 
     assert all(reviewers == {"alpha", "beta"} for reviewers in reviewers_by_seed.values())
+
+
+def test_open_set_candidate_adapter_produces_atomic_candidates_for_unknown_domain() -> None:
+    item = {
+        "id": "HF_AG_NEWS_001",
+        "title": "Company announces new chip plan",
+        "domain": "nieuws - Sci/Tech",
+        "text": "Acme said it will launch a new chip after talks with customers and investors.",
+    }
+
+    candidates = detect_open_set_candidates(item)
+
+    assert candidates
+    assert len(candidates) <= 5
+    assert all(len(candidate.split()) <= 18 for candidate in candidates)
+    assert any("Acme" in candidate for candidate in candidates)
+    assert any("Bron" in candidate or "Onderbouwing" in candidate for candidate in candidates)
+
+
+def test_open_set_review_handles_unknown_hf_domains_without_regression_priors(tmp_path: Path) -> None:
+    input_file = tmp_path / "hf_batch.json"
+    output = tmp_path / "open_set.json"
+    packets = tmp_path / "open_set_packets.json"
+    input_file.write_text(
+        json.dumps(
+            {
+                "version": "hf-open-set-test",
+                "items": [
+                    {
+                        "id": "HF_AG_NEWS_001",
+                        "title": "Company announces new chip plan",
+                        "domain": "nieuws - Sci/Tech",
+                        "text": "Acme said it will launch a new chip after talks with customers and investors.",
+                    },
+                    {
+                        "id": "HF_AG_NEWS_002",
+                        "title": "Market rises after rate decision",
+                        "domain": "nieuws - Business",
+                        "text": "Markets rose after the central bank announced a decision that affected investors.",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    run_open_set_seed_review(str(input_file), str(output), review_packet_path=str(packets))
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    review_payload = json.loads(packets.read_text(encoding="utf-8"))
+
+    assert payload["summary"]["item_count"] == 2
+    assert payload["summary"]["raw_candidate_count"] > 0
+    assert payload["summary"]["accepted_count"] > 0
+    assert payload["summary"]["review_packet_count"] == payload["summary"]["accepted_count"] * 2
+    assert payload["summary"]["candidate_source_counts"] == {"open_set_candidate_adapter": 2}
+    assert payload["summary"]["fixed_scenario_priors_used"] is False
+    assert payload["summary"]["expected_gaps_used"] is False
+    assert payload["summary"]["ground_truth_seeds_used"] is False
+    assert payload["summary"]["regression_gap_detector_used"] is False
+    assert review_payload["summary"]["packet_count"] > 0
+    assert review_payload["summary"]["candidate_source_counts"] == {"open_set_candidate_adapter": 2}
+    assert review_payload["packets"]
+    assert all(packet["review_status"] == "pending" for packet in review_payload["packets"])
+
+    reviewers_by_seed: dict[tuple[str, str], set[str]] = {}
+    for packet in review_payload["packets"]:
+        reviewers_by_seed.setdefault(_seed_key(packet), set()).add(packet["reviewer_id"])
+    assert all(reviewers == {"reviewer_a", "reviewer_b"} for reviewers in reviewers_by_seed.values())

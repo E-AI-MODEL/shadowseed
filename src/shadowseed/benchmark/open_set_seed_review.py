@@ -1,14 +1,25 @@
-"""Open-set seed quality review scaffold for SSL 4.5."""
+"""Open-set seed quality review scaffold for SSL 4.5.
+
+This route prepares candidate seeds for human review on unknown inputs. It does
+not use the fixed regression-suite detector, fixed scenario priors, expected gaps
+or ground-truth seeds. Candidate text is passed through SSLManager so existing
+normalization, atomicity checks, deduplication and zero-weight seed storage stay
+in force.
+"""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 import numpy as np
 
-from shadowseed.benchmark.ssl45_gap_suite import detect_candidate_seeds
+from shadowseed.benchmark.open_set_candidate_adapter import (
+    OPEN_SET_CANDIDATE_ADAPTER_ID,
+    raw_open_set_candidates,
+)
 from shadowseed.hash_utils import stable_bucket_index
 from shadowseed.manager import SSLManager
 
@@ -34,25 +45,6 @@ EVIDENCE_LAYER = "open_set_seed_quality"
 ARTIFACT_CONTRACT_VERSION = "open-review-0.2"
 
 
-def _scenario_like_record(item: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "id": item.get("id", "unknown"),
-        "title": item.get("title", "Untitled"),
-        "domain": item.get("domain", ""),
-        "input": item.get("text") or item.get("input") or "",
-    }
-
-
-def _raw_candidates(item: dict[str, Any]) -> list[str]:
-    explicit = item.get("candidate_seeds")
-    if isinstance(explicit, list) and explicit:
-        return [str(seed).strip() for seed in explicit if str(seed).strip()]
-    scenario = _scenario_like_record(item)
-    if scenario["domain"] and scenario["input"]:
-        return detect_candidate_seeds(scenario)
-    return []
-
-
 def _normalize_reviewer_ids(reviewer_ids: list[str] | tuple[str, ...] | None) -> list[str]:
     ids = reviewer_ids or DEFAULT_REVIEWER_IDS
     normalized: list[str] = []
@@ -67,19 +59,23 @@ def _normalize_reviewer_ids(reviewer_ids: list[str] | tuple[str, ...] | None) ->
     return normalized
 
 
+def _item_excerpt(item: dict[str, Any]) -> str:
+    excerpt = (item.get("text") or item.get("input") or "").strip()
+    excerpt = excerpt[:400] + ("..." if len(excerpt) > 400 else "")
+    return excerpt
+
+
 def _review_entry(
     item: dict[str, Any],
     seed_row: dict[str, Any],
     reviewer_id: str,
     reviewer_slot: int,
 ) -> dict[str, Any]:
-    excerpt = (item.get("text") or item.get("input") or "").strip()
-    excerpt = excerpt[:400] + ("..." if len(excerpt) > 400 else "")
     return {
         "item_id": item.get("id"),
         "title": item.get("title"),
         "domain": item.get("domain"),
-        "source_excerpt": excerpt,
+        "source_excerpt": _item_excerpt(item),
         "seed_id": seed_row.get("seed_id"),
         "seed_text": seed_row.get("text"),
         "reviewer_id": reviewer_id,
@@ -88,6 +84,17 @@ def _review_entry(
         "review_status": "pending",
         "reject_reason": None,
         "reviewer_notes": "",
+    }
+
+
+def _open_set_contract_metadata() -> dict[str, Any]:
+    return {
+        "candidate_adapter": OPEN_SET_CANDIDATE_ADAPTER_ID,
+        "fixed_scenario_priors_used": False,
+        "expected_gaps_used": False,
+        "ground_truth_seeds_used": False,
+        "regression_gap_detector_used": False,
+        "candidate_quality_requires_human_review": True,
     }
 
 
@@ -108,10 +115,12 @@ def run_open_set_seed_review(
     rejected_count = 0
     domain_accept_counts: dict[str, int] = {}
     domain_item_counts: dict[str, int] = {}
+    candidate_source_counts: dict[str, int] = {}
 
     for item in items:
         manager = SSLManager(embedding_fn=detect_embedding)
-        raw_candidates = _raw_candidates(item)
+        raw_candidates, candidate_source = raw_open_set_candidates(item)
+        candidate_source_counts[candidate_source] = candidate_source_counts.get(candidate_source, 0) + 1
         ingest = manager.ingest_detection_candidates(raw_candidates)
         raw_candidate_count += ingest["input_count"]
         normalized_candidate_count += len(ingest["normalized_candidates"])
@@ -130,6 +139,7 @@ def run_open_set_seed_review(
                 "item_id": item.get("id"),
                 "title": item.get("title"),
                 "domain": domain,
+                "candidate_source": candidate_source,
                 "raw_candidates": raw_candidates,
                 "normalized_candidates": ingest["normalized_candidates"],
                 "accepted": ingest["accepted"],
@@ -141,6 +151,7 @@ def run_open_set_seed_review(
     output.parent.mkdir(parents=True, exist_ok=True)
     review_packet_file = Path(review_packet_path) if review_packet_path else output.with_name(output.stem + "_review_packets.json")
     review_packet_file.parent.mkdir(parents=True, exist_ok=True)
+    contract = _open_set_contract_metadata()
 
     summary = {
         "evidence_layer": EVIDENCE_LAYER,
@@ -154,6 +165,8 @@ def run_open_set_seed_review(
         "acceptance_rate": (accepted_count / normalized_candidate_count) if normalized_candidate_count else 0.0,
         "domain_item_counts": domain_item_counts,
         "domain_accept_counts": domain_accept_counts,
+        "candidate_source_counts": candidate_source_counts,
+        **contract,
         "reviewer_ids": reviewer_ids_normalized,
         "reviewer_count": len(reviewer_ids_normalized),
         "review_packet_count": len(review_packets),
@@ -182,6 +195,8 @@ def run_open_set_seed_review(
                     "packet_count": len(review_packets),
                     "criteria": REVIEW_CRITERIA,
                     "reject_codes": REJECT_CODES,
+                    "candidate_source_counts": candidate_source_counts,
+                    **contract,
                     "instructions": (
                         "One packet row is generated per reviewer per seed. "
                         "Do not edit a single row sequentially for multiple reviewers. "
@@ -210,7 +225,7 @@ def detect_embedding(text: str) -> np.ndarray:
     """Cheap deterministic lexical embedding for review scaffolding."""
     dims = 128
     vector = np.zeros(dims, dtype=float)
-    for token in text.lower().split():
+    for token in re.findall(r"[A-Za-zÀ-ÿ0-9_]+", text.lower()):
         vector[stable_bucket_index(token, dims)] += 1.0
     norm = np.linalg.norm(vector)
     if norm == 0:
