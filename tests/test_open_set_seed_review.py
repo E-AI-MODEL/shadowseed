@@ -112,6 +112,22 @@ def test_open_set_candidate_adapter_produces_atomic_candidates_for_unknown_domai
     assert any("Bron" in candidate or "Onderbouwing" in candidate for candidate in candidates)
 
 
+def test_detect_open_set_candidates_ignores_generated_ag_news_title() -> None:
+    item = {
+        "id": "AG_NEWS_TEST_0",
+        "title": "AG News Business #0",
+        "domain": "nieuws - Business",
+        "text": "Fears for pension after talks with unions at Turner Newall and Federal Mogul.",
+    }
+
+    candidates = detect_open_set_candidates(item)
+
+    assert candidates
+    assert all("News" not in candidate for candidate in candidates)
+    assert all("Business" not in candidate for candidate in candidates)
+    assert all("AG" not in candidate for candidate in candidates)
+
+
 def test_detect_open_set_candidates_returns_empty_on_empty_input() -> None:
     assert detect_open_set_candidates({"title": "", "text": ""}) == []
     assert detect_open_set_candidates({"title": "   ", "text": "  "}) == []
