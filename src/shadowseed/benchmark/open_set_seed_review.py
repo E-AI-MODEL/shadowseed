@@ -225,7 +225,7 @@ def detect_embedding(text: str) -> np.ndarray:
     """Cheap deterministic lexical embedding for review scaffolding."""
     dims = 128
     vector = np.zeros(dims, dtype=float)
-    for token in re.findall(r"[A-Za-zÀ-ÿ0-9_]+", text.lower()):
+    for token in re.findall(r"\w+", text.lower(), flags=re.UNICODE):
         vector[stable_bucket_index(token, dims)] += 1.0
     norm = np.linalg.norm(vector)
     if norm == 0:
