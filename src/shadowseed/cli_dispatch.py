@@ -113,6 +113,7 @@ def _run_open_set_seed_review(args: argparse.Namespace) -> str:
         args.input,
         args.output,
         review_packet_path=args.review_packets,
+        reviewer_ids=args.reviewer_ids,
     )
 
 
