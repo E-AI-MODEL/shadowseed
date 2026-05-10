@@ -31,7 +31,7 @@ shadowseed run-open-set-seed-review \
 
 shadowseed summarize-open-set-seed-review \
   --input results/open_review/open_set_review_packets.json \
-  --output results/open_review/open_set_review_summary.json \
+  --output results/open_set_seed_review_summary.json \
   --disagreements-output results/open_review/open_set_disagreements.json \
   --report-output results/open_review/open_set_review_report.md
 ```
@@ -40,7 +40,7 @@ shadowseed summarize-open-set-seed-review \
 
 - `results/open_review/open_set_seed_output.json`
 - `results/open_review/open_set_review_packets.json`
-- `results/open_review/open_set_review_summary.json`
+- `results/open_set_seed_review_summary.json`
 - `results/open_review/open_set_disagreements.json`
 - `results/open_review/open_set_review_report.md`
 
