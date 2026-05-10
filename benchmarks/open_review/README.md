@@ -6,6 +6,23 @@ Deze map is bedoeld voor de eerste echte open-set seedkwaliteitslaag.
 
 Beoordelen of SSL op onbekende teksten kleine, relevante, toetsbare en niet-triviale seeds produceert zonder vaste seedlijst.
 
+## Reviewprotocol
+
+Gebruik voor de eerste echte human-reviewronde het protocol in:
+
+```text
+docs/research/open-set-review-protocol.md
+```
+
+Dat protocol legt vast:
+
+- reviewer-ID's;
+- accept- en rejectregels;
+- vaste reject-codes;
+- de vijf reviewcriteria;
+- hoe disagreements bewaard worden;
+- wanneer `#41` echt klaar is.
+
 ## Verwachte inputvorm
 
 - kleine batch onbekende teksten
@@ -53,6 +70,8 @@ Iedere seed moet uiteindelijk beoordeeld kunnen worden op:
 - toetsbaarheid
 - niet-trivialiteit
 - bruikbaarheid voor vervolgactie
+
+Voor de eerste reviewronde geldt: `accepted` alleen als alle vijf criteria slagen. Bij `rejected` hoort precies één vaste `reject_reason`; aanvullende redenen gaan in `reviewer_notes`.
 
 ## Belangrijke interpretatieregel
 
