@@ -119,11 +119,13 @@ def test_open_set_summary_default_route_flows_into_analyzer(tmp_path: Path) -> N
     )
 
     summary_file = tmp_path / "results" / "open_set_seed_review_summary.json"
+    legacy_summary_file = tmp_path / "results" / "open_review" / "open_set_review_summary.json"
     disagreements_file = tmp_path / "results" / "open_review" / "open_set_disagreements.json"
     report_file = tmp_path / "results" / "open_review" / "open_set_review_report.md"
 
     assert summarize.returncode == 0
     assert summary_file.exists()
+    assert not legacy_summary_file.exists()
     assert disagreements_file.exists()
     assert report_file.exists()
 
@@ -144,3 +146,48 @@ def test_open_set_summary_default_route_flows_into_analyzer(tmp_path: Path) -> N
     summary_payload = json.loads(analysis_summary.read_text(encoding="utf-8"))
     assert summary_payload["open_set_review"]["seed_acceptance_rate"] == 1.0
     assert "## Open-set review" in analysis_report.read_text(encoding="utf-8")
+
+    conclusion = summary_payload["conclusion"]
+    assert {"verdict", "headline", "body", "supporting_observations", "claim_boundary"} <= set(
+        conclusion
+    )
+    assert isinstance(conclusion["supporting_observations"], list)
+    assert conclusion["claim_boundary"]
+
+
+def test_open_set_legacy_summary_name_is_analyzer_fallback_only(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    legacy_dir = results_dir / "open_review"
+    legacy_dir.mkdir(parents=True)
+    legacy_summary = legacy_dir / "open_set_review_summary.json"
+    legacy_summary.write_text(
+        json.dumps(
+            {
+                "summary": {
+                    "packet_count": 1,
+                    "unique_seed_count": 1,
+                    "seed_acceptance_rate": 1.0,
+                    "seed_rejection_rate": 0.0,
+                    "agreement_eligible_seed_count": 1,
+                    "unanimous_verdict_rate": 1.0,
+                    "pairwise_decision_agreement_rate": 1.0,
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    analyze = subprocess.run(
+        [sys.executable, "-m", "shadowseed.cli", "analyze-results"],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+
+    analysis_summary = results_dir / "analysis" / "analysis_summary.json"
+
+    assert analyze.returncode == 0
+    assert analysis_summary.exists()
+
+    payload = json.loads(analysis_summary.read_text(encoding="utf-8"))
+    assert payload["open_set_review"]["seed_acceptance_rate"] == 1.0
