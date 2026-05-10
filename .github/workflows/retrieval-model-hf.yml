@@ -168,7 +168,7 @@ jobs:
               '',
               '## Ruwe output',
               '',
-              '- [Retrieval Model HF Raw](Retrieval-Model-HF-Raw)',
+              '- [Retrieval Model HF Raw](https://raw.githubusercontent.com/wiki/E-AI-MODEL/shadowseed/Retrieval-Model-HF-Raw.json)',
               '',
           ])
           Path('Retrieval-Model-HF.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
