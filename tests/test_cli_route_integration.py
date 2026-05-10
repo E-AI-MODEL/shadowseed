@@ -118,7 +118,7 @@ def test_open_set_summary_default_route_flows_into_analyzer(tmp_path: Path) -> N
         text=True,
     )
 
-    summary_file = tmp_path / "results" / "open_review" / "open_set_review_summary.json"
+    summary_file = tmp_path / "results" / "open_set_seed_review_summary.json"
     disagreements_file = tmp_path / "results" / "open_review" / "open_set_disagreements.json"
     report_file = tmp_path / "results" / "open_review" / "open_set_review_report.md"
 
