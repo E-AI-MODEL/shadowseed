@@ -29,6 +29,7 @@ REJECT_CODES = [
     "duplicate",
     "style_not_gap",
 ]
+DEFAULT_REVIEWER_IDS = ["reviewer_a", "reviewer_b"]
 EVIDENCE_LAYER = "open_set_seed_quality"
 ARTIFACT_CONTRACT_VERSION = "open-review-0.2"
 
@@ -52,7 +53,26 @@ def _raw_candidates(item: dict[str, Any]) -> list[str]:
     return []
 
 
-def _review_entry(item: dict[str, Any], seed_row: dict[str, Any]) -> dict[str, Any]:
+def _normalize_reviewer_ids(reviewer_ids: list[str] | tuple[str, ...] | None) -> list[str]:
+    ids = reviewer_ids or DEFAULT_REVIEWER_IDS
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for reviewer_id in ids:
+        clean = str(reviewer_id).strip()
+        if clean and clean not in seen:
+            normalized.append(clean)
+            seen.add(clean)
+    if not normalized:
+        raise ValueError("At least one reviewer id is required for open-set review packets.")
+    return normalized
+
+
+def _review_entry(
+    item: dict[str, Any],
+    seed_row: dict[str, Any],
+    reviewer_id: str,
+    reviewer_slot: int,
+) -> dict[str, Any]:
     excerpt = (item.get("text") or item.get("input") or "").strip()
     excerpt = excerpt[:400] + ("..." if len(excerpt) > 400 else "")
     return {
@@ -62,7 +82,8 @@ def _review_entry(item: dict[str, Any], seed_row: dict[str, Any]) -> dict[str, A
         "source_excerpt": excerpt,
         "seed_id": seed_row.get("seed_id"),
         "seed_text": seed_row.get("text"),
-        "reviewer_id": None,
+        "reviewer_id": reviewer_id,
+        "reviewer_slot": reviewer_slot,
         "review_fields": {criterion: None for criterion in REVIEW_CRITERIA},
         "review_status": "pending",
         "reject_reason": None,
@@ -74,9 +95,11 @@ def run_open_set_seed_review(
     input_path: str,
     output_path: str,
     review_packet_path: str | None = None,
+    reviewer_ids: list[str] | tuple[str, ...] | None = None,
 ) -> Path:
     payload = json.loads(Path(input_path).read_text(encoding="utf-8"))
     items = payload.get("items", [])
+    reviewer_ids_normalized = _normalize_reviewer_ids(reviewer_ids)
     results = []
     review_packets = []
     raw_candidate_count = 0
@@ -99,7 +122,8 @@ def run_open_set_seed_review(
         domain_accept_counts[domain] = domain_accept_counts.get(domain, 0) + len(ingest["accepted"])
 
         for accepted in ingest["accepted"]:
-            review_packets.append(_review_entry(item, accepted))
+            for reviewer_slot, reviewer_id in enumerate(reviewer_ids_normalized, start=1):
+                review_packets.append(_review_entry(item, accepted, reviewer_id, reviewer_slot))
 
         results.append(
             {
@@ -130,6 +154,8 @@ def run_open_set_seed_review(
         "acceptance_rate": (accepted_count / normalized_candidate_count) if normalized_candidate_count else 0.0,
         "domain_item_counts": domain_item_counts,
         "domain_accept_counts": domain_accept_counts,
+        "reviewer_ids": reviewer_ids_normalized,
+        "reviewer_count": len(reviewer_ids_normalized),
         "review_packet_count": len(review_packets),
         "review_criteria": REVIEW_CRITERIA,
         "reject_codes": REJECT_CODES,
@@ -150,10 +176,18 @@ def run_open_set_seed_review(
                     "evidence_layer": EVIDENCE_LAYER,
                     "artifact_contract_version": ARTIFACT_CONTRACT_VERSION,
                     "item_count": len(items),
+                    "seed_count": accepted_count,
+                    "reviewer_ids": reviewer_ids_normalized,
+                    "reviewer_count": len(reviewer_ids_normalized),
                     "packet_count": len(review_packets),
                     "criteria": REVIEW_CRITERIA,
                     "reject_codes": REJECT_CODES,
-                    "instructions": "Score each seed on atomicity, relevance, testability, non-triviality and follow-up utility.",
+                    "instructions": (
+                        "One packet row is generated per reviewer per seed. "
+                        "Do not edit a single row sequentially for multiple reviewers. "
+                        "Score each seed on atomicity, relevance, testability, "
+                        "non-triviality and follow-up utility."
+                    ),
                     "status": "review_pending",
                     "expected_summary_artifacts": [
                         "open_set_seed_review_summary.json",
