@@ -5,13 +5,13 @@ Status: `review_in_progress`
 
 ## Overview
 
-- packets: 0
+- packets: 120
 - completed packets: 0
-- unique seeds: 0
+- unique seeds: 60
 - accepted seeds: 0
 - rejected seeds: 0
 - mixed seeds: 0
-- pending seeds: 0
+- pending seeds: 60
 
 ## Core Rates
 
@@ -35,7 +35,8 @@ Status: `review_in_progress`
 
 ## Domain Coverage
 
-- none
+- `nieuws - Business`: 5
+- `nieuws - Sci/Tech`: 55
 
 ## Follow-up
 
