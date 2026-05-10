@@ -151,7 +151,7 @@ jobs:
               '',
               '## Ruwe output',
               '',
-              '- [Backend Comparison Raw](Backend-Comparison-Raw)',
+              '- [Backend Comparison Raw](https://raw.githubusercontent.com/wiki/E-AI-MODEL/shadowseed/Backend-Comparison-Raw.json)',
               '- [Complete Vector + SSOT Run](Complete-Vector-SSOT-Run)',
               '- [Vectorstore Smoke](Vectorstore-Smoke)',
               '- [SSOT Smoke](SSOT-Smoke)',
