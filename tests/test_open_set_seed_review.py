@@ -3,8 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from shadowseed.benchmark.open_set_candidate_adapter import detect_open_set_candidates
-from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
+from shadowseed.benchmark.open_set_candidate_adapter import (
+    _extract_first_entity,
+    detect_open_set_candidates,
+)
+from shadowseed.benchmark.open_set_seed_review import detect_embedding, run_open_set_seed_review
 
 
 DATA = "src/shadowseed/data/open_set_seed_review_sample.json"
@@ -107,6 +110,40 @@ def test_open_set_candidate_adapter_produces_atomic_candidates_for_unknown_domai
     assert all(len(candidate.split()) <= 18 for candidate in candidates)
     assert any("Acme" in candidate for candidate in candidates)
     assert any("Bron" in candidate or "Onderbouwing" in candidate for candidate in candidates)
+
+
+def test_detect_open_set_candidates_returns_empty_on_empty_input() -> None:
+    assert detect_open_set_candidates({"title": "", "text": ""}) == []
+    assert detect_open_set_candidates({"title": "   ", "text": "  "}) == []
+    assert detect_open_set_candidates({}) == []
+
+
+def test_extract_first_entity_finds_proper_noun_over_generic() -> None:
+    assert _extract_first_entity("Acme said it will launch a new chip.") == "Acme"
+
+
+def test_extract_first_entity_skips_generic_company_word() -> None:
+    assert _extract_first_entity("Company announces new chip plan") is None
+
+
+def test_extract_first_entity_handles_mixed_capitalized_tokens() -> None:
+    combined = "Company announces new chip plan. Acme said it will launch."
+    assert _extract_first_entity(combined) == "Acme"
+
+
+def test_extract_first_entity_returns_none_on_empty() -> None:
+    assert _extract_first_entity("") is None
+    assert _extract_first_entity("   ") is None
+
+
+def test_detect_embedding_preserves_non_latin_tokens() -> None:
+    latin = detect_embedding("hello world")
+    chinese = detect_embedding("你好 世界")
+    arabic = detect_embedding("مرحبا بالعالم")
+
+    assert latin.any()
+    assert chinese.any()
+    assert arabic.any()
 
 
 def test_open_set_review_handles_unknown_hf_domains_without_regression_priors(tmp_path: Path) -> None:
