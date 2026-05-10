@@ -40,7 +40,7 @@ shadowseed fetch-open-set-hf-batch \
   --output benchmarks/open_review/input/hf_ag_news_test_batch.json
 ```
 
-Then generate seed output and review packets:
+Then generate seed output and review packets. The generator creates one pending packet row per reviewer per seed by default.
 
 ```bash
 shadowseed run-open-set-seed-review \
@@ -49,18 +49,29 @@ shadowseed run-open-set-seed-review \
   --review-packets results/open_review/open_set_review_packets.json
 ```
 
+Equivalent explicit form:
+
+```bash
+shadowseed run-open-set-seed-review \
+  --input benchmarks/open_review/input/hf_ag_news_test_batch.json \
+  --output results/open_review/open_set_seed_output.json \
+  --review-packets results/open_review/open_set_review_packets.json \
+  --reviewer-id reviewer_a \
+  --reviewer-id reviewer_b
+```
+
 ## Review packet handling
 
-For each selected packet:
+For each generated packet row:
 
-1. duplicate the packet once for `reviewer_a` and once for `reviewer_b` if needed;
+1. keep the existing `reviewer_id` and `reviewer_slot`;
 2. fill all five booleans;
 3. set `review_status` to `accepted` or `rejected`;
 4. set `reject_reason` to one fixed code when rejected;
 5. keep `reject_reason` as `null` when accepted;
 6. add short `reviewer_notes`.
 
-Do not edit another reviewer’s packet to remove disagreement.
+Do not let two reviewers edit the same packet row sequentially. Disagreement detection needs separate rows that share the same `(item_id, seed_text)` key and differ by `reviewer_id`.
 
 ## Reject codes
 
@@ -100,6 +111,7 @@ These are generated after the human review is complete. They are not included in
 Round 001 is complete when:
 
 - selected packets have non-empty `reviewer_id`;
+- each selected seed has separate reviewer rows;
 - no completed packet has `review_status: pending`;
 - every completed packet has all five review booleans filled;
 - every rejected packet has one fixed `reject_reason`;
