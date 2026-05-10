@@ -170,7 +170,7 @@ jobs:
               '',
               '## Ruwe output',
               '',
-              '- [Complete Vector SSOT Raw](Complete-Vector-SSOT-Raw)',
+              '- [Complete Vector SSOT Raw](https://raw.githubusercontent.com/wiki/E-AI-MODEL/shadowseed/Complete-Vector-SSOT-Raw.json)',
               '- [Vectorstore Smoke](Vectorstore-Smoke)',
               '- [SSOT Smoke](SSOT-Smoke)',
               '',
