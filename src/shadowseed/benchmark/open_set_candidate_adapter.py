@@ -18,30 +18,61 @@ OPEN_SET_CANDIDATE_ADAPTER_ID = "ssl45_open_set_candidate_adapter_v0.1"
 EXPLICIT_CANDIDATE_SOURCE = "explicit_candidate_seeds"
 OPEN_SET_ADAPTER_SOURCE = "open_set_candidate_adapter"
 
-_ENTITY_STOPWORDS = {
-    "A",
-    "An",
-    "And",
-    "At",
-    "For",
-    "From",
-    "In",
-    "On",
-    "Or",
-    "The",
-    "This",
-    "To",
-    "With",
-    "AG",
-    "News",
-    "Business",
-    "Sci",
-    "Tech",
-    "World",
-    "Sports",
-    "AP",
-    "Reuters",
-}
+_COMMON_SENTENCE_INITIALS = frozenset(
+    {
+        "the",
+        "a",
+        "an",
+        "this",
+        "that",
+        "these",
+        "those",
+        "it",
+        "they",
+        "we",
+        "you",
+        "he",
+        "she",
+        "i",
+        "company",
+        "companies",
+        "people",
+        "person",
+        "someone",
+        "everyone",
+        "everybody",
+        "anyone",
+        "anybody",
+        "de",
+        "het",
+        "een",
+        "deze",
+        "die",
+        "dat",
+        "dit",
+        "ze",
+        "zij",
+        "hij",
+        "wij",
+        "jullie",
+        "men",
+        "bedrijf",
+        "bedrijven",
+        "iemand",
+        "iedereen",
+        "niemand",
+        "today",
+        "yesterday",
+        "tomorrow",
+        "here",
+        "there",
+        "vandaag",
+        "gisteren",
+        "morgen",
+        "hier",
+        "daar",
+    }
+)
 
 _CLAIM_TERMS = (
     "says",
@@ -96,9 +127,7 @@ _NUMBER_PATTERN = re.compile(
     r"(?:[$#€£]\s?\d|\d+(?:\.\d+)?\s?(?:million|billion|percent|%))",
     re.IGNORECASE,
 )
-_ENTITY_PATTERN = re.compile(
-    r"\b[A-Z][A-Za-z0-9&./#-]*(?:\s+[A-Z][A-Za-z0-9&./#-]*){0,2}\b"
-)
+_ENTITY_PATTERN = re.compile(r"\b[A-ZÀ-Þ][a-zA-ZÀ-ÿ0-9]{2,}\b")
 
 
 def compact_text(value: Any) -> str:
@@ -114,25 +143,14 @@ def _contains_any(text: str, terms: tuple[str, ...]) -> bool:
     return any(term in lowered for term in terms)
 
 
-def _clean_entity(entity: str) -> str | None:
-    clean = compact_text(entity.strip(" -:;,.()[]{}'\""))
-    if not clean:
-        return None
-    parts = clean.split()
-    if all(part in _ENTITY_STOPWORDS for part in parts):
-        return None
-    if len(clean) <= 1:
-        return None
-    if clean.isupper() and len(clean) <= 3:
-        return None
-    return clean
-
-
 def _extract_first_entity(text: str) -> str | None:
-    for match in _ENTITY_PATTERN.findall(text):
-        clean = _clean_entity(match)
-        if clean is not None:
-            return clean
+    """Return the first proper-noun-like token in text."""
+    if not text:
+        return None
+    for token in _ENTITY_PATTERN.findall(text):
+        if token.lower() in _COMMON_SENTENCE_INITIALS:
+            continue
+        return token
     return None
 
 
@@ -150,6 +168,9 @@ def detect_open_set_candidates(item: dict[str, Any], max_seeds: int = 5) -> list
     """
     title = compact_text(item.get("title", ""))
     text = item_text(item)
+    if not (title or text):
+        return []
+
     combined = compact_text(f"{title} {text}")
     entity = _extract_first_entity(combined)
     candidates: list[str] = []
