@@ -155,6 +155,16 @@ def build_parser() -> argparse.ArgumentParser:
         default="results/open_review/open_set_review_packets.json",
         help="Waar de review-packets voor menselijke beoordeling worden opgeslagen.",
     )
+    open_set.add_argument(
+        "--reviewer-id",
+        dest="reviewer_ids",
+        action="append",
+        default=None,
+        help=(
+            "Reviewer-id waarvoor een pending packetrij wordt gemaakt. "
+            "Gebruik deze optie meerdere keren. Default: reviewer_a en reviewer_b."
+        ),
+    )
 
     open_set_summary = subparsers.add_parser(
         "summarize-open-set-seed-review",
