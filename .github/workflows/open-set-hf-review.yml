@@ -88,6 +88,7 @@ jobs:
           MD
 
       - name: Commit open-set summary naar repo
+        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

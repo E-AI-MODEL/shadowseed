@@ -106,7 +106,7 @@ Per run moet deze laag minimaal opleveren:
 open_set_seed_output.json
 open_set_review_packets.json
 open_set_reviewer_scores.json
-open_set_review_summary.json
+open_set_seed_review_summary.json
 open_set_disagreements.json
 ```
 
@@ -116,9 +116,9 @@ Daarvoor hoort nu expliciet een samenvattingsstap bij:
 
 ```text
 shadowseed summarize-open-set-seed-review \
-  --input results/open_set_seed_review_packets.json \
+  --input results/open_review/open_set_review_packets.json \
   --output results/open_set_seed_review_summary.json \
-  --disagreements-output results/open_set_seed_review_disagreements.json
+  --disagreements-output results/open_review/open_set_disagreements.json
 ```
 
 ## 6. Primaire metrics

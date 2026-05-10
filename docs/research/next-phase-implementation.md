@@ -88,7 +88,7 @@ results/open_review/         # niet als vaste repo-output, maar als beoogde arti
 
 - `open_set_seed_output.json`
 - `open_set_review_packets.json`
-- `open_set_review_summary.json`
+- `open_set_seed_review_summary.json`
 - `open_set_disagreements.json`
 
 ### Definition of done
