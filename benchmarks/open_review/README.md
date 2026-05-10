@@ -17,6 +17,7 @@ docs/research/open-set-review-protocol.md
 Dat protocol legt vast:
 
 - reviewer-ID's;
+- één packetrij per reviewer per seed;
 - accept- en rejectregels;
 - vaste reject-codes;
 - de vijf reviewcriteria;
@@ -38,14 +39,29 @@ shadowseed fetch-open-set-hf-batch \
   --output benchmarks/open_review/input/hf_ag_news_test_batch.json
 ```
 
-Daarna kan dezelfde batch direct de reviewflow in:
+Daarna kan dezelfde batch direct de reviewflow in. Standaard maakt de generator twee pending reviewrijen per seed: `reviewer_a` en `reviewer_b`.
 
 ```bash
 shadowseed run-open-set-seed-review \
   --input benchmarks/open_review/input/hf_ag_news_test_batch.json \
   --output results/open_review/open_set_seed_output.json \
   --review-packets results/open_review/open_set_review_packets.json
+```
 
+Gebruik desgewenst expliciete reviewer-ID's:
+
+```bash
+shadowseed run-open-set-seed-review \
+  --input benchmarks/open_review/input/hf_ag_news_test_batch.json \
+  --output results/open_review/open_set_seed_output.json \
+  --review-packets results/open_review/open_set_review_packets.json \
+  --reviewer-id reviewer_a \
+  --reviewer-id reviewer_b
+```
+
+Vul daarna de afzonderlijke reviewer-rijen in. Laat twee reviewers nooit dezelfde packetrij overschrijven.
+
+```bash
 shadowseed summarize-open-set-seed-review \
   --input results/open_review/open_set_review_packets.json \
   --output results/open_set_seed_review_summary.json \
