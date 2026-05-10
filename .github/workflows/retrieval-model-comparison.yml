@@ -121,7 +121,7 @@ jobs:
               '',
               '## Ruwe output',
               '',
-              '- [Retrieval Model Comparison Raw](Retrieval-Model-Comparison-Raw)',
+              '- [Retrieval Model Comparison Raw](https://raw.githubusercontent.com/wiki/E-AI-MODEL/shadowseed/Retrieval-Model-Comparison-Raw.json)',
               '',
           ])
 
