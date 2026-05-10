@@ -54,7 +54,7 @@
       "title": "AG News Business #0",
       "domain": "nieuws - Business",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Fears in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -306,7 +306,7 @@
       "title": "AG News Business #0",
       "domain": "nieuws - Business",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -369,7 +369,7 @@
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Race in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -684,7 +684,7 @@
       "title": "AG News Sci/Tech #2",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Wins in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -936,7 +936,7 @@
       "title": "AG News Sci/Tech #2",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Reden voor de beschreven beslissing.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -999,7 +999,7 @@
       "title": "AG News Sci/Tech #3",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Prediction in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1251,7 +1251,7 @@
       "title": "AG News Sci/Tech #3",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1314,7 +1314,7 @@
       "title": "AG News Sci/Tech #4",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Calif in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1566,7 +1566,7 @@
       "title": "AG News Sci/Tech #4",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1629,7 +1629,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Open in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1881,7 +1881,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1944,7 +1944,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Loosing in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2259,7 +2259,7 @@
       "title": "AG News Sci/Tech #7",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van FOAFKey in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2511,7 +2511,7 @@
       "title": "AG News Sci/Tech #7",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2574,7 +2574,7 @@
       "title": "AG News Sci/Tech #9",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Card in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2826,7 +2826,7 @@
       "title": "AG News Sci/Tech #9",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2889,7 +2889,7 @@
       "title": "AG News Sci/Tech #10",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Group in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3141,7 +3141,7 @@
       "title": "AG News Sci/Tech #10",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3204,7 +3204,7 @@
       "title": "AG News Sci/Tech #11",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Apple in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3456,7 +3456,7 @@
       "title": "AG News Sci/Tech #11",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Reden voor de beschreven beslissing.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3519,7 +3519,7 @@
       "title": "AG News Sci/Tech #12",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Rol van News in de gebeurtenis.",
+      "seed_text": "Rol van Dutch in de gebeurtenis.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3771,7 +3771,7 @@
       "title": "AG News Sci/Tech #12",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Herkomst van de genoemde cijfers.",
+      "seed_text": "Onzekerheid rond de centrale bewering.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
