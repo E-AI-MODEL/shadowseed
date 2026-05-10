@@ -31,6 +31,7 @@ vector = [
 ]
 test = [
   "pytest>=8.0",
+  "ruff>=0.6",
 ]
 dev = [
   "shadowseed[test,models,vector,paper]",
@@ -53,3 +54,9 @@ shadowseed = ["data/*.json"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82"]
