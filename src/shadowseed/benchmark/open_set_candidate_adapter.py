@@ -71,6 +71,13 @@ _COMMON_SENTENCE_INITIALS = frozenset(
         "morgen",
         "hier",
         "daar",
+        "ag",
+        "news",
+        "business",
+        "sci",
+        "tech",
+        "world",
+        "sports",
     }
 )
 
@@ -128,6 +135,7 @@ _NUMBER_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _ENTITY_PATTERN = re.compile(r"\b[A-ZÀ-Þ][a-zA-ZÀ-ÿ0-9]{2,}\b")
+_GENERATED_AG_NEWS_TITLE = re.compile(r"^AG News (?:Business|Sci/Tech|World|Sports) #\d+$")
 
 
 def compact_text(value: Any) -> str:
@@ -136,6 +144,13 @@ def compact_text(value: Any) -> str:
 
 def item_text(item: dict[str, Any]) -> str:
     return compact_text(item.get("text") or item.get("input") or "")
+
+
+def _semantic_title(title: str) -> str:
+    """Remove generated source labels that are not source content."""
+    if _GENERATED_AG_NEWS_TITLE.match(title):
+        return ""
+    return title
 
 
 def _contains_any(text: str, terms: tuple[str, ...]) -> bool:
@@ -166,7 +181,7 @@ def detect_open_set_candidates(item: dict[str, Any], max_seeds: int = 5) -> list
     The candidates follow the 4.5 detection-pass shape: small, concrete and
     testable missing relations. They are hypotheses for review, not labels.
     """
-    title = compact_text(item.get("title", ""))
+    title = _semantic_title(compact_text(item.get("title", "")))
     text = item_text(item)
     if not (title or text):
         return []
