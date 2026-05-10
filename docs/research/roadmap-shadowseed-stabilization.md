@@ -1,6 +1,6 @@
 # Shadowseed Stabilization And Evidence-Hardening Roadmap
 
-Status: proposed
+Status: active
 Date: 2026-05-10
 Scope: repository stability, artifact discipline, workflow clarity, and next-step research hardening
 
@@ -87,35 +87,43 @@ Done when:
 - `pytest` stays green
 - there is no benchmark behavior change
 
-## Phase 3: Make Artifact Contracts Explicit
+## Phase 3: Make Artifact And Analyzer-Publication Contracts Explicit
 
-Purpose: stop CLI, workflows, analyzer, tests, and docs from speaking different path dialects.
+Purpose: stop CLI, workflows, analyzer, tests, docs, and public reporting from speaking different path dialects or mixing raw evidence with interpretive outputs implicitly.
 
 Actions:
 - create `docs/research/artifact-contracts.md`
 - document per evidence layer: command, input path, output path, analyzer path, artifact name, and status (`standard_ci`, `manual`, `experimental`)
 - begin with: gap suite, false-positive suite, benefit suite, model benefit suite, blind benchmark, adversarial Gate, probe utility, open-set review, and AbsenceBench smoke
+- mark which artifacts are raw outputs, summaries, analyzer-facing inputs, and public-report inputs
+- make explicit which analyzer outputs are metric-bearing and which are interpretive or public-facing
 - add a simple contract test that validates important defaults and lookup paths
 
 Done when:
 - artifact names are explicit rather than implied
 - path drift is caught by tests
 - open-set has one canonical summary name: `open_set_seed_review_summary.json`
+- analyzer-facing and publication-facing artifacts are clearly distinguished
+- it is visible which outputs are raw evidence and which are interpretive summaries
 
-## Phase 4: Create A Workflow Map
+## Phase 4: Create A Workflow And Claim-Publication Map
 
-Purpose: make workflow behavior readable without hunting through Actions YAML.
+Purpose: make workflow behavior readable without hunting through Actions YAML and make public claim-publication routes visible end to end.
 
 Actions:
 - create `docs/research/workflow-map.md`
 - for each workflow document: trigger, purpose, outputs, whether it writes back to the repo, whether it uses secrets, and whether it belongs to standard CI or manual research
 - explicitly separate standard CI, publish/wiki/pages, manual HF or open-set routes, and model or retrieval routes
 - mark write-back workflows with permissions, branch guards, and touched files
+- identify which workflows produce raw benchmark artifacts, summaries, regenerated analyzer output, and Wiki or Pages publication
+- identify where automatic public conclusion text is generated and published
 
 Done when:
 - it is obvious which workflows support which claim layers
 - it is obvious which workflows are smoke-only
 - write-back routes are not hidden in implementation detail
+- public-report publication routes are visible end to end
+- it is clear which workflow paths can affect public claim wording versus only raw artifacts or metrics
 
 ## Phase 5: Complete The First Real Open-Set Review Round
 
@@ -222,8 +230,8 @@ Only revisit a 5.0-style shift if:
 2. current stack status
 3. SWOT work categories
 4. ruff quality gate
-5. artifact contracts and contract tests
-6. workflow map
+5. artifact and analyzer-publication contracts
+6. workflow and claim-publication map
 7. first real open-set review round
 8. deeper adversarial Gate comparison
 9. probe feedback evaluation
