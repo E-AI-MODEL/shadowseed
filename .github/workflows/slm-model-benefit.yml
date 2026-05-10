@@ -111,8 +111,8 @@ jobs:
             echo "## Pages"
             echo
             echo "- [SLM Model Benefit Analysis](SLM-Model-Benefit-Analysis)"
-            echo "- [SLM Model Benefit Summary JSON](SLM-Model-Benefit-Analysis-Summary)"
-            echo "- [Raw model benefit JSON](SLM-Model-Benefit-Raw)"
+            echo "- [SLM Model Benefit Summary JSON](https://raw.githubusercontent.com/wiki/E-AI-MODEL/shadowseed/SLM-Model-Benefit-Analysis-Summary.json)"
+            echo "- [Raw model benefit JSON](https://raw.githubusercontent.com/wiki/E-AI-MODEL/shadowseed/SLM-Model-Benefit-Raw.json)"
             echo
             echo "## Charts"
             echo

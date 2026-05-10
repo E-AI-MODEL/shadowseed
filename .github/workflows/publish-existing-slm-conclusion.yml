@@ -133,7 +133,7 @@ jobs:
               '## Links',
               '',
               '- [SLM Model Benefit Analysis](SLM-Model-Benefit-Analysis)',
-              '- [Raw model benefit JSON](SLM-Model-Benefit-Raw)',
+              '- [Raw model benefit JSON](https://raw.githubusercontent.com/wiki/E-AI-MODEL/shadowseed/SLM-Model-Benefit-Raw.json)',
               '- [SLM Model Benefit](SLM-Model-Benefit)',
               '',
           ])
