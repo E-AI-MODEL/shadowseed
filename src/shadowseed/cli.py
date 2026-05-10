@@ -167,7 +167,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     open_set_summary.add_argument(
         "--output",
-        default="results/open_review/open_set_review_summary.json",
+        default="results/open_set_seed_review_summary.json",
         help="Waar de geaggregeerde review-samenvatting wordt opgeslagen.",
     )
     open_set_summary.add_argument(
@@ -256,7 +256,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     nlp.set_defaults(command="run-absencebench-smoke")
     nlp.add_argument("--input", default="examples/local_absencebench_sample.json")
-    nlp.add_argument("--output", default="absencebench_smoke.json")
+    nlp.add_argument("--output", default="results/absencebench_smoke.json")
 
     return parser
 

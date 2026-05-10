@@ -27,7 +27,7 @@ def test_open_set_seed_review_outputs_packets(tmp_path: Path) -> None:
     assert payload["summary"]["artifacts"]["review_packets"] == str(packets)
     assert review_payload["summary"]["reject_codes"]
     assert review_payload["summary"]["expected_summary_artifacts"] == [
-        "open_set_review_summary.json",
+        "open_set_seed_review_summary.json",
         "open_set_disagreements.json",
         "open_set_review_report.md",
     ]

@@ -156,7 +156,7 @@ def run_open_set_seed_review(
                     "instructions": "Score each seed on atomicity, relevance, testability, non-triviality and follow-up utility.",
                     "status": "review_pending",
                     "expected_summary_artifacts": [
-                        "open_set_review_summary.json",
+                        "open_set_seed_review_summary.json",
                         "open_set_disagreements.json",
                         "open_set_review_report.md",
                     ],

@@ -20,7 +20,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   open-set-review:
@@ -56,6 +56,14 @@ jobs:
             --output results/open_review/open_set_seed_output.json \
             --review-packets results/open_review/open_set_review_packets.json
 
+      - name: Genereer open-set summary op pending packets
+        run: |
+          python -m shadowseed.cli summarize-open-set-seed-review \
+            --input results/open_review/open_set_review_packets.json \
+            --output results/open_review/open_set_seed_review_summary.json \
+            --disagreements-output results/open_review/open_set_disagreements.json \
+            --report-output results/open_review/open_set_review_report.md
+
       - name: Schrijf korte run-uitleg
         run: |
           cat > results/open_review/README.md <<'MD'
@@ -67,13 +75,33 @@ jobs:
 
           - `open_set_seed_output.json`: de seed-output per item
           - `open_set_review_packets.json`: review-packets voor menselijke beoordeling
+          - `open_set_seed_review_summary.json`: geaggregeerde summary (pending tot review klaar)
+          - `open_set_disagreements.json`: seeds met gemengde reviewverdicts
+          - `open_set_review_report.md`: leesbaar Markdown-rapport
 
           Interpretatie:
 
-          - dit is een aanvullende evidencelaag
+          - dit is een aparte evidencelaag (evidence_layer: open_set_seed_quality)
           - dit is geen standaard regressierun
-          - deze output moet gelezen worden samen met menselijke review
+          - status is `review_in_progress` totdat menselijke reviewers packets hebben ingevuld
+          - lees deze laag niet als vervanging van de fixture-regressies
           MD
+
+      - name: Commit open-set summary naar repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add \
+            results/open_review/open_set_seed_review_summary.json \
+            results/open_review/open_set_disagreements.json \
+            results/open_review/open_set_review_report.md \
+            results/open_review/README.md
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen om te committen."
+          else
+            git commit -m "chore: update open-set review summary [skip ci]"
+            git push origin HEAD:main
+          fi
 
       - name: Upload open-set review artifacts
         uses: actions/upload-artifact@v4
@@ -83,5 +111,8 @@ jobs:
             benchmarks/open_review/input/hf_batch.json
             results/open_review/open_set_seed_output.json
             results/open_review/open_set_review_packets.json
+            results/open_review/open_set_seed_review_summary.json
+            results/open_review/open_set_disagreements.json
+            results/open_review/open_set_review_report.md
             results/open_review/README.md
           if-no-files-found: error
