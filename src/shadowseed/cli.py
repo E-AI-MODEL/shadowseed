@@ -256,7 +256,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     nlp.set_defaults(command="run-absencebench-smoke")
     nlp.add_argument("--input", default="examples/local_absencebench_sample.json")
-    nlp.add_argument("--output", default="results/absencebench_smoke.json")
+    nlp.add_argument("--output", default="absencebench_smoke.json")
 
     return parser
 
