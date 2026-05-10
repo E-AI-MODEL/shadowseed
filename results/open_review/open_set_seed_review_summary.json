@@ -1,0 +1,46 @@
+{
+  "summary": {
+    "evidence_layer": "open_set_seed_quality",
+    "packet_count": 0,
+    "completed_packet_count": 0,
+    "pending_packet_count": 0,
+    "accepted_packet_count": 0,
+    "rejected_packet_count": 0,
+    "packet_acceptance_rate": 0.0,
+    "unique_seed_count": 0,
+    "accepted_seed_count": 0,
+    "rejected_seed_count": 0,
+    "mixed_seed_count": 0,
+    "pending_seed_count": 0,
+    "seed_acceptance_rate": 0.0,
+    "seed_rejection_rate": 0.0,
+    "agreement_eligible_seed_count": 0,
+    "unanimous_seed_count": 0,
+    "unanimous_verdict_rate": 0.0,
+    "pairwise_decision_agreement_rate": 0.0,
+    "criteria": [
+      "atomicity",
+      "relevance",
+      "testability",
+      "non_triviality",
+      "follow_up_utility"
+    ],
+    "criterion_pass_rates": {
+      "atomicity": 0.0,
+      "relevance": 0.0,
+      "testability": 0.0,
+      "non_triviality": 0.0,
+      "follow_up_utility": 0.0
+    },
+    "reject_reason_counts": {},
+    "reviewer_ids": [],
+    "domain_seed_counts": {},
+    "status": "review_in_progress",
+    "artifacts": {
+      "summary": "results/open_review/open_set_seed_review_summary.json",
+      "disagreements": "results/open_review/open_set_disagreements.json",
+      "report": "results/open_review/open_set_review_report.md"
+    }
+  },
+  "results": []
+}
