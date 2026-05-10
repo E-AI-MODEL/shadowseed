@@ -1,30 +1,33 @@
 # Evaluation Layer Map
 
-Deze map is het doelvak voor de volgende SSL-bewijs-lagen.
+Deze map is het doelvak voor de SSL-bewijslagen uit de 4.6-koers.
 
-De huidige repo draait al een sterke regressie- en kleine benchmarklaag in `src/shadowseed/benchmark/`.
-De volgende fase vraagt niet om die laag weg te gooien, maar om duidelijker te scheiden wat regressie is en wat de hoofdclaim later moet gaan dragen.
+De huidige repo draait al een sterke regressie- en kleine benchmarklaag in `src/shadowseed/benchmark/`. Die laag blijft bestaan. Deze map maakt zichtbaar welke bewijssoort eigenaar is van nieuwe of bestaande evaluatielogica.
 
-## Bedoelde lagen
+## Lagen
 
-- `open_review`
-  Doel: open-set seedkwaliteit blind beoordelen zonder vaste seedlijst.
-- `adversarial`
-  Doel: de huidige Validation Gate vergelijken met zwakkere promotieregels.
-- `behavioral`
-  Doel: probe utility en vervolgstapkwaliteit meten.
-- `transfer`
-  Doel: domeintransfer buiten de bekende benchmarkdomeinen testen.
+| Map | Doel | Huidige status |
+|---|---|---|
+| `regression/` | Mechaniek, smoke en kleine vaste benchmarks bewaken | code leeft voorlopig vooral in `benchmark/` |
+| `open_review/` | Open-set seedkwaliteit blind beoordelen zonder vaste seedlijst | handmatige route bestaat, menselijke review blijft nodig |
+| `adversarial/` | Validation Gate vergelijken met zwakkere promotieregels | benchmark en casebook bestaan |
+| `behavioral/` | Probe utility en vervolgstapkwaliteit meten | eerste benchmark bestaat, verdere verdieping volgt |
+| `transfer/` | Domeintransfer buiten bekende benchmarkdomeinen testen | gepland |
 
 ## Werkregel
 
-Nieuwe evaluatielogica die niet puur regressie of kleine benchmark is, hoort vanaf nu conceptueel in deze laag thuis, ook als de code nog tijdelijk elders leeft.
+Nieuwe evaluatielogica moet expliciet aan één laag worden gekoppeld. Code mag tijdelijk nog in `src/shadowseed/benchmark/` blijven zolang gedrag en imports stabiel blijven.
 
 ## Belangrijke grens
 
-Deze map is geen vervanging van `src/shadowseed/benchmark/`.
+Deze map vervangt `src/shadowseed/benchmark/` nog niet.
 
 De hoofdregel blijft:
 
-- `benchmark/` bewaakt de bestaande regressieruggengraat
-- `evaluation/` wordt de plek voor zwaardere bewijs-lagen
+- `benchmark/` bewaakt de bestaande regressieruggengraat en kleine benchmarkroutes;
+- `evaluation/` wordt de plek waar bewijssoort, claimgrens en latere migratie zichtbaar zijn;
+- verplaatsen van echte Python-modules gebeurt pas in aparte PR's met tests.
+
+## Geen gedragswijziging
+
+Deze laagindeling verandert geen CLI-command, workflow, benchmarkoutput of publieke claim. Het is alleen de eerste ordeningsstap zodat latere refactors kleiner en veiliger blijven.
