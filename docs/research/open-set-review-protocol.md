@@ -1,0 +1,225 @@
+# Open-set Human Review Protocol
+
+Status: active protocol for first review round
+Date: 2026-05-10
+Related issue: #41
+Evidence layer: `open_set_seed_quality`
+
+## Purpose
+
+This protocol defines how the first real open-set seed review round should be run.
+
+The goal is to move open-set output from `review_pending` toward real human review evidence. The review measures seed quality on unfamiliar input. It is not a new fixed scenario benchmark and it is not a broad claim that SSL works in all settings.
+
+## Review target
+
+Review the seed packets produced by:
+
+```bash
+shadowseed run-open-set-seed-review \
+  --input benchmarks/open_review/input/hf_ag_news_test_batch.json \
+  --output results/open_review/open_set_seed_output.json \
+  --review-packets results/open_review/open_set_review_packets.json
+```
+
+Each packet contains one candidate seed generated from one open-set item.
+
+Reviewers judge the seed, not whether the whole source item is good and not whether the benchmark suite is complete.
+
+## First round size
+
+Use a small first round:
+
+- 12 to 20 source items;
+- two reviewers;
+- every reviewed seed gets both reviewers where possible;
+- do not expand the sample while the protocol is still being checked.
+
+A small complete round is better than a large partial round.
+
+## Reviewer identity
+
+Use stable reviewer IDs, for example:
+
+```text
+reviewer_a
+reviewer_b
+```
+
+Do not leave `reviewer_id` empty in completed packets.
+
+## Required review fields
+
+Each packet must fill these fields:
+
+| Field | Required value |
+|---|---|
+| `reviewer_id` | stable reviewer ID |
+| `review_status` | `accepted` or `rejected` |
+| `review_fields.atomicity` | boolean |
+| `review_fields.relevance` | boolean |
+| `review_fields.testability` | boolean |
+| `review_fields.non_triviality` | boolean |
+| `review_fields.follow_up_utility` | boolean |
+| `reject_reason` | one fixed code when rejected, otherwise `null` |
+| `reviewer_notes` | short explanation |
+
+Do not leave booleans as `null` in completed packets.
+
+## Criterion definitions
+
+### Atomicity
+
+Accept when the seed expresses one small missing point.
+
+Reject when it combines several independent points or names a broad theme.
+
+Examples of likely failures:
+
+- "privacy and security risks";
+- "economic, political and social context";
+- "all legal implications".
+
+### Relevance
+
+Accept when the seed clearly follows from the source excerpt.
+
+Reject when the seed is off-topic, imported from a generic prior, or only loosely related to the item.
+
+### Testability
+
+Accept when a follow-up answer could check whether the seed is covered.
+
+Reject when the seed is too vague to verify.
+
+### Non-triviality
+
+Accept when the seed adds a meaningful missing consideration.
+
+Reject when it only repeats the prompt, restates the obvious, or adds style advice.
+
+### Follow-up utility
+
+Accept when the seed could guide a useful next question, retrieval query, review step, or answer revision.
+
+Reject when it is technically related but not useful for a next action.
+
+## Accept rule
+
+Use `review_status: accepted` only when all five criteria pass:
+
+- atomicity: true
+- relevance: true
+- testability: true
+- non_triviality: true
+- follow_up_utility: true
+
+`reject_reason` must be `null` for accepted packets.
+
+## Reject rule
+
+Use `review_status: rejected` when one or more criteria fail.
+
+At least one criterion must be `false`.
+
+`reject_reason` must be one of the fixed codes below.
+
+## Fixed reject codes
+
+| Code | Use when |
+|---|---|
+| `too_broad` | Seed combines multiple points or names a large theme. |
+| `too_vague` | Seed is unclear or cannot guide concrete follow-up. |
+| `trivial` | Seed repeats the source or states the obvious. |
+| `not_relevant` | Seed does not follow from the source excerpt. |
+| `not_testable` | It is not possible to check whether an answer covers it. |
+| `duplicate` | Seed duplicates another seed for the same item. |
+| `style_not_gap` | Seed is writing-style feedback rather than a missing content point. |
+
+Use the most important failure as `reject_reason`. Mention secondary failures in `reviewer_notes`.
+
+## Disagreements
+
+A disagreement exists when reviewers do not reach the same aggregate decision for the same seed.
+
+Do not resolve disagreements by editing one reviewer's judgment after the fact.
+
+Instead:
+
+1. keep both reviews;
+2. run `summarize-open-set-seed-review`;
+3. inspect `results/open_review/open_set_disagreements.json`;
+4. decide separately whether a second review round is needed.
+
+Disagreement is useful signal. It should not be hidden.
+
+## Summarization command
+
+After review packets are filled, run:
+
+```bash
+shadowseed summarize-open-set-seed-review \
+  --input results/open_review/open_set_review_packets.json \
+  --output results/open_set_seed_review_summary.json \
+  --disagreements-output results/open_review/open_set_disagreements.json \
+  --report-output results/open_review/open_set_review_report.md
+```
+
+Expected artifacts:
+
+- `results/open_set_seed_review_summary.json`
+- `results/open_review/open_set_disagreements.json`
+- `results/open_review/open_set_review_report.md`
+
+## What to inspect
+
+After summarization, inspect:
+
+- packet count;
+- completed packet count;
+- unique seed count;
+- seed acceptance rate;
+- seed rejection rate;
+- mixed seed count;
+- pending seed count;
+- reject-reason distribution;
+- criterion pass rates;
+- pairwise decision agreement rate;
+- disagreements artifact.
+
+## Publication boundary
+
+This evidence layer may support a conservative claim such as:
+
+```text
+The open-set review layer now contains a first human-reviewed seed-quality sample.
+```
+
+Do not claim:
+
+```text
+SSL is proven to improve all answers on open data.
+```
+
+Do not merge this evidence into the standard regression score.
+
+## Analyzer boundary
+
+The analyzer may read `results/open_set_seed_review_summary.json` when it is present.
+
+If no real review summary exists, open-set metrics should remain `n/a` or review-pending.
+
+The summary is a manual evidence layer, not a standard CI-generated benchmark.
+
+## Quality bar for closing #41
+
+Issue #41 should only close when:
+
+- real completed review packets exist;
+- at least two reviewers are represented, unless a limitation is documented;
+- `summarize-open-set-seed-review` has produced the canonical summary;
+- disagreements are preserved rather than overwritten;
+- the report labels the layer as open-set evidence, not broad proof;
+- the analyzer can read the real summary when present.
+
+This protocol PR prepares the round. It does not by itself complete #41.
