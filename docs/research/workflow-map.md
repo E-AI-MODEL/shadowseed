@@ -3,6 +3,7 @@
 Status: current as of 2026-05-10
 Base commit: `9e8fef85acf5ffa6ded5366cea9214edf8819071`
 Related issue: #40
+Follow-up cleanup: PR #55 removes the duplicate manual blind benchmark workflow.
 
 ## Purpose
 
@@ -11,13 +12,19 @@ This document maps the GitHub Actions surface and audits whether the current wor
 It has two goals:
 
 1. show which workflows collect evidence, analyze results, publish public pages, or write generated files back to `main`;
-2. identify overlap and propose a cleanup order without changing workflow behavior in this PR.
+2. identify overlap, record cleanup decisions, and propose a safe reduction order.
 
-This is an audit document. It does not remove, disable or modify any workflow.
+This is primarily an audit document. PR #55 is the first small implementation of the audit: it removes the duplicate manual blind benchmark workflow while keeping the standard blind benchmark job in `tests.yml`.
 
 ## Scope
 
-The repository currently has 21 workflow files under `.github/workflows/`.
+Before PR #55, the repository had 21 workflow files under `.github/workflows/`.
+
+After PR #55 merges, the repository has 20 workflow files. The removed workflow is:
+
+- `.github/workflows/blind-benchmark.yml`
+
+The blind benchmark itself remains covered by the `blind-benchmark-smoke` job in `.github/workflows/tests.yml`.
 
 This audit focuses on:
 
@@ -38,7 +45,7 @@ This audit focuses on:
 | keep, document better | Workflow can stay, but its name or docs should explain the boundary more clearly. |
 | merge candidate | Workflow overlaps another route and should be considered for consolidation. |
 | fallback only | Workflow is useful only as a manual recovery path. |
-| disable candidate | Workflow should likely be disabled after a replacement exists. |
+| removed | Workflow was removed after review because another maintained route covers the same work. |
 | delete candidate after replacement | Workflow should not be removed until a better route is merged and tested. |
 
 ## Main route overview
@@ -56,8 +63,34 @@ This audit focuses on:
 | Vector and SSOT manual routes | `complete-vector-ssot.yml`, `vectorstore-smoke.yml`, `ssot-smoke.yml`, `nightly-vector-backend-comparison.yml` | Backend smoke and comparison routes | Medium | merge candidate group |
 | Retrieval routes | `retrieval-backend-comparison.yml`, `retrieval-model-comparison.yml`, `retrieval-model-hf.yml` | Retrieval backend and model comparisons | Medium | merge candidate group |
 | Paper routes | `paper-pipeline.yml`, `paper-evidence-smoke.yml`, `paper-scenario-smoke.yml`, `paper-scenario-suite.yml` | Paper ingestion and scenario smoke/suite runs | Medium | merge candidate group |
-| Manual blind benchmark | `blind-benchmark.yml` | Manual copy of the standard blind smoke pattern | Low to medium | disable candidate after review |
+| Manual blind benchmark | `blind-benchmark.yml` | Duplicate of the standard blind smoke pattern | Low to medium | removed in PR #55 |
 | SSOT falsification | `ssot-falsification.yml` | Falsification-specific SSOT route | Medium | keep, document better |
+
+## Applied cleanup
+
+### PR #55: remove duplicate manual blind benchmark workflow
+
+Removed workflow:
+
+- `.github/workflows/blind-benchmark.yml`
+
+Reason:
+
+- it used the same generated private labels as the blind benchmark job in `tests.yml`;
+- it used the same public input: `src/shadowseed/data/blind_suite_public.json`;
+- it ran the same `run-blind-benchmark` command shape;
+- it wrote the same benchmark output path: `results/blind_benchmark.json`;
+- the only meaningful difference was manual trigger plus artifact name.
+
+Retained route:
+
+- `.github/workflows/tests.yml` job `blind-benchmark-smoke`
+
+Effect:
+
+- workflow count decreases from 21 to 20;
+- blind benchmark coverage remains in standard CI;
+- no benchmark input, output path, analyzer behavior or publication route changes.
 
 ## Standard CI route
 
@@ -579,32 +612,19 @@ Reason:
 
 ### `.github/workflows/blind-benchmark.yml`
 
-Trigger:
+Status:
 
-- `workflow_dispatch`
-
-Purpose:
-
-- manually run blind benchmark with generated private labels
-
-Public effect:
-
-- low to medium
-
-Audit judgement:
-
-- disable candidate after review
+- removed in PR #55
 
 Reason:
 
-- standard CI already contains a blind benchmark smoke job with similar generated private labels
-- manual route may still be useful for debugging, but its difference from the standard route is not clear enough
+- standard CI already contains the maintained `blind-benchmark-smoke` job;
+- the removed manual workflow repeated the same public input, private-label fixture, CLI route and output path;
+- keeping both made the workflow list noisier without adding a separate evidence layer.
 
-Recommended action:
+Retained coverage:
 
-- compare exact behavior with the `blind-benchmark-smoke` job in `tests.yml`
-- if equivalent, disable or rename as `manual-blind-debug.yml`
-- if different, document the difference explicitly
+- `.github/workflows/tests.yml` job `blind-benchmark-smoke`
 
 ## SSOT falsification route
 
@@ -702,14 +722,14 @@ Recommendation:
 - audit these as a follow-up group
 - likely consolidate into one `paper-validation.yml` with mode inputs
 
-### 5. Manual blind benchmark may duplicate standard CI
+### 5. Manual blind benchmark duplicate removed
 
-`blind-benchmark.yml` appears to repeat a pattern already present in `tests.yml`.
+`blind-benchmark.yml` repeated work that is already covered by `tests.yml`.
 
-Recommendation:
+Resolution:
 
-- compare exact outputs in a follow-up
-- if equivalent, disable or rename as debug-only
+- removed in PR #55
+- keep `tests.yml` as the single maintained blind benchmark route
 
 ## Recommended cleanup order
 
@@ -719,35 +739,33 @@ Suggested order:
 
 1. Keep `tests.yml` and `publish-test-results.yml` as the stable standard route.
 2. Rename or document `pages-dashboard.yml` as fallback-only.
-3. Decide whether `blind-benchmark.yml` is still needed outside standard CI.
+3. Remove the duplicate manual blind benchmark workflow after direct comparison. Completed by PR #55.
 4. Consolidate SLM workflows into one manual SLM publication route.
 5. Consolidate backend and retrieval workflows after a separate route contract.
 6. Consolidate paper workflows after a focused paper-route audit.
-7. Only then remove old branches or delete workflow files.
+7. Only then remove old branches or delete more workflow files.
 
-## What should not happen in this PR
+## Follow-up constraints
 
-This PR should not:
+Future workflow cleanup PRs should avoid mixing unrelated changes.
 
-- delete workflows
-- disable triggers
-- change Pages or Wiki behavior
-- merge YAML files
-- change artifact names
-- change analyzer behavior
+A workflow cleanup PR should state whether it:
 
-It should only make the route map and cleanup advice visible.
+- deletes a workflow;
+- disables a trigger;
+- changes Pages or Wiki behavior;
+- merges YAML files;
+- changes artifact names;
+- changes analyzer behavior.
 
-## Practical next PR after this audit
+PR #55 only deletes the duplicate manual blind benchmark workflow and updates this audit document.
 
-The next workflow-cleanup PR should be small.
+## Practical next PR after this cleanup
 
-Best first candidate:
+After PR #55, the next small workflow cleanup should be one of:
 
-- clarify `pages-dashboard.yml` as manual fallback only, either by renaming the workflow title or adding an inline comment in the YAML
+- finish/merge the `pages-dashboard.yml` fallback-label PR if it is still open;
+- start a focused SLM publication-route issue before touching SLM YAML;
+- start a focused backend/retrieval workflow contract before merging backend workflows.
 
-Alternative first candidate:
-
-- compare `blind-benchmark.yml` with the blind job in `tests.yml` and disable or rename it if equivalent
-
-Avoid starting with SLM, paper or backend consolidation. Those have higher public-claim and dependency risk.
+Avoid starting with SLM, paper or backend consolidation in the same PR as a small cleanup. Those have higher public-claim and dependency risk.
