@@ -16,6 +16,10 @@ from typing import Any
 
 import numpy as np
 
+from shadowseed.benchmark.evidence_layers import (
+    OPEN_SET_SEED_QUALITY,
+    assert_valid_layer,
+)
 from shadowseed.benchmark.open_set_candidate_adapter import (
     OPEN_SET_CANDIDATE_ADAPTER_ID,
     raw_open_set_candidates,
@@ -41,7 +45,7 @@ REJECT_CODES = [
     "style_not_gap",
 ]
 DEFAULT_REVIEWER_IDS = ["reviewer_a", "reviewer_b"]
-EVIDENCE_LAYER = "open_set_seed_quality"
+EVIDENCE_LAYER = assert_valid_layer(OPEN_SET_SEED_QUALITY)
 ARTIFACT_CONTRACT_VERSION = "open-review-0.2"
 
 
@@ -95,6 +99,10 @@ def _open_set_contract_metadata() -> dict[str, Any]:
         "ground_truth_seeds_used": False,
         "regression_gap_detector_used": False,
         "candidate_quality_requires_human_review": True,
+        "seed_verdict_rule": (
+            "A seed counts as accepted or rejected only after every generated "
+            "reviewer row for that seed is completed and valid."
+        ),
     }
 
 
@@ -200,8 +208,9 @@ def run_open_set_seed_review(
                     "instructions": (
                         "One packet row is generated per reviewer per seed. "
                         "Do not edit a single row sequentially for multiple reviewers. "
-                        "Score each seed on atomicity, relevance, testability, "
-                        "non-triviality and follow-up utility."
+                        "A seed only counts as accepted or rejected after every generated "
+                        "reviewer row is completed and valid. Score each seed on atomicity, "
+                        "relevance, testability, non-triviality and follow-up utility."
                     ),
                     "status": "review_pending",
                     "expected_summary_artifacts": [
