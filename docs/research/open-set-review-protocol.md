@@ -74,6 +74,8 @@ There must be one row per reviewer per seed. The row is distinguished by:
 
 This is required because the summarizer groups rows by the shared `(item_id, seed_text)` key and detects disagreement across the reviewer rows.
 
+A seed telt in de summary pas als `accepted` of `rejected` wanneer alle gegenereerde reviewer-rijen voor die seed compleet en geldig zijn ingevuld. Een enkele ingevulde reviewer-rij telt dus niet als seed-level evidence.
+
 ## Required review fields
 
 Each packet row must fill these fields:
@@ -197,6 +199,8 @@ Expected artifacts:
 - `results/open_set_seed_review_summary.json`
 - `results/open_review/open_set_disagreements.json`
 - `results/open_review/open_set_review_report.md`
+
+De summarizer valideert ook completed packet rows. Een rij met bijvoorbeeld `review_status: accepted` maar ontbrekende booleans wordt als invalid gemarkeerd en blokkeert de laag totdat die rij is hersteld.
 
 ## What to inspect
 
