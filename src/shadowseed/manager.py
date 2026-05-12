@@ -53,6 +53,7 @@ class ShadowSeed:
     weight: float = 0.0
     occurrence_count: int = 1
     evidence_count: int = 0
+    contradiction_score: float = 0.0
     status: SeedStatus = SeedStatus.NEW
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
     updated_at: str = field(default_factory=lambda: datetime.now().isoformat())
@@ -69,9 +70,14 @@ class Constellation:
     members: list[str]
     centroid: list[float]
     combined_weight: float
+    id: str = ""
+    label: str = ""
+    probe_type: str = "socratic"
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        data["member_ids"] = list(self.members)
+        return data
 
 
 @dataclass
@@ -462,6 +468,7 @@ class SSLManager:
         external_evidence: bool,
     ) -> ValidationGateResult:
         seed.weight = max(0.0, seed.weight - self.contradiction_penalty)
+        seed.contradiction_score = min(1.0, seed.contradiction_score + 0.25)
         seed.occurrence_count = 1
         seed.status = SeedStatus.NEW
         self._touch_seed(seed)
@@ -689,6 +696,16 @@ class SSLManager:
                 self._record_event("expired", seed_id, max_age_days=max_age_days)
         return expired
 
+    @staticmethod
+    def _constellation_label(cluster: list[ShadowSeed]) -> str:
+        for seed in cluster:
+            for keyword in seed.trigger_keywords:
+                clean = keyword.strip()
+                if clean:
+                    return f"Cluster rond {clean}."
+        seed_text = cluster[0].text.strip().rstrip(".")
+        return f"Cluster rond {seed_text[:48]}."
+
     def find_constellations(
         self, threshold: float = 0.70, min_members: int = 3
     ) -> list[Constellation]:
@@ -716,6 +733,9 @@ class SSLManager:
                         members=list(member_ids),
                         centroid=centroid.tolist(),
                         combined_weight=float(np.mean([item.weight for item in cluster])),
+                        id=f"const_{len(constellations) + 1:03d}",
+                        label=self._constellation_label(cluster),
+                        probe_type="retrieval" if len(cluster) >= 5 else "socratic",
                     )
                 )
 
