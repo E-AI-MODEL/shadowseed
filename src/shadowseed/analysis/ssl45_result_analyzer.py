@@ -141,9 +141,16 @@ def build_conclusion(
     open_set_pairwise_decision_agreement_rate = float(
         metric(open_set_payload, "pairwise_decision_agreement_rate", 0.0) or 0.0
     )
+    open_set_status = str(metric(open_set_payload, "status", "")) if open_set_payload else ""
+    open_set_completed_seed_count = int(metric(open_set_payload, "completed_seed_count", 0) or 0)
     backend = str(metric(model_benefit_payload, "backend", "unknown"))
     is_real_model = backend.startswith("hf-transformers:")
-    has_open_set = bool(open_set_payload)
+    has_open_set_scaffold = bool(open_set_payload)
+    has_open_set = (
+        has_open_set_scaffold
+        and open_set_status == "review_complete"
+        and open_set_completed_seed_count > 0
+    )
     has_adversarial = bool(adversarial_payload)
 
     if has_open_set and has_adversarial:
@@ -230,6 +237,10 @@ def build_conclusion(
             support.append(
                 "De open-set review is aanwezig, maar laat nog geen overtuigende geaccepteerde seeds zien."
             )
+    elif has_open_set_scaffold:
+        support.append(
+            "De open-set reviewroute is aanwezig, maar de huidige summary is nog niet volledig two-reviewer afgerond en telt daarom nog niet als voltooide evidencelaag."
+        )
 
     if has_adversarial:
         if adversarial_gate_fp == 0.0 and adversarial_delta > 0:
@@ -468,7 +479,10 @@ def make_markdown_report(
                 "",
                 "| Metric | Waarde |",
                 "|---|---:|",
+                f"| Review status | {metric(open_set_payload, 'status', 'n/a')} |",
                 f"| Review packets | {short_number(metric(open_set_payload, 'packet_count'))} |",
+                f"| Fully reviewed seeds | {short_number(metric(open_set_payload, 'completed_seed_count'))} |",
+                f"| Invalid packets | {short_number(metric(open_set_payload, 'invalid_packet_count'))} |",
                 f"| Unique seeds | {short_number(metric(open_set_payload, 'unique_seed_count'))} |",
                 f"| Seed acceptance rate | {short_number(metric(open_set_payload, 'seed_acceptance_rate'))} |",
                 f"| Seed rejection rate | {short_number(metric(open_set_payload, 'seed_rejection_rate'))} |",
