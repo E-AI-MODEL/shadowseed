@@ -73,6 +73,8 @@ For each generated packet row:
 
 Do not let two reviewers edit the same packet row sequentially. Disagreement detection needs separate rows that share the same `(item_id, seed_text)` key and differ by `reviewer_id`.
 
+Een seed is nog niet `accepted` zodra reviewer A klaar is. De seed telt pas mee als beide gegenereerde reviewer-rijen volledig en geldig zijn ingevuld.
+
 ## Reject codes
 
 Allowed codes:
