@@ -1,10 +1,10 @@
-# Shadow Seed Learning 4.5
+# Shadow Seed Learning
 
-Welkom. Deze wiki is nu ook bedoeld voor bezoekers die het project voor het eerst zien.
+Deze wiki is de publieke ingang voor de huidige repo-status.
 
-De kernvraag van SSL is eenvoudig:
+De kernvraag van SSL blijft eenvoudig:
 
-> kan een model betere antwoorden geven als het niet alleen kijkt naar aanwezige informatie, maar ook naar structurele afwezigheden?
+> kan een model betere antwoorden geven als het niet alleen kijkt naar aanwezige informatie, maar ook naar kleine structurele afwezigheden?
 
 SSL slaat zo'n afwezigheid op als een seed. Die seed begint gewichtloos. Pas na validatie via de Validation Gate mag hij invloed krijgen.
 
@@ -12,11 +12,17 @@ SSL slaat zo'n afwezigheid op als een seed. Die seed begint gewichtloos. Pas na 
 
 Als je snel wilt begrijpen wat je bekijkt, gebruik deze volgorde:
 
-1. [Start hier](Start-Hier)
-2. [Latest Test Results](Latest-Test-Results)
-3. [SSL 4.5 Analysis](SSL-45-Analysis)
-4. [Benchmarks](Benchmarks)
-5. [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+1. [Latest Test Results](Latest-Test-Results)
+2. [SSL 4.5 Analysis](SSL-45-Analysis)
+3. [Benchmarks](Benchmarks)
+4. [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+
+Deze vier ingangen beantwoorden samen:
+
+- wat de standaard publicatie nu laat zien;
+- welke bewijslaag je bekijkt;
+- wat je voorzichtig wel kunt concluderen;
+- waar de claimgrens nog ligt.
 
 ## Wat bezoekers meestal willen weten
 
@@ -74,7 +80,7 @@ Niet elke pagina draagt dezelfde claim.
 
 > Een seed bevat precies één gap.
 
-Dat principe houdt SSL tegelijk simpel en complex:
+Dat principe houdt SSL tegelijk simpel en streng:
 
 - simpel, omdat elke seed klein en toetsbaar moet blijven;
-- complex, omdat de totale keten daarna detectie, validatie, retrieval, falsificatie en rapportage kan combineren.
+- streng, omdat de totale keten daarna detectie, validatie, retrieval, falsificatie en rapportage moet verantwoorden.
