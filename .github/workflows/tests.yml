@@ -3,6 +3,7 @@ name: Checks en benchmark-resultaten
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
