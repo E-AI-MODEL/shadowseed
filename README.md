@@ -1,4 +1,4 @@
-# Shadow Seed Learning 4.5
+# Shadow Seed Learning
 
 [![checks](https://github.com/E-AI-MODEL/shadowseed/actions/workflows/tests.yml/badge.svg)](https://github.com/E-AI-MODEL/shadowseed/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -31,15 +31,27 @@ Die vier ingangen beantwoorden samen:
 
 De repo is het best te lezen als:
 
-- een werkende SSL 4.5 benchmark-harness;
-- met een canonieke inhoudelijke koers richting `docs/00_shadow_seed_learning_4_6.md`;
-- en met groeiende aanvullende evidencelagen voor open-set seedkwaliteit, adversarial Gate-gedrag en probe utility.
+- een werkende SSL-harness met een sterke regressie- en benchmarkruggengraat;
+- een repo waarvan `docs/00_shadow_seed_learning_4_6.md` de canonieke inhoudelijke bron is;
+- een project dat aanvullende evidencelagen opbouwt voor open-set seedkwaliteit, adversarial Gate-gedrag en probe utility.
 
 Kort gezegd:
 
 - de mechanische kern is aanwezig;
 - de standaard meetketen draait;
 - de hoofdclaim wordt nog steeds bewust klein gehouden.
+
+## Canonieke en historische bron
+
+Gebruik deze regel voor documentatie:
+
+- `docs/00_shadow_seed_learning_4_6.md` is de huidige canonieke bron voor theorie, evaluatiekoers en repo-alignment
+- `docs/legacy/00_shadow_seed_learning_4_5.md` blijft beschikbaar als historische technische referentie voor de eerdere 4.5-specificatie
+
+Dat betekent:
+
+- 4.6 vertelt waar de repo inhoudelijk heen moet;
+- 4.5 blijft leesbaar, maar is niet meer de primaire bron voor huidige alignment-beslissingen.
 
 ## Wat de standaardresultaten zijn
 
@@ -116,14 +128,25 @@ Belangrijk:
 
 ## Belangrijkste documenten
 
+Huidige bron- en researchstack:
+
 - `docs/00_shadow_seed_learning_4_6.md`
+- `docs/research/current-status.md`
+- `docs/research/work-categories.md`
+- `docs/research/roadmap-shadowseed-stabilization.md`
+- `docs/research/evaluation-matrix.md`
+- `docs/research/artifact-contracts.md`
+- `docs/research/workflow-map.md`
+
+Technische repo-oriëntatie:
+
 - `docs/ARCHITECTURE_MAP.md`
 - `docs/CLI_COMMAND_MAP.md`
-- `docs/research/current-status.md`
-- `docs/research/evaluation-matrix.md`
-- `docs/research/next-phase-implementation.md`
-- `docs/wiki/Home.md`
-- `docs/wiki/Benchmarks.md`
+- `docs/README.md`
+
+Historische referentie:
+
+- `docs/legacy/00_shadow_seed_learning_4_5.md`
 
 ## Kernregel
 
