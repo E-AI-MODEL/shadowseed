@@ -1,8 +1,8 @@
 # Documentatie
 
-Deze map bevat nu drie verschillende documentrollen die bewust uit elkaar worden gehouden.
+Deze map houdt documentrollen bewust uit elkaar.
 
-## 1. Canonieke bron
+## 1. Huidige canonieke bron
 
 Begin voor theorie en doelbeeld hier:
 
@@ -18,9 +18,44 @@ Praktische regel:
 
 > als afgeleide docs inhoudelijk botsen met `00_shadow_seed_learning_4_6.md`, dan gaat `00_` voor op theorie en doelbeeld.
 
-## 2. Afgeleide werkdocumenten
+## 2. Historische bron
 
-Deze documenten zijn afgeleid van de canonieke bron en helpen bij uitleg, benchmarkgebruik en dagelijkse oriëntatie.
+De eerdere 4.5-specificatie blijft beschikbaar als historische referentie:
+
+1. [Historische technische bron: SSL 4.5](legacy/00_shadow_seed_learning_4_5.md)
+
+Gebruik die bron om de eerdere mechanische formulering terug te lezen, niet als primaire bron voor huidige repo-alignment.
+
+## 3. Huidige research-stack
+
+Deze documenten zijn nu de belangrijkste actuele research- en alignmentdocs.
+
+1. [Huidige status](research/current-status.md)
+2. [SWOT naar werkcategorieen](research/work-categories.md)
+3. [Roadmap stabilisatie en evidence-hardening](research/roadmap-shadowseed-stabilization.md)
+4. [Evaluatiematrix](research/evaluation-matrix.md)
+5. [Artifact contracts](research/artifact-contracts.md)
+6. [Workflow map](research/workflow-map.md)
+
+Praktische regel:
+
+> de research-docs vertellen wat vandaag al staat, welke bewijslagen nog gebouwd moeten worden, en hoe die lagen zichtbaar moeten blijven in code, workflows en publicatie.
+
+## 4. Ondersteunende en oudere research-docs
+
+Deze documenten kunnen nog nuttig zijn, maar horen niet meer tot de kleinste huidige bronstack.
+
+1. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
+2. [Volgende implementatiefase](research/next-phase-implementation.md)
+3. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
+4. [Evaluation layer target architecture](research/evaluation-layer-target-architecture.md)
+5. [Workflow evidence taxonomy](research/workflow-evidence-taxonomy.md)
+
+Gebruik deze documenten als verdieping, niet als eerste bron wanneer current status, roadmap of claimgrenzen onduidelijk zijn.
+
+## 5. Afgeleide werkdocumenten
+
+Deze documenten helpen bij uitleg, benchmarkgebruik en dagelijkse oriëntatie.
 
 1. [Framework](01_framework.md)
 2. [Atomische seeds](02_atomic_seeds.md)
@@ -33,44 +68,26 @@ Deze documenten zijn afgeleid van de canonieke bron en helpen bij uitleg, benchm
 9. [Repo-overzicht](ARCHITECTURE_MAP.md)
 10. [Resultaten](results.md)
 
-Deze documenten zijn bedoeld om delen van het systeem sneller te kunnen lezen zonder telkens de volledige bron te hoeven openen.
-
-## 3. Research- en statusdocumenten
-
-Deze documenten zijn leidend voor de vraag wat de repo vandaag werkelijk bewijst en waar ze inhoudelijk heen wil.
-
-1. [Huidige status](research/current-status.md)
-2. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
-3. [Evaluatiematrix](research/evaluation-matrix.md)
-4. [Open-set en adversarial plan](research/open-set-adversarial-plan.md)
-5. [Evaluation layer target architecture](research/evaluation-layer-target-architecture.md)
-6. [Workflow evidence taxonomy](research/workflow-evidence-taxonomy.md)
-
-Praktische regel:
-
-> `00_` vertelt wat SSL inhoudelijk wil zijn.
->
-> de research-docs vertellen wat vandaag al staat, welke bewijslaag nog gebouwd moet worden, en hoe die lagen straks in code, CLI en artifacts zichtbaar moeten worden.
-
 ## Aanbevolen leesroutes
 
-### Route A — Volledige inhoud en doelbeeld
+### Route A — Huidige bronstack
 
 Lees in deze volgorde:
 
 1. [Canonieke bron: SSL 4.6](00_shadow_seed_learning_4_6.md)
 2. [Huidige status](research/current-status.md)
-3. [Scenario-onafhankelijk roadmap](research/scenario-independence-roadmap.md)
-4. [Evaluatiematrix](research/evaluation-matrix.md)
-5. [Evaluation layer target architecture](research/evaluation-layer-target-architecture.md)
-6. [Workflow evidence taxonomy](research/workflow-evidence-taxonomy.md)
+3. [SWOT naar werkcategorieen](research/work-categories.md)
+4. [Roadmap stabilisatie en evidence-hardening](research/roadmap-shadowseed-stabilization.md)
+5. [Evaluatiematrix](research/evaluation-matrix.md)
+6. [Artifact contracts](research/artifact-contracts.md)
+7. [Workflow map](research/workflow-map.md)
 
 Gebruik deze route als je wilt begrijpen:
 
 - wat SSL inhoudelijk claimt;
 - wat de repo vandaag werkelijk aantoont;
-- hoe de hoofdclaim moet verschuiven naar sterkere evaluatielagen;
-- welke repo-structuur nodig is om regressie, open review, adversarial, behavioral en transfer niet te vermengen.
+- welke issues nu preservation-, reduction-, opportunity- of risk-werk zijn;
+- hoe artifacts en workflows zich tot de claimgrens verhouden.
 
 ### Route B — Dagelijks repo-gebruik
 
@@ -89,11 +106,13 @@ Gebruik deze route als je vooral wilt draaien, vergelijken, publiceren of benchm
 | Vraag | Leidende bron |
 |---|---|
 | Wat is SSL inhoudelijk en waar moet het heen? | `00_shadow_seed_learning_4_6.md` |
+| Waar staat de oudere 4.5-specificatie? | `legacy/00_shadow_seed_learning_4_5.md` |
 | Wat bewijst de repo vandaag echt? | `research/current-status.md` |
+| Hoe worden open issues en workstreams geordend? | `research/work-categories.md` |
+| Wat is de huidige uitvoervolgorde van het werk? | `research/roadmap-shadowseed-stabilization.md` |
 | Welke evaluatielagen moeten de hoofdclaim gaan dragen? | `research/evaluation-matrix.md` |
-| Hoe migreert de repo weg van scenario-afhankelijkheid? | `research/scenario-independence-roadmap.md` |
-| Hoe moeten evaluatielagen straks zichtbaar worden in code, CLI en artifacts? | `research/evaluation-layer-target-architecture.md` |
-| Hoe moeten workflows, benchmarkruns en evidence-lagen benoemd worden? | `research/workflow-evidence-taxonomy.md` |
+| Hoe worden artifacts en analyzer-inputs benoemd? | `research/artifact-contracts.md` |
+| Hoe lopen workflows en publicatieroutes? | `research/workflow-map.md` |
 | Welke onderdelen heeft de repo nu? | `ARCHITECTURE_MAP.md` |
 | Welke commands en workflows horen bij welke laag? | `CLI_COMMAND_MAP.md` en `.github/workflows/` |
 

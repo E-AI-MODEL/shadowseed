@@ -1,7 +1,7 @@
 # Shadowseed Stabilization And Evidence-Hardening Roadmap
 
 Status: active
-Date: 2026-05-10
+Date: 2026-05-13
 Scope: repository stability, artifact discipline, workflow clarity, and next-step research hardening
 
 ## Goal
@@ -14,7 +14,7 @@ The order matters:
 
 1. fix active alignment and contract drift
 2. document the current stack and artifact contracts
-3. add a minimal quality gate
+3. turn SWOT observations into usable work categories
 4. make workflow behavior easier to understand
 5. deepen the real evidence layers
 6. only then add heavier tooling or revisit a larger version claim
@@ -39,7 +39,7 @@ Done when:
 Purpose: stop working from memory or stale assumptions.
 
 Actions:
-- create `docs/research/current-stack-status.md`
+- maintain `docs/research/current-status.md`
 - record only repo-derived facts: Python version, dependencies, extras, workflows, CLI defaults, artifact names, and missing tooling
 - include dates for any counts or status snapshots
 
@@ -52,6 +52,9 @@ Done when:
 
 Purpose: turn the SWOT into a usable execution model.
 
+Primary document:
+- `docs/research/work-categories.md`
+
 Categories:
 - strengths to preserve
 - weaknesses to reduce
@@ -59,40 +62,22 @@ Categories:
 - threats to constrain
 
 Examples:
-- strengths: small Python core, optional extras, fixture-first CI, separation between standard CI and manual research runs
-- weaknesses: no linter, no formatter policy, no type checker, no coverage, no pre-commit, no lockfile, artifact drift risk
-- opportunities: minimal quality gate, explicit artifact contracts, workflow map, real open-set human review, deeper adversarial Gate evaluation
-- threats: workflow sprawl, stale docs, overclaiming from fixture results, artifacts bypassing analysis, oversized mixed-goal PRs
+- preserve: small Python core, atomic seeds, manager and Gate logic, fixture-first CI, explicit artifact contracts
+- reduce: stale docs, duplicate publication routes, mixed claim language, path drift risk
+- use: real open-set human review, deeper adversarial Gate evaluation, probe utility evaluation, selective consolidation
+- constrain: workflow sprawl, overclaiming from fixture results, artifacts bypassing analysis, oversized mixed-goal PRs
 
 Done when:
 - each SWOT observation belongs to a concrete work category
 - technical work and research work are clearly separated
+- the category model is usable for issue and PR scoping
 
-## Phase 2: Add A Minimal Quality Gate
-
-Purpose: catch simple Python problems early without disrupting research flow.
-
-Initial choice:
-- add `ruff`
-- do not add `black`, `mypy`, coverage, or pre-commit yet
-
-Actions:
-- add `ruff` to test or dev extras
-- add a minimal config to `pyproject.toml`
-- run `python -m ruff check src tests` before `pytest`
-- begin with safe rules only: syntax, imports, unused imports, obvious Python errors
-
-Done when:
-- `ruff check src tests` is green
-- `pytest` stays green
-- there is no benchmark behavior change
-
-## Phase 3: Make Artifact And Analyzer-Publication Contracts Explicit
+## Phase 2: Make Artifact And Analyzer-Publication Contracts Explicit
 
 Purpose: stop CLI, workflows, analyzer, tests, docs, and public reporting from speaking different path dialects or mixing raw evidence with interpretive outputs implicitly.
 
 Actions:
-- create `docs/research/artifact-contracts.md`
+- maintain `docs/research/artifact-contracts.md`
 - document per evidence layer: command, input path, output path, analyzer path, artifact name, and status (`standard_ci`, `manual`, `experimental`)
 - begin with: gap suite, false-positive suite, benefit suite, model benefit suite, blind benchmark, adversarial Gate, probe utility, open-set review, and AbsenceBench smoke
 - mark which artifacts are raw outputs, summaries, analyzer-facing inputs, and public-report inputs
@@ -106,12 +91,12 @@ Done when:
 - analyzer-facing and publication-facing artifacts are clearly distinguished
 - it is visible which outputs are raw evidence and which are interpretive summaries
 
-## Phase 4: Create A Workflow And Claim-Publication Map
+## Phase 3: Create A Workflow And Claim-Publication Map
 
 Purpose: make workflow behavior readable without hunting through Actions YAML and make public claim-publication routes visible end to end.
 
 Actions:
-- create `docs/research/workflow-map.md`
+- maintain `docs/research/workflow-map.md`
 - for each workflow document: trigger, purpose, outputs, whether it writes back to the repo, whether it uses secrets, and whether it belongs to standard CI or manual research
 - explicitly separate standard CI, publish/wiki/pages, manual HF or open-set routes, and model or retrieval routes
 - mark write-back workflows with permissions, branch guards, and touched files
@@ -125,7 +110,7 @@ Done when:
 - public-report publication routes are visible end to end
 - it is clear which workflow paths can affect public claim wording versus only raw artifacts or metrics
 
-## Phase 5: Complete The First Real Open-Set Review Round
+## Phase 4: Complete The First Real Open-Set Review Round
 
 Purpose: move from pending review packets to actual human review evidence.
 
@@ -147,7 +132,7 @@ Done when:
 - the analyzer reads real review output
 - reporting clearly says this is not standard regression evidence
 
-## Phase 6: Deepen Adversarial Gate Evaluation
+## Phase 5: Deepen Adversarial Gate Evaluation
 
 Purpose: show that the current Gate is stronger than weaker promotion routes.
 
@@ -161,7 +146,7 @@ Done when:
 - the current Gate promotes fewer bad seeds than the baseline variants
 - examples and summary metrics support each other
 
-## Phase 7: Evaluate Probe Feedback Behavior
+## Phase 6: Evaluate Probe Feedback Behavior
 
 Purpose: verify that the reward and penalty loop is not only present but behaviorally meaningful.
 
@@ -175,7 +160,7 @@ Done when:
 - probe feedback has measurable lifecycle effects
 - weak probes do not merely log but also correct behavior
 
-## Phase 8: Expand Tooling Slowly
+## Phase 7: Expand Tooling Slowly
 
 Purpose: add engineering discipline without creating noise.
 
@@ -194,7 +179,7 @@ Done when:
 - benchmark claims do not change
 - churn stays low
 
-## Phase 9: Clean Up Documentation
+## Phase 8: Clean Up Documentation
 
 Purpose: keep docs aligned with code, workflows, and evidence limits.
 
@@ -202,14 +187,16 @@ Actions:
 - remove stale artifact names and old paths
 - weaken any language that overclaims fixture or pending outputs
 - separate status docs, plan docs, and report docs more clearly
-- add a small header to each research doc with date, status, evidence layer, and whether it is current
+- add a small header to each current research doc with date, status, role, and whether it is current
+- keep historical sources available, but outside the current-source lane
 
 Done when:
 - old paths no longer recur
 - status and planning text are not mixed together
 - docs do not claim more than the data supports
+- older canonical material is still readable without competing with the current source stack
 
-## Phase 10: Revisit Positioning
+## Phase 9: Revisit Positioning
 
 Purpose: decide whether the project should still present as an evolved 4.6 line or whether stronger evidence supports a bigger label.
 
@@ -227,15 +214,14 @@ Only revisit a 5.0-style shift if:
 ## Recommended Immediate Order
 
 1. acute alignment fixes
-2. current stack status
+2. current technical status and doc-source clarity
 3. SWOT work categories
-4. ruff quality gate
-5. artifact and analyzer-publication contracts
-6. workflow and claim-publication map
-7. first real open-set review round
-8. deeper adversarial Gate comparison
-9. probe feedback evaluation
-10. only then larger tooling and version-positioning decisions
+4. artifact and analyzer-publication contracts
+5. workflow and claim-publication map
+6. first real open-set review round
+7. deeper adversarial Gate comparison
+8. probe feedback evaluation
+9. only then larger tooling and version-positioning decisions
 
 ## Summary
 

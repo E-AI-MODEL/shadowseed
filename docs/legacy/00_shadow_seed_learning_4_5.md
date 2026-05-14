@@ -267,7 +267,7 @@ weight daalt uitsluitend via falsificatie:
   weight = max(0, weight - 0.3) bij gedeeltelijke weerlegging
 
 weight = 0.0  → aanwezig maar geen retrieval-invloed
-weight > 0.0  → weegt mee in similarity-scoring
+weight > 0.0  → weegt mee naar evenredigheid.
 weight >= 0.5 → PROMOTED: triggert Active Probing
 ```
 
