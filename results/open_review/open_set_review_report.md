@@ -7,11 +7,14 @@ Status: `review_in_progress`
 
 - packets: 120
 - completed packets: 0
+- invalid packets: 0
 - unique seeds: 60
+- fully reviewed seeds: 0
 - accepted seeds: 0
 - rejected seeds: 0
 - mixed seeds: 0
 - pending seeds: 60
+- invalid seeds: 0
 
 ## Core Rates
 
@@ -41,5 +44,6 @@ Status: `review_in_progress`
 ## Follow-up
 
 - disagreements artifact: `results/open_review/open_set_disagreements.json`
-- read disagreements first when mixed verdicts are non-trivial
+- invalid packet rows must be fixed before this layer is treated as completed evidence
+- partial reviewer completion does not count as a seed-level acceptance or rejection
 - do not collapse this layer into the standard regression score
