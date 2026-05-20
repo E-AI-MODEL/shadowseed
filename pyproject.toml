@@ -1,7 +1,7 @@
 [project]
 name = "shadowseed"
 version = "0.2.0"
-description = "Benchmarkklare startrepo voor Shadow Seed Learning 4.5"
+description = "Benchmarkklare startrepo voor Shadow Seed Learning 4.6"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

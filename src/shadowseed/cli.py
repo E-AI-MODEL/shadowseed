@@ -15,7 +15,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="shadowseed",
         description=(
-            "CLI voor Shadow Seed Learning 4.5.\n"
+            "CLI voor Shadow Seed Learning 4.6.\n"
             "Standaard regressie- en smoke-routes leven naast handmatige research-routes.\n"
             "Legacy command aliases blijven voorlopig ondersteund voor compatibiliteit."
         ),
