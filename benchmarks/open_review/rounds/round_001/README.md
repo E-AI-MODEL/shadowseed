@@ -87,6 +87,22 @@ Allowed codes:
 - `duplicate`
 - `style_not_gap`
 
+## Review werkbestanden
+
+Voor reviewer-comfort staan er per-reviewer CSV-werkkopieën van de pending packets:
+
+- `benchmarks/open_review/rounds/round_001/reviewer_a_packets.csv`
+- `benchmarks/open_review/rounds/round_001/reviewer_b_packets.csv`
+
+Elke reviewer bewerkt alleen het eigen bestand. Per rij invullen:
+
+- `review_status`: `accepted` of `rejected`
+- vijf booleans (`atomicity`, `relevance`, `testability`, `non_triviality`, `follow_up_utility`): `true` of `false`
+- `reject_reason`: één code uit de lijst hieronder als rejected, leeg als accepted
+- `reviewer_notes`: korte tekst
+
+De CSV's zijn een werkkopie. De canonieke artefact blijft `results/open_review/open_set_review_packets.json` — ingevulde rijen moeten daar via `packet_index` terug naartoe gemerged worden voordat `summarize-open-set-seed-review` opnieuw draait.
+
 ## Summary route
 
 After the round is filled:
