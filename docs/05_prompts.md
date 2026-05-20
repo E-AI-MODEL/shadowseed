@@ -1,4 +1,6 @@
-# Promptbibliotheek SSL 4.5
+# Promptbibliotheek SSL 4.6
+
+> Afgeleid werkdocument. Canonieke bron: `docs/00_shadow_seed_learning_4_6.md`. De prompts hieronder horen bij de taalmodel-detectiestap die de 4.6 één-zinsclaim eist.
 
 ## 1. Detectie-Pass
 

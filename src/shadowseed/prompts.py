@@ -1,4 +1,4 @@
-"""Promptbibliotheek voor Shadow Seed Learning 4.5."""
+"""Promptbibliotheek voor Shadow Seed Learning 4.6."""
 
 DETECTION_PASS = """
 Je bent een epistemische analist.

@@ -1,10 +1,12 @@
 # Handleiding voor beoordelaars
 
+> Afgeleid werkdocument. Voor de criteria zelf is `docs/02_atomic_seeds.md` leidend, en voor de canonieke 4.6-bron `docs/00_shadow_seed_learning_4_6.md`.
+
 ## Doel
 
 Je beoordeelt of een AI-systeem zinvolle kleine afwezigheden kan vinden in een antwoord. Zo'n afwezigheid heet in dit onderzoek een seed.
 
-Je beoordeelt niet of het antwoord mooi geschreven is. Je beoordeelt of de gedetecteerde seed echt een kleine, relevante gap benoemt.
+Je beoordeelt niet of het antwoord mooi geschreven is. Je beoordeelt of de gedetecteerde seed echt een kleine, relevante gap benoemt in déze tekst, niet in een willekeurige tekst van dit type.
 
 ## Wat je krijgt
 
@@ -99,15 +101,27 @@ Hoog:
 | Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen. | 2 | Klein, specifiek en relevant. |
 | Beveiliging en schaalbaarheid ontbreken. | 1 | Te breed, twee domeinen. |
 | Rate-limiting op API's die gezondheidsdata verwerken. | 2 | Kleine technische gap. |
+| Onderbouwing van de centrale bewering. | 0 | Meta-categorie zonder concrete relatie tot déze tekst. |
+| Tijdlijn van de beschreven gebeurtenis. | 0 | Zou bij elk nieuwsartikel passen; niet item-specifiek. |
+| Betrokken partij buiten de hoofdactor. | 0 | Sjabloonzin, benoemt geen concrete ontbrekende relatie. |
+
+## Meta-categorie als afwijsgrond
+
+Een seed die formeel atomisch oogt maar voor élk willekeurig item in de batch zou kunnen gelden, is een meta-categorie en geen seed. Wijs dit type af. In de open-set review-packets vertaalt dit naar `reject_reason`:
+
+- `too_vague` als de seed enkel meta-termen gebruikt ("de gebeurtenis", "de centrale bewering")
+- `not_relevant` als de seed geen woord uit de inputtekst raakt
+- `trivial` als de seed een truïsme is ("Onzekerheid rond...")
 
 ## Werkwijze
 
 1. Lees de inputtekst.
 2. Lees de gedetecteerde seed.
-3. Vergelijk met de ground truth.
-4. Geef score 0, 1 of 2.
-5. Noteer kort waarom.
+3. Vraag jezelf: zou deze seed even goed bij een ander item in dezelfde batch passen? Zo ja, dan is hij niet specifiek genoeg.
+4. Vergelijk met de ground truth, indien aanwezig.
+5. Geef score 0, 1 of 2.
+6. Noteer kort waarom.
 
 ## Belangrijk
 
-Eerlijke lage scores zijn nuttig. Als een seed breed, vaag of decoratief is, geef geen score 2.
+Eerlijke lage scores zijn nuttig. Als een seed breed, vaag of decoratief is, geef geen score 2. Een serie afwijzingen op meta-categorieën is een geldige onderzoeksbevinding over de detectielaag, geen tekortkoming van de reviewer.
