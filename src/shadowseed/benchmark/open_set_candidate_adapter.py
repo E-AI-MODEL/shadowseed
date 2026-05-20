@@ -235,10 +235,42 @@ def detect_open_set_candidates(item: dict[str, Any], max_seeds: int = 5) -> list
     return candidates[:max_seeds]
 
 
-def raw_open_set_candidates(item: dict[str, Any]) -> tuple[list[str], str]:
-    """Return explicit sample candidates or generated open-set candidates."""
+SUPPORTED_DETECTORS: tuple[str, ...] = ("adapter_v1", "adapter_v2")
+
+
+def raw_open_set_candidates(
+    item: dict[str, Any],
+    detector: str = "adapter_v1",
+) -> tuple[list[str], str]:
+    """Return explicit sample candidates or generated open-set candidates.
+
+    `detector` selects the candidate generator when no explicit candidates
+    are present on the item:
+
+    - ``adapter_v1`` (default, backwards compatible): the v0.1 regex-template
+      baseline in this module.
+    - ``adapter_v2``: the v0.2 text-grounded baseline in
+      ``open_set_candidate_adapter_v2``.
+
+    Explicit ``candidate_seeds`` on the item always win, regardless of the
+    selected detector.
+    """
     explicit = item.get("candidate_seeds")
     if isinstance(explicit, list) and explicit:
         candidates = [str(seed).strip() for seed in explicit if str(seed).strip()]
         return candidates, EXPLICIT_CANDIDATE_SOURCE
+
+    if detector == "adapter_v2":
+        from .open_set_candidate_adapter_v2 import (
+            OPEN_SET_ADAPTER_V2_SOURCE,
+            detect_open_set_candidates_v2,
+        )
+
+        return detect_open_set_candidates_v2(item), OPEN_SET_ADAPTER_V2_SOURCE
+
+    if detector != "adapter_v1":
+        raise ValueError(
+            f"Onbekende detector {detector!r}. Toegestaan: {SUPPORTED_DETECTORS}."
+        )
+
     return detect_open_set_candidates(item), OPEN_SET_ADAPTER_SOURCE

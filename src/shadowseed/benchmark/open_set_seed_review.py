@@ -22,6 +22,7 @@ from shadowseed.benchmark.evidence_layers import (
 )
 from shadowseed.benchmark.open_set_candidate_adapter import (
     OPEN_SET_CANDIDATE_ADAPTER_ID,
+    SUPPORTED_DETECTORS,
     raw_open_set_candidates,
 )
 from shadowseed.hash_utils import stable_bucket_index
@@ -111,7 +112,12 @@ def run_open_set_seed_review(
     output_path: str,
     review_packet_path: str | None = None,
     reviewer_ids: list[str] | tuple[str, ...] | None = None,
+    detector: str = "adapter_v1",
 ) -> Path:
+    if detector not in SUPPORTED_DETECTORS:
+        raise ValueError(
+            f"Onbekende detector {detector!r}. Toegestaan: {SUPPORTED_DETECTORS}."
+        )
     payload = json.loads(Path(input_path).read_text(encoding="utf-8"))
     items = payload.get("items", [])
     reviewer_ids_normalized = _normalize_reviewer_ids(reviewer_ids)
@@ -127,7 +133,7 @@ def run_open_set_seed_review(
 
     for item in items:
         manager = SSLManager(embedding_fn=detect_embedding)
-        raw_candidates, candidate_source = raw_open_set_candidates(item)
+        raw_candidates, candidate_source = raw_open_set_candidates(item, detector=detector)
         candidate_source_counts[candidate_source] = candidate_source_counts.get(candidate_source, 0) + 1
         ingest = manager.ingest_detection_candidates(raw_candidates)
         raw_candidate_count += ingest["input_count"]
@@ -174,6 +180,7 @@ def run_open_set_seed_review(
         "domain_item_counts": domain_item_counts,
         "domain_accept_counts": domain_accept_counts,
         "candidate_source_counts": candidate_source_counts,
+        "detector": detector,
         **contract,
         "reviewer_ids": reviewer_ids_normalized,
         "reviewer_count": len(reviewer_ids_normalized),
