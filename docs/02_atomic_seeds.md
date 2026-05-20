@@ -1,20 +1,31 @@
 # Atomische seeds
 
+> Afgeleid werkdocument. Voor de canonieke bron lees `docs/00_shadow_seed_learning_4_6.md`.
+> Bij botsing met `00_` gaat `00_` voor.
+
 ## 1. Hoofdregel
 
 Een seed bevat precies één gap.
 
 Dat maakt een seed toetsbaar. Een beoordelaar moet kunnen zeggen: deze seed klopt, klopt deels of klopt niet.
 
+De 4.6 één-zinsclaim is hierbij bindend:
+
+> SSL is een mechanisme waarmee een taalmodel kleine structurele afwezigheden in een antwoord detecteert.
+
+De criteria hieronder gelden voor de seed-output, ongeacht welk detectiemechanisme die output produceert. Sjabloon- of regex-generatoren die alleen meta-categorieën invullen voldoen niet aan de één-zinsclaim en leveren geen seeds in de zin van 4.6, ook al passeren ze de schema-checks.
+
 ## 2. Eisen aan een seed
 
 | Eis | Vraag |
 |---|---|
 | Eén gap | Staat er maar één ontbrekende relatie of randvoorwaarde in? |
-| Specifiek | Is duidelijk waar de seed over gaat? |
+| Specifiek | Is duidelijk waar de seed over gaat in déze tekst, niet over een willekeurige tekst van dit type? |
 | Toetsbaar | Kan een beoordelaar of bron dit controleren? |
 | Relevant | Zou de seed het antwoord verbeteren? |
 | Niet-triviaal | Verandert de seed het begrip, niet alleen een detail? |
+
+Vuistregel bij specificiteit: als dezelfde seed-tekst even goed bij een willekeurig ander item uit dezelfde batch zou passen, is hij niet specifiek genoeg.
 
 ## 3. Niet opslaan als seed
 
@@ -22,11 +33,14 @@ Sla dit niet op als seed:
 
 - volledige analysekaders
 - lijsten met meerdere ontbrekende onderdelen
-- algemene opmerkingen zoals “meer nuance”
-- categorieën zoals “economische context” zonder concrete relatie
+- algemene opmerkingen zoals "meer nuance"
+- categorieën zoals "economische context" zonder concrete relatie
+- meta-categorieën die naar het item verwijzen in plaats van naar de inhoud, zoals "Onderbouwing van de centrale bewering", "Tijdlijn van de gebeurtenis", "Betrokken partij buiten de hoofdactor", "Onzekerheid rond de centrale bewering"
 - verzonnen of oncontroleerbare concepten
 - stijlverbeteringen
 - simpele details zoals jaartallen of extra voorbeelden
+
+De meta-categorieën verdienen aparte aandacht. Ze lijken atomisch (één zin, één onderwerp) en passeren makkelijk een schema-check, maar ze benoemen geen concrete ontbrekende relatie in déze tekst. Ze beschrijven een vraag die je over elk item van dit type zou kunnen stellen, en dat is per definitie te generiek.
 
 ## 4. Voorbeelden
 
@@ -117,8 +131,20 @@ Een seed is meestal te breed als hij:
 
 - meer dan 18 woorden bevat
 - meerdere komma's bevat
-- “en” of “of” gebruikt om domeinen te stapelen
-- begint met “volledig analysekader”
-- woorden gebruikt als “context”, “perspectieven”, “factoren” zonder concrete relatie
+- "en" of "of" gebruikt om domeinen te stapelen
+- begint met "volledig analysekader"
+- woorden gebruikt als "context", "perspectieven", "factoren" zonder concrete relatie
 
-Deze heuristiek is een filter, geen bewijs. Menselijke beoordeling blijft nodig.
+Een seed is meestal te generiek (meta-categorie) als hij:
+
+- termen als "de gebeurtenis", "de centrale bewering", "het item", "de hoofdactor" gebruikt zonder die concreet in te vullen
+- zou kunnen dienen als sjabloon-vraag voor elk willekeurig item in dezelfde batch
+- niet één concreet woord uit de inputtekst bevat dat de seed aan déze tekst koppelt
+
+Deze heuristieken zijn filters, geen bewijs. Menselijke beoordeling blijft nodig.
+
+## 8. Relatie tot detectiemechanisme
+
+De criteria in §2 en de verboden in §3 zijn onafhankelijk van hoe de seeds worden gegenereerd. Een regex- of sjabloongenerator kan technisch geldige zinnen produceren, maar als die zinnen meta-categorieën zijn voldoen ze niet aan §2.
+
+Per 4.6 één-zinsclaim moet detectie van een taalmodel komen. Een sjabloongenerator mag als infrastructurele baseline of als regressie-fixture worden gebruikt, maar zijn output telt niet als open-set seed-evidence (Laag C in `00_`) zonder een taalmodel-detectiestap erbovenop.

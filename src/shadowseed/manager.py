@@ -1,8 +1,9 @@
 """
-Shadow Seed Learning 4.5 core manager.
+Shadow Seed Learning 4.6 core manager.
 
-This manager is the canonical Niveau-1 core for SSL 4.5. It keeps four ideas
-explicit:
+This manager is the canonical Niveau-1 core for SSL. The mechanical kernel is
+unchanged across 4.5 and 4.6 — see `docs/00_shadow_seed_learning_4_6.md` for
+the current canonical source. It keeps four ideas explicit:
 
 - a seed is atomic;
 - trace measures presence;

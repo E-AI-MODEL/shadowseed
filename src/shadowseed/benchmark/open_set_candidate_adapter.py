@@ -1,11 +1,26 @@
-"""Open-set candidate adapter for the SSL 4.5 detection pass.
+"""Open-set candidate adapter — templated baseline, not a 4.6 detector.
 
-This adapter is not a second SSL core. It only supplies candidate seed text for
-unknown open-set items. The existing SSLManager still performs normalization,
-atomicity checks, deduplication and storage with weight starting at 0.0.
+This module fills the open-set candidate slot with a small set of Dutch
+template sentences chosen by a regex over the input text. It is not a
+language model and it does not satisfy the SSL 4.6 one-sentence claim, which
+requires that a language model perform the detection step
+(see `docs/00_shadow_seed_learning_4_6.md`).
 
-The adapter deliberately avoids fixed scenario priors, expected gaps and ground
-truth seeds. Human review remains the quality layer for these candidates.
+Its role is therefore:
+
+- infrastructural baseline for the open-set pipeline (item -> packets -> review)
+- regression fixture for the packet generator and review summary code
+- not an open-set seed-quality evidence source (Layer C in `00_`)
+
+The generated candidates are meta-categories ("Onderbouwing van de centrale
+bewering", "Betrokken partij buiten de hoofdactor", ...) that
+`docs/02_atomic_seeds.md` lists as forbidden seed shapes. Reviewers should
+reject them. A real detector belongs in a separate module that calls a
+language model (for example via the existing hf-transformers backend used by
+the model-benefit suite).
+
+The SSLManager still performs normalization, atomicity checks, deduplication
+and storage with weight starting at 0.0 around whatever candidates land here.
 """
 
 from __future__ import annotations
