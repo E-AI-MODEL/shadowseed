@@ -165,6 +165,18 @@ def build_parser() -> argparse.ArgumentParser:
             "Gebruik deze optie meerdere keren. Default: reviewer_a en reviewer_b."
         ),
     )
+    open_set.add_argument(
+        "--detector",
+        choices=("adapter_v1", "adapter_v2"),
+        default="adapter_v1",
+        help=(
+            "Welke candidate adapter genereert seeds wanneer een item geen "
+            "expliciete candidate_seeds heeft. adapter_v1 = regex-template "
+            "baseline (default, backwards compatible). adapter_v2 = "
+            "text-grounded baseline die tokens uit de inputtekst gebruikt. "
+            "Geen van beide is een taalmodel-detectie in 4.6-zin."
+        ),
+    )
 
     open_set_summary = subparsers.add_parser(
         "summarize-open-set-seed-review",
