@@ -167,15 +167,42 @@ def build_parser() -> argparse.ArgumentParser:
     )
     open_set.add_argument(
         "--detector",
-        choices=("adapter_v1", "adapter_v2"),
+        choices=("adapter_v1", "adapter_v2", "model"),
         default="adapter_v1",
         help=(
-            "Welke candidate adapter genereert seeds wanneer een item geen "
+            "Welke candidate generator wordt gebruikt wanneer een item geen "
             "expliciete candidate_seeds heeft. adapter_v1 = regex-template "
             "baseline (default, backwards compatible). adapter_v2 = "
-            "text-grounded baseline die tokens uit de inputtekst gebruikt. "
-            "Geen van beide is een taalmodel-detectie in 4.6-zin."
+            "text-grounded template baseline. model = v0.3 taalmodel-"
+            "detector (voldoet aan de 4.6 een-zinsclaim); kies dan ook "
+            "--model-backend."
         ),
+    )
+    open_set.add_argument(
+        "--model-backend",
+        choices=("fixture", "hf-transformers"),
+        default="fixture",
+        help=(
+            "Welke model-backend de v0.3 detector gebruikt. Alleen relevant "
+            "als --detector model. fixture = deterministisch CI-backend "
+            "(seeds krijgen een [FIXTURE] prefix). hf-transformers = echt "
+            "lokaal taalmodel via de transformers stack; vereist --model-id "
+            "en de optionele models extra."
+        ),
+    )
+    open_set.add_argument(
+        "--model-id",
+        default=None,
+        help=(
+            "Hugging Face model-id voor --model-backend hf-transformers, "
+            "bijvoorbeeld een klein instruct-model dat lokaal past."
+        ),
+    )
+    open_set.add_argument(
+        "--max-new-tokens",
+        type=int,
+        default=400,
+        help="Maximale tokens die de v0.3 model-backend per item genereert.",
     )
 
     open_set_summary = subparsers.add_parser(

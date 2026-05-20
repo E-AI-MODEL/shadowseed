@@ -235,12 +235,13 @@ def detect_open_set_candidates(item: dict[str, Any], max_seeds: int = 5) -> list
     return candidates[:max_seeds]
 
 
-SUPPORTED_DETECTORS: tuple[str, ...] = ("adapter_v1", "adapter_v2")
+SUPPORTED_DETECTORS: tuple[str, ...] = ("adapter_v1", "adapter_v2", "model")
 
 
 def raw_open_set_candidates(
     item: dict[str, Any],
     detector: str = "adapter_v1",
+    model_backend: Any = None,
 ) -> tuple[list[str], str]:
     """Return explicit sample candidates or generated open-set candidates.
 
@@ -251,6 +252,10 @@ def raw_open_set_candidates(
       baseline in this module.
     - ``adapter_v2``: the v0.2 text-grounded baseline in
       ``open_set_candidate_adapter_v2``.
+    - ``model``: the v0.3 taalmodel-detector in ``open_set_model_detector``.
+      Requires ``model_backend`` to be an instantiated ``DetectorBackend``
+      (caller constructs it once and reuses it across items so models are
+      not reloaded per call).
 
     Explicit ``candidate_seeds`` on the item always win, regardless of the
     selected detector.
@@ -267,6 +272,16 @@ def raw_open_set_candidates(
         )
 
         return detect_open_set_candidates_v2(item), OPEN_SET_ADAPTER_V2_SOURCE
+
+    if detector == "model":
+        if model_backend is None:
+            raise ValueError(
+                "detector='model' requires a model_backend instance; "
+                "use open_set_model_detector.make_detector_backend(...)"
+            )
+        from .open_set_model_detector import OPEN_SET_MODEL_DETECTOR_SOURCE
+
+        return model_backend.detect_seeds(item), OPEN_SET_MODEL_DETECTOR_SOURCE
 
     if detector != "adapter_v1":
         raise ValueError(
