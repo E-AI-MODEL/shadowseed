@@ -113,11 +113,27 @@ def run_open_set_seed_review(
     review_packet_path: str | None = None,
     reviewer_ids: list[str] | tuple[str, ...] | None = None,
     detector: str = "adapter_v1",
+    model_backend: str = "fixture",
+    model_id: str | None = None,
+    max_new_tokens: int = 400,
 ) -> Path:
     if detector not in SUPPORTED_DETECTORS:
         raise ValueError(
             f"Onbekende detector {detector!r}. Toegestaan: {SUPPORTED_DETECTORS}."
         )
+
+    model_backend_obj: Any = None
+    model_backend_name: str | None = None
+    if detector == "model":
+        from shadowseed.benchmark.open_set_model_detector import make_detector_backend
+
+        model_backend_obj = make_detector_backend(
+            backend=model_backend,
+            model_id=model_id,
+            max_new_tokens=max_new_tokens,
+        )
+        model_backend_name = model_backend_obj.name
+
     payload = json.loads(Path(input_path).read_text(encoding="utf-8"))
     items = payload.get("items", [])
     reviewer_ids_normalized = _normalize_reviewer_ids(reviewer_ids)
@@ -133,7 +149,9 @@ def run_open_set_seed_review(
 
     for item in items:
         manager = SSLManager(embedding_fn=detect_embedding)
-        raw_candidates, candidate_source = raw_open_set_candidates(item, detector=detector)
+        raw_candidates, candidate_source = raw_open_set_candidates(
+            item, detector=detector, model_backend=model_backend_obj
+        )
         candidate_source_counts[candidate_source] = candidate_source_counts.get(candidate_source, 0) + 1
         ingest = manager.ingest_detection_candidates(raw_candidates)
         raw_candidate_count += ingest["input_count"]
@@ -181,6 +199,7 @@ def run_open_set_seed_review(
         "domain_accept_counts": domain_accept_counts,
         "candidate_source_counts": candidate_source_counts,
         "detector": detector,
+        "model_backend": model_backend_name,
         **contract,
         "reviewer_ids": reviewer_ids_normalized,
         "reviewer_count": len(reviewer_ids_normalized),

@@ -1,0 +1,199 @@
+"""Open-set taalmodel-detector v0.3 — satisfies the SSL 4.6 one-sentence claim.
+
+Per `docs/00_shadow_seed_learning_4_6.md` the open-set detection step has to
+come from a taalmodel. v0.1 (regex templates) and v0.2 (text-grounded
+templates) are baselines that do not satisfy that claim. This module is the
+first detector that does: given an input item, it prompts a language model
+with a Dutch detection prompt derived from `docs/05_prompts.md` and parses
+the numbered output into candidate seeds.
+
+Two backends, mirroring the model-benefit-suite pattern:
+
+- ``fixture``: deterministic, no model download, no network. Returns
+  text-grounded seeds with a clearly distinctive ``[FIXTURE]`` prefix so
+  tests and reviewers can never mistake them for real model output. Used
+  in CI and for offline development.
+- ``hf-transformers``: real local model via the ``transformers`` stack.
+  Opt-in, requires the optional ``models`` extra and a model id, and
+  requires network access to download the model (or a pre-warmed HF cache).
+
+The seeds are still hypotheses for human review, not labels. The same
+atomicity, normalization and zero-weight storage rules in SSLManager apply
+around whatever this detector returns.
+"""
+
+from __future__ import annotations
+
+import re
+from typing import Any, Protocol
+
+
+OPEN_SET_MODEL_DETECTOR_ID = "ssl46_open_set_model_detector_v0.3"
+OPEN_SET_MODEL_DETECTOR_SOURCE = "open_set_model_detector"
+
+
+OPEN_SET_DETECTION_PROMPT = """
+Je bent een epistemische analist.
+
+Je krijgt een korte inputtekst. Je taak is niet om de tekst samen te vatten
+of te beoordelen. Je taak is om kleine structurele afwezigheden te vinden:
+welke kleine concepten, relaties of randvoorwaarden ontbreken in deze tekst
+terwijl ze nodig zouden zijn voor een volledig begrip van dit specifieke
+onderwerp?
+
+Regels:
+- Geef maximaal {max_seeds} seeds.
+- Elke seed bevat precies één gap.
+- Elke seed verwijst concreet naar iets in deze tekst, niet naar een
+  willekeurige tekst van dit type.
+- Geen samengestelde analysekaders.
+- Geen lijsten binnen één seed.
+- Geen meta-categorieën zoals "Onderbouwing van de centrale bewering" of
+  "Tijdlijn van de gebeurtenis".
+- Formuleer concreet en toetsbaar.
+- Geen uitleg, alleen de genummerde seeds.
+
+Inputtekst:
+{text}
+
+Output:
+1.
+""".strip()
+
+
+class DetectorBackend(Protocol):
+    name: str
+
+    def detect_seeds(self, item: dict[str, Any], max_seeds: int = 5) -> list[str]:
+        ...
+
+
+_NUMBERED_LINE = re.compile(r"^\s*\d+[.)]\s*(.+?)\s*$")
+
+
+def parse_numbered_seeds(raw_output: str, max_seeds: int = 5) -> list[str]:
+    """Parse `1. seed` style lines out of a model response.
+
+    Lines without a leading number are ignored. Blank seeds, the literal
+    placeholder ``[seed]`` and trivial duplicates are dropped. Returns at
+    most ``max_seeds`` items in source order.
+    """
+    seeds: list[str] = []
+    seen: set[str] = set()
+    for line in raw_output.splitlines():
+        match = _NUMBERED_LINE.match(line)
+        if not match:
+            continue
+        seed = match.group(1).strip().strip("-•").strip()
+        if not seed or seed.lower() == "[seed]":
+            continue
+        if seed in seen:
+            continue
+        seen.add(seed)
+        seeds.append(seed)
+        if len(seeds) >= max_seeds:
+            break
+    return seeds
+
+
+def build_detection_prompt(text: str, max_seeds: int = 5) -> str:
+    return OPEN_SET_DETECTION_PROMPT.format(text=text.strip(), max_seeds=max_seeds)
+
+
+class FixtureDetectorBackend:
+    """Deterministic CI backend. Marks every seed with ``[FIXTURE]``."""
+
+    name = "fixture"
+
+    def detect_seeds(self, item: dict[str, Any], max_seeds: int = 5) -> list[str]:
+        text = str(item.get("text") or item.get("input") or "").strip()
+        if not text:
+            return []
+        # take up to max_seeds distinct capitalized tokens from the text
+        tokens: list[str] = []
+        seen: set[str] = set()
+        for token in re.findall(r"\b[A-ZÀ-Þ][a-zA-ZÀ-ÿ]{2,}\b", text):
+            key = token.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            tokens.append(token)
+            if len(tokens) >= max_seeds:
+                break
+        return [
+            f"[FIXTURE] Ontbrekende toelichting bij {token} in deze tekst."
+            for token in tokens
+        ]
+
+
+class HFTransformersDetectorBackend:
+    """Local Hugging Face transformers backend for real taalmodel detection.
+
+    Opt-in. Requires ``pip install -e '.[models]'`` and network access to
+    download the model (or a pre-warmed HF cache). Default decoding is
+    greedy and deterministic so the same input produces the same seeds.
+    """
+
+    def __init__(self, model_id: str, max_new_tokens: int = 400) -> None:
+        try:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+        except ImportError as exc:  # pragma: no cover - optional dependency
+            raise RuntimeError(
+                "Install optional model dependencies first: "
+                "pip install -e '.[models]' transformers torch"
+            ) from exc
+
+        self.name = f"hf-transformers:{model_id}"
+        self.model_id = model_id
+        self.max_new_tokens = max_new_tokens
+        self.tokenizer = AutoTokenizer.from_pretrained(model_id)
+        model_kwargs: dict[str, Any] = {}
+        if torch.cuda.is_available():
+            model_kwargs = {"torch_dtype": torch.float16, "device_map": "auto"}
+        model = AutoModelForCausalLM.from_pretrained(model_id, **model_kwargs)
+        self.generator = pipeline(
+            "text-generation",
+            model=model,
+            tokenizer=self.tokenizer,
+            device=0 if torch.cuda.is_available() else -1,
+        )
+
+    def detect_seeds(self, item: dict[str, Any], max_seeds: int = 5) -> list[str]:
+        text = str(item.get("text") or item.get("input") or "").strip()
+        if not text:
+            return []
+        prompt = build_detection_prompt(text, max_seeds=max_seeds)
+        output = self.generator(
+            prompt,
+            max_new_tokens=self.max_new_tokens,
+            do_sample=False,
+            return_full_text=False,
+        )
+        raw = output[0]["generated_text"]
+        # the prompt ends with "1.\n" — re-prepend so the parser sees the first item
+        return parse_numbered_seeds("1. " + raw, max_seeds=max_seeds)
+
+
+SUPPORTED_MODEL_BACKENDS: tuple[str, ...] = ("fixture", "hf-transformers")
+
+
+def make_detector_backend(
+    backend: str,
+    model_id: str | None = None,
+    max_new_tokens: int = 400,
+) -> DetectorBackend:
+    if backend == "fixture":
+        return FixtureDetectorBackend()
+    if backend == "hf-transformers":
+        if not model_id:
+            raise ValueError(
+                "--model-id is required for --model-backend hf-transformers"
+            )
+        return HFTransformersDetectorBackend(
+            model_id=model_id, max_new_tokens=max_new_tokens
+        )
+    raise ValueError(
+        f"Onbekende model-backend {backend!r}. "
+        f"Toegestaan: {SUPPORTED_MODEL_BACKENDS}."
+    )

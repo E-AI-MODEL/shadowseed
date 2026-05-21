@@ -115,6 +115,9 @@ def _run_open_set_seed_review(args: argparse.Namespace) -> str:
         review_packet_path=args.review_packets,
         reviewer_ids=args.reviewer_ids,
         detector=args.detector,
+        model_backend=args.model_backend,
+        model_id=args.model_id,
+        max_new_tokens=args.max_new_tokens,
     )
 
 
