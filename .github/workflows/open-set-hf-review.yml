@@ -18,6 +18,33 @@ on:
         required: true
         default: "0"
         type: string
+      detector:
+        description: "Candidate generator: adapter_v1 (regex baseline), adapter_v2 (text-grounded baseline), model (v0.3 taalmodel-detector)"
+        required: true
+        default: "adapter_v1"
+        type: choice
+        options:
+          - adapter_v1
+          - adapter_v2
+          - model
+      model_backend:
+        description: "Alleen relevant als detector=model. fixture = CI-deterministisch ([FIXTURE] prefix). hf-transformers = echt taalmodel via transformers, vereist model_id."
+        required: true
+        default: "fixture"
+        type: choice
+        options:
+          - fixture
+          - hf-transformers
+      model_id:
+        description: "HF model-id (bv. een klein instruct-model). Vereist wanneer model_backend=hf-transformers, anders leeg laten."
+        required: false
+        default: ""
+        type: string
+      max_new_tokens:
+        description: "Maximale tokens die de v0.3 model-backend per item genereert."
+        required: true
+        default: "400"
+        type: string
 
 permissions:
   contents: write
@@ -36,10 +63,22 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Valideer detector + model_backend combinatie
+        run: |
+          if [ "${{ inputs.detector }}" = "model" ] && [ "${{ inputs.model_backend }}" = "hf-transformers" ] && [ -z "${{ inputs.model_id }}" ]; then
+            echo "::error::detector=model met model_backend=hf-transformers vereist een model_id."
+            exit 1
+          fi
+
       - name: Installeer pakket
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[test]"
+
+      - name: Installeer models extra (alleen voor echte taalmodel-detector)
+        if: ${{ inputs.detector == 'model' && inputs.model_backend == 'hf-transformers' }}
+        run: |
+          pip install -e ".[models]"
 
       - name: Haal HF open-set batch op
         run: |
@@ -54,7 +93,11 @@ jobs:
           python -m shadowseed.cli run-open-set-seed-review \
             --input benchmarks/open_review/input/hf_batch.json \
             --output results/open_review/open_set_seed_output.json \
-            --review-packets results/open_review/open_set_review_packets.json
+            --review-packets results/open_review/open_set_review_packets.json \
+            --detector "${{ inputs.detector }}" \
+            --model-backend "${{ inputs.model_backend }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            ${{ inputs.model_id != '' && format('--model-id "{0}"', inputs.model_id) || '' }}
 
       - name: Genereer open-set summary op pending packets
         run: |
@@ -65,26 +108,44 @@ jobs:
             --report-output results/open_review/open_set_review_report.md
 
       - name: Schrijf korte run-uitleg
+        env:
+          INPUT_SOURCE_ID: ${{ inputs.source_id }}
+          INPUT_LIMIT: ${{ inputs.limit }}
+          INPUT_OFFSET: ${{ inputs.offset }}
+          INPUT_DETECTOR: ${{ inputs.detector }}
+          INPUT_MODEL_BACKEND: ${{ inputs.model_backend }}
+          INPUT_MODEL_ID: ${{ inputs.model_id }}
         run: |
-          cat > results/open_review/README.md <<'MD'
+          cat > results/open_review/README.md <<MD
           # Open-set HF review batch
 
           Deze artifactset komt uit een handmatige workflow met Hugging Face intake.
 
+          Run-parameters:
+
+          - source_id: \`$INPUT_SOURCE_ID\`
+          - limit: \`$INPUT_LIMIT\`
+          - offset: \`$INPUT_OFFSET\`
+          - detector: \`$INPUT_DETECTOR\`
+          - model_backend: \`$INPUT_MODEL_BACKEND\`
+          - model_id: \`${INPUT_MODEL_ID:-n.v.t.}\`
+
           Inhoud:
 
-          - `open_set_seed_output.json`: de seed-output per item
-          - `open_set_review_packets.json`: review-packets voor menselijke beoordeling
-          - `open_set_seed_review_summary.json`: geaggregeerde summary (pending tot review klaar)
-          - `open_set_disagreements.json`: seeds met gemengde reviewverdicts
-          - `open_set_review_report.md`: leesbaar Markdown-rapport
+          - \`open_set_seed_output.json\`: de seed-output per item
+          - \`open_set_review_packets.json\`: review-packets voor menselijke beoordeling
+          - \`open_set_seed_review_summary.json\`: geaggregeerde summary (pending tot review klaar)
+          - \`open_set_disagreements.json\`: seeds met gemengde reviewverdicts
+          - \`open_set_review_report.md\`: leesbaar Markdown-rapport
 
           Interpretatie:
 
           - dit is een aparte evidencelaag (evidence_layer: open_set_seed_quality)
           - dit is geen standaard regressierun
-          - status is `review_in_progress` totdat menselijke reviewers packets hebben ingevuld
+          - status is \`review_in_progress\` totdat menselijke reviewers packets hebben ingevuld
           - lees deze laag niet als vervanging van de fixture-regressies
+          - alleen \`detector=model\` met \`model_backend=hf-transformers\` voldoet aan de 4.6 een-zinsclaim;
+            adapter_v1, adapter_v2 en de fixture model-backend zijn baseline-infrastructuur, geen Laag-C bewijs
           MD
 
       - name: Commit open-set summary naar repo
@@ -107,7 +168,7 @@ jobs:
       - name: Upload open-set review artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: open-set-hf-review-batch
+          name: open-set-hf-review-batch-${{ inputs.detector }}-${{ inputs.model_backend }}
           path: |
             benchmarks/open_review/input/hf_batch.json
             results/open_review/open_set_seed_output.json
