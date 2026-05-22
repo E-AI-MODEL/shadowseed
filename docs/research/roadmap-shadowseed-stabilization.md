@@ -1,5 +1,11 @@
 # Shadowseed Stabilization And Evidence-Hardening Roadmap
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: Top-level roadmap
+> Current source: yes
+
+
 Status: active
 Date: 2026-05-13
 Scope: repository stability, artifact discipline, workflow clarity, and next-step research hardening

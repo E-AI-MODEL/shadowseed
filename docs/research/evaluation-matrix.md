@@ -1,5 +1,11 @@
 # SSL Evaluatiematrix
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: Evidence-layer matrix
+> Current source: yes
+
+
 ## Doel van dit document
 
 Deze matrix vertaalt de SSL-specificatie naar een praktische evaluatiestructuur voor de repository.

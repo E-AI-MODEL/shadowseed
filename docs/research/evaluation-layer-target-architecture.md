@@ -1,5 +1,11 @@
 # Evaluation Layer Target Architecture
 
+> Status: planning
+> Date: 2026-05-22
+> Evidence layer: Target architecture across layers
+> Current source: yes
+
+
 Status: uitvoerplan voor de stap na repo-cleanup.
 
 Deze notitie vertaalt de 4.6-koers naar een concrete repo-architectuur. Ze verandert geen claimniveau en vervangt geen tests. Het doel is om de volgende inhoudelijke fase reviewbaar te maken voordat er nieuwe workflowroutes of grote codeverplaatsingen komen.

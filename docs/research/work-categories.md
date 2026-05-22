@@ -1,5 +1,11 @@
 # SWOT Naar Werkcategorieen
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: SWOT-to-categories map
+> Current source: yes
+
+
 Status: active
 Date: 2026-05-13
 Role: planning and backlog-scoping document

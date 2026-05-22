@@ -1,5 +1,11 @@
 # Workflow Map and Publication Route Audit
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: Workflow map + publication routes
+> Current source: yes
+
+
 Status: current as of 2026-05-10
 Base commit: `9e8fef85acf5ffa6ded5366cea9214edf8819071`
 Related issue: #40

@@ -1,5 +1,11 @@
 # SLM Open Evaluation Plan
 
+> Status: partly current
+> Date: 2026-05-22
+> Evidence layer: Earlier plan; design contract is `slm-open-evaluation.md` (#56 / PR #83)
+> Current source: partial
+
+
 Status: proposed
 Date: 2026-05-10
 Base commit: `52c8fdf4fe422b43bd116f7c1e06e2f361c87330`

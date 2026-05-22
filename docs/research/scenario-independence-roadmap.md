@@ -1,5 +1,11 @@
 # Plan Naar Scenario-onafhankelijke SSL-validatie
 
+> Status: partly current
+> Date: 2026-05-22
+> Evidence layer: Direction note; concrete steps tracked in roadmap + phase issues
+> Current source: partial
+
+
 ## Doel van dit document
 
 Dit document zet op papier hoe Shadow Seed Learning kan doorgroeien van een scenario-gedreven benchmarkrepo naar een schonere repo en een sterkere, scenario-onafhankelijke validatiestrategie.

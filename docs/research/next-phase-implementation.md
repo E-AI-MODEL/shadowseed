@@ -1,5 +1,11 @@
 # Uitvoeringsplan Voor De Volgende SSL-fase
 
+> Status: historical
+> Date: 2026-05-22
+> Evidence layer: Predecessor of roadmap-shadowseed-stabilization.md
+> Current source: no
+
+
 ## Doel
 
 Dit document vertaalt de bestaande 4.6-koers naar een directe bouwvolgorde voor de repo.

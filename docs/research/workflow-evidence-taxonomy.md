@@ -1,5 +1,11 @@
 # Workflow evidence taxonomy
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: Workflow ↔ evidence taxonomy
+> Current source: yes
+
+
 Deze pagina legt vast hoe workflows, benchmarkruns en resultaatartefacts benoemd en gelezen moeten worden.
 
 Doel:

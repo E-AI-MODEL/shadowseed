@@ -1,5 +1,11 @@
 # Artifact and Analyzer Publication Contracts
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: Artifact contract — all layers
+> Current source: yes
+
+
 Status: current as of 2026-05-10
 Base commit: `acd4e4512ca16d370595b26a99f4b8b4be42d320`
 Related issue: #39
@@ -61,7 +67,7 @@ These artifacts are not guaranteed in every standard CI run.
 | Open-set seed output | `run-open-set-seed-review` | `benchmarks/open_review/input/hf_batch.json` | `results/open_review/open_set_seed_output.json` | not read by analyzer | raw output | Manual research |
 | Open-set review packets | `run-open-set-seed-review --review-packets` | open-set seed output | `results/open_review/open_set_review_packets.json` | not read by analyzer | human-review input | Manual research |
 | Open-set summary, CLI default | `summarize-open-set-seed-review` | `results/open_review/open_set_review_packets.json` | `results/open_set_seed_review_summary.json` | `results/open_set_seed_review_summary.json` | summary | Analyzer-facing manual result |
-| Open-set summary, HF workflow write-back | `.github/workflows/open-set-hf-review.yml` | `results/open_review/open_set_review_packets.json` | `results/open_review/open_set_seed_review_summary.json` | copied into artifact bundle, then read as `results/open_set_seed_review_summary.json` | summary | Manual result passed into standard analysis when present |
+| Open-set summary, HF workflow write-back | `.github/workflows/open-set-hf-review.yml` | `results/open_review/open_set_review_packets.json` | `results/open_review/open_set_seed_review_summary.json` (nested) | not currently read by the analyzer at this nested path; a future fix should either copy to `results/open_set_seed_review_summary.json` after commit or extend the analyzer lookup | summary | Manual result; workflow path drift acknowledged |
 | Open-set disagreements | `summarize-open-set-seed-review --disagreements-output` | review packets | `results/open_review/open_set_disagreements.json` | not read by analyzer | follow-up artifact | Manual research |
 | Open-set report | `summarize-open-set-seed-review --report-output` | review packets | `results/open_review/open_set_review_report.md` | not read by analyzer | prose summary | Manual research |
 | Vectorstore smoke | `run-vectorstore-smoke` | synthetic smoke input | `results/vectorstore_smoke.json` | `results/vectorstore_smoke.json` | smoke output | Optional manual input |
