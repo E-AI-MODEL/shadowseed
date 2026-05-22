@@ -15,6 +15,7 @@ would promote.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 from shadowseed.benchmark.ssl45_gap_suite import detect_candidate_seeds, lexical_embedding, tokenize
@@ -76,28 +77,82 @@ def trace_without_contradiction_promotes(
     )
 
 
-def evaluate_adversarial_candidate(candidate: str, scenario: dict) -> dict:
+def _normalize_adversarial_candidate(
+    candidate: str | dict,
+) -> tuple[str, str, bool, str | None]:
+    """Normalize a candidate entry into (text, expected_label, evidence_available, candidate_type).
+
+    Bare strings are treated as legacy negative-control lures: expected_label
+    ``not_gap``, no external evidence, no candidate_type. Dict form lets the
+    fixture mark a candidate as a positive control or annotate its category
+    so discrimination metrics can be computed.
+    """
+    if isinstance(candidate, dict):
+        text = str(candidate.get("text", "")).strip()
+        if not text:
+            raise ValueError("dict-form candidate must have a non-empty 'text' field")
+        expected_label = str(candidate.get("expected_label", "not_gap"))
+        if expected_label not in {"gap", "not_gap"}:
+            raise ValueError(
+                f"expected_label must be 'gap' or 'not_gap', got {expected_label!r}"
+            )
+        evidence_available = bool(candidate.get("evidence_available", False))
+        candidate_type = candidate.get("candidate_type")
+        return text, expected_label, evidence_available, candidate_type
+    return str(candidate).strip(), "not_gap", False, None
+
+
+def evaluate_adversarial_candidate(candidate: str | dict, scenario: dict) -> dict:
+    text, expected_label, evidence_available, candidate_type = (
+        _normalize_adversarial_candidate(candidate)
+    )
     manager = SSLManager(embedding_fn=lexical_embedding)
     seed_id = None
     for _ in range(manager.config.min_occurrences_for_gate):
-        seed_id = manager.add_or_update_seed(candidate, trigger_keywords=sorted(tokenize(candidate))[:5])
+        seed_id = manager.add_or_update_seed(text, trigger_keywords=sorted(tokenize(text))[:5])
     assert seed_id is not None
 
-    contradiction = contradiction_from_complete_input(candidate, scenario["input"])
+    contradiction = contradiction_from_complete_input(text, scenario["input"])
     baseline_trace_only = trace_only_promotes(manager, seed_id)
     baseline_trace_without_contradiction = trace_without_contradiction_promotes(
         manager,
         seed_id,
         contradiction,
     )
+    # Reaching PROMOTED requires (a) enough evidence calls to clear
+    # min_evidence_for_gate and (b) enough successful validations to lift
+    # weight to promotion_threshold. The first few Gate calls return
+    # verdict="blocked" while evidence accumulates; only afterwards do
+    # successful validations begin incrementing weight. The fixture therefore
+    # simulates this accumulation by calling the Gate until the seed promotes
+    # or a generous safety cap is reached. Negative controls (contradiction
+    # or no evidence) never promote because their validation flags fail every
+    # iteration.
+    weight_steps_needed = max(
+        1,
+        math.ceil(manager.promotion_threshold / manager.validation_increment),
+    )
+    max_iterations = manager.config.min_evidence_for_gate + weight_steps_needed + 2
     gate_result = manager.run_validation_gate_detailed(
         seed_id,
-        external_evidence=False,
+        external_evidence=evidence_available,
         contradiction=contradiction,
     )
+    if not contradiction and evidence_available and not gate_result.promoted:
+        for _ in range(max_iterations - 1):
+            gate_result = manager.run_validation_gate_detailed(
+                seed_id,
+                external_evidence=evidence_available,
+                contradiction=False,
+            )
+            if gate_result.promoted:
+                break
 
     return {
-        "candidate": candidate,
+        "candidate": text,
+        "expected_label": expected_label,
+        "evidence_available": evidence_available,
+        "candidate_type": candidate_type,
         "contradiction_detected": contradiction,
         "trace_only_promoted": baseline_trace_only,
         "trace_without_contradiction_promoted": baseline_trace_without_contradiction,

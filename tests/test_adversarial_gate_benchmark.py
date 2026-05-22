@@ -21,9 +21,20 @@ def test_adversarial_gate_benchmark_blocks_lures_and_writes_casebook(tmp_path: P
     false_positive_log = payload["false_positive_log"]
     casebook_text = casebook.read_text(encoding="utf-8")
 
-    assert summary["scenario_count"] == 5
-    assert summary["candidate_count"] == 10
-    assert summary["gate_promoted_count"] == 0
+    # The fixture now contains a mix of negative-control candidates and
+    # positive-control candidates (with and without external evidence).
+    assert summary["scenario_count"] >= 5
+    assert summary["candidate_count"] >= 10
+    assert summary["bad_candidate_count"] > 0
+    assert summary["good_with_evidence_count"] > 0
+    assert summary["promoted_bad_count"] == 0
+    assert summary["promoted_good_with_evidence_count"] == summary["good_with_evidence_count"]
+    assert summary["missed_good_with_evidence_count"] == 0
+    assert summary["correct_outcome_count"] == summary["candidate_count"]
+    assert summary["correct_outcome_rate"] == 1.0
+    assert summary["current_gate_precision"] == 1.0
+    assert summary["current_gate_recall"] == 1.0
+    assert summary["current_gate_f1"] == 1.0
     assert summary["trace_only_promoted_count"] > 0
     assert summary["gate_vs_trace_only_delta"] > 0
     assert summary["baseline_only_blocked_count"] > 0
@@ -32,14 +43,74 @@ def test_adversarial_gate_benchmark_blocks_lures_and_writes_casebook(tmp_path: P
     assert summary["gate_relative_reduction_vs_trace_only"] > 0.0
     assert summary["passed"] is True
 
-    assert baseline_summaries["current_gate"]["promoted_count"] == 0
+    assert baseline_summaries["current_gate"]["promoted_count"] == summary["gate_promoted_count"]
     assert baseline_summaries["trace_only"]["promoted_count"] == summary["trace_only_promoted_count"]
     assert len(false_positive_log) == summary["candidate_count"]
     assert any(row["baseline_only_blocked"] for row in false_positive_log)
+    outcomes = {row["outcome"] for row in false_positive_log}
+    assert "blocked_true_negative" in outcomes
+    assert "promoted_true_positive" in outcomes
 
     assert "Adversarial Gate Casebook" in casebook_text
     assert "Trace-only promoted" in casebook_text
     assert "Gate reductie vs trace-only" in casebook_text
+    assert "Gate precision" in casebook_text
+
+
+def test_adversarial_gate_benchmark_correctly_refuses_positive_without_evidence(tmp_path: Path) -> None:
+    """Positive controls without evidence must be blocked: the Gate is supposed
+    to require evidence even when the seed is a legitimate gap."""
+    output = tmp_path / "adversarial_gate.json"
+    run_adversarial_gate_benchmark(DATA, str(output))
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    log = payload["false_positive_log"]
+
+    refused_without_evidence = [
+        row for row in log
+        if row["candidate_expected_label"] == "gap"
+        and not row["evidence_available"]
+    ]
+    assert refused_without_evidence, "fixture must include positive controls without evidence"
+    for row in refused_without_evidence:
+        assert not row["current_gate_promoted"], (
+            f"positive control without evidence was promoted: {row['candidate']!r}"
+        )
+
+
+def test_adversarial_gate_benchmark_backwards_compatible_with_bare_string_candidates(
+    tmp_path: Path,
+) -> None:
+    """A legacy fixture that still uses bare-string candidates must still run
+    and treat them as not_gap candidates without external evidence."""
+    legacy_fixture = {
+        "version": "adversarial-gate-legacy",
+        "description": "Legacy fixture with bare-string candidates",
+        "scenarios": [
+            {
+                "id": "LEGACY_A",
+                "title": "Volledig antwoord",
+                "domain": "test",
+                "scenario_type": "complete-answer",
+                "expected_label": "not_gap",
+                "input": "Het antwoord behandelt al de centrale punten over alpha, beta en gamma volledig.",
+                "adversarial_candidates": [
+                    "Alpha als centrale factor in deze redenering.",
+                    "Beta als secundaire factor.",
+                ],
+            }
+        ],
+    }
+    fixture_path = tmp_path / "legacy_fixture.json"
+    fixture_path.write_text(json.dumps(legacy_fixture), encoding="utf-8")
+    output = tmp_path / "out.json"
+    run_adversarial_gate_benchmark(str(fixture_path), str(output))
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    log = payload["false_positive_log"]
+    assert len(log) == 2
+    for row in log:
+        assert row["candidate_expected_label"] == "not_gap"
+        assert row["evidence_available"] is False
+        assert row["candidate_type"] is None
 
 
 def test_analyze_results_includes_adversarial_gate_metrics(tmp_path: Path) -> None:
