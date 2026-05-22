@@ -255,6 +255,24 @@ def build_parser() -> argparse.ArgumentParser:
     probe.add_argument("--input", default="src/shadowseed/data/ssl45_probe_utility_suite.json")
     probe.add_argument("--output", default="results/ssl45_probe_utility_suite.json")
 
+    probe_behavior = subparsers.add_parser(
+        "run-probe-feedback-behavior-suite",
+        help="[manual] Laag-E lifecycle-test: reward, penalty, clamping, demotie, status-block",
+    )
+    probe_behavior.add_argument(
+        "--input",
+        default="src/shadowseed/data/probe_feedback_behavior_suite.json",
+    )
+    probe_behavior.add_argument(
+        "--output",
+        default="results/probe_feedback_behavior_suite.json",
+    )
+    probe_behavior.add_argument(
+        "--casebook",
+        default="results/probe_feedback_behavior_casebook.md",
+        help="Waar de leesbare casebook met per-scenario verdicten wordt opgeslagen.",
+    )
+
     vectorstore = subparsers.add_parser(
         "run-vectorstore-smoke",
         help="[manual] vectorstore backend smoke-test",
