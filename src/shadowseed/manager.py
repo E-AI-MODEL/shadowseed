@@ -295,16 +295,25 @@ class SSLManager:
             return False
         return not has_many_separators and not has_broad_terms and word_count <= word_limit
 
-    def normalize_detection_candidates(self, candidates: Iterable[str]) -> list[str]:
-        return normalize_detection_candidates(list(candidates))
+    def normalize_detection_candidates(
+        self,
+        candidates: Iterable[str],
+        expand_short_fragments: bool = True,
+    ) -> list[str]:
+        return normalize_detection_candidates(
+            list(candidates), expand_short_fragments=expand_short_fragments
+        )
 
     def ingest_detection_candidates(
         self,
         candidates: Iterable[str],
         trigger_keywords: Iterable[str] | None = None,
+        expand_short_fragments: bool = True,
     ) -> dict[str, Any]:
         raw_candidates = list(candidates)
-        normalized = self.normalize_detection_candidates(raw_candidates)
+        normalized = self.normalize_detection_candidates(
+            raw_candidates, expand_short_fragments=expand_short_fragments
+        )
         accepted: list[dict[str, str]] = []
         rejected: list[dict[str, str]] = []
         for candidate in normalized:

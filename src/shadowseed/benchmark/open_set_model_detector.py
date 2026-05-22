@@ -35,26 +35,39 @@ OPEN_SET_MODEL_DETECTOR_SOURCE = "open_set_model_detector"
 OPEN_SET_DETECTION_PROMPT = """
 Je bent een epistemische analist.
 
-Je krijgt een korte inputtekst. Je taak is niet om de tekst samen te vatten
-of te beoordelen. Je taak is om kleine structurele afwezigheden te vinden:
-welke kleine concepten, relaties of randvoorwaarden ontbreken in deze tekst
-terwijl ze nodig zouden zijn voor een volledig begrip van dit specifieke
-onderwerp?
+Je krijgt een korte inputtekst. Je taak is NIET om de tekst samen te vatten,
+te citeren of te paraphraseren. Je taak is om kleine structurele
+afwezigheden te vinden: welke kleine concepten, relaties of randvoorwaarden
+ONTBREKEN in deze tekst terwijl ze nodig zouden zijn voor een volledig
+begrip van dit specifieke onderwerp?
 
 Regels:
 - Geef maximaal {max_seeds} seeds.
-- Elke seed bevat precies één gap.
-- Elke seed verwijst concreet naar iets in deze tekst, niet naar een
-  willekeurige tekst van dit type.
-- Geen samengestelde analysekaders.
-- Geen lijsten binnen één seed.
+- Elke seed bevat precies één gap, geformuleerd als hele Nederlandse zin.
+- Elke seed benoemt iets dat NIET in de tekst staat maar wel zou moeten.
+- Elke seed verwijst concreet naar iets in deze tekst (een entiteit, een
+  beslissing, een claim), niet naar een willekeurige tekst van dit type.
+- Geen citaten of fragmenten uit de inputtekst.
+- Geen losse woorden, namen of acroniemen zonder relatie.
+- Geen samengestelde analysekaders of lijsten binnen één seed.
 - Geen meta-categorieën zoals "Onderbouwing van de centrale bewering" of
   "Tijdlijn van de gebeurtenis".
-- Formuleer concreet en toetsbaar.
-- Geen uitleg, alleen de genummerde seeds.
+
+Niet goed (citaat / fragment / leeg):
+1. Sven Jaschan
+2. Apple Computer Inc.
+3. AAPL.O&gt
+4. Bron van de centrale bewering.
+
+Wel goed (concrete ontbrekende relatie):
+1. Motivatie van Sven Jaschan om de Netsky-worm te schrijven.
+2. Effect van de Apple-licentievoorwaarden op derde-partij ontwikkelaars.
+3. Verantwoordelijke toezichthouder bij grensoverschrijdende virusinfecties.
 
 Inputtekst:
 {text}
+
+Geef nu maximaal {max_seeds} echte gap-seeds in dit formaat. Begin direct met "1.".
 
 Output:
 1.
@@ -69,14 +82,53 @@ class DetectorBackend(Protocol):
 
 
 _NUMBERED_LINE = re.compile(r"^\s*\d+[.)]\s*(.+?)\s*$")
+_HTML_ENTITY = re.compile(r"&(?:[a-zA-Z]+|#\d+);?")
+_ACRONYM_ONLY = re.compile(r"^[A-Z][A-Z0-9.&;<>\-]{1,8}$")
 
 
-def parse_numbered_seeds(raw_output: str, max_seeds: int = 5) -> list[str]:
+def _looks_like_citation_fragment(seed: str, source_text: str) -> bool:
+    """Heuristic filter for clearly non-seed output from small models.
+
+    Drops candidates that are too short, that are obvious HTML/garbage, that
+    are bare acronyms, or that appear as a literal long substring of the
+    source text. These all indicate the model copied from the input rather
+    than naming a gap.
+    """
+    stripped = seed.strip()
+    if not stripped:
+        return True
+    if _HTML_ENTITY.search(stripped):
+        return True
+    word_count = len(stripped.split())
+    if word_count <= 2:
+        return True
+    if _ACRONYM_ONLY.match(stripped):
+        return True
+    # Long literal substring of input → almost certainly a citation
+    if source_text and word_count <= 16:
+        normalized_seed = re.sub(r"\s+", " ", stripped).strip(" .,:;-").lower()
+        normalized_source = re.sub(r"\s+", " ", source_text).lower()
+        if len(normalized_seed) >= 20 and normalized_seed in normalized_source:
+            return True
+    return False
+
+
+def parse_numbered_seeds(
+    raw_output: str,
+    max_seeds: int = 5,
+    source_text: str = "",
+) -> list[str]:
     """Parse `1. seed` style lines out of a model response.
 
     Lines without a leading number are ignored. Blank seeds, the literal
-    placeholder ``[seed]`` and trivial duplicates are dropped. Returns at
-    most ``max_seeds`` items in source order.
+    placeholder ``[seed]``, citation fragments (HTML entities, bare
+    acronyms, very short stubs, long substrings of the source text) and
+    duplicates are dropped. Returns at most ``max_seeds`` items in source
+    order.
+
+    `source_text` is the inputtext that was given to the model. When
+    provided, candidates that appear as a long literal substring of it are
+    dropped as citations.
     """
     seeds: list[str] = []
     seen: set[str] = set()
@@ -86,6 +138,8 @@ def parse_numbered_seeds(raw_output: str, max_seeds: int = 5) -> list[str]:
             continue
         seed = match.group(1).strip().strip("-•").strip()
         if not seed or seed.lower() == "[seed]":
+            continue
+        if _looks_like_citation_fragment(seed, source_text):
             continue
         if seed in seen:
             continue
@@ -172,7 +226,9 @@ class HFTransformersDetectorBackend:
         )
         raw = output[0]["generated_text"]
         # the prompt ends with "1.\n" — re-prepend so the parser sees the first item
-        return parse_numbered_seeds("1. " + raw, max_seeds=max_seeds)
+        return parse_numbered_seeds(
+            "1. " + raw, max_seeds=max_seeds, source_text=text
+        )
 
 
 SUPPORTED_MODEL_BACKENDS: tuple[str, ...] = ("fixture", "hf-transformers")

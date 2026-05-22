@@ -153,7 +153,13 @@ def run_open_set_seed_review(
             item, detector=detector, model_backend=model_backend_obj
         )
         candidate_source_counts[candidate_source] = candidate_source_counts.get(candidate_source, 0) + 1
-        ingest = manager.ingest_detection_candidates(raw_candidates)
+        # For a real taalmodel detector the model is expected to produce
+        # whole-sentence gaps; suppress the auto-"ontbreekt" expansion of
+        # short fragments so garbage output stays visibly garbage.
+        ingest = manager.ingest_detection_candidates(
+            raw_candidates,
+            expand_short_fragments=(detector != "model"),
+        )
         raw_candidate_count += ingest["input_count"]
         normalized_candidate_count += len(ingest["normalized_candidates"])
         accepted_count += len(ingest["accepted"])

@@ -35,3 +35,40 @@ def test_manager_ingest_detection_candidates_keeps_accept_reject_split():
     assert len(result["accepted"]) == 1
     assert result["accepted"][0]["seed_id"] == "ss_001"
     assert len(result["rejected"]) == 3
+
+
+def test_expand_short_fragments_default_adds_ontbreekt_to_broad_categories():
+    # legacy human-written categories still expand
+    normalized = normalize_detection_candidates(["kolonialisme"])
+    assert normalized == ["kolonialisme ontbreekt."]
+
+
+def test_expand_short_fragments_disabled_keeps_model_fragments_as_is():
+    # when output comes from a real taalmodel detector, short stubs are
+    # left visible instead of being dressed up with "ontbreekt"
+    normalized = normalize_detection_candidates(
+        ["TORONTO", "FOAF", "Bloom Filters"],
+        expand_short_fragments=False,
+    )
+    assert normalized == ["TORONTO.", "FOAF.", "Bloom Filters."]
+    for seed in normalized:
+        assert "ontbreekt" not in seed.lower()
+
+
+def test_expand_short_fragments_disabled_still_keeps_full_sentence_seeds():
+    sentence = "Motivatie van Sven Jaschan om de Netsky-worm te schrijven."
+    normalized = normalize_detection_candidates([sentence], expand_short_fragments=False)
+    assert normalized == [sentence]
+
+
+def test_manager_ingest_passes_expand_flag_through():
+    manager = SSLManager(embedding_fn=lambda _text: __import__("numpy").array([1.0, 0.0, 0.0]))
+    result = manager.ingest_detection_candidates(
+        ["TORONTO"],
+        expand_short_fragments=False,
+    )
+    accepted_or_rejected = result["accepted"] + result["rejected"]
+    assert any("TORONTO" in row["text"] for row in accepted_or_rejected)
+    # without the flag the same input would have produced "TORONTO ontbreekt."
+    legacy = manager.normalize_detection_candidates(["TORONTO"])
+    assert legacy == ["TORONTO ontbreekt."]
