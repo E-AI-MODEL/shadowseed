@@ -31,6 +31,7 @@ vector = [
 ]
 test = [
   "pytest>=8.0",
+  "pytest-cov>=5.0",
   "ruff>=0.6",
 ]
 dev = [
@@ -60,3 +61,22 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E9", "F63", "F7", "F82"]
+
+[tool.coverage.run]
+source = ["shadowseed"]
+branch = true
+omit = [
+  "tests/*",
+  "*/site-packages/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+precision = 1
+exclude_lines = [
+  "pragma: no cover",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
