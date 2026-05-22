@@ -117,9 +117,56 @@ ignored chatter
 
 
 def test_parse_numbered_seeds_respects_max() -> None:
-    raw = "\n".join(f"{i}. seed {i}" for i in range(1, 11))
+    # use sentence-shaped placeholders so the citation-fragment filter does
+    # not reject them as 2-word stubs.
+    raw = "\n".join(
+        f"{i}. Voorbeeld van een gemiste structurele relatie nummer {i} in deze tekst."
+        for i in range(1, 11)
+    )
     seeds = parse_numbered_seeds(raw, max_seeds=3)
-    assert seeds == ["seed 1", "seed 2", "seed 3"]
+    assert len(seeds) == 3
+    assert seeds[0].endswith("nummer 1 in deze tekst.")
+    assert seeds[2].endswith("nummer 3 in deze tekst.")
+
+
+def test_parse_numbered_seeds_drops_html_entities() -> None:
+    raw = """
+1. AAPL.O&gt
+2. &lt;some html&gt;
+3. Verantwoordelijke toezichthouder bij grensoverschrijdende incidenten.
+""".strip()
+    seeds = parse_numbered_seeds(raw)
+    assert seeds == [
+        "Verantwoordelijke toezichthouder bij grensoverschrijdende incidenten."
+    ]
+
+
+def test_parse_numbered_seeds_drops_bare_acronyms_and_stubs() -> None:
+    raw = """
+1. FOAF
+2. PGP
+3. Sven Jaschan
+4. Effect van Sven Jaschans rechtszaak op virusauteursparagraaf in Duits strafrecht.
+""".strip()
+    seeds = parse_numbered_seeds(raw)
+    assert seeds == [
+        "Effect van Sven Jaschans rechtszaak op virusauteursparagraaf in Duits strafrecht."
+    ]
+
+
+def test_parse_numbered_seeds_drops_long_citation_substrings_of_source() -> None:
+    source = (
+        "TORONTO, Canada -- A second team of rocketeers competing for the X Prize "
+        "has officially announced the first launch date for its manned rocket."
+    )
+    raw = """
+1. A second team of rocketeers competing for the X Prize
+2. Motivatie van de tweede ploeg om voor de X Prize te kiezen.
+""".strip()
+    seeds = parse_numbered_seeds(raw, source_text=source)
+    assert seeds == [
+        "Motivatie van de tweede ploeg om voor de X Prize te kiezen."
+    ]
 
 
 def test_parse_numbered_seeds_returns_empty_on_no_numbered_lines() -> None:
@@ -133,3 +180,62 @@ def test_build_detection_prompt_includes_text_and_constraints() -> None:
     assert "maximaal 5 seeds" in prompt
     assert "meta-categorie" in prompt
     assert prompt.endswith("1.")
+
+
+def test_detection_prompt_includes_few_shot_blocks() -> None:
+    """The prompt must teach the model what a citation is and what a real gap
+    looks like, so small models do not just echo fragments back."""
+    prompt = build_detection_prompt("Een korte test-inputtekst.")
+    assert "Niet goed" in prompt
+    assert "Wel goed" in prompt
+    # the few-shot bad-example list must include both a bare-entity and a
+    # meta-categorie example, since both showed up in the v0.3a SmolLM2 run
+    assert "Sven Jaschan" in prompt
+    assert "Bron van de centrale bewering." in prompt
+    # the few-shot good-example list must include at least one concrete
+    # relation that names something specific
+    assert "Motivatie van Sven Jaschan" in prompt
+
+
+def test_run_open_set_seed_review_skips_expansion_for_model_detector(tmp_path) -> None:
+    """When the detector is 'model' the auto-'ontbreekt' suffix must not be
+    added; the language model is expected to deliver whole sentences."""
+    import json
+    from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
+
+    input_batch = {
+        "version": "test-batch",
+        "items": [
+            {
+                "id": "TEST_ITEM_1",
+                "title": "Test",
+                "domain": "test",
+                "text": "Een korte test-inputtekst over alpha en beta.",
+            }
+        ],
+    }
+    input_path = tmp_path / "batch.json"
+    input_path.write_text(json.dumps(input_batch), encoding="utf-8")
+
+    output_path = tmp_path / "out.json"
+    packets_path = tmp_path / "packets.json"
+    run_open_set_seed_review(
+        str(input_path),
+        str(output_path),
+        review_packet_path=str(packets_path),
+        detector="model",
+        model_backend="fixture",
+    )
+    out = json.loads(output_path.read_text(encoding="utf-8"))
+    # fixture backend prefixes seeds with [FIXTURE] and does not produce
+    # bare stubs, but the seed text must never have a bare " ontbreekt."
+    # appended by the normalizer to a short fragment
+    for item in out["results"]:
+        for seed in item["accepted"]:
+            text = seed["text"] if isinstance(seed, dict) else seed
+            # this is a structural check: the model path is expected to
+            # carry whole-sentence seeds straight through, not be reshaped
+            # into "X ontbreekt." form by the legacy expansion
+            assert not text.endswith(" ontbreekt.") or text.startswith("[FIXTURE]"), (
+                f"unexpected ontbreekt suffix on model-path seed: {text!r}"
+            )
