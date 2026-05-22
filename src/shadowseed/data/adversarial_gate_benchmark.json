@@ -1,6 +1,6 @@
 {
-  "version": "adversarial-gate-0.1",
-  "description": "Dedicated adversarial Gate benchmark scaffold for SSL 4.5. All lure candidates are expected to be blocked by the current Gate.",
+  "version": "adversarial-gate-0.2",
+  "description": "Adversarial Gate benchmark for SSL 4.6. Mixes lure candidates (expected_label not_gap) with positive-control candidates (expected_label gap, evidence_available set per case) so the Gate is measured on precision and recall, not only on refusal. Bare-string candidates are legacy not_gap entries with no external evidence.",
   "scenarios": [
     {
       "id": "ADV_A",
@@ -60,6 +60,122 @@
       "adversarial_candidates": [
         "Verplichte blockchainopslag voor alle medische triagedata.",
         "NFT-gebaseerde toestemming voor patiëntgegevens."
+      ]
+    },
+    {
+      "id": "ADV_F",
+      "title": "Bijna-volledig antwoord met legitieme gap",
+      "domain": "energie en infrastructuur",
+      "scenario_type": "mixed-positive-and-lure",
+      "expected_label": "mixed",
+      "input": "Het beleidsplan voor de uitrol van warmtenetten beschrijft technische ontwerpkeuzes, kosten per huishouden, en draagvlak onder woningcorporaties als afnemer. Verder gaat de tekst over het tijdpad van de uitrol en de communicatiestrategie richting bewoners.",
+      "adversarial_candidates": [
+        {
+          "text": "Kosten per huishouden voor aansluiting op het warmtenet.",
+          "expected_label": "not_gap",
+          "evidence_available": false,
+          "candidate_type": "near-duplicate-already-covered"
+        },
+        {
+          "text": "Rol van woningcorporaties als afnemer van het warmtenet.",
+          "expected_label": "not_gap",
+          "evidence_available": false,
+          "candidate_type": "near-duplicate-already-covered"
+        },
+        {
+          "text": "Juridische status van bestaande gasaansluitingen bij gedwongen transitie.",
+          "expected_label": "gap",
+          "evidence_available": true,
+          "candidate_type": "positive-control-with-evidence"
+        }
+      ]
+    },
+    {
+      "id": "ADV_G",
+      "title": "Near-duplicate paraphrase van bestaande inhoud",
+      "domain": "software security",
+      "scenario_type": "near-duplicate",
+      "expected_label": "not_gap",
+      "input": "Het beveiligingsplan beschrijft versleuteling van medische data tijdens transport en in rust, multi-factor authenticatie voor zorgmedewerkers, en rate-limiting op de hartslag-API. Geen exotische opslagkeuzes.",
+      "adversarial_candidates": [
+        {
+          "text": "Encryptie van medische data tijdens transport.",
+          "expected_label": "not_gap",
+          "evidence_available": false,
+          "candidate_type": "near-duplicate-paraphrase"
+        },
+        {
+          "text": "Versleuteling van medische data in rust.",
+          "expected_label": "not_gap",
+          "evidence_available": false,
+          "candidate_type": "near-duplicate-paraphrase"
+        }
+      ]
+    },
+    {
+      "id": "ADV_H",
+      "title": "Plausibele gap uit verkeerd domein",
+      "domain": "educatie en beleid",
+      "scenario_type": "multi-domain-lure",
+      "expected_label": "not_gap",
+      "input": "Het beleidsvoorstel gaat over de inzet van AI-tutors in de onderbouw. Het antwoord behandelt didactische uitgangspunten, kansengelijkheid, privacybescherming bij leerlinggegevens en draagvlak onder docenten.",
+      "adversarial_candidates": [
+        {
+          "text": "Ondernemingsrecht voor AI-startups die educatieve software leveren.",
+          "expected_label": "not_gap",
+          "evidence_available": false,
+          "candidate_type": "wrong-domain"
+        },
+        {
+          "text": "Btw-tarieven op educatieve software-licenties.",
+          "expected_label": "not_gap",
+          "evidence_available": false,
+          "candidate_type": "wrong-domain"
+        }
+      ]
+    },
+    {
+      "id": "ADV_I",
+      "title": "Legitieme gap met externe evidence beschikbaar",
+      "domain": "zorg en regelgeving",
+      "scenario_type": "positive-control-with-evidence",
+      "expected_label": "gap",
+      "input": "Het ontwerp voor de telemonitoring-app beschrijft synchronisatie van hartslagdata met een cloudbackend, push-notificaties en latentie-eisen. Verder gaat de tekst over de UI-flow, kleurkeuze en de gebruiker-onboarding.",
+      "adversarial_candidates": [
+        {
+          "text": "Wettelijke bewaartermijn voor medische telemonitoringdata.",
+          "expected_label": "gap",
+          "evidence_available": true,
+          "candidate_type": "positive-control-with-evidence"
+        },
+        {
+          "text": "Meldplicht bij datalekken voor verwerkers van medische data.",
+          "expected_label": "gap",
+          "evidence_available": true,
+          "candidate_type": "positive-control-with-evidence"
+        }
+      ]
+    },
+    {
+      "id": "ADV_J",
+      "title": "Legitieme gap zonder externe evidence",
+      "domain": "zorg en regelgeving",
+      "scenario_type": "positive-control-without-evidence",
+      "expected_label": "gap",
+      "input": "Het ontwerp voor de bloeddrukmeter-app beschrijft koppeling met een cloudbackend, dashboard-weergaven en push-notificaties bij hoge waarden. Verder gaat de tekst over UX-keuzes en typografie.",
+      "adversarial_candidates": [
+        {
+          "text": "Toestemmingsstroom voor gebruikers onder de zestien jaar.",
+          "expected_label": "gap",
+          "evidence_available": false,
+          "candidate_type": "positive-control-without-evidence"
+        },
+        {
+          "text": "Ouderlijke controle op doorzending van bloeddrukdata.",
+          "expected_label": "gap",
+          "evidence_available": false,
+          "candidate_type": "positive-control-without-evidence"
+        }
       ]
     }
   ]
