@@ -2,6 +2,15 @@
 
 Deze artifactset komt uit een handmatige workflow met Hugging Face intake.
 
+Run-parameters:
+
+- source_id: `ag_news_test`
+- limit: `12`
+- offset: `0`
+- detector: `model`
+- model_backend: `hf-transformers`
+- model_id: `HuggingFaceTB/SmolLM2-360M-Instruct`
+
 Inhoud:
 
 - `open_set_seed_output.json`: de seed-output per item
@@ -16,3 +25,5 @@ Interpretatie:
 - dit is geen standaard regressierun
 - status is `review_in_progress` totdat menselijke reviewers packets hebben ingevuld
 - lees deze laag niet als vervanging van de fixture-regressies
+- alleen `detector=model` met `model_backend=hf-transformers` voldoet aan de 4.6 een-zinsclaim;
+  adapter_v1, adapter_v2 en de fixture model-backend zijn baseline-infrastructuur, geen Laag-C bewijs
