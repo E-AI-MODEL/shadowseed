@@ -1,5 +1,11 @@
 # Open-set Human Review Protocol
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: Layer C protocol
+> Current source: yes
+
+
 Status: active protocol for first review round
 Date: 2026-05-10
 Related issue: #41

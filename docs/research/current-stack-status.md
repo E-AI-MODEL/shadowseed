@@ -1,5 +1,11 @@
 # Current Stack Status
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: Repository stack snapshot
+> Current source: yes
+
+
 Status: current as of 2026-05-10
 Base commit: `087dc7f322a680d6e23b4e657ecc85966c98b3f4`
 Related issue: #36

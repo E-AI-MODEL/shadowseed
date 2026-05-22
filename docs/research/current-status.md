@@ -1,5 +1,10 @@
 # Huidige Status van SSL-validatie
 
+> Status: current
+> Date: 2026-05-22
+> Evidence layer: status snapshot across layers A-G
+> Source: 4.6 evidence model in `docs/00_shadow_seed_learning_4_6.md`
+
 ## Doel van dit document
 
 Dit document maakt expliciet wat de repository vandaag werkelijk aantoont, wat slechts gedeeltelijk is afgedekt, en wat nog gepland of conceptueel is.
@@ -19,24 +24,26 @@ Dit document scheidt daarom vier dingen:
 
 De repo staat er sterk voor als benchmark-harness voor SSL-mechaniek. De kernlogica rond atomische seeds, `trace`, `weight`, Validation Gate, blinde labelscheiding, retrieval-smokes en rapportage is aanwezig en functioneel.
 
-De repo staat er nog niet sterk genoeg voor als volledig bewijs van het hele SSL 4.5 onderzoeksprogramma. Vooral open-set validatie, adversarial Gate-evaluatie, probe utility, domeintransfer en modelinterne validatie zijn nog niet op het niveau dat een brede algemene claim zou dragen.
+De repo staat er nog niet sterk genoeg voor als volledig bewijs van het hele SSL-onderzoeksprogramma (4.5 als mechaniek, 4.6 als evaluatiekoers). Open-set validatie, domeintransfer en modelinterne validatie zijn nog niet op het niveau dat een brede algemene claim zou dragen. Adversarial Gate-evaluatie en probe-feedback gedrag hebben sinds 2026-05-22 wel eerste echte evidence (PRs #80 en #82).
 
-Korte totaalscore per laag:
+Korte totaalscore per laag (per 2026-05-22):
 
 - mechanische regressie: sterk
 - kleine benchmarkvalidatie: bruikbaar
-- open-world validatie: zwak of afwezig
-- gedragsvalidatie van probes: beperkt
-- domeintransfer: zwak
-- modelinterne validatie: afwezig
+- open-set seedkwaliteit: infrastructuur compleet (v0.1/v0.2/v0.3 detectoren op main), evidence pending op round 003 dispatch met taalmodel + menselijke review
+- adversarial Gate-evaluatie: eerste echte evidence (PR #80, F1 1.0 op 21 candidates met drie baselines)
+- probe utility behavioral: eerste echte evidence (PR #82, 10/10 lifecycle scenarios)
+- probe utility prompt-quality: bestaand scaffold in `ssl45_probe_utility_suite`
+- domeintransfer: nog leeg
+- modelinterne validatie: nog onderzoekswerk per 4.6 doc
 
 ## Statusoverzicht per fase
 
 | Fase | Status | Korte duiding |
 |---|---|---|
-| Fase 0: detectie | Partially implemented | Goede kleine benchmarklaag, maar nog niet open-set en nog niet breed genoeg voor algemene detectieclaims |
-| Fase 1: multi-turn state | Partially implemented | Antwoordwinst is meetbaar, maar de volledige conditievergelijking uit het testplan ontbreekt |
-| Fase 2: Validation Gate en probes | Partially implemented | Gate-mechaniek bestaat, maar evaluatie is nog te vriendelijk en probekwaliteit wordt nog beperkt gemeten |
+| Fase 0: detectie | Infrastructure complete, evidence pending | Drie detectoren op main (v0.1/v0.2/v0.3); fixture-suites groen; open-set Laag-C evidence wacht op round 003 dispatch + review |
+| Fase 1: multi-turn state | Partially implemented | Antwoordwinst is meetbaar op de benefit-suite (delta +0.92 op model-benefit, +0.80 op blind), maar de volledige A/B/C-conditievergelijking uit het testplan ontbreekt nog |
+| Fase 2: Validation Gate en probes | First evidence | Gate discrimineert correct op de uitgebreide adversarial fixture (PR #80, F1 1.0); probe-feedback lifecycle gevalideerd op 10 scenarios (PR #82); prompt-quality suite blijft naast de behavioral suite staan |
 | Fase 3: constellations | Planned / infrastructural | Bouwstenen bestaan, maar er is nog geen echte constellation-benchmark of clusterwaarde-evaluatie |
 | Fase 4: modelinterne test | Planned | Geen operationele evaluatielaag aanwezig |
 
@@ -201,21 +208,28 @@ Dit is een bruikbare tussenlaag: goed voor vaste cases, te smal voor brede claim
 
 ## Open-world evaluatie
 
-Status: Weak
+Status: Infrastructure complete, evidence pending
 
-Er is nog geen volwassen open-set evaluatie waarbij onbekende teksten zonder vaste ground-truth seedlijst blind beoordeeld worden op seedkwaliteit.
+De drie detectiepaden zijn aanwezig op main: `open_set_candidate_adapter` v0.1 (regex baseline, default voor backwards compatibility), v0.2 text-grounded baseline, en v0.3 taalmodel-detector via de hf-transformers backend. De v0.3 detector voldoet aan de 4.6 één-zinsclaim wanneer met een echt model gedraaid. Workflow dispatch ondersteunt alle drie via `--detector` en `--model-backend`. Round 001 staat gepauzeerd als infrastructure baseline; eerste echte open-set evidence wacht op round 003 met `detector=model + model_backend=hf-transformers` plus menselijke review op de packets (zie #41 en #81).
 
 ## Adversarial Gate-evaluatie
 
-Status: Weak
+Status: First evidence
 
-De repo heeft false-positive controle, maar nog geen zware vergelijking tussen de huidige Gate en zwakkere promotiebaselines onder echt misleidende inputs.
+PR #80 maakt van de adversarial Gate suite een echte discrimination-test in plaats van een refusal-only suite. De fixture bevat nu 10 scenarios met 21 candidates verdeeld over zes categorieën (volledig antwoord, stijl-zonder-gap, verleidelijke irrelevante, mixed positief-en-lure, near-duplicate paraphrase, plausibele wrong-domain) plus positieve controles met en zonder evidence. Drie baselines worden vergeleken: `current_gate`, `trace_only`, `trace_no_contradiction_check`. Resultaat: 21/21 correct outcomes, precision 1.0, recall 1.0 (op cases met evidence), F1 1.0, baseline-only blocked 16 (wat zwakkere baselines wel zouden doorlaten). Een refusal-only Gate zou nu falen met recall 0.
+
+Beperking: 21 candidates blijft klein en de contradiction-check is lexicaal. Bredere adversarial sets en niet-lexicale contradiction-detectie blijven open werk.
 
 ## Probe utility
 
-Status: Weak to partial
+Status: First evidence (behavioral + prompt-quality)
 
-De repo heeft wel paden die vervolgkwaliteit benaderen, maar nog geen volledige en zelfstandige evaluatielaag voor probe utility.
+Twee complementaire suites:
+
+- `ssl45_probe_utility_suite` (bestaand): meet prompt-kwaliteit van SSL-guided follow-up, retrieval en dialectiek versus baseline. Antwoordt op de 4.6 vraag "betere vervolgvragen / retrieval / falsificatie".
+- `probe_feedback_behavior_suite` (PR #82): meet of de feedback-loop in `SSLManager.apply_probe_feedback` zich gedraagt zoals de 4.6 spec claimt. 10 scenarios over 8 lifecycle-categorieën (strengthen, weaken, clamp upper, clamp lower, demotion PROMOTED -> ACTIVE, status_block voor DORMANT en EXPIRED, neutral no-op, promotion-block dat reward alleen niet promoteert, mixed). Resultaat: 10/10 correct outcomes, alle 8 categorieën pass. Bevat een expliciete regression-guard test die fixture-mutatie detecteert.
+
+Beperking: de behavioral suite test mechanism, niet usefulness in echte workflows. Dat blijft de taak van de open-set rounds met menselijke review.
 
 ## Reproduceerbaarheid
 
@@ -264,4 +278,4 @@ Samen vormen ze:
 
 De repo is vandaag:
 
-> een sterke en serieuze SSL-benchmarkharness met goede mechanische discipline, maar nog geen volledige validatie van het hele SSL 4.5 onderzoeksprogramma.
+> een sterke en serieuze SSL-benchmarkharness met goede mechanische discipline, met eerste echte evidence op de adversarial Gate (D) en probe-feedback (E) lagen, en open-set evidence (C) die wacht op een echte taalmodel-detector run met menselijke review.

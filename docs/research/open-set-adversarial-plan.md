@@ -1,5 +1,11 @@
 # Plan voor Open-set Seed Review en Adversarial Gate-evaluatie
 
+> Status: partly current
+> Date: 2026-05-22
+> Evidence layer: Adversarial section fulfilled by PR #80; open-set section tracked by #41/#62/#81
+> Current source: partial
+
+
 ## Doel van dit document
 
 Dit document maakt de volgende inhoudelijke stap voor SSL 4.5 concreet.

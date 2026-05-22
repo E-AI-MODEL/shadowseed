@@ -1,5 +1,11 @@
 # HF Open-Set Dataset Integration Plan
 
+> Status: historical
+> Date: 2026-05-22
+> Evidence layer: HF intake plan, mostly implemented; see workflow + #81
+> Current source: no
+
+
 ## Why this exists
 
 The report and publish pipeline now carries automatic benchmark layers cleanly, but the next evidence step is still missing: a reproducible open-set dataset intake route.
