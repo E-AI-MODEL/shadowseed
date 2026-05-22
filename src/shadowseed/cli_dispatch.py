@@ -21,6 +21,7 @@ from shadowseed.benchmark.ssl45_benefit_suite import run_ssl45_benefit_suite
 from shadowseed.benchmark.ssl45_false_positive_suite import run_ssl45_false_positive_suite
 from shadowseed.benchmark.ssl45_gap_suite import run_ssl45_gap_suite
 from shadowseed.benchmark.ssl45_model_benefit_suite import run_ssl45_model_benefit_suite
+from shadowseed.benchmark.probe_feedback_behavior_suite import run_probe_feedback_behavior_suite
 from shadowseed.benchmark.ssl45_probe_utility_suite import run_ssl45_probe_utility_suite
 from shadowseed.benchmark.ssot_smoke import run_ssot_smoke
 from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
@@ -142,6 +143,12 @@ def _run_probe_utility_benchmark(args: argparse.Namespace) -> str:
     return run_ssl45_probe_utility_suite(args.input, args.output)
 
 
+def _run_probe_feedback_behavior_suite(args: argparse.Namespace) -> str:
+    return run_probe_feedback_behavior_suite(
+        args.input, args.output, casebook_path=args.casebook
+    )
+
+
 def _run_vectorstore_smoke(args: argparse.Namespace) -> str:
     return run_vectorstore_smoke(args.output, backend=args.backend)
 
@@ -190,6 +197,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "summarize-open-set-seed-review": _summarize_open_set_seed_review,
     "run-adversarial-gate-benchmark": _run_adversarial_gate_benchmark,
     "run-probe-utility-benchmark": _run_probe_utility_benchmark,
+    "run-probe-feedback-behavior-suite": _run_probe_feedback_behavior_suite,
     "run-vectorstore-smoke": _run_vectorstore_smoke,
     "run-ssot-smoke": _run_ssot_smoke,
     "run-retrieval-benchmark": _run_retrieval_benchmark,
