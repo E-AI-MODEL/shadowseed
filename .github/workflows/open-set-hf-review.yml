@@ -148,23 +148,6 @@ jobs:
             adapter_v1, adapter_v2 en de fixture model-backend zijn baseline-infrastructuur, geen Laag-C bewijs
           MD
 
-      - name: Commit open-set summary naar repo
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add \
-            results/open_review/open_set_seed_review_summary.json \
-            results/open_review/open_set_disagreements.json \
-            results/open_review/open_set_review_report.md \
-            results/open_review/README.md
-          if git diff --cached --quiet; then
-            echo "Geen wijzigingen om te committen."
-          else
-            git commit -m "chore: update open-set review summary [skip ci]"
-            git push origin HEAD:main
-          fi
-
       - name: Upload open-set review artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -178,3 +161,39 @@ jobs:
             results/open_review/open_set_review_report.md
             results/open_review/README.md
           if-no-files-found: error
+
+      - name: Commit open-set summary naar repo
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add \
+            results/open_review/open_set_seed_review_summary.json \
+            results/open_review/open_set_disagreements.json \
+            results/open_review/open_set_review_report.md \
+            results/open_review/README.md
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen om te committen."
+            exit 0
+          fi
+          git commit -m "chore: update open-set review summary [skip ci]"
+          # Push with rebase-and-retry: main can advance between checkout and
+          # push (concurrent merges or another workflow run). Without this the
+          # push is rejected as non-fast-forward and the whole job fails even
+          # though the artifact above already succeeded.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Push geslaagd op poging $attempt."
+              exit 0
+            fi
+            echo "Push geweigerd op poging $attempt; rebase op origin/main."
+            git fetch origin main || true
+            if ! git rebase origin/main; then
+              echo "::error::Rebase op origin/main mislukte (conflict op resultaatbestanden). Artifact is wel geupload."
+              git rebase --abort || true
+              exit 1
+            fi
+            sleep $((attempt * 3))
+          done
+          echo "::error::Push na 5 pogingen nog steeds geweigerd. Artifact is wel geupload."
+          exit 1
