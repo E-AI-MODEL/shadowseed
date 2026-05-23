@@ -75,6 +75,28 @@ These artifacts are not guaranteed in every standard CI run.
 | Retrieval benchmark | `run-retrieval-benchmark` | `src/shadowseed/data/retrieval_benchmark.json` | `results/retrieval_benchmark.json` | `results/retrieval_benchmark.json` | raw output plus metrics | Optional manual input |
 | Retrieval model benchmark | `run-retrieval-model-benchmark` | retrieval and output benchmark data | `results/retrieval_model_benchmark.json` | `results/retrieval_model_benchmark.json` | raw output plus summary | Optional manual input |
 
+## Open-set detector selection
+
+`run-open-set-seed-review` chooses its candidate generator with `--detector`
+(canonical list: `SUPPORTED_DETECTORS` in
+`src/shadowseed/benchmark/open_set_candidate_adapter.py`). The CLI and the
+`open-set-hf-review` workflow both follow that list. See
+`docs/adr/0001-open-set-detector-strategy.md` for the rationale.
+
+| `--detector` | `--model-backend` | What runs | Layer C evidence? |
+|---|---|---|---|
+| `adapter_v1` (default) | n/a | regex/template baseline (v0.1) | no — infrastructure |
+| `adapter_v2` | n/a | text-grounded template baseline (v0.2) | no — stronger baseline |
+| `model` | `fixture` | deterministic `[FIXTURE]` detector | no — CI fixture |
+| `model` | `hf-transformers` (needs `--model-id`) | real taalmodel detector (v0.3) | yes — the only Layer-C-eligible combination |
+
+Notes:
+- the model path suppresses the auto-"ontbreekt" fragment expansion in
+  `seed_normalization`, so language-model output is judged as written
+- `--model-id`, `--max-new-tokens` only apply to `--model-backend hf-transformers`
+- the summary records `detector` and `model_backend` so each artifact is
+  traceable to the generator that produced it
+
 ## Known legacy fallback
 
 The analyzer currently attempts this open-set path first:
