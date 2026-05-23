@@ -1,19 +1,19 @@
 {
   "summary": {
     "evidence_layer": "open_set_seed_quality",
-    "packet_count": 132,
+    "packet_count": 122,
     "completed_packet_count": 0,
-    "pending_packet_count": 132,
+    "pending_packet_count": 122,
     "invalid_packet_count": 0,
     "accepted_packet_count": 0,
     "rejected_packet_count": 0,
     "packet_acceptance_rate": 0.0,
-    "unique_seed_count": 59,
+    "unique_seed_count": 61,
     "completed_seed_count": 0,
     "accepted_seed_count": 0,
     "rejected_seed_count": 0,
     "mixed_seed_count": 0,
-    "pending_seed_count": 59,
+    "pending_seed_count": 61,
     "invalid_seed_count": 0,
     "agreement_eligible_seed_count": 0,
     "unanimous_seed_count": 0,
@@ -41,7 +41,8 @@
       "reviewer_b"
     ],
     "domain_seed_counts": {
-      "nieuws - Sci/Tech": 59
+      "nieuws - Business": 3,
+      "nieuws - Sci/Tech": 58
     },
     "status": "review_in_progress",
     "artifacts": {
@@ -52,11 +53,200 @@
   },
   "results": [
     {
+      "item_id": "AG_NEWS_TEST_0",
+      "title": "AG News Business #0",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_001",
+      "seed_text": "Motivatie van Sven Jaschan om de Netsky-worm te schrijven.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_0",
+      "title": "AG News Business #0",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_002",
+      "seed_text": "Effect van de Apple-licentievoorwaarden op derde-partij ontwikkelaars.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_0",
+      "title": "AG News Business #0",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_003",
+      "seed_text": "Verantwoordelijke toezichthouder bij grensoverschrijdende virusinfecties.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
       "item_id": "AG_NEWS_TEST_1",
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "The Race is On: Second Private Team Sets Launch Date for Human Spaceflight (SPACE.com).",
+      "seed_text": "De Ansari X Prize is een financiële prijsvergunning.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -119,371 +309,7 @@
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "TORONTO ontbreekt.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 4,
-        "relevance": 4,
-        "testability": 4,
-        "non_triviality": 4,
-        "follow_up_utility": 4
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 4,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_1",
-      "title": "AG News Sci/Tech #1",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_003",
-      "seed_text": "Canada -- A second\\team of rocketeers competing for the #36.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 4,
-        "relevance": 4,
-        "testability": 4,
-        "non_triviality": 4,
-        "follow_up_utility": 4
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 4,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_1",
-      "title": "AG News Sci/Tech #1",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_004",
-      "seed_text": "million Ansari X Prize ontbreekt.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 4,
-        "relevance": 4,
-        "testability": 4,
-        "non_triviality": 4,
-        "follow_up_utility": 4
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 4,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_1",
-      "title": "AG News Sci/Tech #1",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_005",
-      "seed_text": "a contest for\\privately funded suborbital space flight.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 4,
-        "relevance": 4,
-        "testability": 4,
-        "non_triviality": 4,
-        "follow_up_utility": 4
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 4,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_1",
-      "title": "AG News Sci/Tech #1",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_006",
-      "seed_text": "has officially announced the first\\launch date for its manned rocket.",
+      "seed_text": "Een team heeft officieel een launchdatum vastgesteld.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -545,8 +371,134 @@
       "item_id": "AG_NEWS_TEST_1",
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_007",
-      "seed_text": "has officially announced the first.",
+      "seed_id": "ss_003",
+      "seed_text": "Het is nog geen menselijk vliegtuig dat is geproduceerd.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "title": "AG News Sci/Tech #1",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_004",
+      "seed_text": "De eerste launchdatum is ongeveer 1 maart 2004.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "title": "AG News Sci/Tech #1",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_005",
+      "seed_text": "De Ansari X Prize wordt gewonnen door het SpaceX-team.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -609,7 +561,7 @@
       "title": "AG News Sci/Tech #2",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Kees: ontbreekt.",
+      "seed_text": "De chemisch wetenschapper die het bedrijf heeft gecreëerd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -671,8 +623,197 @@
       "item_id": "AG_NEWS_TEST_2",
       "title": "AG News Sci/Tech #2",
       "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_001",
-      "seed_text": "Kees ontbreekt.",
+      "seed_id": "ss_002",
+      "seed_text": "Het doel van het bedrijf om peptidens te ontwikkelen.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "title": "AG News Sci/Tech #2",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_003",
+      "seed_text": "De belangrijkste component van een peptide.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "title": "AG News Sci/Tech #2",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_004",
+      "seed_text": "De bron van de centrale bewering.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "title": "AG News Sci/Tech #2",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_005",
+      "seed_text": "De oorsprong van de methode van producentie van peptiden.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -735,7 +876,7 @@
       "title": "AG News Sci/Tech #3",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Fitzpatrick starts his shift with a blur of colorful maps.",
+      "seed_text": "Het wordt nog steeds donker toen Mike Fitzpatrick begint met zijn werk.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -798,36 +939,8 @@
       "title": "AG News Sci/Tech #3",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "figures and endless charts ontbreekt.",
+      "seed_text": "De wind strekt zich af en breekt het pad waarop hij liep.",
       "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
         {
           "reviewer_id": "reviewer_a",
           "review_status": "pending",
@@ -872,15 +985,15 @@
         "follow_up_utility": 0
       },
       "criterion_pending_counts": {
-        "atomicity": 4,
-        "relevance": 4,
-        "testability": 4,
-        "non_triviality": 4,
-        "follow_up_utility": 4
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
       },
       "reject_reason_counts": {},
       "completed_reviewer_count": 0,
-      "reviewer_count": 4,
+      "reviewer_count": 2,
       "aggregate_verdict": "pending",
       "pairwise_decision_agreement": null
     },
@@ -889,7 +1002,7 @@
       "title": "AG News Sci/Tech #3",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "It's barely dawn when Mike Fitzpatrick starts his shift with a blur of colorful maps.",
+      "seed_text": "Licht brandt in plaats van ongeveer de plekken die hij verwacht had.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -952,7 +1065,70 @@
       "title": "AG News Sci/Tech #3",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_004",
-      "seed_text": "It's barely dawn when Mike Fitzpatrick starts.",
+      "seed_text": "De lucht wordt droog en roept vuur op.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_3",
+      "title": "AG News Sci/Tech #3",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_005",
+      "seed_text": "Mike Fitzpatrick heeft al weten hoe de dag zal verlopen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1015,7 +1191,7 @@
       "title": "AG News Sci/Tech #4",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Calif. Aims to Limit Farm-Related Smog (AP).",
+      "seed_text": "Cali. heeft geen eigen smogfokking-agency.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1078,7 +1254,7 @@
       "title": "AG News Sci/Tech #4",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "Southern California's smog-fighting agency went after emissions of the bovine variety Friday.",
+      "seed_text": "De regio heeft geen prioriteiten voor het verminderen van smog.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1141,7 +1317,133 @@
       "title": "AG News Sci/Tech #4",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "adopting the nation's first rules to reduce air pollution from dairy cow manure.",
+      "seed_text": "Het land heeft geen wetgeving over bovinemanueel.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "title": "AG News Sci/Tech #4",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_004",
+      "seed_text": "De regio heeft geen bedreigingen tegen bovinesmog.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "title": "AG News Sci/Tech #4",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_005",
+      "seed_text": "De regio heeft geen maatschappelijk beleid over bovinesmog.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1204,7 +1506,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Open Letter Against British Copyright Indoctrination in Schools.",
+      "seed_text": "De Britse Ministerie voor Onderwijs en Ontwikkeling heeft een \"Muziekmanifestaat\" gestart.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1267,7 +1569,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "The British Department for Education and Skills (DfES) recently launched a \"Music Manifesto\" campaign.",
+      "seed_text": "waarmee het de leerlingen van onze schoolen wil educeren over muzikale legitimeiten.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1330,7 +1632,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "with the ostensible intention of educating the next generation of British musicians. Unfortunately.",
+      "seed_text": "De EMI heeft apparently hun eindresultaten goed gemaakt.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1393,7 +1695,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_004",
-      "seed_text": "they also teamed up with the music industry (EMI.",
+      "seed_text": "dus dat kinderen in onze schoolen worden gedreven over de illegaalheid van downloaden van muziek.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1456,7 +1758,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "and various artists) to make this popular. EMI has apparently negotiated their end well.",
+      "seed_text": "Ik heb een open brief geschreven aan de DfES over dit incident.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1519,7 +1821,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_006",
-      "seed_text": "so I wrote an open letter to the DfES about it. Unfortunately.",
+      "seed_text": "maar ik hoop dat u het nuttig vindt en misschien inspirerend voelt om het zelf te doen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1582,7 +1884,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_007",
-      "seed_text": "it's pedantic ontbreekt.",
+      "seed_text": "indien hetzelfde gebeurt in uw gebied.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1645,7 +1947,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_008",
-      "seed_text": "and perhaps feel inspired to do something similar.",
+      "seed_text": "Het is pijnlijk om te zien hoe de Britse regering zich door de legitieme rechtvaardigheid heen heeft gesleept.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1708,7 +2010,7 @@
       "title": "AG News Sci/Tech #5",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_009",
-      "seed_text": "if or when the same thing has happened in your area.",
+      "seed_text": "wat ons allemaal kan spelen in de wereld van de muziek.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1771,7 +2073,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Loosing the War on Terrorism.",
+      "seed_text": "Het antwoord van Sophos over het percentage van virus infecties wordt niet vermeld.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1834,7 +2136,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "Sven Jaschan ontbreekt.",
+      "seed_text": "De naam van de antiviruscompany Sophos wordt niet genoemd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1897,7 +2199,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "self-confessed author of the Netsky and Sasser viruses.",
+      "seed_text": "De bron van de informatie over Jaschan en zijn verhaal wordt niet genoemd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1960,7 +2262,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_004",
-      "seed_text": "is\\responsible for 70 percent of virus infections in 2004.",
+      "seed_text": "De exacte datum van Jaschan's arrest wordt niet genoemd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2023,385 +2325,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "according to a six-month\\virus roundup published Wednesday by antivirus company Sophos.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_006",
-      "seed_text": "something\\experts at Microsoft confirmed ontbreekt.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_007",
-      "seed_text": "During the five months preceding Jaschan's capture.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_008",
-      "seed_text": "there were at least 25 variants of Netsky and one of the port-scanning network worm Sasser.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_009",
-      "seed_text": "Graham Cluley ontbreekt.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_010",
-      "seed_text": "senior technology consultant at Sophos.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_011",
-      "seed_text": "said it was a staggering\\event.",
+      "seed_text": "De definitie van 'virus' wordt niet expliciet gedefinieerd in de tekst.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2464,7 +2388,7 @@
       "title": "AG News Sci/Tech #7",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "FOAF ontbreekt.",
+      "seed_text": "De FOAF-bestand moet eerst worden gedefinieerd en beschreven.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2527,7 +2451,7 @@
       "title": "AG News Sci/Tech #7",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "PGP ontbreekt.",
+      "seed_text": "Het gebruik van bloempullenfilteren is niet expliciet vermeld.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2590,7 +2514,7 @@
       "title": "AG News Sci/Tech #7",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "Key Distribution ontbreekt.",
+      "seed_text": "De encryptie van het FOAF-bestand is niet aangetoond.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2653,7 +2577,7 @@
       "title": "AG News Sci/Tech #7",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_004",
-      "seed_text": "Bloom Filters ontbreekt.",
+      "seed_text": "Er wordt geen discussie over de privacy impliceren van deze technologie.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2716,7 +2640,7 @@
       "title": "AG News Sci/Tech #7",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Bloom ontbreekt.",
+      "seed_text": "De sociale netwerken worden niet genoemd in de inputtekst.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2779,7 +2703,7 @@
       "title": "AG News Sci/Tech #9",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Card fraud unit nets 36.",
+      "seed_text": "De bedrijfsrelatie tussen Card Fraud Unit en het economisch belang van de UK wordt niet genoemd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2842,7 +2766,7 @@
       "title": "AG News Sci/Tech #9",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "cards ontbreekt.",
+      "seed_text": "Het aantal geslaagde arrestaties door de Card Fraud Unit is ongeveer 171.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2905,7 +2829,7 @@
       "title": "AG News Sci/Tech #9",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "In its first two years.",
+      "seed_text": "De Card Fraud Unit heeft geen berekening gemaakt over de economische waarde van de geslaagde arrestaties.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2968,385 +2892,7 @@
       "title": "AG News Sci/Tech #9",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_004",
-      "seed_text": "the UK's dedicated card fraud unit.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_9",
-      "title": "AG News Sci/Tech #9",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_005",
-      "seed_text": "has recovered 36 ontbreekt.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_9",
-      "title": "AG News Sci/Tech #9",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_006",
-      "seed_text": "stolen cards and 171 arrests.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_9",
-      "title": "AG News Sci/Tech #9",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_007",
-      "seed_text": "And estimates it saved 65m.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_9",
-      "title": "AG News Sci/Tech #9",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_008",
-      "seed_text": "The card fraud unit has recovered 36.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_9",
-      "title": "AG News Sci/Tech #9",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_009",
-      "seed_text": "stolen cards and 171 arrests in the first two years.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_9",
-      "title": "AG News Sci/Tech #9",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_010",
-      "seed_text": "This is the output of the program.",
+      "seed_text": "De Card Fraud Unit maakt gebruik van de Apple-licentievoorwaarden om de virusinfecties te detecteren.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3409,7 +2955,7 @@
       "title": "AG News Sci/Tech #10",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "The new wireless networking standard will be called LOS ANGELES.",
+      "seed_text": "De technologie die wordt beschreven in de inputtekst bestaat niet.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3472,7 +3018,196 @@
       "title": "AG News Sci/Tech #10",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "The new wireless networking standard will be called L.",
+      "seed_text": "Het aantal groepen die de nieuwe standard willen aanpakken is onbekend.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_10",
+      "title": "AG News Sci/Tech #10",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_003",
+      "seed_text": "De naam van de company die het meest heeft gedaan bij de netwerkstandaard is niet genoemd.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_10",
+      "title": "AG News Sci/Tech #10",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_004",
+      "seed_text": "De naam van de company die de nieuwe standard wil aanpakken is niet bekend.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_10",
+      "title": "AG News Sci/Tech #10",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_004",
+      "seed_text": "De naam van de company die de nieuwe standard heeft ingevoerd is niet bekend.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3535,7 +3270,7 @@
       "title": "AG News Sci/Tech #11",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Apple Launches Graphics Software ontbreekt.",
+      "seed_text": "Motivatie van Apple Computer Inc. om de Netsky-worm te schrijven.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3598,7 +3333,7 @@
       "title": "AG News Sci/Tech #11",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "Video Bundle ontbreekt.",
+      "seed_text": "Effect van de Apple-licentievoorwaarden op de gebruikte drie-deelpartij ontwikkelaars.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3661,7 +3396,7 @@
       "title": "AG News Sci/Tech #11",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "LOS ANGELES (Reuters) - Apple Computer Inc.&lt.",
+      "seed_text": "Verantwoordelijke toezichthouder bij grensoverschrijdende virusinfecties.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3724,7 +3459,70 @@
       "title": "AG News Sci/Tech #11",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_004",
-      "seed_text": "AAPL.O&gt ontbreekt.",
+      "seed_text": "Uitvoeringsdatum van het nieuwe programma voor real-time motion graphics.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_11",
+      "title": "AG News Sci/Tech #11",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_005",
+      "seed_text": "Naam van de nieuwe video-editing software-bundle.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3787,36 +3585,8 @@
       "title": "AG News Sci/Tech #12",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "Dutch Retailer Beats Apple to Local Download Market AMSTERDAM (Reuters) - Free Record Shop.",
+      "seed_text": "Motivatie van Free Record Shop om de nieuwe downloadservice te starten.",
       "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
         {
           "reviewer_id": "reviewer_a",
           "review_status": "pending",
@@ -3861,15 +3631,15 @@
         "follow_up_utility": 0
       },
       "criterion_pending_counts": {
-        "atomicity": 4,
-        "relevance": 4,
-        "testability": 4,
-        "non_triviality": 4,
-        "follow_up_utility": 4
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
       },
       "reject_reason_counts": {},
       "completed_reviewer_count": 0,
-      "reviewer_count": 4,
+      "reviewer_count": 2,
       "aggregate_verdict": "pending",
       "pairwise_decision_agreement": null
     },
@@ -3878,36 +3648,8 @@
       "title": "AG News Sci/Tech #12",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "a Dutch music retail chain.",
+      "seed_text": "Effectieve implementatie van de Apple-licentievoorwaarden door Free Record Shop.",
       "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
         {
           "reviewer_id": "reviewer_a",
           "review_status": "pending",
@@ -3952,15 +3694,204 @@
         "follow_up_utility": 0
       },
       "criterion_pending_counts": {
-        "atomicity": 4,
-        "relevance": 4,
-        "testability": 4,
-        "non_triviality": 4,
-        "follow_up_utility": 4
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
       },
       "reject_reason_counts": {},
       "completed_reviewer_count": 0,
-      "reviewer_count": 4,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_12",
+      "title": "AG News Sci/Tech #12",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_003",
+      "seed_text": "Grensoverschrijdingsproblemen tijdens het testen van de downloadservice.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_12",
+      "title": "AG News Sci/Tech #12",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_004",
+      "seed_text": "Deze nieuwe downloadservice wordt beschouwd als een innovatie voor de digitale musicsector.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_12",
+      "title": "AG News Sci/Tech #12",
+      "domain": "nieuws - Sci/Tech",
+      "seed_id": "ss_005",
+      "seed_text": "Het succesvolle luchtdrukken van Free Record Shop in de lokale downloadmarkt.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
       "aggregate_verdict": "pending",
       "pairwise_decision_agreement": null
     }

@@ -9,7 +9,7 @@ Run-parameters:
 - offset: `0`
 - detector: `model`
 - model_backend: `hf-transformers`
-- model_id: `HuggingFaceTB/SmolLM2-360M-Instruct`
+- model_id: `Qwen/Qwen2.5-1.5B-Instruct`
 
 Inhoud:
 
