@@ -174,6 +174,42 @@ def test_parse_numbered_seeds_returns_empty_on_no_numbered_lines() -> None:
     assert parse_numbered_seeds("") == []
 
 
+def test_parse_numbered_seeds_drops_verbatim_fewshot_leak() -> None:
+    """A model that echoes a few-shot example verbatim must have it dropped."""
+    raw = """
+1. Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen.
+2. AVG-compliance bij verwerking van medische hartslagdata.
+3. Gevolgen van de gerapporteerde fabriekssluiting voor de lokale werkgelegenheid.
+""".strip()
+    seeds = parse_numbered_seeds(raw)
+    assert seeds == [
+        "Gevolgen van de gerapporteerde fabriekssluiting voor de lokale werkgelegenheid."
+    ]
+
+
+def test_parse_numbered_seeds_drops_near_verbatim_fewshot_leak() -> None:
+    """Near-verbatim echo (one token changed) of a few-shot example is also
+    caught by the token-overlap leak filter."""
+    raw = """
+1. Koloniaal kapitaal als financieringsbron voor Britse fabrieksuitbreidingen.
+2. Effect van de aangekondigde tariefverhoging op kleine importeurs.
+""".strip()
+    seeds = parse_numbered_seeds(raw)
+    assert seeds == [
+        "Effect van de aangekondigde tariefverhoging op kleine importeurs."
+    ]
+
+
+def test_parse_numbered_seeds_keeps_legitimate_seed_sharing_a_few_common_words() -> None:
+    """A real seed that happens to share a couple of common words with a
+    few-shot example must NOT be dropped (no over-eager leak filtering)."""
+    raw = "1. Bron van de financiering voor de aangekondigde ziekenhuisuitbreiding."
+    seeds = parse_numbered_seeds(raw)
+    assert seeds == [
+        "Bron van de financiering voor de aangekondigde ziekenhuisuitbreiding."
+    ]
+
+
 def test_build_detection_prompt_includes_text_and_constraints() -> None:
     prompt = build_detection_prompt("De Industriële Revolutie in Groot-Brittannië.")
     assert "De Industriële Revolutie in Groot-Brittannië." in prompt
@@ -183,18 +219,20 @@ def test_build_detection_prompt_includes_text_and_constraints() -> None:
 
 
 def test_detection_prompt_includes_few_shot_blocks() -> None:
-    """The prompt must teach the model what a citation is and what a real gap
-    looks like, so small models do not just echo fragments back."""
+    """The prompt must teach form with examples, but those examples must come
+    from domains OTHER than the news corpus so a small model that echoes them
+    is obviously off-topic (the v0.3b leakage fix)."""
     prompt = build_detection_prompt("Een korte test-inputtekst.")
     assert "Niet goed" in prompt
     assert "Wel goed" in prompt
-    # the few-shot bad-example list must include both a bare-entity and a
-    # meta-categorie example, since both showed up in the v0.3a SmolLM2 run
-    assert "Sven Jaschan" in prompt
-    assert "Bron van de centrale bewering." in prompt
-    # the few-shot good-example list must include at least one concrete
-    # relation that names something specific
-    assert "Motivatie van Sven Jaschan" in prompt
+    # good examples come from history / medicine / law, not news
+    assert "Koloniaal kapitaal" in prompt
+    assert "AVG-compliance" in prompt
+    # the prompt must warn against copying the example content
+    assert "Kopieer hun inhoud niet" in prompt or "niet kopiëren" in prompt
+    # no news-domain entities from the AG News corpus should appear as examples
+    assert "Sven Jaschan" not in prompt
+    assert "Apple" not in prompt
 
 
 def test_run_open_set_seed_review_skips_expansion_for_model_detector(tmp_path) -> None:
