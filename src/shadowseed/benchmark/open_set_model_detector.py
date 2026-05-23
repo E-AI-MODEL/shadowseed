@@ -32,6 +32,29 @@ OPEN_SET_MODEL_DETECTOR_ID = "ssl46_open_set_model_detector_v0.3"
 OPEN_SET_MODEL_DETECTOR_SOURCE = "open_set_model_detector"
 
 
+# Few-shot examples deliberately come from domains that are NOT the open-set
+# news corpus (history, software, law, medicine). When the model leaks an
+# example verbatim into a news item it is then obviously off-topic and is also
+# caught by the verbatim leakage filter below. Using news-domain entities here
+# (the v0.3b mistake) let the model blend "Sven Jaschan" / "Apple" into
+# unrelated news items because they pattern-matched the input.
+_FEWSHOT_BAD = (
+    "Onderbouwing van de centrale bewering.",
+    "Tijdlijn van de gebeurtenis.",
+    "Security, privacy en schaalbaarheid.",
+    "&lt;tag&gt;",
+)
+_FEWSHOT_GOOD = (
+    "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen.",
+    "AVG-compliance bij verwerking van medische hartslagdata.",
+    "Rechtsbevoegdheid bij een grensoverschrijdend consumentengeschil.",
+)
+
+
+def _numbered(lines: tuple[str, ...]) -> str:
+    return "\n".join(f"{i}. {line}" for i, line in enumerate(lines, start=1))
+
+
 OPEN_SET_DETECTION_PROMPT = """
 Je bent een epistemische analist.
 
@@ -45,29 +68,28 @@ Regels:
 - Geef maximaal {max_seeds} seeds.
 - Elke seed bevat precies één gap, geformuleerd als hele Nederlandse zin.
 - Elke seed benoemt iets dat NIET in de tekst staat maar wel zou moeten.
-- Elke seed verwijst concreet naar iets in deze tekst (een entiteit, een
-  beslissing, een claim), niet naar een willekeurige tekst van dit type.
+- Elke seed verwijst concreet naar het onderwerp van DEZE inputtekst.
+- Verzin geen feiten, namen of cijfers die niet in de tekst staan.
 - Geen citaten of fragmenten uit de inputtekst.
 - Geen losse woorden, namen of acroniemen zonder relatie.
 - Geen samengestelde analysekaders of lijsten binnen één seed.
-- Geen meta-categorieën zoals "Onderbouwing van de centrale bewering" of
-  "Tijdlijn van de gebeurtenis".
+- Geen meta-categorieën zonder concrete relatie.
 
-Niet goed (citaat / fragment / leeg):
-1. Sven Jaschan
-2. Apple Computer Inc.
-3. AAPL.O&gt
-4. Bron van de centrale bewering.
+De volgende voorbeelden komen uit ANDERE teksten (geschiedenis, recht, zorg).
+Ze tonen alleen de VORM. Kopieer hun inhoud niet; schrijf seeds over het
+onderwerp van de inputtekst hieronder.
 
-Wel goed (concrete ontbrekende relatie):
-1. Motivatie van Sven Jaschan om de Netsky-worm te schrijven.
-2. Effect van de Apple-licentievoorwaarden op derde-partij ontwikkelaars.
-3. Verantwoordelijke toezichthouder bij grensoverschrijdende virusinfecties.
+Niet goed (vorm-voorbeelden, niet kopiëren):
+{bad_examples}
+
+Wel goed (vorm-voorbeelden uit andere domeinen, niet kopiëren):
+{good_examples}
 
 Inputtekst:
 {text}
 
-Geef nu maximaal {max_seeds} echte gap-seeds in dit formaat. Begin direct met "1.".
+Geef nu maximaal {max_seeds} echte gap-seeds over het onderwerp van deze
+inputtekst. Begin direct met "1.".
 
 Output:
 1.
@@ -84,6 +106,43 @@ class DetectorBackend(Protocol):
 _NUMBERED_LINE = re.compile(r"^\s*\d+[.)]\s*(.+?)\s*$")
 _HTML_ENTITY = re.compile(r"&(?:[a-zA-Z]+|#\d+);?")
 _ACRONYM_ONLY = re.compile(r"^[A-Z][A-Z0-9.&;<>\-]{1,8}$")
+
+
+def _normalize_for_match(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip(" .,:;-").lower()
+
+
+def _token_set(text: str) -> set[str]:
+    return {t for t in re.findall(r"[a-zà-ÿ0-9]+", text.lower()) if len(t) > 2}
+
+
+_FEWSHOT_NORMALIZED = frozenset(
+    _normalize_for_match(example) for example in (_FEWSHOT_GOOD + _FEWSHOT_BAD)
+)
+_FEWSHOT_TOKEN_SETS = tuple(_token_set(example) for example in (_FEWSHOT_GOOD + _FEWSHOT_BAD))
+
+
+def _looks_like_fewshot_leak(seed: str, threshold: float = 0.7) -> bool:
+    """Drop output that copies a few-shot example verbatim or near-verbatim.
+
+    A small model sometimes echoes the prompt's example seeds. Foreign-domain
+    examples make that obvious and rare, but this is the safety net. Mutated
+    leakage (same template, swapped entity) is intentionally NOT caught here:
+    that needs content-grounding against the input text, which is future work.
+    """
+    normalized = _normalize_for_match(seed)
+    if normalized in _FEWSHOT_NORMALIZED:
+        return True
+    seed_tokens = _token_set(seed)
+    if not seed_tokens:
+        return False
+    for example_tokens in _FEWSHOT_TOKEN_SETS:
+        if not example_tokens:
+            continue
+        overlap = len(seed_tokens & example_tokens) / len(seed_tokens | example_tokens)
+        if overlap >= threshold:
+            return True
+    return False
 
 
 def _looks_like_citation_fragment(seed: str, source_text: str) -> bool:
@@ -141,6 +200,8 @@ def parse_numbered_seeds(
             continue
         if _looks_like_citation_fragment(seed, source_text):
             continue
+        if _looks_like_fewshot_leak(seed):
+            continue
         if seed in seen:
             continue
         seen.add(seed)
@@ -151,7 +212,12 @@ def parse_numbered_seeds(
 
 
 def build_detection_prompt(text: str, max_seeds: int = 5) -> str:
-    return OPEN_SET_DETECTION_PROMPT.format(text=text.strip(), max_seeds=max_seeds)
+    return OPEN_SET_DETECTION_PROMPT.format(
+        text=text.strip(),
+        max_seeds=max_seeds,
+        bad_examples=_numbered(_FEWSHOT_BAD),
+        good_examples=_numbered(_FEWSHOT_GOOD),
+    )
 
 
 class FixtureDetectorBackend:
