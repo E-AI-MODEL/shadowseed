@@ -22,6 +22,28 @@ def test_absencebench_aliases_map_to_canonical_commands() -> None:
     assert parser.parse_args(["run-absencebench-smoke"]).command == "run-absencebench-smoke"
 
 
+def test_open_set_detector_choices_track_the_canonical_enums() -> None:
+    """Drift guard: the CLI --detector / --model-backend choices must come
+    from the canonical enums, not a hardcoded copy. ADR 0001."""
+    from shadowseed.benchmark.open_set_candidate_adapter import SUPPORTED_DETECTORS
+    from shadowseed.benchmark.open_set_model_detector import SUPPORTED_MODEL_BACKENDS
+
+    parser = build_parser()
+    subparsers_action = next(
+        a for a in parser._actions if hasattr(a, "choices") and a.choices
+        and "run-open-set-seed-review" in a.choices
+    )
+    open_set = subparsers_action.choices["run-open-set-seed-review"]
+    detector_action = next(
+        a for a in open_set._actions if "--detector" in getattr(a, "option_strings", [])
+    )
+    backend_action = next(
+        a for a in open_set._actions if "--model-backend" in getattr(a, "option_strings", [])
+    )
+    assert tuple(detector_action.choices) == tuple(SUPPORTED_DETECTORS)
+    assert tuple(backend_action.choices) == tuple(SUPPORTED_MODEL_BACKENDS)
+
+
 def test_execute_command_resolves_alias_before_dispatch(monkeypatch) -> None:
     calls: list[str] = []
 

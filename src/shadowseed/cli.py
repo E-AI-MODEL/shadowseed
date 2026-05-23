@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 
+from shadowseed.benchmark.open_set_candidate_adapter import SUPPORTED_DETECTORS
+from shadowseed.benchmark.open_set_model_detector import SUPPORTED_MODEL_BACKENDS
 from shadowseed.cli_dispatch import execute_command
 
 
@@ -167,7 +169,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     open_set.add_argument(
         "--detector",
-        choices=("adapter_v1", "adapter_v2", "model"),
+        choices=SUPPORTED_DETECTORS,
         default="adapter_v1",
         help=(
             "Welke candidate generator wordt gebruikt wanneer een item geen "
@@ -180,7 +182,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     open_set.add_argument(
         "--model-backend",
-        choices=("fixture", "hf-transformers"),
+        choices=SUPPORTED_MODEL_BACKENDS,
         default="fixture",
         help=(
             "Welke model-backend de v0.3 detector gebruikt. Alleen relevant "
