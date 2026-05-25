@@ -1,32 +1,18 @@
-# Shadow Seed Learning 4.5
+# Shadow Seed Learning 4.6
 
-## Actuele ingang
+## Begin hier
 
 - [Home](Home)
-- [Latest Test Results](Latest-Test-Results)
-- [SSL 4.5 Analysis](SSL-45-Analysis)
-- [Dashboard](Dashboard)
-- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
-
-## Kernuitleg
-
-- [Start hier](Start-Hier)
-- [Benchmarks](Benchmarks)
-- [Blind Benchmark](Blind-Benchmark)
-- [Architectuur](Architectuur)
-- [Quick Start](Quick-Start)
-
-## Aanvullende checks
-
-- [SSOT Falsification](SSOT-Falsification)
-- [Retrieval Model HF](Retrieval-Model-HF)
-- [Full Validation Sweep](Full-Validation-Sweep)
-
-## Achtergrond en ontwikkeling
-
-- [Tussentijdse rapportage](Tussentijdse-Rapportage)
-- [Visueel verhaal](Visueel-Verhaal)
-- [Conceptueel overzicht](Conceptueel-Overzicht)
-- [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is)
-- [Blind review protocol](Blind-Review-Protocol)
+- [Wat is SSL](Wat-is-SSL)
+- [Huidige Evidence-Status](Huidige-Evidence-Status)
+- [Reproduceren](Quick-Start)
 - [Roadmap](Roadmap)
+
+## Live
+
+- [Latest Test Results](Latest-Test-Results)
+- [Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+
+## Achtergrond
+
+- [Archief](Archief)
