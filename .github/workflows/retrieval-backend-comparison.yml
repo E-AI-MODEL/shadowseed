@@ -1,9 +1,7 @@
-name: Retrieval Backend Comparison
+name: Retrieval Backend Comparison (manual)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "23 2 * * *"
 
 permissions:
   contents: write

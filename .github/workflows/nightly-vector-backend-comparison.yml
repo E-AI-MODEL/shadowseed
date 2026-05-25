@@ -1,9 +1,7 @@
-name: Nightly Vector Backend Comparison
+name: Vector Backend Comparison (manual)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "17 3 * * *"
 
 permissions:
   contents: write
