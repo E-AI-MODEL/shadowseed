@@ -307,11 +307,17 @@ jobs:
         run: |
           python -m shadowseed.cli run-probe-utility-benchmark
 
+      - name: Draai probe-feedback behavioral suite
+        run: |
+          python -m shadowseed.cli run-probe-feedback-behavior-suite
+
       - name: Upload probe-utility resultaten
         uses: actions/upload-artifact@v4
         with:
           name: 06c-probe-utility-results
-          path: results/ssl45_probe_utility_suite.json
+          path: |
+            results/ssl45_probe_utility_suite.json
+            results/probe_feedback_behavior_suite.json
           if-no-files-found: error
 
   ssl-analysis:

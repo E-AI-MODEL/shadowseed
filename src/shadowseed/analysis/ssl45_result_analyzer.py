@@ -122,6 +122,7 @@ def build_conclusion(
     blind_payload: ResultDict | None,
     adversarial_payload: ResultDict | None,
     open_set_payload: ResultDict | None,
+    probe_behavior_payload: ResultDict | None = None,
 ) -> dict[str, Any]:
     """Build a cautious conclusion from the available result summaries."""
     gap_score = float(metric(gap_payload, "mean_scenario_score", 0.0) or 0.0)
@@ -282,6 +283,9 @@ def build_conclusion(
             "adversarial_current_gate_false_promotion_rate": adversarial_gate_fp,
             "adversarial_trace_only_false_promotion_rate": adversarial_trace_fp,
             "adversarial_gate_vs_trace_only_delta": adversarial_delta,
+            "adversarial_current_gate_f1": float(metric(adversarial_payload, "current_gate_f1", 0.0) or 0.0),
+            "adversarial_correct_outcome_rate": float(metric(adversarial_payload, "correct_outcome_rate", 0.0) or 0.0),
+            "probe_feedback_correct_outcome_rate": float(metric(probe_behavior_payload, "correct_outcome_rate", 0.0) or 0.0),
             "benefit_coverage_delta": benefit_delta,
             "model_benefit_coverage_delta": model_delta,
             "model_unsupported_ssl_addition_rate": unsupported_rate,
@@ -362,6 +366,7 @@ def make_markdown_report(
     semantic: dict[str, Any],
     conclusion: dict[str, Any],
     publish_mode: str,
+    probe_behavior_payload: ResultDict | None = None,
 ) -> str:
     lines = [
         "# SSL 4.5 resultaatanalyse",
@@ -508,8 +513,28 @@ def make_markdown_report(
                 f"| Trace zonder contradictie false-promotion rate | {short_number(metric(adversarial_payload, 'trace_without_contradiction_false_promotion_rate'))} |",
                 f"| Gate reductie vs trace-only | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_only'))} |",
                 f"| Gate reductie vs trace zonder contradictiecheck | {short_number(metric(adversarial_payload, 'gate_relative_reduction_vs_trace_without_contradiction'))} |",
+                f"| Gate precision | {short_number(metric(adversarial_payload, 'current_gate_precision'))} |",
+                f"| Gate recall (cases met evidence) | {short_number(metric(adversarial_payload, 'current_gate_recall'))} |",
+                f"| Gate F1 | {short_number(metric(adversarial_payload, 'current_gate_f1'))} |",
+                f"| Correcte uitkomsten | {short_number(metric(adversarial_payload, 'correct_outcome_rate'))} |",
                 "",
-                "Deze laag laat zien hoeveel lure-promoties de Gate voorkomt ten opzichte van zwakkere regels.",
+                "Deze laag laat zien dat de Gate discrimineert: hij blokkeert lures en promoot legitieme gaps met evidence. Precision/recall/F1 zijn alleen zinvol als de fixture positieve controles bevat.",
+            ]
+        )
+
+    if probe_behavior_payload:
+        lines.extend(
+            [
+                "",
+                "## Probe feedback behavioral-laag",
+                "",
+                "| Metric | Waarde |",
+                "|---|---:|",
+                f"| Scenarios | {short_number(metric(probe_behavior_payload, 'scenario_count'))} |",
+                f"| Correcte lifecycle-uitkomsten | {short_number(metric(probe_behavior_payload, 'correct_outcome_count'))} |",
+                f"| Correct-outcome rate | {short_number(metric(probe_behavior_payload, 'correct_outcome_rate'))} |",
+                "",
+                "Deze laag controleert of de probe-feedback lifecycle (reward, penalty, clamping, demotie, status-block) zich gedraagt zoals de 4.6-spec claimt. Het meet mechaniek, niet bruikbaarheid in echte workflows.",
             ]
         )
 
@@ -584,13 +609,16 @@ def analyze_results(
     retrieval = load_json(source / "retrieval_benchmark.json")
     retrieval_model = load_json(source / "retrieval_model_benchmark.json")
     probe = load_json(source / "ssl45_probe_utility_suite.json")
+    probe_behavior = load_json(source / "probe_feedback_behavior_suite.json")
     ssot = load_json(source / "ssot_smoke.json")
     vectorstore = load_json(source / "vectorstore_smoke.json")
     manifest = load_json(source / "manifest.json")
     turn_matrix = load_turn_matrix(source)
 
     semantic = semantic_seed_summary([gap, benefit, model_benefit])
-    conclusion = build_conclusion(gap, false_positive, benefit, model_benefit, blind, adversarial, open_set_review)
+    conclusion = build_conclusion(
+        gap, false_positive, benefit, model_benefit, blind, adversarial, open_set_review, probe_behavior
+    )
     publish_mode = "workflow snapshot"
     if manifest and manifest.get("committed_back_to_main") is False:
         publish_mode = "wiki/pages snapshot without main write-back"
@@ -626,6 +654,7 @@ def analyze_results(
         "retrieval": retrieval.get("metrics") if retrieval else None,
         "retrieval_model": retrieval_model.get("summary") if retrieval_model else None,
         "probe_utility": probe.get("summary") if probe else None,
+        "probe_feedback_behavior": probe_behavior.get("summary") if probe_behavior else None,
         "ssot": ssot.get("summary") if ssot else None,
         "vectorstore": vectorstore.get("summary") if vectorstore else None,
         "turn_matrix": turn_matrix,
@@ -657,6 +686,7 @@ def analyze_results(
             semantic,
             conclusion,
             publish_mode,
+            probe_behavior,
         ),
         encoding="utf-8",
     )
