@@ -19,49 +19,23 @@ function fmt(value) {
   return String(value);
 }
 
-function metric(summary, group, key, fallback = null) {
-  return summary?.[group]?.[key] ?? fallback;
-}
-
+// The A-G evidence table is static in index.html so the dashboard story can
+// never silently drift from the wiki. This script only fills the small live
+// fixture snapshot (layer B) and the conclusion line from the latest analyzer
+// summary.
 async function init() {
   const summary = await loadJSON('./results/latest/summary.json');
-  const conclusion = summary?.conclusion;
-  const modelBenefit = summary?.model_benefit;
-  const benefit = summary?.benefit;
-  const falsePositive = summary?.false_positive;
-  const adversarial = summary?.adversarial_gate;
-  const probe = summary?.probe_utility;
+  if (!summary) return;
 
-  setField('conclusion', conclusion?.headline || 'Nog geen analyse geladen');
-  setField(
-    'baseline',
-    fmt(metric(modelBenefit, 'summary', 'baseline_mean_gap_coverage', modelBenefit?.baseline_mean_gap_coverage))
-  );
-  setField(
-    'with_ssl',
-    fmt(metric(modelBenefit, 'summary', 'ssl_mean_gap_coverage', modelBenefit?.ssl_mean_gap_coverage))
-  );
-  setField('delta', fmt(metric(modelBenefit, 'summary', 'coverage_delta', modelBenefit?.coverage_delta)));
+  const modelBenefit = summary.model_benefit || summary.benefit || {};
+  setField('baseline', fmt(modelBenefit.baseline_mean_gap_coverage));
+  setField('with_ssl', fmt(modelBenefit.ssl_mean_gap_coverage));
+  setField('delta', fmt(modelBenefit.coverage_delta));
 
-  const systemOk = Boolean(summary?.gap && falsePositive?.promoted_false_positive_rate === 0);
-  setField('system', systemOk ? 'stabiel' : 'controle nodig');
-
-  if (falsePositive?.promoted_false_positive_rate === 0) {
-    setField('safety', 'schoon');
-  } else {
-    setField('safety', `fp ${fmt(falsePositive?.promoted_false_positive_rate)}`);
-  }
-
-  if (adversarial && probe) {
-    setField('paper', 'adversarial + probe');
-  } else if (adversarial) {
-    setField('paper', 'adversarial zichtbaar');
-  } else if (probe) {
-    setField('paper', 'probe zichtbaar');
-  } else if (benefit?.coverage_delta !== undefined) {
-    setField('paper', `delta ${fmt(benefit.coverage_delta)}`);
-  } else {
-    setField('paper', 'nog beperkt');
+  const conclusion = summary.conclusion;
+  if (conclusion?.headline) {
+    const backend = conclusion.is_real_model ? 'echt model' : 'fixture-backend';
+    setField('conclusion', `${conclusion.headline} (${backend})`);
   }
 }
 

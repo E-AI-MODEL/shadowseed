@@ -3,142 +3,82 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Shadow Seed Learning 4.5</title>
+    <title>Shadow Seed Learning 4.6</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="page">
       <section class="hero split">
         <div>
-          <p class="eyebrow">Shadow Seed Learning 4.5</p>
-          <h1>SSL probeert zichtbaar te maken wat een antwoord nog mist.</h1>
-          <p class="subtitle">Deze pagina is de publieke ingang naar de standaardresultaten. Je ziet hier regressie, smoke-tests, kleine benchmarks en aanvullende evidencelagen naast elkaar.</p>
+          <p class="eyebrow">Shadow Seed Learning 4.6</p>
+          <h1>Wat is vandaag bewezen, en wat is nog doelbeeld?</h1>
+          <p class="subtitle">SSL detecteert kleine structurele afwezigheden in een antwoord, slaat ze op als gewichtloze seeds, en laat ze pas na validatie meewegen. Dit dashboard toont per evaluatielaag hoe sterk het bewijs vandaag is.</p>
           <div class="hero-actions">
-            <a class="button" href="https://github.com/E-AI-MODEL/shadowseed/wiki/Latest-Test-Results">Latest Test Results</a>
-            <a class="button ghost" href="https://github.com/E-AI-MODEL/shadowseed/wiki/SSL-45-Analysis">Lees de analyse</a>
+            <a class="button" href="https://github.com/E-AI-MODEL/shadowseed/wiki/Huidige-Evidence-Status">Evidence-status</a>
+            <a class="button ghost" href="https://github.com/E-AI-MODEL/shadowseed/wiki/Wat-is-SSL">Wat is SSL?</a>
           </div>
         </div>
-        <div class="answer-card" id="overall-status">
-          <span>Wat zegt de laatste publicatie?</span>
-          <strong data-field="conclusion">Nog geen run geladen</strong>
-        </div>
-      </section>
-
-      <section class="scoreboard">
-        <article class="score-card">
-          <span>Zonder SSL</span>
-          <strong data-field="baseline">n/a</strong>
-          <p>Baseline gap coverage</p>
-        </article>
-        <article class="score-card highlight">
-          <span>Met SSL</span>
-          <strong data-field="with_ssl">n/a</strong>
-          <p>SSL gap coverage</p>
-        </article>
-        <article class="score-card">
-          <span>Verschil</span>
-          <strong data-field="delta">n/a</strong>
-          <p>Alleen zinvol binnen de huidige suite</p>
-        </article>
-      </section>
-
-      <section class="panel visual-panel">
-        <div>
-          <p class="eyebrow">Wat is SSL?</p>
-          <h2>Niet alleen meer context, maar beter zicht op ontbrekende structuur.</h2>
-          <p>Een antwoord kan goed klinken en toch een klein maar belangrijk punt missen. SSL legt zo'n gemis vast als een gewichtloze seed en laat die pas na validatie meewegen.</p>
-        </div>
-        <svg class="seed-svg" viewBox="0 0 560 220" role="img" aria-label="SSL seed flow">
-          <defs>
-            <linearGradient id="g" x1="0" x2="1"><stop stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
-          </defs>
-          <rect x="12" y="55" width="110" height="80" rx="16" />
-          <text x="67" y="91" text-anchor="middle">Answer</text>
-          <text x="67" y="114" text-anchor="middle">misses X</text>
-          <path d="M130 95 H205" />
-          <circle cx="245" cy="95" r="42" />
-          <text x="245" y="91" text-anchor="middle">Seed</text>
-          <text x="245" y="114" text-anchor="middle">weight 0</text>
-          <path d="M290 95 H365" />
-          <rect x="382" y="45" width="150" height="100" rx="18" />
-          <text x="457" y="86" text-anchor="middle">Validation</text>
-          <text x="457" y="110" text-anchor="middle">Gate</text>
-          <path d="M455 150 V190 H245 V143" class="dashed" />
-        </svg>
-      </section>
-
-      <section class="grid three">
-        <article class="card">
-          <span class="label">Standaard</span>
-          <h2>Werkt de basis?</h2>
-          <p>Python, benchmarkmechaniek en artifactketen.</p>
-          <strong class="metric" data-field="system">n/a</strong>
-        </article>
-        <article class="card">
-          <span class="label">Veiligheid</span>
-          <h2>Blijft SSL terughoudend?</h2>
-          <p>False positives en misleidende promoties moeten beperkt blijven.</p>
-          <strong class="metric" data-field="safety">n/a</strong>
-        </article>
-        <article class="card">
-          <span class="label">Aanvullend bewijs</span>
-          <h2>Meer dan alleen smoke?</h2>
-          <p>Adversarial Gate en probe utility helpen de hoofdclaim eerlijker te begrenzen.</p>
-          <strong class="metric" data-field="paper">n/a</strong>
-        </article>
-      </section>
-
-      <section class="panel visual-panel">
-        <svg class="rag-svg" viewBox="0 0 640 220" role="img" aria-label="RAG versus SSL">
-          <text x="95" y="28" text-anchor="middle">Standaard context</text>
-          <rect x="25" y="55" width="140" height="70" rx="14" />
-          <text x="95" y="93" text-anchor="middle">Fetch facts</text>
-          <path d="M170 90 H270" />
-          <rect x="280" y="55" width="140" height="70" rx="14" />
-          <text x="350" y="93" text-anchor="middle">Answer now</text>
-          <text x="545" y="28" text-anchor="middle">SSL</text>
-          <rect x="470" y="55" width="140" height="70" rx="14" />
-          <text x="540" y="83" text-anchor="middle">Track missing</text>
-          <text x="540" y="106" text-anchor="middle">structure</text>
-          <path d="M540 128 V170" />
-          <rect x="455" y="168" width="170" height="38" rx="12" />
-          <text x="540" y="193" text-anchor="middle">Verify before influence</text>
-        </svg>
-        <div>
-          <p class="eyebrow">Hoe lees je dit?</p>
-          <h2>Eerst zien wat de basis doet, daarna pas naar bredere claims kijken.</h2>
-          <p>De publieke resultaten combineren meerdere bewijssoorten. Daarom moet je eerst letten op de labelsoort van een run: regressie, smoke, kleine benchmark of aanvullende evidencelaag.</p>
+        <div class="answer-card">
+          <span>Eerlijke één-zin</span>
+          <strong>Op de gemeten lagen (A, B, D, E) is SSL meetbaar helpend; open-set (C) wacht op echte review; transfer (F) en modelinterne (G) zijn nog open.</strong>
         </div>
       </section>
 
       <section class="panel">
         <div class="panel-header">
-          <h2>Wat je hier wel en niet moet lezen</h2>
-          <p>De standaardpublicatie is bedoeld om eerlijk te zijn over zowel kracht als grens.</p>
+          <h2>Evidence-lagen</h2>
+          <p>De hoofdclaim rust niet op één totaalscore, maar op gescheiden lagen. Per laag: de vraag, de status, en het bewijs van vandaag.</p>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>Vraag</th>
-                <th>Antwoord</th>
-              </tr>
+              <tr><th>Laag</th><th>Vraag</th><th>Status</th><th>Bewijs vandaag</th></tr>
             </thead>
             <tbody>
-              <tr><td>Werkt de basis van SSL?</td><td>Ja, dat is precies wat regressie- en smoke-lagen zichtbaar maken.</td></tr>
-              <tr><td>Is alles al volledig bewezen?</td><td>Nee. Open-set, transfer en brede modelclaims vragen nog zwaarder bewijs.</td></tr>
-              <tr><td>Waarom extra lagen tonen?</td><td>Omdat bezoekers meteen moeten zien dat de repo verder kijkt dan alleen fixtures en kleine scenario-suites.</td></tr>
+              <tr><td><strong>A</strong> Regressie</td><td>blijft de mechaniek werken?</td><td><span class="badge strong">sterk</span></td><td>volledige test-suite groen, lint schoon</td></tr>
+              <tr><td><strong>B</strong> Kleine benchmark</td><td>scoort SSL op vaste suites?</td><td><span class="badge ok">bruikbaar</span></td><td>gap / false-positive / benefit / blind; benefit-delta zonder ongegronde toevoegingen</td></tr>
+              <tr><td><strong>C</strong> Open-set seedkwaliteit</td><td>werkt het op onbekende teksten?</td><td><span class="badge pending">infra klaar, evidence pending</span></td><td>v0.1/v0.2/v0.3 detectoren op main; taalmodel-detector draait; menselijke review nog niet gedaan</td></tr>
+              <tr><td><strong>D</strong> Adversarial Gate</td><td>houdt de Gate misleidende seeds tegen?</td><td><span class="badge ok">eerste evidence</span></td><td>21 cases, precision 1.0, recall 1.0, F1 1.0; drie baselines vergeleken</td></tr>
+              <tr><td><strong>E</strong> Probe utility</td><td>doet de feedback-loop echt iets?</td><td><span class="badge ok">eerste evidence</span></td><td>10/10 lifecycle-scenarios (reward/penalty/clamp/demotie/status-block)</td></tr>
+              <tr><td><strong>F</strong> Domeintransfer</td><td>blijft kwaliteit overeind buiten bekende domeinen?</td><td><span class="badge absent">afwezig</span></td><td>geen module</td></tr>
+              <tr><td><strong>G</strong> Modelinterne</td><td>steun in interne modelsignalen?</td><td><span class="badge absent">onderzoekswerk</span></td><td>conceptueel; bewust uitgesteld</td></tr>
             </tbody>
           </table>
         </div>
+        <p class="footnote">Bron: de evidence-status wikipagina en <code>docs/research/current-status.md</code>. Deze tabel is het verhaal; de cijfers hieronder zijn een momentopname van één kleine suite.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Live fixture-snapshot</h2>
+          <p>Laatste gepubliceerde run van de kleine benchmark-suite. Dit is laag B — een vaste, kleine suite, geen brede claim over open data.</p>
+        </div>
+        <div class="scoreboard">
+          <article class="score-card">
+            <span>Zonder SSL</span>
+            <strong data-field="baseline">n/a</strong>
+            <p>baseline gap coverage (fixture)</p>
+          </article>
+          <article class="score-card highlight">
+            <span>Met SSL</span>
+            <strong data-field="with_ssl">n/a</strong>
+            <p>SSL gap coverage (fixture)</p>
+          </article>
+          <article class="score-card">
+            <span>Verschil</span>
+            <strong data-field="delta">n/a</strong>
+            <p>alleen zinvol binnen deze suite</p>
+          </article>
+        </div>
+        <p class="footnote" data-field="conclusion">Nog geen run geladen.</p>
       </section>
 
       <section class="links">
-        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Start-Hier">Start hier</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Home">Wiki Home</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Wat-is-SSL">Wat is SSL</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Huidige-Evidence-Status">Evidence-status</a>
+        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Quick-Start">Reproduceren</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Latest-Test-Results">Latest Test Results</a>
-        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/SSL-45-Analysis">SSL 4.5 Analysis</a>
-        <a href="https://github.com/E-AI-MODEL/shadowseed/wiki/Benchmarks">Benchmarks</a>
-        <a href="https://github.com/E-AI-MODEL/shadowseed/actions">GitHub Actions</a>
         <a href="https://github.com/E-AI-MODEL/shadowseed">Repo</a>
       </section>
     </main>

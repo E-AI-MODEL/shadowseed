@@ -385,3 +385,29 @@ th{
   h2{font-size:clamp(1.7rem,9vw,2.5rem)}
   .score-card{min-height:auto}
 }
+
+/* Evidence-layer badges + footnotes (4.6 dashboard) */
+.badge{
+  display:inline-block;
+  padding:.2rem .6rem;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:600;
+  white-space:nowrap;
+  border:1px solid var(--line);
+}
+.badge.strong{background:#1a2a23;color:#eafff5}
+.badge.ok{background:#dff0e6;color:#1a5235}
+.badge.pending{background:#fdeccd;color:#8a5a12}
+.badge.absent{background:#efe8da;color:#58655f}
+.footnote{
+  margin-top:1rem;
+  color:var(--muted);
+  font-size:.9rem;
+  line-height:1.5;
+}
+.footnote code{
+  background:var(--surface-strong);
+  padding:.1rem .35rem;
+  border-radius:6px;
+}
