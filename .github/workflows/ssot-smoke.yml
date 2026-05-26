@@ -1,4 +1,4 @@
-name: SSOT Smoke Run
+name: Research · SSOT smoke
 
 on:
   workflow_dispatch:

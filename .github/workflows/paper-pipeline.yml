@@ -1,4 +1,4 @@
-name: Paper Pipeline
+name: Research · Paper · pipeline
 
 on:
   workflow_dispatch:

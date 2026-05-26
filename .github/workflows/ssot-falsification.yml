@@ -1,4 +1,4 @@
-name: SSOT Falsification Run
+name: Research · SSOT falsification
 
 on:
   workflow_dispatch:

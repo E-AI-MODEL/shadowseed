@@ -1,4 +1,4 @@
-name: Publiceer alleen statische Wiki-pagina's
+name: Publish · Wiki
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Open-set HF review batch
+name: Research · Open-set HF review
 
 on:
   workflow_dispatch:
