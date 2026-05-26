@@ -36,6 +36,9 @@ jobs:
           python -m shadowseed.cli run-false-positive-suite
           python -m shadowseed.cli run-benefit-suite
           python -m shadowseed.cli run-model-benefit-suite --backend fixture
+          python -m shadowseed.cli run-adversarial-gate-benchmark
+          python -m shadowseed.cli run-probe-utility-benchmark
+          python -m shadowseed.cli run-probe-feedback-behavior-suite
           python -m shadowseed.cli analyze-results
       - name: Upload core artifacts
         uses: actions/upload-artifact@v4
