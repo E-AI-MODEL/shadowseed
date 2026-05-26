@@ -2,6 +2,21 @@ import numpy as np
 import pytest
 
 from shadowseed.benchmark.vectorstore_smoke import run_vectorstore_smoke
+from shadowseed.vectorstore.chroma_store import _as_list
+
+
+def test_as_list_handles_numpy_arrays_without_ambiguous_truth_value():
+    """Regression: Chroma returns embeddings as a numpy array. The old
+    `value or []` idiom raised ValueError on those arrays and crashed
+    hydration of a persisted collection. _as_list must accept them."""
+    # an empty numpy array used to raise "truth value is ambiguous"
+    assert _as_list(np.array([])) == []
+    assert _as_list(None) == []
+    rows = _as_list(np.array([[0.1, 0.2], [0.3, 0.4]]))
+    assert len(rows) == 2
+    assert np.allclose(rows[0], [0.1, 0.2])
+    # plain lists pass through unchanged
+    assert _as_list(["a", "b"]) == ["a", "b"]
 
 
 @pytest.mark.parametrize("backend", ["faiss", "chroma"])
