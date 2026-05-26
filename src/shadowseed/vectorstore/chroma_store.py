@@ -20,6 +20,19 @@ import numpy as np
 from shadowseed.vectorstore.base import SearchResult, VectorStore
 
 
+def _as_list(value: Any) -> list:
+    """Normalize a Chroma payload field to a list.
+
+    Chroma returns embeddings as a numpy array in recent versions. The old
+    `value or []` idiom raised "truth value of an empty array is ambiguous"
+    on those arrays, which crashed hydration of a persisted collection. An
+    explicit None check avoids evaluating the array in a boolean context.
+    """
+    if value is None:
+        return []
+    return list(value)
+
+
 class ChromaVectorStore(VectorStore):
     def __init__(self, collection_name: str = "shadowseed", persist_directory: str | None = None) -> None:
         try:
@@ -81,9 +94,9 @@ class ChromaVectorStore(VectorStore):
             except Exception:
                 return
 
-        ids = payload.get("ids") or []
-        metadatas = payload.get("metadatas") or []
-        embeddings = payload.get("embeddings") or []
+        ids = _as_list(payload.get("ids"))
+        metadatas = _as_list(payload.get("metadatas"))
+        embeddings = _as_list(payload.get("embeddings"))
 
         for id, metadata in zip(ids, metadatas):
             self._metadata[str(id)] = dict(metadata or {})
