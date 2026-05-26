@@ -1,4 +1,4 @@
-name: Full Validation Sweep
+name: Research · Full validation sweep (A-E + backends)
 
 on:
   push:

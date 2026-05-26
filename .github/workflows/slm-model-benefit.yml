@@ -1,4 +1,4 @@
-name: SLM Model Benefit Run
+name: Research · SLM model benefit
 
 on:
   workflow_dispatch:

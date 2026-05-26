@@ -1,4 +1,4 @@
-name: Model Reality Check
+name: Research · Retrieval model (HF reality check)
 
 on:
   workflow_dispatch:

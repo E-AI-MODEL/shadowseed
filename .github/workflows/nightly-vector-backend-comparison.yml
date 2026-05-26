@@ -1,4 +1,4 @@
-name: Vector Backend Comparison (manual)
+name: Research · Vector backend comparison
 
 on:
   workflow_dispatch:

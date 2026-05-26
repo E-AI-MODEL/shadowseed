@@ -1,4 +1,4 @@
-name: Deploy Dashboard (manual fallback only)
+name: Publish · Pages dashboard
 
 on:
   workflow_dispatch:

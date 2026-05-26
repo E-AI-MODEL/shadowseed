@@ -1,4 +1,4 @@
-name: Publiceer testresultaten naar Wiki en Pages
+name: Publish · Test results to Wiki & Pages
 
 on:
   workflow_run:
