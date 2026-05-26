@@ -1,4 +1,4 @@
-name: Paper Scenario Benchmark
+name: Research · Paper · scenario benchmark
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Retrieval Model Comparison
+name: Research · Retrieval model comparison
 
 on:
   workflow_dispatch:

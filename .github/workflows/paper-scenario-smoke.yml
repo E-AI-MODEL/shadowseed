@@ -1,4 +1,4 @@
-name: Paper Scenario Smoke
+name: Research · Paper · scenario smoke
 
 on:
   workflow_dispatch:

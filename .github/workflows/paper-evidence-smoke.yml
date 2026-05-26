@@ -1,4 +1,4 @@
-name: Paper Evidence Smoke
+name: Research · Paper · evidence smoke
 
 on:
   workflow_dispatch:

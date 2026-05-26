@@ -1,4 +1,4 @@
-name: Retrieval Backend Comparison (manual)
+name: Research · Retrieval backend comparison
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Vectorstore Smoke Run
+name: Research · Vectorstore smoke
 
 on:
   workflow_dispatch:
