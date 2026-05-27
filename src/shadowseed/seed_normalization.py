@@ -115,6 +115,7 @@ def split_broad_seed_text(text: str, expand_short_fragments: bool = True) -> lis
 def normalize_detection_candidates(
     candidates: list[str] | tuple[str, ...],
     expand_short_fragments: bool = True,
+    split_broad: bool = True,
 ) -> list[str]:
     """Normalize raw detection output into seed-shaped candidates.
 
@@ -123,11 +124,21 @@ def normalize_detection_candidates(
     expansion which is appropriate for broad human-written categories
     but disguises garbage as a well-formed seed when applied to model
     output.
+
+    Set ``split_broad=False`` for real taalmodel output. The comma /
+    semicolon / "en" / "of" splitting exists to break up broad
+    human-written category stacks ("Security, privacy en schaalbaarheid
+    ontbreken."). A language model already emits one gap per line, and
+    natural sentences contain commas, so splitting them only shreds whole
+    sentences into fragments ("De #36." / "wordt niet aangegeven.").
     """
     normalized: list[str] = []
     for candidate in candidates:
         cleaned = clean_candidate_text(candidate)
         if not cleaned:
+            continue
+        if not split_broad:
+            normalized.append(maybe_expand_fragment(cleaned, expand_short_fragments=expand_short_fragments))
             continue
         parts = split_broad_seed_text(cleaned, expand_short_fragments=expand_short_fragments)
         if len(parts) <= 1:
