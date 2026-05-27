@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import yaml
+from pathlib import Path
 
 from shadowseed.benchmark.open_set_models import (
     dropdown_ids,
@@ -45,9 +45,31 @@ def test_format_table_renders():
 
 
 def _workflow_model_choices(path: str) -> list[str]:
-    data = yaml.safe_load(open(path, encoding="utf-8"))
-    inputs = data[True]["workflow_dispatch"]["inputs"]  # 'on' parses as True
-    return list(inputs["model_id"].get("options", []))
+    """Extract the model_id input's dropdown options without a YAML dependency.
+
+    Walks the workflow file line by line: after the `model_id:` input is seen,
+    collect the bullet items under its `options:` block until the block ends.
+    Earlier inputs (detector, model_backend) and the following model_id_custom
+    input are ignored because collection only starts at model_id's options.
+    """
+    seen_model_id = False
+    in_options = False
+    opts: list[str] = []
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("model_id:"):
+            seen_model_id = True
+            in_options = False
+            continue
+        if seen_model_id and stripped == "options:":
+            in_options = True
+            continue
+        if in_options:
+            if stripped.startswith("- "):
+                opts.append(stripped[2:].strip())
+            else:
+                break
+    return opts
 
 
 def test_open_set_workflow_dropdown_is_subset_of_registry():
