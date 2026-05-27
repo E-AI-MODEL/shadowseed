@@ -4,9 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       model_id:
-        description: "Hugging Face model id"
-        required: true
+        description: "Model uit de gecureerde lijst (ungated, CPU-ok). Zie 'shadowseed list-open-set-models'."
+        required: false
         default: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+        type: choice
+        options:
+          - HuggingFaceTB/SmolLM2-360M-Instruct
+          - Qwen/Qwen2.5-0.5B-Instruct
+          - TinyLlama/TinyLlama-1.1B-Chat-v1.0
+          - Qwen/Qwen2.5-1.5B-Instruct
+          - HuggingFaceTB/SmolLM2-1.7B-Instruct
+          - Qwen/Qwen2.5-3B-Instruct
+      model_id_custom:
+        description: "Override: een ander HF model-id (bv. gated). Leeg laten om de keuze hierboven te gebruiken."
+        required: false
+        default: ""
+        type: string
       turns:
         description: "Number of SSL detection turns"
         required: true
@@ -32,11 +45,25 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Resolve model id
+        env:
+          MODEL_ID_CHOICE: ${{ inputs.model_id }}
+          MODEL_ID_CUSTOM: ${{ inputs.model_id_custom }}
+        run: |
+          RAW="${MODEL_ID_CUSTOM:-$MODEL_ID_CHOICE}"
+          RESOLVED="$(echo "$RAW" | xargs)"
+          if [ -z "$RESOLVED" ]; then
+            echo "::error::Geen model_id opgegeven."
+            exit 1
+          fi
+          echo "MODEL_ID=$RESOLVED" >> "$GITHUB_ENV"
+          echo "Resolved model_id: '$RESOLVED'"
+
       - name: Cache Hugging Face models
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: hf-${{ runner.os }}-${{ inputs.model_id }}
+          key: hf-${{ runner.os }}-${{ env.MODEL_ID }}
           restore-keys: |
             hf-${{ runner.os }}-
 
@@ -49,7 +76,7 @@ jobs:
         run: |
           python -m shadowseed.cli run-model-benefit-suite \
             --backend hf-transformers \
-            --model-id "${{ inputs.model_id }}" \
+            --model-id "$MODEL_ID" \
             --turns "${{ inputs.turns }}" \
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
             --output results/ssl45_model_benefit_suite.json
@@ -83,7 +110,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
           SHA: ${{ github.sha }}
-          MODEL_ID: ${{ inputs.model_id }}
+          MODEL_ID: ${{ env.MODEL_ID }}
           TURNS: ${{ inputs.turns }}
           MAX_NEW_TOKENS: ${{ inputs.max_new_tokens }}
         run: |
