@@ -9,7 +9,7 @@ Run-parameters:
 - offset: `0`
 - detector: `model`
 - model_backend: `hf-transformers`
-- model_id: `Qwen/Qwen2.5-1.5B-Instruct`
+- model_id: `Qwen/Qwen2.5-3B-Instruct`
 
 Inhoud:
 
