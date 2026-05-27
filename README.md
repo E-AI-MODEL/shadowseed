@@ -11,35 +11,13 @@ Shadow Seed Learning (SSL) is een research-harness voor een simpele maar strenge
 SSL noemt zo'n ontbrekend punt een shadow seed.
 Een seed begint gewichtloos. Pas na validatie via de Validation Gate mag die invloed krijgen op vervolgvragen, retrieval of falsificatie.
 
-## Voor nieuwe bezoekers
+## In 30 seconden
 
-Begin hier als je de repo of wiki voor het eerst ziet:
+- **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* in een antwoord, bewaart dat als een gewichtloze "shadow seed", en laat alleen gevalideerde seeds meesturen in vervolgvraag, retrieval of falsificatie.
+- **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt vanzelf) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
+- **Status:** werkende research-harness met een sterke regressielaag; de brede claim wordt bewust klein gehouden (zie de laagstatus hieronder).
 
-1. [GitHub Wiki Home](https://github.com/E-AI-MODEL/shadowseed/wiki)
-2. [Latest Test Results](https://github.com/E-AI-MODEL/shadowseed/wiki/Latest-Test-Results)
-3. [SSL 4.5 Analysis](https://github.com/E-AI-MODEL/shadowseed/wiki/SSL-45-Analysis)
-4. [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
-
-Die vier ingangen beantwoorden samen:
-
-- wat SSL is;
-- welke resultaten je nu bekijkt;
-- wat die resultaten wel laten zien;
-- wat nog geen brede eindclaim is.
-
-## Wat deze repo vandaag is
-
-De repo is het best te lezen als:
-
-- een werkende SSL-harness met een sterke regressie- en benchmarkruggengraat;
-- een repo waarvan `docs/00_shadow_seed_learning_4_6.md` de canonieke inhoudelijke bron is;
-- een project dat aanvullende evidencelagen opbouwt voor open-set seedkwaliteit, adversarial Gate-gedrag en probe utility.
-
-Kort gezegd:
-
-- de mechanische kern is aanwezig;
-- de standaard meetketen draait;
-- de hoofdclaim wordt nog steeds bewust klein gehouden.
+> Kernregel: één seed = één klein, toetsbaar ontbrekend punt.
 
 ## Canonieke en historische bron
 
@@ -53,26 +31,21 @@ Dat betekent:
 - 4.6 vertelt waar de repo inhoudelijk heen moet;
 - 4.5 blijft leesbaar, maar is niet meer de primaire bron voor huidige alignment-beslissingen.
 
-## Wat de standaardresultaten zijn
+## Wat de repo vandaag bewijst (lagen A–G)
 
-De standaard workflow heet `Checks en benchmark-resultaten`.
+SSL hanteert één laag-taal voor bewijs, gelijk aan `docs/00_shadow_seed_learning_4_6.md` en `src/shadowseed/benchmark/evidence_layers.py`. De lagen worden bewust gescheiden gehouden — er is géén totaalscore.
 
-De standaardpublicatie laat vooral vijf soorten signalen zien:
+| Laag | Vraag | Status vandaag |
+|---|---|---|
+| **A** Regressie | Blijft de kernmechaniek werken? | **Sterk** — snelle CI-ruggengraat |
+| **B** Kleine benchmark | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** (bewust smal) |
+| **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Infra compleet; evidence pending** op menselijke review |
+| **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** (nog klein) |
+| **E** Probe utility | Leveren promoted seeds betere vervolgstappen op? | **Eerste echte evidence** |
+| **F** Domeintransfer | Werkt SSL buiten de bekende domeinen? | **Nog leeg** |
+| **G** Modelintern | Steun in interne activaties (H-Neurons)? | **Onderzoekslaag**, niet operationeel |
 
-| Laag | Betekenis |
-|---|---|
-| regressie | blijft de Python- en benchmarkmechaniek werken? |
-| technische smoke | werkt een route technisch zonder grote externe afhankelijkheden? |
-| methodologische smoke | blijven detectie en scoring eerlijk gescheiden? |
-| kleine benchmark | zie je winst op een kleine vaste suite? |
-| aanvullende evidencelaag | zie je al extra bewijs buiten alleen fixture- en scenario-smokes? |
-
-De huidige standaardworkflow publiceert daarom niet alleen de oude kernsuites, maar ook aanvullende evidencelagen voor:
-
-- adversarial Gate-gedrag;
-- probe utility.
-
-Die extra lagen horen bij de standaardpublicatie, maar moeten nog steeds gelezen worden als aanvullend bewijs en niet als definitieve eindvalidatie.
+De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie- en kleine-benchmarklagen plus de aanvullende evidencelagen D (adversarial Gate) en E (probe utility). Die aanvullende lagen zijn echt bewijs, maar nog geen volledige eindvalidatie.
 
 ## Wat de resultaten wel en niet betekenen
 
@@ -147,6 +120,13 @@ Technische repo-oriëntatie:
 Historische referentie:
 
 - `docs/legacy/00_shadow_seed_learning_4_5.md`
+
+## Meer lezen
+
+- [GitHub Wiki Home](https://github.com/E-AI-MODEL/shadowseed/wiki) — uitgebreide uitleg en achtergrond
+- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/) — actuele resultaten per laag
+- [Latest Test Results](https://github.com/E-AI-MODEL/shadowseed/wiki/Latest-Test-Results)
+- [SSL 4.5 Analysis](https://github.com/E-AI-MODEL/shadowseed/wiki/SSL-45-Analysis)
 
 ## Kernregel
 
