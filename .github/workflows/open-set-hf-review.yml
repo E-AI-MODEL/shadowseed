@@ -36,7 +36,20 @@ on:
           - fixture
           - hf-transformers
       model_id:
-        description: "HF model-id (bv. een klein instruct-model). Vereist wanneer model_backend=hf-transformers, anders leeg laten."
+        description: "Model uit de gecureerde lijst (ungated, CPU-ok). Zie 'shadowseed list-open-set-models'. Alleen gebruikt bij model_backend=hf-transformers."
+        required: false
+        default: "Qwen/Qwen2.5-1.5B-Instruct"
+        type: choice
+        options:
+          - HuggingFaceTB/SmolLM2-135M-Instruct
+          - HuggingFaceTB/SmolLM2-360M-Instruct
+          - Qwen/Qwen2.5-0.5B-Instruct
+          - TinyLlama/TinyLlama-1.1B-Chat-v1.0
+          - Qwen/Qwen2.5-1.5B-Instruct
+          - HuggingFaceTB/SmolLM2-1.7B-Instruct
+          - Qwen/Qwen2.5-3B-Instruct
+      model_id_custom:
+        description: "Override: een ander HF model-id (bv. gated zoals meta-llama/...). Leeg laten om de keuze hierboven te gebruiken."
         required: false
         default: ""
         type: string
@@ -63,9 +76,21 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Resolve model id
+        env:
+          MODEL_ID_CHOICE: ${{ inputs.model_id }}
+          MODEL_ID_CUSTOM: ${{ inputs.model_id_custom }}
+        run: |
+          # custom override wins; trim whitespace (a stray space in the dispatch
+          # field used to crash the HF repo-id validator).
+          RAW="${MODEL_ID_CUSTOM:-$MODEL_ID_CHOICE}"
+          RESOLVED="$(echo "$RAW" | xargs)"
+          echo "MODEL_ID=$RESOLVED" >> "$GITHUB_ENV"
+          echo "Resolved model_id: '$RESOLVED'"
+
       - name: Valideer detector + model_backend combinatie
         run: |
-          if [ "${{ inputs.detector }}" = "model" ] && [ "${{ inputs.model_backend }}" = "hf-transformers" ] && [ -z "${{ inputs.model_id }}" ]; then
+          if [ "${{ inputs.detector }}" = "model" ] && [ "${{ inputs.model_backend }}" = "hf-transformers" ] && [ -z "$MODEL_ID" ]; then
             echo "::error::detector=model met model_backend=hf-transformers vereist een model_id."
             exit 1
           fi
@@ -97,7 +122,7 @@ jobs:
             --detector "${{ inputs.detector }}" \
             --model-backend "${{ inputs.model_backend }}" \
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
-            ${{ inputs.model_id != '' && format('--model-id "{0}"', inputs.model_id) || '' }}
+            --model-id "$MODEL_ID"
 
       - name: Genereer open-set summary op pending packets
         run: |
@@ -114,7 +139,7 @@ jobs:
           INPUT_OFFSET: ${{ inputs.offset }}
           INPUT_DETECTOR: ${{ inputs.detector }}
           INPUT_MODEL_BACKEND: ${{ inputs.model_backend }}
-          INPUT_MODEL_ID: ${{ inputs.model_id }}
+          INPUT_MODEL_ID: ${{ env.MODEL_ID }}
         run: |
           cat > results/open_review/README.md <<MD
           # Open-set HF review batch

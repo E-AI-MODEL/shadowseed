@@ -232,6 +232,21 @@ def build_parser() -> argparse.ArgumentParser:
         help="Waar de leesbare open-set samenvatting wordt opgeslagen.",
     )
 
+    list_models = subparsers.add_parser(
+        "list-open-set-models",
+        help="[info] toon de gecureerde lijst HF-modellen voor de model-detector / SLM-routes",
+    )
+    list_models.add_argument(
+        "--registry",
+        default="src/shadowseed/data/open_set_models.json",
+        help="JSON-registry met gecureerde modellen.",
+    )
+    list_models.add_argument(
+        "--output",
+        default=None,
+        help="Optioneel pad om de tabel naar weg te schrijven; standaard naar stdout.",
+    )
+
     adversarial = subparsers.add_parser(
         "run-adversarial-gate-benchmark",
         help="[manual] vergelijk current Gate met zwakkere promotieregels",
