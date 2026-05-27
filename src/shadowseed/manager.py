@@ -299,9 +299,12 @@ class SSLManager:
         self,
         candidates: Iterable[str],
         expand_short_fragments: bool = True,
+        split_broad: bool = True,
     ) -> list[str]:
         return normalize_detection_candidates(
-            list(candidates), expand_short_fragments=expand_short_fragments
+            list(candidates),
+            expand_short_fragments=expand_short_fragments,
+            split_broad=split_broad,
         )
 
     def ingest_detection_candidates(
@@ -309,19 +312,45 @@ class SSLManager:
         candidates: Iterable[str],
         trigger_keywords: Iterable[str] | None = None,
         expand_short_fragments: bool = True,
+        split_broad: bool = True,
+        deduplicate: bool = True,
+        min_seed_words: int = 0,
     ) -> dict[str, Any]:
         raw_candidates = list(candidates)
         normalized = self.normalize_detection_candidates(
-            raw_candidates, expand_short_fragments=expand_short_fragments
+            raw_candidates,
+            expand_short_fragments=expand_short_fragments,
+            split_broad=split_broad,
         )
         accepted: list[dict[str, str]] = []
         rejected: list[dict[str, str]] = []
+        seen_texts: set[str] = set()
+        accepted_ids: set[str] = set()
         for candidate in normalized:
+            if min_seed_words and len(re.findall(r"\w+", candidate)) < min_seed_words:
+                rejected.append({"text": candidate, "reason": "too_vague"})
+                continue
+            key = candidate.strip().lower()
+            if key in seen_texts:
+                rejected.append({"text": candidate, "reason": "duplicate"})
+                continue
             try:
-                seed_id = self.add_or_update_seed(candidate, trigger_keywords=trigger_keywords)
-                accepted.append({"seed_id": seed_id, "text": candidate})
+                seed_id = self.add_or_update_seed(
+                    candidate, trigger_keywords=trigger_keywords, deduplicate=deduplicate
+                )
             except ValueError:
                 rejected.append({"text": candidate, "reason": "not_atomic"})
+                continue
+            if seed_id in accepted_ids:
+                # Deduplication merged this candidate into a seed that was
+                # already accepted in this batch; emitting it again would
+                # produce a duplicate seed_id row. Record it as a duplicate
+                # instead of a second accepted seed under the same id.
+                rejected.append({"text": candidate, "reason": "duplicate"})
+                continue
+            accepted.append({"seed_id": seed_id, "text": candidate})
+            accepted_ids.add(seed_id)
+            seen_texts.add(key)
         return {
             "input_count": len(raw_candidates),
             "normalized_candidates": normalized,
@@ -373,15 +402,17 @@ class SSLManager:
         self,
         text: str,
         trigger_keywords: Iterable[str] | None = None,
+        deduplicate: bool = True,
     ) -> str:
         if not self.is_atomic_seed(text, max_seed_words=self.config.max_seed_words):
             raise ValueError("Seed lijkt te breed. Splits eerst naar atomische seeds.")
 
         new_embedding = self.get_embedding(text)
-        deduplicated = self._maybe_deduplicate_seed(new_embedding)
-        if deduplicated is not None:
-            seed_id, similarity = deduplicated
-            return self._activate_existing_seed(seed_id, similarity)
+        if deduplicate:
+            deduplicated = self._maybe_deduplicate_seed(new_embedding)
+            if deduplicated is not None:
+                seed_id, similarity = deduplicated
+                return self._activate_existing_seed(seed_id, similarity)
 
         return self._create_seed(text, new_embedding, trigger_keywords)
 
