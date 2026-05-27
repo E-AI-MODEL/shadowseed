@@ -25,8 +25,11 @@ import math
 from pathlib import Path
 from typing import Any
 
+from shadowseed.benchmark.evidence_layers import PROBE_UTILITY, assert_valid_layer
 from shadowseed.benchmark.ssl45_gap_suite import lexical_embedding
 from shadowseed.manager import ProbeOutcome, ProbeType, SSLManager, SeedStatus
+
+EVIDENCE_LAYER = assert_valid_layer(PROBE_UTILITY)
 
 
 WEIGHT_TOLERANCE = 1e-6
@@ -189,6 +192,7 @@ def run_probe_feedback_behavior_suite(
             bucket["correct"] += 1
 
     summary = {
+        "evidence_layer": EVIDENCE_LAYER,
         "suite_version": suite.get("version"),
         "scenario_count": len(results),
         "correct_outcome_count": correct,

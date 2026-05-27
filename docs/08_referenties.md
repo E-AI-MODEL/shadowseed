@@ -20,7 +20,7 @@ Deze lijst ondersteunt de theoretische en technische achtergrond van SSL. De ver
 
 ## Neuronale interpretatie
 
-- Gao, C. et al. (2025). *H-Neurons: On the Existence, Impact, and Origin of Hallucination-Associated Neurons in LLMs.*
+- Gao, C. et al. (2025). *H-Neurons: On the Existence, Impact, and Origin of Hallucination-Associated Neurons in LLMs.* arXiv:2512.01797. Code: https://github.com/thunlp/H-Neurons
 
 ## Geheugen en consolidatie
 

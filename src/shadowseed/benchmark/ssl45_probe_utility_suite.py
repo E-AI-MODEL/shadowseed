@@ -17,6 +17,10 @@ import json
 from pathlib import Path
 import re
 
+from shadowseed.benchmark.evidence_layers import PROBE_UTILITY, assert_valid_layer
+
+EVIDENCE_LAYER = assert_valid_layer(PROBE_UTILITY)
+
 
 BROAD_WORDS = {
     "meer",
@@ -123,6 +127,7 @@ def run_ssl45_probe_utility_suite(input_path: str, output_path: str) -> Path:
     dialectic_delta = sum(item["dialectic_delta"] for item in results) / count if count else 0.0
 
     summary = {
+        "evidence_layer": EVIDENCE_LAYER,
         "suite_version": suite.get("version"),
         "scenario_count": count,
         "mean_follow_up_delta": follow_delta,
