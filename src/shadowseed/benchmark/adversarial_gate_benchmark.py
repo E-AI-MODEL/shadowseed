@@ -20,7 +20,13 @@ import json
 from pathlib import Path
 from typing import Any
 
+from shadowseed.benchmark.evidence_layers import (
+    ADVERSARIAL_NOISE_CONTROL,
+    assert_valid_layer,
+)
 from shadowseed.benchmark.ssl45_false_positive_suite import evaluate_adversarial_candidate
+
+EVIDENCE_LAYER = assert_valid_layer(ADVERSARIAL_NOISE_CONTROL)
 
 
 def _safe_rate(numerator: int, denominator: int) -> float:
@@ -254,6 +260,7 @@ def run_adversarial_gate_benchmark(
     )
 
     summary = {
+        "evidence_layer": EVIDENCE_LAYER,
         "suite_version": suite.get("version"),
         "scenario_count": len(suite["scenarios"]),
         "candidate_count": candidate_count,
