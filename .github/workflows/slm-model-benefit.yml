@@ -14,6 +14,7 @@ on:
           - TinyLlama/TinyLlama-1.1B-Chat-v1.0
           - Qwen/Qwen2.5-1.5B-Instruct
           - HuggingFaceTB/SmolLM2-1.7B-Instruct
+          - Qwen/Qwen3-1.7B
           - Qwen/Qwen2.5-3B-Instruct
       model_id_custom:
         description: "Override: een ander HF model-id (bv. gated). Leeg laten om de keuze hierboven te gebruiken."
