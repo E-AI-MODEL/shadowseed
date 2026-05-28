@@ -14,7 +14,7 @@ on:
         default: "12"
         type: string
       offset:
-        description: "Start-offset in de dataset"
+        description: "Start-offset in de dataset; gebruik per nieuwe ronde een nieuwe offset om dezelfde batch niet te herhalen"
         required: true
         default: "0"
         type: string
@@ -37,7 +37,7 @@ on:
           - hf-transformers
           - ollama
       model_id:
-        description: "HF model uit de gecureerde lijst (ungated, CPU-ok). Alleen gebruikt bij model_backend=hf-transformers."
+        description: "HF model uit de gecureerde lijst (ungated, CPU-ok). Alleen gebruikt bij detector=model en model_backend=hf-transformers."
         required: false
         default: "Qwen/Qwen2.5-1.5B-Instruct"
         type: choice
@@ -50,7 +50,7 @@ on:
           - HuggingFaceTB/SmolLM2-1.7B-Instruct
           - Qwen/Qwen2.5-3B-Instruct
       ollama_model_id:
-        description: "Ollama modelnaam. Alleen gebruikt bij model_backend=ollama."
+        description: "Ollama modelnaam. Alleen gebruikt bij detector=model en model_backend=ollama."
         required: false
         default: "qwen2.5:0.5b-instruct"
         type: choice
@@ -62,7 +62,7 @@ on:
           - llama3.2:3b
           - gemma2:2b
       model_id_custom:
-        description: "Override: een ander HF- of Ollama-model-id. Leeg laten om de backend-keuze hierboven te gebruiken."
+        description: "Override voor de gekozen backend. HF-id bij hf-transformers, Ollama-modelnaam bij ollama. Leeg laten om de keuzelijst te gebruiken."
         required: false
         default: ""
         type: string
@@ -91,24 +91,28 @@ jobs:
 
       - name: Resolve model id
         env:
+          DETECTOR: ${{ inputs.detector }}
           MODEL_BACKEND: ${{ inputs.model_backend }}
           MODEL_ID_CHOICE: ${{ inputs.model_id }}
           OLLAMA_MODEL_ID_CHOICE: ${{ inputs.ollama_model_id }}
           MODEL_ID_CUSTOM: ${{ inputs.model_id_custom }}
         run: |
-          # custom override wins; trim whitespace (a stray space in the dispatch
-          # field used to crash repo-id validators). The resolved id is only
-          # used when detector=model and the selected backend needs a model id.
-          RAW="$MODEL_ID_CHOICE"
-          if [ "$MODEL_BACKEND" = "ollama" ]; then
-            RAW="$OLLAMA_MODEL_ID_CHOICE"
-          fi
-          if [ -n "$MODEL_ID_CUSTOM" ]; then
-            RAW="$MODEL_ID_CUSTOM"
+          # Only detector=model uses a model id. Keeping this empty for adapter
+          # runs prevents README/artifact metadata from implying a model run.
+          RAW=""
+          if [ "$DETECTOR" = "model" ]; then
+            if [ "$MODEL_BACKEND" = "hf-transformers" ]; then
+              RAW="$MODEL_ID_CHOICE"
+            elif [ "$MODEL_BACKEND" = "ollama" ]; then
+              RAW="$OLLAMA_MODEL_ID_CHOICE"
+            fi
+            if [ -n "$MODEL_ID_CUSTOM" ]; then
+              RAW="$MODEL_ID_CUSTOM"
+            fi
           fi
           RESOLVED="$(echo "$RAW" | xargs)"
           echo "MODEL_ID=$RESOLVED" >> "$GITHUB_ENV"
-          echo "Resolved model_id: '$RESOLVED'"
+          echo "Resolved model_id: '${RESOLVED:-n.v.t.}'"
 
       - name: Valideer detector + model_backend combinatie
         run: |
@@ -134,6 +138,10 @@ jobs:
       - name: Start Ollama server
         if: ${{ inputs.detector == 'model' && inputs.model_backend == 'ollama' }}
         run: |
+          if curl -fsS http://localhost:11434/api/version >/dev/null 2>&1; then
+            echo "Ollama is already up" | tee ollama.log
+            exit 0
+          fi
           ollama serve > ollama.log 2>&1 &
           # wait for the HTTP API to come up
           for i in $(seq 1 30); do
@@ -213,14 +221,28 @@ jobs:
           - dit is geen standaard regressierun
           - status is \`review_in_progress\` totdat menselijke reviewers packets hebben ingevuld
           - lees deze laag niet als vervanging van de fixture-regressies
+          - herhaal voor een nieuwe open-set ronde niet automatisch dezelfde \`offset\`; anders test je dezelfde HF-items opnieuw
           - alleen \`detector=model\` met een echte taalmodel-backend (\`hf-transformers\` of \`ollama\`) voldoet aan de 4.6 een-zinsclaim;
             adapter_v1, adapter_v2 en de fixture model-backend zijn baseline-infrastructuur, geen Laag-C bewijs
           MD
 
+      - name: Normalize artifact name
+        env:
+          MODEL_ID: ${{ env.MODEL_ID }}
+        run: |
+          python - <<'PY' >> "$GITHUB_ENV"
+          import os
+          import re
+
+          model_id = os.environ.get("MODEL_ID", "").strip()
+          safe_model_id = re.sub(r'[":<>|*?\r\n\\/]', "-", model_id).strip(".- ")
+          print(f"SAFE_MODEL_ID={safe_model_id or 'no-model'}")
+          PY
+
       - name: Upload open-set review artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: open-set-hf-review-batch-${{ inputs.detector }}-${{ inputs.model_backend }}
+          name: open-set-hf-review-batch-${{ inputs.detector }}-${{ inputs.model_backend }}-${{ env.SAFE_MODEL_ID }}
           path: |
             benchmarks/open_review/input/hf_batch.json
             results/open_review/open_set_seed_output.json
