@@ -136,6 +136,7 @@ def run_open_set_seed_review(
 
     payload = json.loads(Path(input_path).read_text(encoding="utf-8"))
     items = payload.get("items", [])
+    source_metadata = payload.get("source", {})
     reviewer_ids_normalized = _normalize_reviewer_ids(reviewer_ids)
     results = []
     review_packets = []
@@ -201,6 +202,7 @@ def run_open_set_seed_review(
         "evidence_layer": EVIDENCE_LAYER,
         "artifact_contract_version": ARTIFACT_CONTRACT_VERSION,
         "corpus_version": payload.get("version"),
+        "source": source_metadata,
         "item_count": len(items),
         "raw_candidate_count": raw_candidate_count,
         "normalized_candidate_count": normalized_candidate_count,
@@ -234,6 +236,8 @@ def run_open_set_seed_review(
                 "summary": {
                     "evidence_layer": EVIDENCE_LAYER,
                     "artifact_contract_version": ARTIFACT_CONTRACT_VERSION,
+                    "corpus_version": payload.get("version"),
+                    "source": source_metadata,
                     "item_count": len(items),
                     "seed_count": accepted_count,
                     "reviewer_ids": reviewer_ids_normalized,
