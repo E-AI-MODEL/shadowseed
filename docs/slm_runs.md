@@ -101,3 +101,48 @@ shadowseed run-model-benefit-suite \
 
 shadowseed analyze-results
 ```
+
+## Alternatief: Ollama-backend (lichter in een runner)
+
+De `ollama`-backend praat over HTTP met een lokale Ollama-server in plaats van
+de modelgewichten in-process te laden. Ollama gebruikt gekwantiseerde
+GGUF-modellen, dus dit is veel lichter dan de `transformers`/`torch`-stack en
+heeft geen extra Python-deps nodig — handig om SSL in een (standaard) runner te
+draaien.
+
+### In GitHub Actions
+
+Ga naar:
+
+```text
+Actions → Research · SLM Model Benefit (Ollama) → Run workflow
+```
+
+Kies een model (bijv. `qwen2.5:0.5b-instruct`) en draai. De workflow installeert
+Ollama, start de server, pullt het model en draait de suite met
+`--backend ollama`.
+
+### Lokaal
+
+```bash
+# 1. installeer Ollama (https://ollama.com) en start de server
+ollama serve &
+
+# 2. haal een klein model op
+ollama pull qwen2.5:0.5b-instruct
+
+# 3. draai de suite tegen Ollama (geen models-extra nodig)
+pip install -e .
+
+shadowseed run-model-benefit-suite \
+  --backend ollama \
+  --model-id qwen2.5:0.5b-instruct \
+  --turns 3 \
+  --max-new-tokens 220
+
+shadowseed analyze-results
+```
+
+Wijst je Ollama-server elders? Zet dan `OLLAMA_HOST`, bijvoorbeeld
+`export OLLAMA_HOST=http://192.168.1.10:11434`. De `ollama`-backend werkt ook
+voor de open-set detector via `--detector model --model-backend ollama`.
