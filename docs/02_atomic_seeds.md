@@ -17,15 +17,25 @@ De criteria hieronder gelden voor de seed-output, ongeacht welk detectiemechanis
 
 ## 2. Eisen aan een seed
 
-| Eis | Vraag |
-|---|---|
-| Eén gap | Staat er maar één ontbrekende relatie of randvoorwaarde in? |
-| Specifiek | Is duidelijk waar de seed over gaat in déze tekst, niet over een willekeurige tekst van dit type? |
-| Toetsbaar | Kan een beoordelaar of bron dit controleren? |
-| Relevant | Zou de seed het antwoord verbeteren? |
-| Niet-triviaal | Verandert de seed het begrip, niet alleen een detail? |
+| Eis | Vraag | Wanneer afgedwongen |
+|---|---|---|
+| Eén gap | Staat er maar één ontbrekende relatie of randvoorwaarde in? | generatie + review |
+| Specifiek | Is duidelijk waar de seed over gaat in déze tekst, niet over een willekeurige tekst van dit type? | review |
+| Toetsbaar | Kan een beoordelaar of bron dit controleren? | review |
+| Relevant | Zou de seed het antwoord verbeteren? | review |
+| Niet-triviaal | Verandert de seed het begrip, niet alleen een detail? | review |
 
-Vuistregel bij specificiteit: als dezelfde seed-tekst even goed bij een willekeurig ander item uit dezelfde batch zou passen, is hij niet specifiek genoeg.
+### Specificiteit is een reviewcriterium, geen generatieblokkade
+
+De laatste kolom is belangrijk. Bij **generatie** is er maar één harde eis: één gap per seed, en geen verzonnen feiten. Een seed wordt geboren als een afwezigheid, niet als een waardevol punt. Dat is de kern van 4.6:
+
+> Een seed start gewichtloos: `trace = 2.0`, `weight = 0.0`.
+
+Specificiteit, toetsbaarheid, relevantie en niet-trivialiteit zijn **waardeoordelen**. Ze horen bij de fase waarin een mens — of de Validation Gate — de seed weegt, niet bij het moment van detectie. Een generator die deze oordelen vooraf afdwingt, kent de seed al waarde toe voordat hij is getoetst, en dat botst met het gewichtloze-seed-principe. Een te generieke seed is geen reden om de seed bij geboorte te weigeren; hij krijgt vanzelf lage herkenning en haalt de Gate nooit.
+
+Vuistregel bij specificiteit (voor de **reviewer**, niet voor de generator): als dezelfde seed-tekst even goed bij een willekeurig ander item uit dezelfde batch zou passen, scoort de reviewer hem als niet specifiek genoeg.
+
+Wat de generator wél moet doen, is de seed concreet aan déze inputtekst koppelen (zie de detectieprompt in `open_set_model_detector.py`). Dat is een formuleer-instructie, geen waardeoordeel: het houdt de seed bij het onderwerp zonder hem vooraf goed of fout te keuren.
 
 ## 3. Niet opslaan als seed
 

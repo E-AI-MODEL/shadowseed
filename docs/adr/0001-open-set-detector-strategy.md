@@ -75,6 +75,7 @@ is baseline infrastructure or a regression fixture.
 | 003a | model + SmolLM2-360M | pipeline works; model too small — output was citations and fragments, not gaps |
 | 003b | model + Qwen2.5-1.5B | full Dutch sentence gaps (big jump) but few-shot leakage + hallucination |
 | 003c (pending) | model + Qwen2.5-1.5B | re-dispatch against the v0.3c foreign-domain prompt + leak filter |
+| 004 (review pending) | model + Qwen2.5-3B-Instruct | 54 accepted seeds over 12 AG News items; biggest model so far. Per-reviewer CSVs are out for human review. AI prescreen (triage aid only, not Layer C) flagged three systematic failure modes — claim-vs-gap, mistranslation, false-gap — addressed in the v0.3d prompt + entity filter for the next dispatch |
 
 ## Consequences
 
