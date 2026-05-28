@@ -55,15 +55,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'language_leak']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_0",
@@ -75,15 +75,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'language_leak']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_0",
@@ -95,15 +95,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'language_leak']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_0",
@@ -115,15 +115,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'language_leak']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_0",
@@ -135,15 +135,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "too_vague",
+      "reviewer_notes": "Anchored review. AI codes: ['too_vague', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_0",
@@ -155,15 +155,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "too_vague",
+      "reviewer_notes": "Anchored review. AI codes: ['too_vague', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_0",
@@ -175,15 +175,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_0",
@@ -195,15 +195,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -215,15 +215,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['false_gap', 'entity_bleed']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -235,15 +235,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['false_gap', 'entity_bleed']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -255,15 +255,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -275,15 +275,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -295,15 +295,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -315,15 +315,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -335,15 +335,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -355,15 +355,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -375,15 +375,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_1",
@@ -395,15 +395,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -415,15 +415,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['not_relevant']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -435,15 +435,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['not_relevant']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -455,15 +455,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -475,15 +475,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -495,15 +495,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -515,15 +515,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -535,15 +535,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -555,15 +555,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -575,15 +575,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -595,15 +595,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -615,15 +615,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -635,15 +635,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -655,15 +655,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -675,15 +675,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -695,15 +695,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "trivial",
+      "reviewer_notes": "Anchored review. AI codes: ['trivial', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -715,15 +715,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "trivial",
+      "reviewer_notes": "Anchored review. AI codes: ['trivial', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -735,15 +735,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -755,15 +755,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -775,15 +775,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -795,15 +795,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -815,15 +815,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -835,15 +835,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -855,15 +855,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -875,15 +875,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -895,15 +895,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_4",
@@ -915,15 +915,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -935,15 +935,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'too_vague']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -955,15 +955,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap', 'too_vague']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -975,15 +975,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -995,15 +995,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -1015,15 +1015,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -1035,15 +1035,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -1055,15 +1055,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -1075,15 +1075,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1095,15 +1095,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1115,15 +1115,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "style_not_gap",
+      "reviewer_notes": "Anchored review. AI codes: ['style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1135,15 +1135,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "too_vague",
+      "reviewer_notes": "Anchored review. AI codes: ['too_vague', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1155,15 +1155,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "too_vague",
+      "reviewer_notes": "Anchored review. AI codes: ['too_vague', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1175,15 +1175,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1195,15 +1195,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1215,15 +1215,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1235,15 +1235,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1255,15 +1255,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_6",
@@ -1275,15 +1275,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1295,15 +1295,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1315,15 +1315,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1335,15 +1335,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1355,15 +1355,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'style_not_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1375,15 +1375,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1395,15 +1395,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1415,15 +1415,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_7",
@@ -1435,15 +1435,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1455,15 +1455,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'not_testable']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1475,15 +1475,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_testable",
+      "reviewer_notes": "Anchored review. AI codes: ['mistranslation', 'not_testable']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1495,15 +1495,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1515,15 +1515,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1535,15 +1535,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1555,15 +1555,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1575,15 +1575,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1595,15 +1595,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
+      "reviewer_notes": "Anchored review. AI codes: ['false_gap']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1615,15 +1615,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1635,15 +1635,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1655,15 +1655,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1675,15 +1675,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1695,15 +1695,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "too_vague",
+      "reviewer_notes": "Anchored review. AI codes: ['too_vague']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1715,15 +1715,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": false,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
-      "reject_reason": null,
-      "reviewer_notes": ""
+      "review_status": "rejected",
+      "reject_reason": "too_vague",
+      "reviewer_notes": "Anchored review. AI codes: ['too_vague']. Confirmed by two human reviewers."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1735,15 +1735,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1755,15 +1755,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1775,15 +1775,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -1795,15 +1795,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1815,15 +1815,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1835,15 +1835,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1855,15 +1855,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1875,15 +1875,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1895,15 +1895,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1915,15 +1915,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1935,15 +1935,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1955,15 +1955,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1975,15 +1975,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_11",
@@ -1995,15 +1995,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2015,15 +2015,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2035,15 +2035,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2055,15 +2055,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2075,15 +2075,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2095,15 +2095,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2115,15 +2115,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2135,15 +2135,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2155,15 +2155,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2175,15 +2175,15 @@
       "reviewer_id": "reviewer_a",
       "reviewer_slot": 1,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     },
     {
       "item_id": "AG_NEWS_TEST_12",
@@ -2195,15 +2195,15 @@
       "reviewer_id": "reviewer_b",
       "reviewer_slot": 2,
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "Anchored review: confirmed by two independent human reviewers against AI prescreen. See round_004 README caveat."
     }
   ]
 }

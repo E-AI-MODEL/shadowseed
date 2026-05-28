@@ -1,6 +1,6 @@
 # Open-set Review Round 004
 
-> Status: **klaar voor menselijke review**
+> Status: **menselijke review afgerond (anchored, zie caveat)**
 > Detector: `model` + `hf-transformers` (Qwen/Qwen2.5-3B-Instruct), v0.3c prompt
 > Evidence layer: `open_set_seed_quality` (Laag C)
 > Related: #41, #62, #81, ADR 0001
@@ -14,9 +14,35 @@ vermindert, met dezelfde 12 AG News test-items (offset 0) en dezelfde v0.3c
 prompt (vreemd-domein few-shot + leak-filter).
 
 - 12 items, 54 unieke seeds, 108 review-packets (54 seeds × reviewer_a + reviewer_b)
-- alle packets staan op `pending`
+- review afgerond: **28 accepted / 26 rejected** (acceptance rate 51.9%)
 - automatische acceptatie na normalisatie: 54/60 (0.90)
 - batch is nog 12/12 nieuws/Sci-Tech (offset 0) — geen domein-spreiding
+
+## Caveat: anchored review
+
+Twee menselijke reviewers hebben elk onafhankelijk de seeds beoordeeld,
+maar **vertrokken vanuit dezelfde AI-prescreen** als startpunt. Ze
+hadden geen afwijkende bevindingen ten opzichte van de prescreen-verdicts.
+
+Dit is echte menselijke review (mensen hebben geoordeeld), maar:
+
+- de 100% inter-beoordelaars-overeenstemming is een artefact van gemeenschappelijk
+  startpunt, niet van onafhankelijke convergentie
+- de overeenstemming mag **niet** worden geïnterpreteerd als sterk
+  inter-beoordelaars-signaal
+- de accepted/rejected verdicts zijn wel geldig als conservatief Layer C-sample
+
+Toegestane claim:
+
+> Round 004 bevat een eerste door mensen bevestigde seed-quality sample
+> (anchored review, 28/54 accepted).
+
+Niet toegestaan:
+
+> Twee onafhankelijke reviewers stemden voor 100% overeen.
+
+Voor een werkelijk onafhankelijke ronde met blindmeting moet een
+volgende round zonder AI-prescreen als startpunt worden uitgevoerd.
 
 Round 003 (Qwen-1.5B) blijft ongemoeid; die review loopt apart. Dit is een
 parallelle, sterkere-model batch, niet een vervanging.

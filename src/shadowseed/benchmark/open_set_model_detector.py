@@ -55,6 +55,9 @@ def _numbered(lines: tuple[str, ...]) -> str:
     return "\n".join(f"{i}. {line}" for i, line in enumerate(lines, start=1))
 
 
+# Prompt iteration v0.3d: hardens three failure modes seen in round 004
+# (Qwen-3B) — claim-vs-gap phrasing, mistranslated source terms, and
+# plausible-but-false gaps (naming something absent that is already in the text).
 OPEN_SET_DETECTION_PROMPT = """
 Je bent een epistemische analist.
 
@@ -67,9 +70,21 @@ begrip van dit specifieke onderwerp?
 Regels:
 - Geef maximaal {max_seeds} seeds.
 - Elke seed bevat precies één gap, geformuleerd als hele Nederlandse zin.
-- Elke seed benoemt iets dat NIET in de tekst staat maar wel zou moeten.
+- Formuleer elke seed als een AFWEZIGHEID, niet als een bewering. Gebruik een
+  vorm als "... wordt niet genoemd", "... is niet aangegeven", "... ontbreekt".
+  Schrijf NIET een stelling alsof je een nieuw feit beweert.
+  * Fout (bewering): "De toezichthouder heeft geen onderzoek gedaan."
+  * Goed (afwezigheid): "Of de toezichthouder onderzoek heeft gedaan, wordt
+    niet vermeld."
+- Noem alleen iets als ontbrekend wanneer het ECHT niet in de tekst staat.
+  Staat het er al (een naam, bedrag, datum), dan is het geen gap; sla het over.
 - Elke seed verwijst concreet naar het onderwerp van DEZE inputtekst.
 - Verzin geen feiten, namen of cijfers die niet in de tekst staan.
+- Behoud vaktermen en eigennamen in hun oorspronkelijke vorm; vertaal ze niet
+  als je niet zeker bent van een correcte Nederlandse term. Een onjuiste
+  vertaling (bijv. een verzonnen woord) is erger dan de term onvertaald laten.
+- Schrijf de seed verder volledig in het Nederlands; echo geen hele Engelse
+  zinsdelen uit de inputtekst.
 - Geen citaten of fragmenten uit de inputtekst.
 - Geen losse woorden, namen of acroniemen zonder relatie.
 - Geen samengestelde analysekaders of lijsten binnen één seed.
@@ -104,7 +119,9 @@ class DetectorBackend(Protocol):
 
 
 _NUMBERED_LINE = re.compile(r"^\s*\d+[.)]\s*(.+?)\s*$")
-_HTML_ENTITY = re.compile(r"&(?:[a-zA-Z]+|#\d+);?")
+# Catches both proper entities (&amp; &gt; &#36;) and the bare numeric remnant
+# (#36;) that survives when the source already stripped the leading ampersand.
+_HTML_ENTITY = re.compile(r"&(?:[a-zA-Z]+|#\d+);?|#\d+;")
 _ACRONYM_ONLY = re.compile(r"^[A-Z][A-Z0-9.&;<>\-]{1,8}$")
 
 
