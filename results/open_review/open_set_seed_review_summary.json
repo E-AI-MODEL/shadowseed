@@ -1,19 +1,19 @@
 {
   "summary": {
     "evidence_layer": "open_set_seed_quality",
-    "packet_count": 114,
+    "packet_count": 108,
     "completed_packet_count": 0,
-    "pending_packet_count": 114,
+    "pending_packet_count": 108,
     "invalid_packet_count": 0,
     "accepted_packet_count": 0,
     "rejected_packet_count": 0,
     "packet_acceptance_rate": 0.0,
-    "unique_seed_count": 57,
+    "unique_seed_count": 54,
     "completed_seed_count": 0,
     "accepted_seed_count": 0,
     "rejected_seed_count": 0,
     "mixed_seed_count": 0,
-    "pending_seed_count": 57,
+    "pending_seed_count": 54,
     "invalid_seed_count": 0,
     "agreement_eligible_seed_count": 0,
     "unanimous_seed_count": 0,
@@ -42,7 +42,7 @@
     ],
     "domain_seed_counts": {
       "nieuws - Business": 4,
-      "nieuws - Sci/Tech": 53
+      "nieuws - Sci/Tech": 50
     },
     "status": "review_in_progress",
     "artifacts": {
@@ -119,7 +119,7 @@
       "item_id": "AG_NEWS_TEST_0",
       "title": "AG News Business #0",
       "domain": "nieuws - Business",
-      "seed_id": "ss_001",
+      "seed_id": "ss_002",
       "seed_text": "De verantwoordelijkheid voor de arbeidsvoorwaarden van T N ligt bij de stricken parent firm Federal Mogul.",
       "reviewers": [
         {
@@ -182,7 +182,7 @@
       "item_id": "AG_NEWS_TEST_0",
       "title": "AG News Business #0",
       "domain": "nieuws - Business",
-      "seed_id": "ss_002",
+      "seed_id": "ss_003",
       "seed_text": "De vertrouwenbrekerij tussen T N en Federal Mogul kan effectief zijn op de pensioenen van T N werknemers.",
       "reviewers": [
         {
@@ -245,7 +245,7 @@
       "item_id": "AG_NEWS_TEST_0",
       "title": "AG News Business #0",
       "domain": "nieuws - Business",
-      "seed_id": "ss_003",
+      "seed_id": "ss_004",
       "seed_text": "De mogelijke veranderingen in de arbeidsvoorwaarden van T N werknemers zijn niet duidelijk gemaakt door de gesprekken.",
       "reviewers": [
         {
@@ -309,7 +309,7 @@
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_001",
-      "seed_text": "De #36.",
+      "seed_text": "De #36;10 miljoen Ansari X Prize wordt niet genoemd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -372,69 +372,6 @@
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_002",
-      "seed_text": "miljoen Ansari X Prize wordt niet genoemd.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_1",
-      "title": "AG News Sci/Tech #1",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_003",
       "seed_text": "Het aantal teams in de competitie wordt niet geciteerd.",
       "reviewers": [
         {
@@ -497,7 +434,7 @@
       "item_id": "AG_NEWS_TEST_1",
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_004",
+      "seed_id": "ss_003",
       "seed_text": "De specifieke datum voor de eerste lancering wordt niet aangegeven.",
       "reviewers": [
         {
@@ -560,7 +497,7 @@
       "item_id": "AG_NEWS_TEST_1",
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_005",
+      "seed_id": "ss_004",
       "seed_text": "De naam van de tweede team is niet genoemd.",
       "reviewers": [
         {
@@ -623,7 +560,7 @@
       "item_id": "AG_NEWS_TEST_1",
       "title": "AG News Sci/Tech #1",
       "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_006",
+      "seed_id": "ss_005",
       "seed_text": "De specifieke manier waarop de teams zich aanmelden voor de X Prize wordt niet beschreven.",
       "reviewers": [
         {
@@ -1884,7 +1821,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_003",
-      "seed_text": "Er zijn andere virusontwikkelaars die net zo belangrijk zijn als Sven Jaschan.",
+      "seed_text": "Er zijn andere virusontwikkelaars die net zo belangrijk zijn als Sven Jaschan, maar deze niet genoemd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1947,7 +1884,7 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_004",
-      "seed_text": "maar deze niet genoemd.",
+      "seed_text": "Het aantal virusvarianten die in een periode kunnen ontstaan, wordt niet aangegeven.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2010,132 +1947,6 @@
       "title": "AG News Sci/Tech #6",
       "domain": "nieuws - Sci/Tech",
       "seed_id": "ss_005",
-      "seed_text": "Het aantal virusvarianten die in een periode kunnen ontstaan.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_006",
-      "seed_text": "wordt niet aangegeven.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "AG_NEWS_TEST_6",
-      "title": "AG News Sci/Tech #6",
-      "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_007",
       "seed_text": "De technische details van de virusontwikkeling en hun effecten op de netwerken worden niet uitgebreid beschreven.",
       "reviewers": [
         {
@@ -3521,7 +3332,7 @@
       "item_id": "AG_NEWS_TEST_12",
       "title": "AG News Sci/Tech #12",
       "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_003",
+      "seed_id": "ss_004",
       "seed_text": "Ontbreken van de reactie van andere music retailers op de nieuwe service.",
       "reviewers": [
         {
@@ -3584,7 +3395,7 @@
       "item_id": "AG_NEWS_TEST_12",
       "title": "AG News Sci/Tech #12",
       "domain": "nieuws - Sci/Tech",
-      "seed_id": "ss_002",
+      "seed_id": "ss_005",
       "seed_text": "Ontbreken van de technische details van de nieuwe downloadservice.",
       "reviewers": [
         {
