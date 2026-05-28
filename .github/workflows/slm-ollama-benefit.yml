@@ -81,10 +81,23 @@ jobs:
       - name: Analyze results
         run: python -m shadowseed.cli analyze-results || true
 
+      - name: Normalize artifact name
+        env:
+          MODEL_ID: ${{ inputs.model_id }}
+        run: |
+          python - <<'PY' >> "$GITHUB_ENV"
+          import os
+          import re
+
+          model_id = os.environ["MODEL_ID"]
+          safe_model_id = re.sub(r'[":<>|*?\r\n\\/]', "-", model_id).strip(".- ")
+          print(f"SAFE_MODEL_ID={safe_model_id or 'model'}")
+          PY
+
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: ssl45-slm-ollama-results-${{ inputs.model_id }}
+          name: ssl45-slm-ollama-results-${{ env.SAFE_MODEL_ID }}
           path: |
             results/ssl45_model_benefit_suite.json
             ollama.log
