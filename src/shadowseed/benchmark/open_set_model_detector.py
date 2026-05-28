@@ -7,7 +7,7 @@ first detector that does: given an input item, it prompts a language model
 with a Dutch detection prompt derived from `docs/05_prompts.md` and parses
 the numbered output into candidate seeds.
 
-Two backends, mirroring the model-benefit-suite pattern:
+Three backends, mirroring the model-benefit-suite pattern:
 
 - ``fixture``: deterministic, no model download, no network. Returns
   text-grounded seeds with a clearly distinctive ``[FIXTURE]`` prefix so
@@ -16,6 +16,9 @@ Two backends, mirroring the model-benefit-suite pattern:
 - ``hf-transformers``: real local model via the ``transformers`` stack.
   Opt-in, requires the optional ``models`` extra and a model id, and
   requires network access to download the model (or a pre-warmed HF cache).
+- ``ollama``: real model served by a local Ollama server over HTTP. Opt-in,
+  needs no Python model deps (stdlib only); install Ollama, ``ollama pull``
+  the model, and pass its id. Lightweight enough for a standard CI runner.
 
 The seeds are still hypotheses for human review, not labels. The same
 atomicity, normalization and zero-weight storage rules in SSLManager apply
@@ -314,7 +317,40 @@ class HFTransformersDetectorBackend:
         )
 
 
-SUPPORTED_MODEL_BACKENDS: tuple[str, ...] = ("fixture", "hf-transformers")
+class OllamaDetectorBackend:
+    """Detector backend backed by a local Ollama server over HTTP.
+
+    Opt-in. Needs no Python model dependencies (stdlib only): install Ollama,
+    run ``ollama pull <model_id>``, then point the run at it. Decoding is greedy
+    (temperature 0, fixed seed) so the same input produces the same seeds.
+    """
+
+    def __init__(
+        self,
+        model_id: str,
+        max_new_tokens: int = 400,
+        host: str | None = None,
+    ) -> None:
+        from shadowseed.benchmark.ollama_client import OllamaClient
+
+        self.name = f"ollama:{model_id}"
+        self.model_id = model_id
+        self.max_new_tokens = max_new_tokens
+        self.client = OllamaClient(model=model_id, host=host)
+
+    def detect_seeds(self, item: dict[str, Any], max_seeds: int = 5) -> list[str]:
+        text = str(item.get("text") or item.get("input") or "").strip()
+        if not text:
+            return []
+        prompt = build_detection_prompt(text, max_seeds=max_seeds)
+        raw = self.client.generate(prompt, max_new_tokens=self.max_new_tokens)
+        # the prompt ends with "1.\n" — re-prepend so the parser sees the first item
+        return parse_numbered_seeds(
+            "1. " + raw, max_seeds=max_seeds, source_text=text
+        )
+
+
+SUPPORTED_MODEL_BACKENDS: tuple[str, ...] = ("fixture", "hf-transformers", "ollama")
 
 
 def make_detector_backend(
@@ -330,6 +366,14 @@ def make_detector_backend(
                 "--model-id is required for --model-backend hf-transformers"
             )
         return HFTransformersDetectorBackend(
+            model_id=model_id, max_new_tokens=max_new_tokens
+        )
+    if backend == "ollama":
+        if not model_id:
+            raise ValueError(
+                "--model-id is required for --model-backend ollama"
+            )
+        return OllamaDetectorBackend(
             model_id=model_id, max_new_tokens=max_new_tokens
         )
     raise ValueError(

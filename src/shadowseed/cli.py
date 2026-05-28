@@ -10,7 +10,7 @@ from shadowseed.cli_dispatch import execute_command
 
 
 VECTOR_BACKENDS = ["memory", "faiss", "chroma"]
-MODEL_BACKENDS = ["fixture", "hf-transformers"]
+MODEL_BACKENDS = ["fixture", "hf-transformers", "ollama"]
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -102,6 +102,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--backend",
         choices=MODEL_BACKENDS,
         default="fixture",
+        help=(
+            "Model-backend. fixture = deterministische CI-smoke. "
+            "hf-transformers = echt lokaal model via de transformers stack "
+            "(vereist --model-id en de models extra). ollama = echt model via "
+            "een lokale Ollama-server (vereist --model-id en een draaiende "
+            "`ollama serve` met het model gepulld)."
+        ),
     )
     model_benefit.add_argument("--model-id", default=None)
     model_benefit.add_argument("--max-new-tokens", type=int, default=220)
@@ -189,15 +196,18 @@ def build_parser() -> argparse.ArgumentParser:
             "als --detector model. fixture = deterministisch CI-backend "
             "(seeds krijgen een [FIXTURE] prefix). hf-transformers = echt "
             "lokaal taalmodel via de transformers stack; vereist --model-id "
-            "en de optionele models extra."
+            "en de optionele models extra. ollama = echt model via een lokale "
+            "Ollama-server (HTTP, geen Python model-deps); vereist --model-id "
+            "en een draaiende `ollama serve` met het model gepulld."
         ),
     )
     open_set.add_argument(
         "--model-id",
         default=None,
         help=(
-            "Hugging Face model-id voor --model-backend hf-transformers, "
-            "bijvoorbeeld een klein instruct-model dat lokaal past."
+            "Model-id voor --model-backend. Voor hf-transformers een Hugging "
+            "Face id (bijv. een klein instruct-model dat lokaal past); voor "
+            "ollama de Ollama-modelnaam (bijv. qwen2.5:0.5b of tinyllama)."
         ),
     )
     open_set.add_argument(

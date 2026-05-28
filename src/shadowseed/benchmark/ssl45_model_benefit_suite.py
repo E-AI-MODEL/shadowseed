@@ -95,6 +95,27 @@ class HFTransformersBackend:
         return output[0]["generated_text"].strip()
 
 
+class OllamaBackend:
+    """Local Ollama backend.
+
+    Talks to a running Ollama server over HTTP instead of loading weights in
+    process. This keeps real small-model runs lightweight enough for a standard
+    CI runner: install Ollama, ``ollama pull`` a quantized model, then point the
+    run at it. Decoding is greedy (temperature 0, fixed seed) for reproducibility.
+    """
+
+    def __init__(self, model_id: str, max_new_tokens: int = 220, host: str | None = None) -> None:
+        from shadowseed.benchmark.ollama_client import OllamaClient
+
+        self.name = f"ollama:{model_id}"
+        self.model_id = model_id
+        self.max_new_tokens = max_new_tokens
+        self.client = OllamaClient(model=model_id, host=host)
+
+    def generate(self, prompt: str, scenario: dict, mode: str, ssl_seeds: list[str]) -> str:
+        return self.client.generate(prompt, max_new_tokens=self.max_new_tokens)
+
+
 def make_backend(backend: str, model_id: str | None, max_new_tokens: int) -> ModelBackend:
     if backend == "fixture":
         return FixtureBackend()
@@ -102,6 +123,10 @@ def make_backend(backend: str, model_id: str | None, max_new_tokens: int) -> Mod
         if not model_id:
             raise ValueError("--model-id is required for backend hf-transformers")
         return HFTransformersBackend(model_id=model_id, max_new_tokens=max_new_tokens)
+    if backend == "ollama":
+        if not model_id:
+            raise ValueError("--model-id is required for backend ollama")
+        return OllamaBackend(model_id=model_id, max_new_tokens=max_new_tokens)
     raise ValueError(f"Unknown backend: {backend}")
 
 
