@@ -28,15 +28,16 @@ on:
           - adapter_v2
           - model
       model_backend:
-        description: "Alleen relevant als detector=model. fixture = CI-deterministisch ([FIXTURE] prefix). hf-transformers = echt taalmodel via transformers, vereist model_id."
+        description: "Alleen relevant als detector=model. fixture = CI-deterministisch. hf-transformers = lokaal HF-model. ollama = lokaal Ollama-model via HTTP."
         required: true
         default: "fixture"
         type: choice
         options:
           - fixture
           - hf-transformers
+          - ollama
       model_id:
-        description: "Model uit de gecureerde lijst (ungated, CPU-ok). Zie 'shadowseed list-open-set-models'. Alleen gebruikt bij model_backend=hf-transformers."
+        description: "HF model uit de gecureerde lijst (ungated, CPU-ok). Alleen gebruikt bij model_backend=hf-transformers."
         required: false
         default: "Qwen/Qwen2.5-1.5B-Instruct"
         type: choice
@@ -48,8 +49,20 @@ on:
           - Qwen/Qwen2.5-1.5B-Instruct
           - HuggingFaceTB/SmolLM2-1.7B-Instruct
           - Qwen/Qwen2.5-3B-Instruct
+      ollama_model_id:
+        description: "Ollama modelnaam. Alleen gebruikt bij model_backend=ollama."
+        required: false
+        default: "qwen2.5:0.5b-instruct"
+        type: choice
+        options:
+          - qwen2.5:0.5b-instruct
+          - qwen2.5:1.5b-instruct
+          - tinyllama
+          - llama3.2:1b
+          - llama3.2:3b
+          - gemma2:2b
       model_id_custom:
-        description: "Override: een ander HF model-id (bv. gated zoals meta-llama/...). Leeg laten om de keuze hierboven te gebruiken."
+        description: "Override: een ander HF- of Ollama-model-id. Leeg laten om de backend-keuze hierboven te gebruiken."
         required: false
         default: ""
         type: string
@@ -78,20 +91,29 @@ jobs:
 
       - name: Resolve model id
         env:
+          MODEL_BACKEND: ${{ inputs.model_backend }}
           MODEL_ID_CHOICE: ${{ inputs.model_id }}
+          OLLAMA_MODEL_ID_CHOICE: ${{ inputs.ollama_model_id }}
           MODEL_ID_CUSTOM: ${{ inputs.model_id_custom }}
         run: |
           # custom override wins; trim whitespace (a stray space in the dispatch
-          # field used to crash the HF repo-id validator).
-          RAW="${MODEL_ID_CUSTOM:-$MODEL_ID_CHOICE}"
+          # field used to crash repo-id validators). The resolved id is only
+          # used when detector=model and the selected backend needs a model id.
+          RAW="$MODEL_ID_CHOICE"
+          if [ "$MODEL_BACKEND" = "ollama" ]; then
+            RAW="$OLLAMA_MODEL_ID_CHOICE"
+          fi
+          if [ -n "$MODEL_ID_CUSTOM" ]; then
+            RAW="$MODEL_ID_CUSTOM"
+          fi
           RESOLVED="$(echo "$RAW" | xargs)"
           echo "MODEL_ID=$RESOLVED" >> "$GITHUB_ENV"
           echo "Resolved model_id: '$RESOLVED'"
 
       - name: Valideer detector + model_backend combinatie
         run: |
-          if [ "${{ inputs.detector }}" = "model" ] && [ "${{ inputs.model_backend }}" = "hf-transformers" ] && [ -z "$MODEL_ID" ]; then
-            echo "::error::detector=model met model_backend=hf-transformers vereist een model_id."
+          if [ "${{ inputs.detector }}" = "model" ] && [ "${{ inputs.model_backend }}" != "fixture" ] && [ -z "$MODEL_ID" ]; then
+            echo "::error::detector=model met model_backend=${{ inputs.model_backend }} vereist een model_id."
             exit 1
           fi
 
@@ -100,10 +122,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[test]"
 
-      - name: Installeer models extra (alleen voor echte taalmodel-detector)
+      - name: Installeer models extra (alleen voor HF-transformers taalmodel-detector)
         if: ${{ inputs.detector == 'model' && inputs.model_backend == 'hf-transformers' }}
         run: |
           pip install -e ".[models]"
+
+      - name: Installeer Ollama (alleen voor Ollama taalmodel-detector)
+        if: ${{ inputs.detector == 'model' && inputs.model_backend == 'ollama' }}
+        run: curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama server
+        if: ${{ inputs.detector == 'model' && inputs.model_backend == 'ollama' }}
+        run: |
+          ollama serve > ollama.log 2>&1 &
+          # wait for the HTTP API to come up
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:11434/api/version >/dev/null 2>&1; then
+              echo "Ollama is up"; break
+            fi
+            sleep 2
+          done
+
+      - name: Pull Ollama model
+        if: ${{ inputs.detector == 'model' && inputs.model_backend == 'ollama' }}
+        run: ollama pull "$MODEL_ID"
 
       - name: Haal HF open-set batch op
         run: |
@@ -114,6 +156,8 @@ jobs:
             --output benchmarks/open_review/input/hf_batch.json
 
       - name: Bouw open-set review-packets
+        env:
+          OLLAMA_HOST: http://localhost:11434
         run: |
           python -m shadowseed.cli run-open-set-seed-review \
             --input benchmarks/open_review/input/hf_batch.json \
@@ -169,7 +213,7 @@ jobs:
           - dit is geen standaard regressierun
           - status is \`review_in_progress\` totdat menselijke reviewers packets hebben ingevuld
           - lees deze laag niet als vervanging van de fixture-regressies
-          - alleen \`detector=model\` met \`model_backend=hf-transformers\` voldoet aan de 4.6 een-zinsclaim;
+          - alleen \`detector=model\` met een echte taalmodel-backend (\`hf-transformers\` of \`ollama\`) voldoet aan de 4.6 een-zinsclaim;
             adapter_v1, adapter_v2 en de fixture model-backend zijn baseline-infrastructuur, geen Laag-C bewijs
           MD
 
