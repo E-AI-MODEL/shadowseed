@@ -58,9 +58,9 @@ def _numbered(lines: tuple[str, ...]) -> str:
     return "\n".join(f"{i}. {line}" for i, line in enumerate(lines, start=1))
 
 
-# Prompt iteration v0.3d: hardens three failure modes seen in round 004
-# (Qwen-3B) — claim-vs-gap phrasing, mistranslated source terms, and
-# plausible-but-false gaps (naming something absent that is already in the text).
+# Prompt iteration v0.3e: keeps v0.3d's gap-phrasing guardrails, but names
+# detector output kandidaat-lacunes so only review/manager/gate/core can later
+# grant seed, evidence, or Round 001 status through the existing SSL route.
 OPEN_SET_DETECTION_PROMPT = """
 Je bent een epistemische analist.
 
@@ -71,31 +71,36 @@ ONTBREKEN in deze tekst terwijl ze nodig zouden zijn voor een volledig
 begrip van dit specifieke onderwerp?
 
 Regels:
-- Geef maximaal {max_seeds} seeds.
-- Elke seed bevat precies één gap, geformuleerd als hele Nederlandse zin.
-- Formuleer elke seed als een AFWEZIGHEID, niet als een bewering. Gebruik een
-  vorm als "... wordt niet genoemd", "... is niet aangegeven", "... ontbreekt".
+- Geef maximaal {max_seeds} kandidaat-lacunes.
+- Elke kandidaat-lacune bevat precies één ontbrekend element, geformuleerd als
+  hele Nederlandse zin.
+- De output is alleen detectoroutput voor latere review. Ken zelf geen seed-,
+  evidence- of Round 001-status toe.
+- Formuleer elke kandidaat-lacune als een AFWEZIGHEID, niet als een bewering.
+  Gebruik een vorm als "... wordt niet genoemd", "... is niet aangegeven",
+  "... ontbreekt".
   Schrijf NIET een stelling alsof je een nieuw feit beweert.
   * Fout (bewering): "De toezichthouder heeft geen onderzoek gedaan."
   * Goed (afwezigheid): "Of de toezichthouder onderzoek heeft gedaan, wordt
     niet vermeld."
 - Noem alleen iets als ontbrekend wanneer het ECHT niet in de tekst staat.
   Staat het er al (een naam, bedrag, datum), dan is het geen gap; sla het over.
-- Elke seed verwijst concreet naar het onderwerp van DEZE inputtekst.
+- Elke kandidaat-lacune verwijst concreet naar het onderwerp van DEZE
+  inputtekst.
 - Verzin geen feiten, namen of cijfers die niet in de tekst staan.
 - Behoud vaktermen en eigennamen in hun oorspronkelijke vorm; vertaal ze niet
   als je niet zeker bent van een correcte Nederlandse term. Een onjuiste
   vertaling (bijv. een verzonnen woord) is erger dan de term onvertaald laten.
-- Schrijf de seed verder volledig in het Nederlands; echo geen hele Engelse
-  zinsdelen uit de inputtekst.
+- Schrijf de kandidaat-lacune verder volledig in het Nederlands; echo geen hele
+  Engelse zinsdelen uit de inputtekst.
 - Geen citaten of fragmenten uit de inputtekst.
 - Geen losse woorden, namen of acroniemen zonder relatie.
-- Geen samengestelde analysekaders of lijsten binnen één seed.
+- Geen samengestelde analysekaders of lijsten binnen één kandidaat-lacune.
 - Geen meta-categorieën zonder concrete relatie.
 
 De volgende voorbeelden komen uit ANDERE teksten (geschiedenis, recht, zorg).
-Ze tonen alleen de VORM. Kopieer hun inhoud niet; schrijf seeds over het
-onderwerp van de inputtekst hieronder.
+Ze tonen alleen de VORM. Kopieer hun inhoud niet; schrijf kandidaat-lacunes
+over het onderwerp van de inputtekst hieronder.
 
 Niet goed (vorm-voorbeelden, niet kopiëren):
 {bad_examples}
@@ -106,7 +111,7 @@ Wel goed (vorm-voorbeelden uit andere domeinen, niet kopiëren):
 Inputtekst:
 {text}
 
-Geef nu maximaal {max_seeds} echte gap-seeds over het onderwerp van deze
+Geef nu maximaal {max_seeds} kandidaat-lacunes over het onderwerp van deze
 inputtekst. Begin direct met "1.".
 
 Output:
