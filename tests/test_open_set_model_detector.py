@@ -213,7 +213,8 @@ def test_parse_numbered_seeds_keeps_legitimate_seed_sharing_a_few_common_words()
 def test_build_detection_prompt_includes_text_and_constraints() -> None:
     prompt = build_detection_prompt("De Industriële Revolutie in Groot-Brittannië.")
     assert "De Industriële Revolutie in Groot-Brittannië." in prompt
-    assert "maximaal 5 seeds" in prompt
+    assert "maximaal 5 kandidaat-lacunes" in prompt
+    assert "geen seed-,\n  evidence- of Round 001-status" in prompt
     assert "meta-categorie" in prompt
     assert prompt.endswith("1.")
 
