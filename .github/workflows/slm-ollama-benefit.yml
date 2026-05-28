@@ -54,6 +54,10 @@ jobs:
 
       - name: Start Ollama server
         run: |
+          if curl -fsS http://localhost:11434/api/version >/dev/null 2>&1; then
+            echo "Ollama is already up" | tee ollama.log
+            exit 0
+          fi
           ollama serve > ollama.log 2>&1 &
           # wait for the HTTP API to come up
           for i in $(seq 1 30); do
