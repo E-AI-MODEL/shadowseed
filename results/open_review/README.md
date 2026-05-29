@@ -5,11 +5,11 @@ Deze artifactset komt uit een handmatige workflow met Hugging Face intake.
 Run-parameters:
 
 - source_id: `ag_news_test`
-- limit: `12`
+- limit: `6`
 - offset: `0`
 - detector: `model`
 - model_backend: `hf-transformers`
-- model_id: `HuggingFaceTB/SmolLM2-1.7B-Instruct`
+- model_id: `Qwen/Qwen2.5-3B-Instruct`
 
 Inhoud:
 
