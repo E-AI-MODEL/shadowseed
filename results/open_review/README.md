@@ -9,7 +9,7 @@ Run-parameters:
 - offset: `0`
 - detector: `model`
 - model_backend: `hf-transformers`
-- model_id: `Qwen/Qwen2.5-3B-Instruct`
+- model_id: `HuggingFaceTB/SmolLM2-1.7B-Instruct`
 
 Inhoud:
 
@@ -25,5 +25,6 @@ Interpretatie:
 - dit is geen standaard regressierun
 - status is `review_in_progress` totdat menselijke reviewers packets hebben ingevuld
 - lees deze laag niet als vervanging van de fixture-regressies
-- alleen `detector=model` met `model_backend=hf-transformers` voldoet aan de 4.6 een-zinsclaim;
+- herhaal voor een nieuwe open-set ronde niet automatisch dezelfde `offset`; anders test je dezelfde HF-items opnieuw
+- alleen `detector=model` met een echte taalmodel-backend (`hf-transformers` of `ollama`) voldoet aan de 4.6 een-zinsclaim;
   adapter_v1, adapter_v2 en de fixture model-backend zijn baseline-infrastructuur, geen Laag-C bewijs
