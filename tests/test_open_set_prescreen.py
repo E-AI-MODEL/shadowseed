@@ -63,3 +63,19 @@ def test_report_carries_non_evidence_disclaimer() -> None:
     report = prescreen.prescreen_output({"summary": {}, "results": []})
     assert "GEEN menselijke review" in report["disclaimer"]
     assert report["artifact"] == "mechanical_prescreen"
+
+
+def test_yield_counts_empty_items() -> None:
+    seed_output = {
+        "summary": {},
+        "results": [
+            {"item_id": "a", "normalized_candidates": ["De prijs wordt niet genoemd."]},
+            {"item_id": "b", "normalized_candidates": []},
+            {"item_id": "c", "raw_candidates": []},
+        ],
+    }
+    report = prescreen.prescreen_output(seed_output)
+    y = report["yield"]
+    assert y["item_count"] == 3
+    assert y["items_empty"] == 2
+    assert y["items_with_candidates"] == 1

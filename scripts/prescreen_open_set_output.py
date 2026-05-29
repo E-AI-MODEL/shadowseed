@@ -145,10 +145,16 @@ def prescreen_output(
     failure_code_counts: dict[str, int] = {code: 0 for code in MECHANICAL_CODES}
     flagged = 0
 
-    for result in seed_output.get("results", []):
+    results = seed_output.get("results", [])
+    item_count = len(results)
+    items_empty = 0
+
+    for result in results:
         item_id = str(result.get("item_id", ""))
         source_text = source_index.get(item_id, "")
         candidates = result.get("normalized_candidates") or result.get("raw_candidates") or []
+        if not candidates:
+            items_empty += 1
         for position, seed in enumerate(candidates, start=1):
             codes = prescreen_seed(seed, source_text)
             for code in codes:
@@ -177,6 +183,13 @@ def prescreen_output(
         "round": round_label,
         "detector": summary.get("detector"),
         "model_backend": summary.get("model_backend"),
+        "yield": {
+            "item_count": item_count,
+            "items_with_candidates": item_count - items_empty,
+            "items_empty": items_empty,
+            "empty_rate": round(items_empty / item_count, 3) if item_count else 0.0,
+            "mean_candidates_per_item": round(seed_count / item_count, 3) if item_count else 0.0,
+        },
         "mechanical_codes": list(MECHANICAL_CODES),
         "not_mechanically_checkable": list(NON_MECHANICAL_CODES),
         "seed_count": seed_count,
@@ -198,8 +211,17 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"Detector: `{report.get('detector')}` · backend: `{report.get('model_backend')}`"
     )
     lines.append("")
+    y = report["yield"]
+    lines.append("## Yield (levert het model kandidaten op?)")
+    lines.append("")
     lines.append(
-        f"## Uitkomst ({report['seed_count']} kandidaat-lacunes)"
+        f"- items: **{y['item_count']}** · met kandidaten: **{y['items_with_candidates']}** "
+        f"· leeg: **{y['items_empty']}** (empty-rate **{y['empty_rate']}**)"
+    )
+    lines.append(f"- gemiddeld kandidaten per item: **{y['mean_candidates_per_item']}**")
+    lines.append("")
+    lines.append(
+        f"## Kwaliteit van geleverde kandidaten ({report['seed_count']} kandidaat-lacunes)"
     )
     lines.append("")
     lines.append(f"- clean (geen mechanische vlag): **{report['clean_count']}**")
