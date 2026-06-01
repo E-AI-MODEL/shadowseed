@@ -63,11 +63,14 @@ _ABSENCE_MARKERS: tuple[str, ...] = (
 
 # A short list of English function words. Two or more as whole words inside a
 # nominally-Dutch gap signals an untranslated echo from the source text.
+# Dutch/English homographs ("of", "in", "is", "was", "her") are deliberately
+# EXCLUDED: every v0.3e gap is phrased "Of ... wordt niet vermeld", so counting
+# "Of"/"in"/"is" as English would false-flag well-formed Dutch output.
 _ENGLISH_STOPWORDS: frozenset[str] = frozenset(
     {
-        "the", "of", "and", "for", "with", "is", "are", "was", "were", "to",
-        "in", "on", "at", "by", "from", "that", "this", "their", "his", "her",
-        "has", "have", "been", "will", "would", "after", "about", "into",
+        "the", "and", "for", "with", "are", "were", "to", "on", "at", "by",
+        "from", "that", "this", "their", "his", "has", "have", "been", "will",
+        "would", "after", "about", "into",
     }
 )
 
