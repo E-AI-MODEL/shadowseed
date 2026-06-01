@@ -1,0 +1,169 @@
+{
+  "artifact": "mechanical_prescreen",
+  "disclaimer": "Deterministische prescreen, GEEN menselijke review. Telt NIET als reviewer_a/reviewer_b en niet als open_set_seed_quality (Laag C) evidence, en geeft GEEN accept/reject-verdict. Bedoeld om aandacht te richten en de v0.3e-prompt te toetsen aan haar eigen regels.",
+  "round": "round_005",
+  "detector": "model",
+  "model_backend": "hf-transformers (v0.3e; exact model id only in Actions artifact)",
+  "yield": {
+    "item_count": 5,
+    "items_with_candidates": 5,
+    "items_empty": 0,
+    "empty_rate": 0.0,
+    "mean_candidates_per_item": 3.6
+  },
+  "mechanical_codes": [
+    "claim_vs_gap",
+    "parse_leak",
+    "language_leak",
+    "entity_bleed",
+    "citation_fragment",
+    "fewshot_leak",
+    "not_atomic"
+  ],
+  "not_mechanically_checkable": [
+    "false_gap",
+    "mistranslation",
+    "grammar"
+  ],
+  "seed_count": 18,
+  "flagged_count": 0,
+  "clean_count": 18,
+  "clean_rate": 1.0,
+  "failure_code_counts": {
+    "claim_vs_gap": 0,
+    "parse_leak": 0,
+    "language_leak": 0,
+    "entity_bleed": 0,
+    "citation_fragment": 0,
+    "fewshot_leak": 0,
+    "not_atomic": 0
+  },
+  "verdicts": [
+    {
+      "item_id": "AG_NEWS_TEST_0",
+      "position": 1,
+      "seed": "Of de Federal Mogul onderzoek heeft gedaan naar de toekomstige financiële situatie van T N, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "position": 1,
+      "seed": "Of de tweede team een officiële lanceringdatum heeft aangegeven, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "position": 2,
+      "seed": "Of de tweede team een naam heeft genoemd, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "position": 3,
+      "seed": "Of de tweede team een organisatie heeft genoemd, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "position": 4,
+      "seed": "Of de tweede team een locatie heeft genoemd, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "position": 5,
+      "seed": "Of de tweede team een sponsor heeft genoemd, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "position": 1,
+      "seed": "Of de Ky. Company onderzoek heeft gedaan, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "position": 2,
+      "seed": "Of de peptides door de Ky. Company worden gebruikt, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "position": 3,
+      "seed": "Of de peptides door de Ky. Company worden verkocht, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "position": 4,
+      "seed": "Of de peptides door de Ky. Company worden ingevoerd in de markt, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_3",
+      "position": 1,
+      "seed": "Of de Prediction Unit ondersteuning biedt voor bepaalde regio's, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_3",
+      "position": 2,
+      "seed": "Of de Prediction Unit zich beperkt tot bepaalde regio's, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_3",
+      "position": 3,
+      "seed": "Of de Prediction Unit een bepaalde periode in dienst is, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_3",
+      "position": 4,
+      "seed": "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "position": 1,
+      "seed": "Of de bovengenoemde regels effectief zijn, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "position": 2,
+      "seed": "Of er sprake is van een toezichthouder die deze regels uitwerkt, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "position": 3,
+      "seed": "Of er sprake is van een financiële belasting die aan deze regels wordt toegeschreven, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "position": 4,
+      "seed": "Of er sprake is van een periode waarin deze regels werden ingevoerd, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    }
+  ]
+}

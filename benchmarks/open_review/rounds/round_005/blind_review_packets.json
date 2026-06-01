@@ -1,0 +1,1464 @@
+[
+  {
+    "blind_id": "b_3d116cd145d9",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 1,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_3d116cd145d9",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 1,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4e34c4774b70",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 2,
+    "candidate": "Direct geraakte groep in het item.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4e34c4774b70",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 2,
+    "candidate": "Direct geraakte groep in het item.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_c08fa88b6d01",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 3,
+    "candidate": "Onzekerheid rond de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_c08fa88b6d01",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 3,
+    "candidate": "Onzekerheid rond de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_384a95e6b31e",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 4,
+    "candidate": "Tijdlijn van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_384a95e6b31e",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 4,
+    "candidate": "Tijdlijn van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_655a3be25374",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 5,
+    "candidate": "Rol van Fears in de gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_655a3be25374",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 5,
+    "candidate": "Rol van Fears in de gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_646c80606a15",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 6,
+    "candidate": "Of de Federal Mogul onderzoek heeft gedaan naar de toekomstige financiële situatie van T N, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_646c80606a15",
+    "item_id": "AG_NEWS_TEST_0",
+    "shown_position": 6,
+    "candidate": "Of de Federal Mogul onderzoek heeft gedaan naar de toekomstige financiële situatie van T N, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4adca4418482",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 1,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4adca4418482",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 1,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_037ea9480a5f",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 2,
+    "candidate": "Of de tweede team een locatie heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_037ea9480a5f",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 2,
+    "candidate": "Of de tweede team een locatie heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_0c7ac7b78883",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 3,
+    "candidate": "Herkomst van de genoemde cijfers.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_0c7ac7b78883",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 3,
+    "candidate": "Herkomst van de genoemde cijfers.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_048e60b9791b",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 4,
+    "candidate": "Bron van de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_048e60b9791b",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 4,
+    "candidate": "Bron van de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_5ff9b190f480",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 5,
+    "candidate": "Of de tweede team een sponsor heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_5ff9b190f480",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 5,
+    "candidate": "Of de tweede team een sponsor heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_56458e6e5e33",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 6,
+    "candidate": "Rol van Race in de gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_56458e6e5e33",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 6,
+    "candidate": "Rol van Race in de gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4003de32afcb",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 7,
+    "candidate": "Of de tweede team een naam heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4003de32afcb",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 7,
+    "candidate": "Of de tweede team een naam heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_c58c7a1097f7",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 8,
+    "candidate": "Of de tweede team een organisatie heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_c58c7a1097f7",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 8,
+    "candidate": "Of de tweede team een organisatie heeft genoemd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_9e4cf7c8486f",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 9,
+    "candidate": "Of de tweede team een officiële lanceringdatum heeft aangegeven, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_9e4cf7c8486f",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 9,
+    "candidate": "Of de tweede team een officiële lanceringdatum heeft aangegeven, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_82be9e2276f6",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 10,
+    "candidate": "Tijdstip van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_82be9e2276f6",
+    "item_id": "AG_NEWS_TEST_1",
+    "shown_position": 10,
+    "candidate": "Tijdstip van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_a8f58091a9fc",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 1,
+    "candidate": "Of de peptides door de Ky. Company worden ingevoerd in de markt, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_a8f58091a9fc",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 1,
+    "candidate": "Of de peptides door de Ky. Company worden ingevoerd in de markt, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_f8671cc49c13",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 2,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_f8671cc49c13",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 2,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_d04447a3a50d",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 3,
+    "candidate": "Reden voor de beschreven beslissing.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_d04447a3a50d",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 3,
+    "candidate": "Reden voor de beschreven beslissing.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_f75ac86b85c0",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 4,
+    "candidate": "Rol van Wins in de gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_f75ac86b85c0",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 4,
+    "candidate": "Rol van Wins in de gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4f1642169f24",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 5,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4f1642169f24",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 5,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_ee8d867dd94c",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 6,
+    "candidate": "Of de Ky. Company onderzoek heeft gedaan, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_ee8d867dd94c",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 6,
+    "candidate": "Of de Ky. Company onderzoek heeft gedaan, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4575bcbb7954",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 7,
+    "candidate": "Of de peptides door de Ky. Company worden gebruikt, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4575bcbb7954",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 7,
+    "candidate": "Of de peptides door de Ky. Company worden gebruikt, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_eb56dd6f82e0",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 8,
+    "candidate": "Of de peptides door de Ky. Company worden verkocht, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_eb56dd6f82e0",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 8,
+    "candidate": "Of de peptides door de Ky. Company worden verkocht, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_1b00a25d8e46",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 9,
+    "candidate": "Tijdstip van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_1b00a25d8e46",
+    "item_id": "AG_NEWS_TEST_2",
+    "shown_position": 9,
+    "candidate": "Tijdstip van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_99b75e773018",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 1,
+    "candidate": "Tijdstip van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_99b75e773018",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 1,
+    "candidate": "Tijdstip van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_982c43c71f20",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 2,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_982c43c71f20",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 2,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_9b47b4bd4b71",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 3,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_9b47b4bd4b71",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 3,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_712a8244725e",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 4,
+    "candidate": "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_712a8244725e",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 4,
+    "candidate": "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_7c8cc6a9e370",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 5,
+    "candidate": "Onzekerheid rond de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_7c8cc6a9e370",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 5,
+    "candidate": "Onzekerheid rond de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4e946ac9e5cd",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 6,
+    "candidate": "Of de Prediction Unit zich beperkt tot bepaalde regio's, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_4e946ac9e5cd",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 6,
+    "candidate": "Of de Prediction Unit zich beperkt tot bepaalde regio's, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_5a3fdf3fec1c",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 7,
+    "candidate": "Of de Prediction Unit een bepaalde periode in dienst is, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_5a3fdf3fec1c",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 7,
+    "candidate": "Of de Prediction Unit een bepaalde periode in dienst is, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_1a91f508ad42",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 8,
+    "candidate": "Of de Prediction Unit ondersteuning biedt voor bepaalde regio's, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_1a91f508ad42",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 8,
+    "candidate": "Of de Prediction Unit ondersteuning biedt voor bepaalde regio's, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_a0f4c6bb8c4c",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 9,
+    "candidate": "Rol van Prediction in de gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_a0f4c6bb8c4c",
+    "item_id": "AG_NEWS_TEST_3",
+    "shown_position": 9,
+    "candidate": "Rol van Prediction in de gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_f29b9c6db75d",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 1,
+    "candidate": "Of er sprake is van een financiële belasting die aan deze regels wordt toegeschreven, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_f29b9c6db75d",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 1,
+    "candidate": "Of er sprake is van een financiële belasting die aan deze regels wordt toegeschreven, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_df9937c61a68",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 2,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_df9937c61a68",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 2,
+    "candidate": "Onderbouwing van de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_183b01d586af",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 3,
+    "candidate": "Rol van Calif in de gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_183b01d586af",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 3,
+    "candidate": "Rol van Calif in de gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_715c543b0c57",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 4,
+    "candidate": "Of er sprake is van een periode waarin deze regels werden ingevoerd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_715c543b0c57",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 4,
+    "candidate": "Of er sprake is van een periode waarin deze regels werden ingevoerd, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_ab205f8ba466",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 5,
+    "candidate": "Onzekerheid rond de centrale bewering.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_ab205f8ba466",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 5,
+    "candidate": "Onzekerheid rond de centrale bewering.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_be560402ffe5",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 6,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_be560402ffe5",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 6,
+    "candidate": "Betrokken partij buiten de hoofdactor.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_535161f8f0d5",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 7,
+    "candidate": "Of er sprake is van een toezichthouder die deze regels uitwerkt, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_535161f8f0d5",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 7,
+    "candidate": "Of er sprake is van een toezichthouder die deze regels uitwerkt, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_1b79bf5e6bba",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 8,
+    "candidate": "Of de bovengenoemde regels effectief zijn, wordt niet vermeld.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_1b79bf5e6bba",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 8,
+    "candidate": "Of de bovengenoemde regels effectief zijn, wordt niet vermeld.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_5e79240f5253",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 9,
+    "candidate": "Tijdlijn van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_a",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  },
+  {
+    "blind_id": "b_5e79240f5253",
+    "item_id": "AG_NEWS_TEST_4",
+    "shown_position": 9,
+    "candidate": "Tijdlijn van de beschreven gebeurtenis.",
+    "reviewer_id": "reviewer_b",
+    "judgment": {
+      "atomic": null,
+      "relevant": null,
+      "testable": null,
+      "non_trivial": null,
+      "useful_for_followup": null,
+      "accept": null,
+      "reject_reason": null
+    },
+    "review_status": "pending"
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "summary": {
+    "detector": "model",
+    "model_backend": "hf-transformers (v0.3e; exact model id only in Actions artifact)",
+    "provenance": "reconstructed from committed open_set_seed_review_summary.json @ dd89a23 (raw seed_output.json not committed)"
+  },
+  "results": [
+    {
+      "item_id": "AG_NEWS_TEST_0",
+      "normalized_candidates": [
+        "Of de Federal Mogul onderzoek heeft gedaan naar de toekomstige financiële situatie van T N, wordt niet vermeld."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "normalized_candidates": [
+        "Of de tweede team een officiële lanceringdatum heeft aangegeven, wordt niet vermeld.",
+        "Of de tweede team een naam heeft genoemd, wordt niet vermeld.",
+        "Of de tweede team een organisatie heeft genoemd, wordt niet vermeld.",
+        "Of de tweede team een locatie heeft genoemd, wordt niet vermeld.",
+        "Of de tweede team een sponsor heeft genoemd, wordt niet vermeld."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "normalized_candidates": [
+        "Of de Ky. Company onderzoek heeft gedaan, wordt niet vermeld.",
+        "Of de peptides door de Ky. Company worden gebruikt, wordt niet vermeld.",
+        "Of de peptides door de Ky. Company worden verkocht, wordt niet vermeld.",
+        "Of de peptides door de Ky. Company worden ingevoerd in de markt, wordt niet vermeld."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_3",
+      "normalized_candidates": [
+        "Of de Prediction Unit ondersteuning biedt voor bepaalde regio's, wordt niet vermeld.",
+        "Of de Prediction Unit zich beperkt tot bepaalde regio's, wordt niet vermeld.",
+        "Of de Prediction Unit een bepaalde periode in dienst is, wordt niet vermeld.",
+        "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "normalized_candidates": [
+        "Of de bovengenoemde regels effectief zijn, wordt niet vermeld.",
+        "Of er sprake is van een toezichthouder die deze regels uitwerkt, wordt niet vermeld.",
+        "Of er sprake is van een financiële belasting die aan deze regels wordt toegeschreven, wordt niet vermeld.",
+        "Of er sprake is van een periode waarin deze regels werden ingevoerd, wordt niet vermeld."
+      ]
+    }
+  ]
+}

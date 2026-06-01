@@ -1,8 +1,9 @@
 # Open-set round 005 — first v0.3e Layer-C round, with blind model-vs-baseline control
 
-> **Status: scaffolding, awaiting run.** This round protocol is ready; it
-> fills in once the v0.3e detector run on a capable model lands. It is Layer C
-> (open-set seed quality), evidence pending on human review.
+> **Status: ready for human review.** The v0.3e model arm and the adapter_v1
+> baseline arm are built and blinded; the prescreen gate passed. It is Layer C
+> (open-set seed quality), evidence pending on the human review below. See "Run
+> notes" at the bottom for the concrete state of this round.
 
 ## Why this round
 
@@ -111,3 +112,38 @@ blind_review_packets.json           # blinded interleaved packets for review
 blind_key.json                      # hidden arm mapping (reviewers must not see)
 blind_control_summary.json          # per-arm accept/atomic rates + delta (after un-blinding)
 ```
+
+---
+
+## Run notes (this round, built 2026-06-01)
+
+- **Model arm** (`model_seed_output.json`): reconstructed from the committed
+  big run `open_set_seed_review_summary.json` @ `dd89a23` (29 May, v0.3e). The
+  raw `seed_output.json` and the exact model id were not committed — they live
+  only in the Actions artifact. 18 seeds over 5 items (AG News test 0–4).
+- **Baseline arm** (`baseline_seed_output.json`): `adapter_v1` on the same 5
+  items, 25 candidates.
+- **Prescreen gate: PASSED** — model arm clean-rate 1.0, `claim_vs_gap` 0,
+  yield 3.6/item (vs round 004's 0.45 / SmolLM2's 0.17). v0.3e removed the
+  dominant round-004 failure mode.
+- **Blind packets**: 43 blinded candidates, 86 rows (2 reviewers).
+- **Key is intentionally NOT committed.** The shuffle is deterministic, so
+  `build_blind_control_packets.py build` regenerates the identical key from the
+  two arm files at un-blind time. This keeps the blind intact in the repo.
+
+### Honest limitation of this baseline
+
+`adapter_v1` is a template baseline, so its candidates ("Rol van X.", "Tijdlijn
+van Y.") are stylistically recognisable next to the model's fluent absence
+sentences. The interleaving therefore controls for **rubric and order effects
+and rubber-stamping**, not for arm recognition. Treat the model-minus-baseline
+delta as "fluent model output vs template baseline under one shared rubric", not
+as a fully arm-masked trial. A future round can swap in `adapter_v2` or a weaker
+model for a harder-to-distinguish baseline.
+
+### Reviewer-aandachtspunten (uit de prescreen + eyeballing)
+
+- Over-generatie / near-duplicates within an item (TEST_1: 5× "Of de tweede
+  team een *X* heeft genoemd"; TEST_3 ss_003/004 are logical negations) →
+  candidate `duplicate` / `trivial`.
+- "tweede team" reads like an awkward translation → reviewer attention.
