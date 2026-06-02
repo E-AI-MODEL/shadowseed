@@ -6,7 +6,7 @@ Run-parameters:
 
 - source_id: `ag_news_test`
 - limit: `12`
-- offset: `0`
+- offset: `12`
 - detector: `model`
 - model_backend: `hf-transformers`
 - model_id: `Qwen/Qwen2.5-3B-Instruct`
