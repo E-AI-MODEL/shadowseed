@@ -115,18 +115,20 @@ blind_control_summary.json          # per-arm accept/atomic rates + delta (after
 
 ---
 
-## Run notes (this round, built 2026-06-01)
+## Run notes (this round, rebuilt 2026-06-02 from the real artifact)
 
-- **Model arm** (`model_seed_output.json`): reconstructed from the committed
-  big run `open_set_seed_review_summary.json` @ `dd89a23` (29 May, v0.3e). The
-  raw `seed_output.json` and the exact model id were not committed — they live
-  only in the Actions artifact. 18 seeds over 5 items (AG News test 0–4).
-- **Baseline arm** (`baseline_seed_output.json`): `adapter_v1` on the same 5
-  items, 25 candidates.
-- **Prescreen gate: PASSED** — model arm clean-rate 1.0, `claim_vs_gap` 0,
-  yield 3.6/item (vs round 004's 0.45 / SmolLM2's 0.17). v0.3e removed the
-  dominant round-004 failure mode.
-- **Blind packets**: 43 blinded candidates, 86 rows (2 reviewers).
+- **Model arm** (`model_seed_output.json`): the real Actions artifact —
+  `hf-transformers:Qwen/Qwen2.5-3B-Instruct`, v0.3e, source `ag_news_test`
+  (offset 0, limit 12). 59 candidates over **12 items** (AG News test 0–7,
+  9–12). This replaces the earlier 5-item reconstruction from the committed
+  summary; full provenance is now in the file's `summary`.
+- **Baseline arm** (`baseline_seed_output.json`): `adapter_v1` on the same
+  12-item input, 60 candidates.
+- **Prescreen gate: PASSED** — yield 4.9/item, `claim_vs_gap` 0, clean-rate
+  **0.678** (vs round 004's 0.45 / SmolLM2's 0.17). v0.3e removed the dominant
+  round-004 failure mode (claim-vs-gap) entirely.
+- **Blind packets**: 119 blinded candidates (59 model + 60 baseline), 238 rows
+  (2 reviewers).
 - **Key is intentionally NOT committed.** The shuffle is deterministic, so
   `build_blind_control_packets.py build` regenerates the identical key from the
   two arm files at un-blind time. This keeps the blind intact in the repo.
@@ -143,7 +145,11 @@ model for a harder-to-distinguish baseline.
 
 ### Reviewer-aandachtspunten (uit de prescreen + eyeballing)
 
-- Over-generatie / near-duplicates within an item (TEST_1: 5× "Of de tweede
-  team een *X* heeft genoemd"; TEST_3 ss_003/004 are logical negations) →
-  candidate `duplicate` / `trivial`.
+- **Atomiciteit** — 19/59 model-kandidaten mechanisch `not_atomic` geflagd,
+  o.a. TEST_9 "Of het aantal arrestaties 171 of het bedrag dat besparingen
+  werden gemaakt …" (stapelt met " of "). Kandidaat `too_broad`/`not_atomic`.
+- **Parse-leak** — 5 kandidaten met ingebedde nummering; reviewer let op
+  afgekapte of samengevoegde zinnen.
+- **Over-generatie / near-duplicates** within an item (TEST_1: 5× "Of de tweede
+  team een *X* heeft genoemd"; TEST_3 logical negations) → `duplicate`/`trivial`.
 - "tweede team" reads like an awkward translation → reviewer attention.
