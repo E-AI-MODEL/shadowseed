@@ -45,6 +45,20 @@ def test_html_entity_is_entity_bleed() -> None:
     assert "entity_bleed" in codes
 
 
+def test_dutch_homographs_do_not_trigger_language_leak() -> None:
+    # Every v0.3e gap starts with "Of ..." and often contains "in"/"is";
+    # these Dutch words must not be counted as an English echo.
+    codes = prescreen.prescreen_seed(
+        "Of de Prediction Unit een bepaalde periode in dienst is, wordt niet vermeld."
+    )
+    assert "language_leak" not in codes
+
+
+def test_real_english_echo_is_language_leak() -> None:
+    codes = prescreen.prescreen_seed("Apple Launches Graphics Software with the new bundle.")
+    assert "language_leak" in codes
+
+
 def test_round_004_baseline_is_dominated_by_claim_vs_gap() -> None:
     seed_output = json.loads(
         Path("benchmarks/open_review/rounds/round_004/open_set_seed_output.json").read_text(
