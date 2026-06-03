@@ -115,41 +115,50 @@ blind_control_summary.json          # per-arm accept/atomic rates + delta (after
 
 ---
 
-## Run notes (this round, rebuilt 2026-06-02 from the real artifact)
+## Run notes (this round, extended 2026-06-02 with the offset-12 batch)
 
-- **Model arm** (`model_seed_output.json`): the real Actions artifact —
-  `hf-transformers:Qwen/Qwen2.5-3B-Instruct`, v0.3e, source `ag_news_test`
-  (offset 0, limit 12). 59 candidates over **12 items** (AG News test 0–7,
-  9–12). This replaces the earlier 5-item reconstruction from the committed
-  summary; full provenance is now in the file's `summary`.
+- **Model arm** (`model_seed_output.json`): real Actions artifacts,
+  `hf-transformers:Qwen/Qwen2.5-3B-Instruct`, v0.3e, source `ag_news_test`,
+  **two batches merged** — offset 0 + offset 12 (limit 12 each). Item
+  `AG_NEWS_TEST_12` overlapped both batches with identical candidates and was
+  deduplicated. Result: **114 candidates over 23 items** (TEST 0–7, 9–20,
+  23–25).
 - **Baseline arm** (`baseline_seed_output.json`): `adapter_v1` on the same
-  12-item input, 60 candidates.
-- **Prescreen gate: PASSED** — yield 4.9/item, `claim_vs_gap` 0, clean-rate
-  **0.678** (vs round 004's 0.45 / SmolLM2's 0.17). v0.3e removed the dominant
-  round-004 failure mode (claim-vs-gap) entirely.
-- **Blind packets**: 119 blinded candidates (59 model + 60 baseline), 238 rows
-  (2 reviewers).
+  23-item input, 115 candidates.
+- **Prescreen gate (combined): yield 5.0/item, `claim_vs_gap` 9, clean-rate
+  0.588.** The offset-0 batch was clean-rate 0.678; the offset-12 batch was
+  weaker (0.533, all 9 claim_vs_gap come from it). Still removes the dominant
+  round-004 failure mode by a wide margin (round 004 had 30 claim_vs_gap at
+  clean-rate 0.45).
+- **Blind packets**: 229 blinded candidates (114 model + 115 baseline), 458
+  rows (2 reviewers).
 - **Key is intentionally NOT committed.** The shuffle is deterministic, so
   `build_blind_control_packets.py build` regenerates the identical key from the
   two arm files at un-blind time. This keeps the blind intact in the repo.
+
+### Mechanical per-arm preview (NOT evidence)
+
+- Prescreen clean-rate: model **0.588** vs baseline **0.0** (every adapter_v1
+  candidate lacks the absence form).
+- Manager auto-accept is inverted and misleading: it passes ~all short template
+  baseline lines but flags longer model sentences — exactly why the manager
+  accept rate is not a quality signal and human review is the arbiter.
 
 ### Honest limitation of this baseline
 
 `adapter_v1` is a template baseline, so its candidates ("Rol van X.", "Tijdlijn
 van Y.") are stylistically recognisable next to the model's fluent absence
 sentences. The interleaving therefore controls for **rubric and order effects
-and rubber-stamping**, not for arm recognition. Treat the model-minus-baseline
-delta as "fluent model output vs template baseline under one shared rubric", not
-as a fully arm-masked trial. A future round can swap in `adapter_v2` or a weaker
-model for a harder-to-distinguish baseline.
+and rubber-stamping**, not for arm recognition. A future round can swap in
+`adapter_v2` or a weaker model for a harder-to-distinguish baseline.
 
 ### Reviewer-aandachtspunten (uit de prescreen + eyeballing)
 
-- **Atomiciteit** — 19/59 model-kandidaten mechanisch `not_atomic` geflagd,
-  o.a. TEST_9 "Of het aantal arrestaties 171 of het bedrag dat besparingen
-  werden gemaakt …" (stapelt met " of "). Kandidaat `too_broad`/`not_atomic`.
-- **Parse-leak** — 5 kandidaten met ingebedde nummering; reviewer let op
-  afgekapte of samengevoegde zinnen.
+- **Atomiciteit** — 38/114 model-kandidaten mechanisch `not_atomic` (o.a. TEST_9
+  "… 171 of het bedrag …" stapelt met " of "). Kandidaat `too_broad`/`not_atomic`.
+- **Claim vs gap** — 9 kandidaten (offset-12 batch) zijn beweringen i.p.v.
+  afwezigheden → `style_not_gap`.
+- **Parse-leak** — 10 kandidaten met ingebedde nummering of afgekapte zinnen.
 - **Over-generatie / near-duplicates** within an item (TEST_1: 5× "Of de tweede
-  team een *X* heeft genoemd"; TEST_3 logical negations) → `duplicate`/`trivial`.
+  team een *X* heeft genoemd"; logische ontkenningen) → `duplicate`/`trivial`.
 - "tweede team" reads like an awkward translation → reviewer attention.

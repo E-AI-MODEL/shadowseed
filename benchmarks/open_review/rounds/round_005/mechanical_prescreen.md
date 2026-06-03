@@ -6,21 +6,21 @@ Detector: `model` · backend: `hf-transformers:Qwen/Qwen2.5-3B-Instruct`
 
 ## Yield (levert het model kandidaten op?)
 
-- items: **12** · met kandidaten: **12** · leeg: **0** (empty-rate **0.0**)
-- gemiddeld kandidaten per item: **4.917**
+- items: **23** · met kandidaten: **23** · leeg: **0** (empty-rate **0.0**)
+- gemiddeld kandidaten per item: **4.957**
 
-## Kwaliteit van geleverde kandidaten (59 kandidaat-lacunes)
+## Kwaliteit van geleverde kandidaten (114 kandidaat-lacunes)
 
-- clean (geen mechanische vlag): **40**
-- geflagd: **19**
-- clean-rate: **0.678**
+- clean (geen mechanische vlag): **67**
+- geflagd: **47**
+- clean-rate: **0.588**
 
 ## Mechanische faalcodes
 
-- `not_atomic`: 19
-- `parse_leak`: 5
+- `not_atomic`: 38
+- `parse_leak`: 10
+- `claim_vs_gap`: 9
 - `citation_fragment`: 0
-- `claim_vs_gap`: 0
 - `entity_bleed`: 0
 - `fewshot_leak`: 0
 - `language_leak`: 0
