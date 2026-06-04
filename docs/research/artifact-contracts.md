@@ -97,6 +97,34 @@ Notes:
 - the summary records `detector` and `model_backend` so each artifact is
   traceable to the generator that produced it
 
+## Open-set round and prescreen artifacts (round-local, manual research)
+
+These artifacts live per round under `benchmarks/open_review/rounds/round_NNN/`.
+They are manual research, round-local, and NOT read by `analyze-results`. None of
+them is Layer-C evidence by itself: detector output is candidate-only (#109) and
+only human review on the packets counts as `open_set_seed_quality` evidence.
+
+| Artifact | Produced by | Type | Notes |
+|---|---|---|---|
+| `input/hf_batch.json` | `fetch-open-set-hf-batch` | intake batch | source items for the round |
+| `model_seed_output.json` | `run-open-set-seed-review --detector model --model-backend hf-transformers` | raw output | v0.3 detector candidates; carries `detector`/`model_backend` provenance |
+| `baseline_seed_output.json` | `run-open-set-seed-review --detector adapter_v1` | raw output | template baseline arm; not Layer-C eligible |
+| `mechanical_prescreen.json` / `.md` | `scripts/prescreen_open_set_output.py` | triage filter | deterministic; NOT evidence and NOT human review |
+| `blind_review_packets.json` | `scripts/build_blind_control_packets.py build` | human-review input | model+baseline candidates interleaved, arm hidden |
+| `blind_key.json` | `scripts/build_blind_control_packets.py build` | hidden key | NOT committed; reviewers must not see it; deterministically regenerable from the two arm files |
+| `blind_control_summary.json` | `scripts/build_blind_control_packets.py unblind` | summary | per-arm accept/atomic rates + model-minus-baseline delta, after un-blinding |
+
+Contract notes:
+- the prescreen `near_duplicate` flag marks near-identical restatements of the
+  same gap only; distinct-but-related gaps are spared as Constellation material
+  (4.5 §9.1)
+- the detector prompt enforces only generation-level rules (one gap, no
+  fabrication, tied to this text); triviality, specificity and redundancy are
+  review/Gate concerns, not generation blockades (02_atomic_seeds §2)
+- near-paraphrase candidates from the model path are deliberately not
+  auto-collapsed; they are surfaced to the reviewer (prescreen + `duplicate`
+  reject code), consistent with the weightless-seed principle
+
 ## Known legacy fallback
 
 The analyzer currently attempts this open-set path first:

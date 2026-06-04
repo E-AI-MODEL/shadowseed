@@ -58,11 +58,17 @@ def _numbered(lines: tuple[str, ...]) -> str:
     return "\n".join(f"{i}. {line}" for i, line in enumerate(lines, start=1))
 
 
-# Prompt iteration v0.3f: keeps v0.3e's candidate-gap framing and gap-phrasing
-# guardrails, and adds two rules that sharpen existing SSL criteria — distinctness
-# (no redundant restatement of the same gap; 4.5 §12.4 dedup) and non-triviality
-# (no obvious world-knowledge gaps; 4.5 §5.2/§5.3). Distinct-but-related gaps are
-# explicitly still allowed: they are Constellation material (4.5 §9.1).
+# Prompt iteration v0.3e: keeps v0.3d's gap-phrasing guardrails, but names
+# detector output kandidaat-lacunes so only review/manager/gate/core can later
+# grant seed, evidence, or Round 001 status through the existing SSL route.
+#
+# Note (02_atomic_seeds §2): generation enforces only "one gap per seed", "no
+# fabricated facts", and "tie the gap to THIS text". Value judgments —
+# triviality, specificity, relevance, redundancy — are review/Gate/normalization
+# concerns, NOT generation blockades, because pre-judging value at birth breaks
+# the weightless-seed principle. Redundant near-duplicates are deduplicated
+# downstream (normalization, 4.5 §12.4) and surfaced by the prescreen, not
+# suppressed here.
 OPEN_SET_DETECTION_PROMPT = """
 Je bent een epistemische analist.
 
@@ -87,14 +93,6 @@ Regels:
     niet vermeld."
 - Noem alleen iets als ontbrekend wanneer het ECHT niet in de tekst staat.
   Staat het er al (een naam, bedrag, datum), dan is het geen gap; sla het over.
-- Laat triviale of algemeen bekende lacunes weg. Een kandidaat-lacune moet het
-  begrip van DEZE tekst echt veranderen, niet een vanzelfsprekendheid zijn.
-  * Triviaal (niet doen): "Of Parijs de hoofdstad van Frankrijk is, wordt niet
-    vermeld." (algemeen bekend; verandert het begrip niet)
-- Elke kandidaat-lacune gaat over een ANDER ontbrekend element. Herhaal niet
-  dezelfde lacune in andere bewoordingen of met een ander werkwoord ("niet
-  genoemd" / "niet besproken" / "niet vermeld" voor hetzelfde punt). Verwante
-  maar duidelijk verschillende lacunes mogen wel naast elkaar staan.
 - Elke kandidaat-lacune verwijst concreet naar het onderwerp van DEZE
   inputtekst.
 - Verzin geen feiten, namen of cijfers die niet in de tekst staan.
