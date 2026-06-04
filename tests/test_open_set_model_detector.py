@@ -216,6 +216,9 @@ def test_build_detection_prompt_includes_text_and_constraints() -> None:
     assert "maximaal 5 kandidaat-lacunes" in prompt
     assert "geen seed-,\n  evidence- of Round 001-status" in prompt
     assert "meta-categorie" in prompt
+    # v0.3f: distinctness and non-triviality guardrails
+    assert "ANDER ontbrekend element" in prompt
+    assert "Triviaal (niet doen)" in prompt
     assert prompt.endswith("1.")
 
 

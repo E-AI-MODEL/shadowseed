@@ -1,7 +1,7 @@
 {
   "artifact": "mechanical_prescreen",
   "disclaimer": "Deterministische prescreen, GEEN menselijke review. Telt NIET als reviewer_a/reviewer_b en niet als open_set_seed_quality (Laag C) evidence, en geeft GEEN accept/reject-verdict. Bedoeld om aandacht te richten en de v0.3e-prompt te toetsen aan haar eigen regels.",
-  "round": "round_005",
+  "round": "round_005_v0.3e_A",
   "detector": "model",
   "model_backend": "hf-transformers:Qwen/Qwen2.5-3B-Instruct",
   "yield": {
@@ -18,7 +18,8 @@
     "entity_bleed",
     "citation_fragment",
     "fewshot_leak",
-    "not_atomic"
+    "not_atomic",
+    "near_duplicate"
   ],
   "not_mechanically_checkable": [
     "false_gap",
@@ -26,9 +27,10 @@
     "grammar"
   ],
   "seed_count": 114,
-  "flagged_count": 47,
-  "clean_count": 67,
-  "clean_rate": 0.588,
+  "flagged_count": 51,
+  "clean_count": 63,
+  "clean_rate": 0.553,
+  "near_duplicate_rate": 0.114,
   "failure_code_counts": {
     "claim_vs_gap": 9,
     "parse_leak": 10,
@@ -36,7 +38,8 @@
     "entity_bleed": 0,
     "citation_fragment": 0,
     "fewshot_leak": 0,
-    "not_atomic": 38
+    "not_atomic": 38,
+    "near_duplicate": 13
   },
   "verdicts": [
     {
@@ -151,7 +154,8 @@
       "seed": "Of de peptides door de Ky. Company worden geproduceerd, wordt niet vermeld. 1. Of de peptides door de Ky. Company worden gebruikt, wordt niet vermeld.",
       "codes": [
         "parse_leak",
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -180,8 +184,10 @@
       "item_id": "AG_NEWS_TEST_3",
       "position": 4,
       "seed": "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld.",
-      "codes": [],
-      "clean": true
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -189,7 +195,8 @@
       "seed": "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld. (dubbel) 1. Of de Prediction Unit een bepaalde periode in dienst is, wordt niet vermeld.",
       "codes": [
         "parse_leak",
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -390,7 +397,8 @@
       "position": 5,
       "seed": "Of de arrestaties gerapporteerd werden aan de media of direct door de card fraud unit, wordt niet vermeld.",
       "codes": [
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -537,7 +545,8 @@
       "seed": "Of er sprake is van een studie of onderzoek dat de impact van de super-colonie op lokale insectensoorten heeft onderzocht, wordt niet vermeld. 1. Of de super-colonie van esophagele antrennissen in Melbourne, Australië, een bedreiging vormt voor lokale insectensoorten, wordt niet vermeld.",
       "codes": [
         "parse_leak",
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -718,7 +727,8 @@
       "position": 3,
       "seed": "Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet aangegeven.",
       "codes": [
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -727,7 +737,8 @@
       "position": 4,
       "seed": "Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet genoemd.",
       "codes": [
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -737,7 +748,8 @@
       "seed": "Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet besproken. 1. Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet vermeld.",
       "codes": [
         "parse_leak",
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -840,7 +852,8 @@
       "position": 3,
       "seed": "Of Google een procedure heeft om te bepalen wie mogen proberen in te.",
       "codes": [
-        "claim_vs_gap"
+        "claim_vs_gap",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -873,8 +886,10 @@
       "item_id": "AG_NEWS_TEST_24",
       "position": 2,
       "seed": "Of Charles Schwab een competitor heeft, wordt niet vermeld.",
-      "codes": [],
-      "clean": true
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
     },
     {
       "item_id": "AG_NEWS_TEST_24",
@@ -887,15 +902,19 @@
       "item_id": "AG_NEWS_TEST_24",
       "position": 4,
       "seed": "Of Charles Schwab wordt beschreven als een competitor, wordt niet vermeld.",
-      "codes": [],
-      "clean": true
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
     },
     {
       "item_id": "AG_NEWS_TEST_24",
       "position": 5,
       "seed": "Of Charles Schwab wordt beschreven als een rival, wordt niet vermeld.",
-      "codes": [],
-      "clean": true
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
     },
     {
       "item_id": "AG_NEWS_TEST_25",
@@ -937,7 +956,8 @@
       "seed": "Of er een budget is aangewezen voor het onderhouden van de beveiliging van de meest kwetsbare componenten, wordt niet vermeld. 1. Of de industrie- of standaardcyber-beveiliging onderzoekt wel of de meest kwetsbare componenten van de elektriciteitsnetwerk worden beschermd, wordt niet vermeld.",
       "codes": [
         "parse_leak",
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     }

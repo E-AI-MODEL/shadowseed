@@ -8,7 +8,12 @@ IMPORTANT — what this is and is NOT:
 
 - It is a *deterministic* triage aid. It only flags failure modes that can be
   detected without reading for meaning (absence-phrasing, parse leaks, HTML
-  entities, English echo, few-shot copying, non-atomic shape).
+  entities, English echo, few-shot copying, non-atomic shape, and redundant
+  near-duplicate restatements within an item).
+- ``near_duplicate`` flags only near-identical rewordings of the SAME gap (high
+  content-overlap). Distinct-but-related gaps are deliberately spared: in SSL a
+  cluster of related gaps is potential Constellation material (4.5 §9.1), not
+  noise.
 - It is NOT human review. It does NOT count as ``reviewer_a``/``reviewer_b``
   and NOT as ``open_set_seed_quality`` (Layer C) evidence.
 - It is NOT even the AI-judgment prescreen used in round 004: it makes no
@@ -78,6 +83,27 @@ _ENGLISH_STOPWORDS: frozenset[str] = frozenset(
 # numbered item bled into one candidate.
 _EMBEDDED_NUMBER = re.compile(r"\S\s+\d+[.)]\s+[A-Z]")
 
+# Scaffold words shared by almost every v0.3e gap ("Of ... wordt niet vermeld").
+# They are stripped before measuring overlap so similarity reflects the *gap
+# content*, not the absence scaffold every seed shares.
+_SCAFFOLD_WORDS: frozenset[str] = frozenset(
+    {
+        "een", "het", "wordt", "worden", "word", "niet", "vermeld", "vermeldt",
+        "aangegeven", "genoemd", "benoemd", "beschreven", "gespecificeerd",
+        "toegelicht", "uitgelegd", "gegeven", "bekend", "duidelijk", "gemaakt",
+        "ontbreekt", "ontbreken", "onduidelijk", "onbekend", "onvermeld",
+        "sprake", "heeft", "hebben", "was", "zijn", "naar", "voor", "van",
+        "door", "dat", "met", "deze", "die", "hun", "ook", "wat", "hoeveel",
+    }
+)
+
+# Jaccard threshold for flagging a candidate as a redundant restatement of an
+# EARLIER candidate in the same item. Set high on purpose (aligned with SSL's
+# own dedup at cosine 0.85, 4.5 §12.4): we flag near-identical rewordings of the
+# SAME gap, NOT distinct-but-related gaps — those are Constellation material
+# (4.5 §9.1) and must survive.
+_NEAR_DUPLICATE_THRESHOLD = 0.7
+
 # Mechanically detectable codes.
 MECHANICAL_CODES: tuple[str, ...] = (
     "claim_vs_gap",
@@ -87,6 +113,7 @@ MECHANICAL_CODES: tuple[str, ...] = (
     "citation_fragment",
     "fewshot_leak",
     "not_atomic",
+    "near_duplicate",
 )
 
 # Codes that need a reader; surfaced for transparency but never auto-assigned.
@@ -121,6 +148,39 @@ def prescreen_seed(seed: str, source_text: str = "") -> list[str]:
         codes.append("not_atomic")
 
     return codes
+
+
+def _content_tokens(text: str) -> set[str]:
+    """Content tokens of a gap: words >2 chars, minus the absence scaffold."""
+    return {
+        tok
+        for tok in re.findall(r"[a-zà-ÿ0-9]+", text.lower())
+        if len(tok) > 2 and tok not in _SCAFFOLD_WORDS
+    }
+
+
+def _near_duplicate_indices(
+    candidates: list[str], threshold: float = _NEAR_DUPLICATE_THRESHOLD
+) -> set[int]:
+    """Indices of candidates that restate an EARLIER candidate in the same item.
+
+    Compares Jaccard overlap of content tokens. Keeps the first occurrence
+    clean and flags later near-identical rewordings only. Distinct-but-related
+    gaps stay below the threshold and are NOT flagged: in SSL they are potential
+    Constellation members (4.5 §9.1), not noise.
+    """
+    token_sets = [_content_tokens(c) for c in candidates]
+    flagged: set[int] = set()
+    for i in range(len(candidates)):
+        for j in range(i):
+            a, b = token_sets[i], token_sets[j]
+            if not a or not b:
+                continue
+            jaccard = len(a & b) / len(a | b)
+            if jaccard >= threshold:
+                flagged.add(i)
+                break
+    return flagged
 
 
 def _source_text_index(input_batch: dict[str, Any] | None) -> dict[str, str]:
@@ -158,8 +218,11 @@ def prescreen_output(
         candidates = result.get("normalized_candidates") or result.get("raw_candidates") or []
         if not candidates:
             items_empty += 1
+        dup_indices = _near_duplicate_indices(candidates)
         for position, seed in enumerate(candidates, start=1):
             codes = prescreen_seed(seed, source_text)
+            if (position - 1) in dup_indices:
+                codes.append("near_duplicate")
             for code in codes:
                 failure_code_counts[code] += 1
             if codes:
@@ -199,6 +262,9 @@ def prescreen_output(
         "flagged_count": flagged,
         "clean_count": seed_count - flagged,
         "clean_rate": round((seed_count - flagged) / seed_count, 3) if seed_count else 0.0,
+        "near_duplicate_rate": round(failure_code_counts["near_duplicate"] / seed_count, 3)
+        if seed_count
+        else 0.0,
         "failure_code_counts": failure_code_counts,
         "verdicts": verdicts,
     }
@@ -230,6 +296,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     lines.append(f"- clean (geen mechanische vlag): **{report['clean_count']}**")
     lines.append(f"- geflagd: **{report['flagged_count']}**")
     lines.append(f"- clean-rate: **{report['clean_rate']}**")
+    lines.append(f"- near-duplicate-rate: **{report['near_duplicate_rate']}**")
     lines.append("")
     lines.append("## Mechanische faalcodes")
     lines.append("")
