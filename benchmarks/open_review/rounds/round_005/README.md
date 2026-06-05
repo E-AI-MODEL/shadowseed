@@ -7,15 +7,33 @@
 
 ## Why this round
 
-Round 005 is the first round that pairs the v0.3e detector prompt (merge #109,
-candidate-gap terminology) on a *capable* model with a **blind control** against
-the `adapter_v1` template baseline on the same items.
+Round 005 is the first open-set seed-quality round (Layer C) on the v0.3e
+detector prompt (merge #109) run on a *capable* model. Its **primary** purpose
+is what the SSL 4.6 evaluation matrix (§3) asks of Layer C: can the detector
+produce small, relevant, testable, non-trivial seeds on unseen text **without a
+ground-truth seed list** — measured by acceptance rate, atomicity ratio,
+relevance ratio, reviewer agreement, trivial %, and reject-code counts.
 
-This serves SSL 4.5's Fase 0 question — *"kan het model kleine atomische gaps
-vinden, boven baseline?"* (§20, H1, H8) — executed under SSL 4.6's evidence
-discipline: open text, no ground-truth seed list, blind human review, no total
-score. The baseline arm restores 4.5's explicit "boven baseline" requirement
-that the open-set reframing had softened.
+It additionally carries a **secondary** blind model-vs-baseline robustness check
+against the `adapter_v1` template baseline. That comparison is adversarial-style
+framing (model beats a weaker baseline; 4.5 §20/H1/H8, and the forking-paths
+discipline of Gelman & Loken 2013). It is borrowed here only as a robustness
+control against rubber-stamping — it is **not** the definition of Layer-C
+evidence, and it does not replace the absolute open-set metrics above.
+
+Executed under SSL 4.6 evidence discipline: open text, no ground truth, blind
+human review, no total score, no fixture-as-evidence.
+
+## Evidence sources (do not duplicate the existing route)
+
+- **Primary Layer-C metrics** come from the existing canonical route,
+  `summarize-open-set-seed-review` on the model-arm packets — it already emits
+  acceptance, criterion pass rates (atomicity / relevance / testability /
+  non_triviality / follow_up_utility), reviewer agreement, disagreements,
+  per-domain counts and reject-code counts. The blind control does **not**
+  recompute these (work-categories: no parallel metric pipeline).
+- **Secondary robustness** comes from the blind control's per-arm accept/atomic
+  comparison (`build_blind_control_packets.py unblind`).
 
 ## Go / no-go gate (before any human review)
 
@@ -90,16 +108,24 @@ Reject codes: `too_broad`, `too_vague`, `trivial`, `not_relevant`,
 - both reviewers judge every blinded candidate where possible;
 - a small complete round beats a large partial one.
 
-## Success criteria (Layer C, first usable evidence)
+## Success criteria
 
-- ≥ 60% of model candidates not directly rejected;
-- ≥ 70% of accepted candidates judged atomic;
-- reviewer disagreement stays explainable;
-- reject reasons return real learning signal;
-- **model arm beats the `adapter_v1` baseline arm** on accept and atomic rate.
+### Primary — Layer-C seed quality (evaluation-matrix §3)
 
-These are acceptance criteria for a first usable open-set evaluation layer, not
-paper-level claims.
+Measured on the model arm via `summarize-open-set-seed-review`:
+
+- acceptance rate ≥ 60% (model candidates not directly rejected);
+- atomicity ratio ≥ 70% of accepted candidates;
+- relevance ratio and trivial % reported and read separately (no total score);
+- reviewer agreement reported with the disagreement log;
+- reject-code counts return real learning signal.
+
+### Secondary — baseline robustness (4.5 "boven baseline")
+
+- model arm ≥ `adapter_v1` baseline arm on accept and atomic rate, blind.
+
+This is a robustness control, not the Layer-C definition. These are acceptance
+criteria for a first usable open-set evaluation layer, not paper-level claims.
 
 ## Artifact contract
 
