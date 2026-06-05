@@ -1,15 +1,15 @@
 {
   "artifact": "mechanical_prescreen",
   "disclaimer": "Deterministische prescreen, GEEN menselijke review. Telt NIET als reviewer_a/reviewer_b en niet als open_set_seed_quality (Laag C) evidence, en geeft GEEN accept/reject-verdict. Bedoeld om aandacht te richten en de v0.3e-prompt te toetsen aan haar eigen regels.",
-  "round": "round_005",
+  "round": "round_005_v0.3e_A",
   "detector": "model",
   "model_backend": "hf-transformers:Qwen/Qwen2.5-3B-Instruct",
   "yield": {
-    "item_count": 12,
-    "items_with_candidates": 12,
+    "item_count": 23,
+    "items_with_candidates": 23,
     "items_empty": 0,
     "empty_rate": 0.0,
-    "mean_candidates_per_item": 4.917
+    "mean_candidates_per_item": 4.957
   },
   "mechanical_codes": [
     "claim_vs_gap",
@@ -18,25 +18,28 @@
     "entity_bleed",
     "citation_fragment",
     "fewshot_leak",
-    "not_atomic"
+    "not_atomic",
+    "near_duplicate"
   ],
   "not_mechanically_checkable": [
     "false_gap",
     "mistranslation",
     "grammar"
   ],
-  "seed_count": 59,
-  "flagged_count": 19,
-  "clean_count": 40,
-  "clean_rate": 0.678,
+  "seed_count": 114,
+  "flagged_count": 51,
+  "clean_count": 63,
+  "clean_rate": 0.553,
+  "near_duplicate_rate": 0.114,
   "failure_code_counts": {
-    "claim_vs_gap": 0,
-    "parse_leak": 5,
+    "claim_vs_gap": 9,
+    "parse_leak": 10,
     "language_leak": 0,
     "entity_bleed": 0,
     "citation_fragment": 0,
     "fewshot_leak": 0,
-    "not_atomic": 19
+    "not_atomic": 38,
+    "near_duplicate": 13
   },
   "verdicts": [
     {
@@ -151,7 +154,8 @@
       "seed": "Of de peptides door de Ky. Company worden geproduceerd, wordt niet vermeld. 1. Of de peptides door de Ky. Company worden gebruikt, wordt niet vermeld.",
       "codes": [
         "parse_leak",
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -180,8 +184,10 @@
       "item_id": "AG_NEWS_TEST_3",
       "position": 4,
       "seed": "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld.",
-      "codes": [],
-      "clean": true
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
     },
     {
       "item_id": "AG_NEWS_TEST_3",
@@ -189,7 +195,8 @@
       "seed": "Of de Prediction Unit een bepaalde periode niet in dienst is, wordt niet vermeld. (dubbel) 1. Of de Prediction Unit een bepaalde periode in dienst is, wordt niet vermeld.",
       "codes": [
         "parse_leak",
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -390,7 +397,8 @@
       "position": 5,
       "seed": "Of de arrestaties gerapporteerd werden aan de media of direct door de card fraud unit, wordt niet vermeld.",
       "codes": [
-        "not_atomic"
+        "not_atomic",
+        "near_duplicate"
       ],
       "clean": false
     },
@@ -494,6 +502,464 @@
       "seed": "Of Free Record Shop een downloadservice biedt, wordt niet vermeld.",
       "codes": [],
       "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_13",
+      "position": 1,
+      "seed": "Of de super-colonie van esophagele antrennissen in Melbourne, Australië, een bedreiging vormt voor lokale insectensoorten, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_13",
+      "position": 2,
+      "seed": "Of er specifieke maatregelen zijn genomen om de potentiële schade van de super-colonie te voorkomen, wordt niet aangegeven.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_13",
+      "position": 3,
+      "seed": "Of er sprake is van een toezichthouder of bestuursinstantie die de situatie beheert, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_13",
+      "position": 4,
+      "seed": "Of er een plan is om de super-colonie te beperken of te elimineren, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_13",
+      "position": 5,
+      "seed": "Of er sprake is van een studie of onderzoek dat de impact van de super-colonie op lokale insectensoorten heeft onderzocht, wordt niet vermeld. 1. Of de super-colonie van esophagele antrennissen in Melbourne, Australië, een bedreiging vormt voor lokale insectensoorten, wordt niet vermeld.",
+      "codes": [
+        "parse_leak",
+        "not_atomic",
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_14",
+      "position": 1,
+      "seed": "Of socialites activeren specifieke sociale vaardigheden, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_14",
+      "position": 2,
+      "seed": "Of de effecten van socialiteacties op de structuur van de dolphin-pod worden niet aangegeven.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_14",
+      "position": 3,
+      "seed": "Of er specifieke soorten socialiteacties worden beschreven, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_14",
+      "position": 4,
+      "seed": "Of er een verband wordt getoond tussen de activiteit van socialites en de stabiliteit van de dolphin-pod, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_14",
+      "position": 5,
+      "seed": "Of er specifieke soorten dolphin-pods worden genoemd, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_15",
+      "position": 1,
+      "seed": "Of Teenage T. rex's monster growth werd veroorzaakt door een andere fase dan adolescentie, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_15",
+      "position": 2,
+      "seed": "Of de precieze duur of periode van de groeiperiode wordt niet aangegeven.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_15",
+      "position": 3,
+      "seed": "Of de mate of intensiteit van de groeiperiode wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_15",
+      "position": 4,
+      "seed": "Of de specifieke mechanismen die leidden tot de groei, zoals voedselvoorziening of hormonen, worden niet genoemd.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_15",
+      "position": 5,
+      "seed": "Of de effecten van deze groeiperiode op de longen, tanden of andere organen, worden niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_16",
+      "position": 1,
+      "seed": "Of de lumps onder de ijskust van Ganymede bestaan, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_16",
+      "position": 2,
+      "seed": "Of de lumps onder de ijskust van Ganymede een natuurlijke of een.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_16",
+      "position": 3,
+      "seed": "Of de lumps onder de ijskust van Ganymede een effect op de oppervlakte.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_16",
+      "position": 4,
+      "seed": "Of de lumps onder de ijskust van Ganymede een impact hebben op de.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_16",
+      "position": 5,
+      "seed": "Of de lumps onder de ijskust van Ganymede een invloed hebben op de.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_17",
+      "position": 1,
+      "seed": "Of de Mars Express ondersteuning biedt aan de rover, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_17",
+      "position": 2,
+      "seed": "Of de Mars Express de foto's verzamelt, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_17",
+      "position": 3,
+      "seed": "Of de Mars Express de foto's verwerkt, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_17",
+      "position": 4,
+      "seed": "Of de Mars Express de foto's naar de rover stuurt, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_17",
+      "position": 5,
+      "seed": "Of de Mars Express de foto's naar de opnamecentrum stuurt, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_18",
+      "position": 1,
+      "seed": "Of de sedimenten biologisch of chemisch zijn, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_18",
+      "position": 2,
+      "seed": "Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_18",
+      "position": 3,
+      "seed": "Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet aangegeven.",
+      "codes": [
+        "not_atomic",
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_18",
+      "position": 4,
+      "seed": "Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet genoemd.",
+      "codes": [
+        "not_atomic",
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_18",
+      "position": 5,
+      "seed": "Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet besproken. 1. Of de fossiele resten in de sedimenten biologisch of chemisch zijn, wordt niet vermeld.",
+      "codes": [
+        "parse_leak",
+        "not_atomic",
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_19",
+      "position": 1,
+      "seed": "Of HP heeft hijft op servers bruise, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_19",
+      "position": 2,
+      "seed": "Of HP heeft hijft op storage, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_19",
+      "position": 3,
+      "seed": "Of HP heeft hijft op earnings update, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_19",
+      "position": 4,
+      "seed": "Of HP heeft hijft op earnings per share, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_19",
+      "position": 5,
+      "seed": "Of HP heeft hijft op analysts' expectations, wordt niet vermeld. 1. Of HP heeft hijft op servers bruise, wordt niet vermeld.",
+      "codes": [
+        "parse_leak",
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_20",
+      "position": 1,
+      "seed": "Hoeveel nieuwe werknemers IBM gaat huren, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_20",
+      "position": 2,
+      "seed": "Wanneer het einde van het jaar wordt bereikt, wordt niet aangegeven.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_20",
+      "position": 3,
+      "seed": "Wat de grootste hoofdcijfers sinds 1991 zijn, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_20",
+      "position": 4,
+      "seed": "Of er al eerder een grotere hoofdcijfer was, wordt niet aangegeven.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_20",
+      "position": 5,
+      "seed": "Hoeveel werknemers IBM had sinds 1991, wordt niet vermeld. 1. Hoeveel nieuwe werknemers IBM gaat huren, wordt niet vermeld.",
+      "codes": [
+        "parse_leak",
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_23",
+      "position": 1,
+      "seed": "Of Google heeft een lijst met mensen die niet mogen proberen in te.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_23",
+      "position": 2,
+      "seed": "Of Google een criteria heeft om te bepalen wie mogen proberen in te.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_23",
+      "position": 3,
+      "seed": "Of Google een procedure heeft om te bepalen wie mogen proberen in te.",
+      "codes": [
+        "claim_vs_gap",
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_23",
+      "position": 4,
+      "seed": "Of Google een beperking heeft opgelegd aan de prijs die mensen mogen.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_23",
+      "position": 5,
+      "seed": "Of Google een beperking heeft opgelegd aan het aantal aandelen dat.",
+      "codes": [
+        "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_24",
+      "position": 1,
+      "seed": "Of Charles Schwab heeft een competitor, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_24",
+      "position": 2,
+      "seed": "Of Charles Schwab een competitor heeft, wordt niet vermeld.",
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_24",
+      "position": 3,
+      "seed": "Of Charles Schwab een rival is, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_24",
+      "position": 4,
+      "seed": "Of Charles Schwab wordt beschreven als een competitor, wordt niet vermeld.",
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_24",
+      "position": 5,
+      "seed": "Of Charles Schwab wordt beschreven als een rival, wordt niet vermeld.",
+      "codes": [
+        "near_duplicate"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_25",
+      "position": 1,
+      "seed": "Of de industrie- of standaardcyber-beveiliging onderzoekt wel of de meest kwetsbare componenten van de elektriciteitsnetwerk worden beschermd, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_25",
+      "position": 2,
+      "seed": "Of er een plan is om de cyber-beveiligingstandaarden te verbeteren, wordt niet vermeld.",
+      "codes": [],
+      "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_25",
+      "position": 3,
+      "seed": "Of er een duidelijke verantwoordelijkheidsstructuur bestaat voor het onderhouden van de beveiliging van de meest kwetsbare componenten, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_25",
+      "position": 4,
+      "seed": "Of er een procedure is om de beveiligingsrisico's van de meest kwetsbare componenten te evalueren, wordt niet vermeld.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_25",
+      "position": 5,
+      "seed": "Of er een budget is aangewezen voor het onderhouden van de beveiliging van de meest kwetsbare componenten, wordt niet vermeld. 1. Of de industrie- of standaardcyber-beveiliging onderzoekt wel of de meest kwetsbare componenten van de elektriciteitsnetwerk worden beschermd, wordt niet vermeld.",
+      "codes": [
+        "parse_leak",
+        "not_atomic",
+        "near_duplicate"
+      ],
+      "clean": false
     }
   ]
 }

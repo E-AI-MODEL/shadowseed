@@ -61,6 +61,14 @@ def _numbered(lines: tuple[str, ...]) -> str:
 # Prompt iteration v0.3e: keeps v0.3d's gap-phrasing guardrails, but names
 # detector output kandidaat-lacunes so only review/manager/gate/core can later
 # grant seed, evidence, or Round 001 status through the existing SSL route.
+#
+# Note (02_atomic_seeds §2): generation enforces only "one gap per seed", "no
+# fabricated facts", and "tie the gap to THIS text". Value judgments —
+# triviality, specificity, relevance, redundancy — are review/Gate/normalization
+# concerns, NOT generation blockades, because pre-judging value at birth breaks
+# the weightless-seed principle. Redundant near-duplicates are deduplicated
+# downstream (normalization, 4.5 §12.4) and surfaced by the prescreen, not
+# suppressed here.
 OPEN_SET_DETECTION_PROMPT = """
 Je bent een epistemische analist.
 

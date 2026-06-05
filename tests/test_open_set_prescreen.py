@@ -79,6 +79,36 @@ def test_report_carries_non_evidence_disclaimer() -> None:
     assert report["artifact"] == "mechanical_prescreen"
 
 
+def test_near_duplicate_flags_reworded_same_gap() -> None:
+    # Same gap, only the scaffold verb changes -> the later one is redundant.
+    item = {
+        "item_id": "a",
+        "normalized_candidates": [
+            "Of Charles Schwab een competitor heeft, wordt niet vermeld.",
+            "Of Charles Schwab wordt beschreven als een competitor, wordt niet genoemd.",
+        ],
+    }
+    report = prescreen.prescreen_output({"summary": {}, "results": [item]})
+    codes = [v["codes"] for v in report["verdicts"]]
+    assert "near_duplicate" not in codes[0]  # first occurrence kept clean
+    assert "near_duplicate" in codes[1]
+    assert report["near_duplicate_rate"] == 0.5
+
+
+def test_distinct_related_gaps_are_not_near_duplicates() -> None:
+    # Distinct-but-related gaps are Constellation material (4.5 §9.1), not noise.
+    item = {
+        "item_id": "a",
+        "normalized_candidates": [
+            "Of de financieringsbron van de fabrieken wordt niet vermeld.",
+            "Of de arbeidsomstandigheden in de fabrieken worden niet beschreven.",
+            "Of de milieugevolgen van de productie worden niet genoemd.",
+        ],
+    }
+    report = prescreen.prescreen_output({"summary": {}, "results": [item]})
+    assert all("near_duplicate" not in v["codes"] for v in report["verdicts"])
+
+
 def test_yield_counts_empty_items() -> None:
     seed_output = {
         "summary": {},

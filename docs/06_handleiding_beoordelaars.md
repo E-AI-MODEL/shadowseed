@@ -113,6 +113,36 @@ Een seed die formeel atomisch oogt maar voor élk willekeurig item in de batch z
 - `not_relevant` als de seed geen woord uit de inputtekst raakt
 - `trivial` als de seed een truïsme is ("Onzekerheid rond...")
 
+## Open-set review (geen ground truth)
+
+De 0/1/2-score en de ground-truthvergelijking hierboven horen bij de
+gap-suite met vooraf vastgelegde seeds. **Open-set rounds hebben geen ground
+truth**: je beoordeelt de kandidaat-lacune op zichzelf, tegen déze inputtekst.
+Stap 4 ("vergelijk met de ground truth") vervalt dan.
+
+De vijf dimensies hierboven keren in de open-set review-packets terug als
+booleans plus een eindoordeel:
+
+| Packet-veld | Dimensie hierboven |
+|---|---|
+| `atomic` | Atomiciteit |
+| `relevant` | Relevantie |
+| `testable` | Verifieerbaarheid |
+| `non_trivial` | Niet-trivialiteit |
+| `useful_for_followup` | Levert de gap een bruikbare vervolgstap op? |
+| `accept` | `true`/`false` — eindoordeel van deze reviewer |
+| `reject_reason` | afwijscode bij `accept=false` |
+
+Specificiteit is geen apart veld: een niet-specifieke (meta-categorie) seed wijs
+je af via `reject_reason` (`too_vague` / `not_relevant` / `trivial`), zoals
+hierboven. Afwijscodes: `too_broad`, `too_vague`, `trivial`, `not_relevant`,
+`not_testable`, `duplicate`, `style_not_gap`.
+
+Belangrijk (zie `02_atomic_seeds.md §2`): deze criteria zijn **reviewoordelen**.
+De detector mag ze niet vooraf afdwingen — een te brede of triviale
+kandidaat-lacune mag geboren worden en sneuvelt hier of bij de Gate. Jouw
+afwijzing is een geldige onderzoeksbevinding, geen reparatie van de detector.
+
 ## Werkwijze
 
 1. Lees de inputtekst.
