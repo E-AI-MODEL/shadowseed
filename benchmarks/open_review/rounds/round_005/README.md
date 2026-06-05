@@ -80,6 +80,9 @@ python scripts/build_blind_control_packets.py build \
 
 # 3. reviewers fill `judgment` on the packets (they never see blind_key.json)
 
+# NB: blind_key.json is not committed. Regenerate it deterministically from the
+#     two arm files with the same `build` command before un-blinding.
+
 # 4. un-blind and read per-arm accept / atomic rates and the model-vs-baseline delta
 python scripts/build_blind_control_packets.py unblind \
   --packets <filled blind_review_packets.json> \

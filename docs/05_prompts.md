@@ -4,6 +4,20 @@
 
 ## 1. Detectie-Pass
 
+> De live, geharde detector-prompt staat in
+> `src/shadowseed/benchmark/open_set_model_detector.py` (iteratie v0.3e). Dit is
+> de spec/intentie; bij verschil is de code leidend voor de exacte tekst.
+>
+> Twee bindende principes (zie #109 en `02_atomic_seeds.md §2`):
+> - **Candidate-only**: de output zijn *kandidaat-lacunes*, geen seeds. De
+>   detector kent zelf geen seed-, evidence- of Round-status toe; alleen
+>   review/manager/gate/core doen dat later.
+> - **Generatie ≠ review**: bij generatie gelden maar drie harde eisen — één gap
+>   per kandidaat, geen verzonnen feiten, en concreet aan déze tekst gekoppeld.
+>   Specificiteit, toetsbaarheid, relevantie en niet-trivialiteit zijn
+>   *waardeoordelen* en horen bij review/Gate, niet bij de generatie-prompt
+>   (anders weeg je de seed vóór toetsing en breek je het gewichtloze principe).
+
 Gebruik deze prompt nadat het model een eerste antwoord heeft gegeven.
 
 ```text
@@ -17,17 +31,19 @@ Kijk naar het antwoord dat je zojuist gaf.
 Welke kleine concepten, relaties of randvoorwaarden ontbreken, terwijl ze nodig zijn voor een volledig begrip van dit specifieke onderwerp?
 
 Regels:
-- Geef maximaal 5 seeds.
-- Elke seed bevat precies één gap.
-- Geen samengestelde analysekaders.
-- Geen lijsten binnen één seed.
-- Formuleer concreet en toetsbaar.
+- Geef maximaal 5 kandidaat-lacunes.
+- Elke kandidaat-lacune bevat precies één gap.
+- Formuleer elke kandidaat-lacune als een AFWEZIGHEID ("... wordt niet genoemd",
+  "... ontbreekt"), niet als een bewering.
+- Verzin geen feiten, namen of cijfers die niet in de tekst staan.
+- Koppel elke kandidaat-lacune concreet aan déze inputtekst.
+- Geen samengestelde analysekaders of lijsten binnen één kandidaat-lacune.
 - Geen uitleg.
 
 Output:
-1. [seed]
-2. [seed]
-3. [seed]
+1. [kandidaat-lacune]
+2. [kandidaat-lacune]
+3. [kandidaat-lacune]
 ```
 
 ## 2. Seed-normalisatie
