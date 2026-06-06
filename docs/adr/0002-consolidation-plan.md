@@ -1,10 +1,23 @@
 # ADR 0002 — Consolidation plan: workflows, wiki, Pages
 
-Status: proposed (awaiting approval before execution)
-Date: 2026-05-22
+Status: accepted; partially executed (see "Execution status")
+Date: 2026-05-22 (execution status updated 2026-06-06)
 Deciders: shadowseed maintainers
 Related: #34 (roadmap), ADR 0001; 4.6 canon `docs/00_shadow_seed_learning_4_6.md`
 Supersedes: none
+
+## Execution status (2026-06-06)
+
+| Workstream | State | Evidence |
+|---|---|---|
+| A1 — kill nightly crons + remove dead workflow | **done** | no `schedule:` triggers remain; `publish-existing-slm-conclusion.yml` removed |
+| B — wiki to 5-page reading order + Archief | **done** | merged (#91) |
+| C — Pages dashboard as A–G status story | **done** | merged (#92) |
+| A2 — merge research workflows into `vector-retrieval.yml` / `ssot.yml` / `paper.yml` | **not done / deferred** | 19 workflows remain; the three merged files do not exist |
+
+A1, B and C are executed and merged. A2 (the higher-risk workflow merges) is
+deliberately deferred per the ADR's own "we can stop after A1" note. The plan
+below is kept as written for historical context.
 
 ## Context
 

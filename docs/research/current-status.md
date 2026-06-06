@@ -1,7 +1,7 @@
 # Huidige Status van SSL-validatie
 
 > Status: current
-> Date: 2026-05-22
+> Date: 2026-05-22 (open-set status refreshed 2026-06-06)
 > Evidence layer: status snapshot across layers A-G
 > Source: 4.6 evidence model in `docs/00_shadow_seed_learning_4_6.md`
 
@@ -30,7 +30,7 @@ Korte totaalscore per laag (per 2026-05-22):
 
 - mechanische regressie: sterk
 - kleine benchmarkvalidatie: bruikbaar
-- open-set seedkwaliteit: infrastructuur compleet (v0.1/v0.2/v0.3 detectoren op main), evidence pending op round 003 dispatch met taalmodel + menselijke review
+- open-set seedkwaliteit: infrastructuur compleet (v0.1/v0.2/v0.3 detectoren op main); round 004 (Qwen2.5-3B, v0.3d) is mensgereviewd, round 005 (v0.3e, 23 items + blinde baseline-control) gebouwd met review pending — eerste echte Laag-C evidence is dus in uitvoering, nog niet afgerond
 - adversarial Gate-evaluatie: eerste echte evidence (PR #80, F1 1.0 op 21 candidates met drie baselines)
 - probe utility behavioral: eerste echte evidence (PR #82, 10/10 lifecycle scenarios)
 - probe utility prompt-quality: bestaand scaffold in `ssl45_probe_utility_suite`
@@ -41,7 +41,7 @@ Korte totaalscore per laag (per 2026-05-22):
 
 | Fase | Status | Korte duiding |
 |---|---|---|
-| Fase 0: detectie | Infrastructure complete, evidence pending | Drie detectoren op main (v0.1/v0.2/v0.3); fixture-suites groen; open-set Laag-C evidence wacht op round 003 dispatch + review |
+| Fase 0: detectie | Infrastructure complete, evidence in uitvoering | Drie detectoren op main (v0.1/v0.2/v0.3); fixture-suites groen; round 004 mensgereviewd, round 005 (v0.3e) gebouwd met review pending |
 | Fase 1: multi-turn state | Partially implemented | Antwoordwinst is meetbaar op de benefit-suite (delta +0.92 op model-benefit, +0.80 op blind), maar de volledige A/B/C-conditievergelijking uit het testplan ontbreekt nog |
 | Fase 2: Validation Gate en probes | First evidence | Gate discrimineert correct op de uitgebreide adversarial fixture (PR #80, F1 1.0); probe-feedback lifecycle gevalideerd op 10 scenarios (PR #82); prompt-quality suite blijft naast de behavioral suite staan |
 | Fase 3: constellations | Planned / infrastructural | Bouwstenen bestaan, maar er is nog geen echte constellation-benchmark of clusterwaarde-evaluatie |
@@ -208,9 +208,11 @@ Dit is een bruikbare tussenlaag: goed voor vaste cases, te smal voor brede claim
 
 ## Open-world evaluatie
 
-Status: Infrastructure complete, evidence pending
+Status: Infrastructure complete, evidence in uitvoering
 
-De drie detectiepaden zijn aanwezig op main: `open_set_candidate_adapter` v0.1 (regex baseline, default voor backwards compatibility), v0.2 text-grounded baseline, en v0.3 taalmodel-detector via de hf-transformers backend. De v0.3 detector voldoet aan de 4.6 één-zinsclaim wanneer met een echt model gedraaid. Workflow dispatch ondersteunt alle drie via `--detector` en `--model-backend`. Round 001 staat gepauzeerd als infrastructure baseline; eerste echte open-set evidence wacht op round 003 met `detector=model + model_backend=hf-transformers` plus menselijke review op de packets (zie #41 en #81).
+De drie detectiepaden zijn aanwezig op main: `open_set_candidate_adapter` v0.1 (regex baseline, default voor backwards compatibility), v0.2 text-grounded baseline, en v0.3 taalmodel-detector via de hf-transformers backend. De v0.3 detector voldoet aan de 4.6 één-zinsclaim wanneer met een echt model gedraaid. Workflow dispatch ondersteunt alle drie via `--detector` en `--model-backend`.
+
+Round-voortgang: round 001 is een gepauzeerde infrastructure baseline. Round 004 (Qwen2.5-3B, v0.3d) is volledig mensgereviewd door twee beoordelaars. Round 005 (v0.3e prompt, `ag_news_test` offset 0 + 12, 23 items) is gebouwd met een `adapter_v1` blinde baseline-control; de mensreview daarvan staat nog open. De mechanische prescreen laat zien dat v0.3e het dominante round-004-probleem (claim-vs-gap) wegneemt (30 → 0). Eerste echte Laag-C evidence is dus in uitvoering, nog niet als afgeronde evidence te claimen (zie `benchmarks/open_review/rounds/round_005/`, #41 en #81).
 
 ## Adversarial Gate-evaluatie
 
