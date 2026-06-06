@@ -1,9 +1,11 @@
 # Open-set round 005 — first v0.3e Layer-C round, with blind model-vs-baseline control
 
-> **Status: ready for human review.** The v0.3e model arm and the adapter_v1
-> baseline arm are built and blinded; the prescreen gate passed. It is Layer C
-> (open-set seed quality), evidence pending on the human review below. See "Run
-> notes" at the bottom for the concrete state of this round.
+> **Status: partial evidence landed.** The offset-12 batch has completed
+> single-arm human review — see `reviewed_offset12/` (first real Layer-C
+> evidence: 41 seeds, acceptance 0.29). The offset-0 batch and the blind
+> model-vs-baseline control below are still pending review. The v0.3e model arm
+> and the adapter_v1 baseline are built and blinded; the prescreen gate passed.
+> See "Run notes" at the bottom for the concrete state of this round.
 
 ## Why this round
 
