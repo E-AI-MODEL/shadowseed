@@ -1,11 +1,18 @@
 # Open-set round 005 — first v0.3e Layer-C round, with blind model-vs-baseline control
 
-> **Status: partial evidence landed.** The offset-12 batch has completed
-> single-arm human review — see `reviewed_offset12/` (first real Layer-C
-> evidence: 41 seeds, acceptance 0.29). The offset-0 batch and the blind
-> model-vs-baseline control below are still pending review. The v0.3e model arm
-> and the adapter_v1 baseline are built and blinded; the prescreen gate passed.
-> See "Run notes" at the bottom for the concrete state of this round.
+> **Status: closed on all three arms.**
+> 1. **offset-12 — human** (`reviewed_offset12/`): authoritative Layer-C
+>    evidence, 41 seeds, acceptance 0.29.
+> 2. **offset-0 — delegated AI** (`ai_review/`): 54 seeds, acceptance 0.185 —
+>    same relevant-but-trivial pattern, consistent with the human batch.
+> 3. **blind model-vs-baseline control — delegated AI** (`ai_review/`): model
+>    0.219 vs baseline 0.0, delta +0.219, model accepted-atomicity 1.0.
+>
+> The offset-0 and blind-control arms were completed by a single AI reviewer
+> under explicit maintainer delegation (98% accept-agreement with the human
+> batch on the overlapping seeds). They are labeled AI, not human; see
+> `ai_review/README.md`. The substance gap (low non-triviality) stands and
+> hands off to round 006.
 
 ## Why this round
 
@@ -156,11 +163,17 @@ blind_control_summary.json          # per-arm accept/atomic rates + delta (after
   23–25).
 - **Baseline arm** (`baseline_seed_output.json`): `adapter_v1` on the same
   23-item input, 115 candidates.
-- **Prescreen gate (combined): yield 5.0/item, `claim_vs_gap` 9, clean-rate
-  0.588.** The offset-0 batch was clean-rate 0.678; the offset-12 batch was
-  weaker (0.533, all 9 claim_vs_gap come from it). Still removes the dominant
-  round-004 failure mode by a wide margin (round 004 had 30 claim_vs_gap at
-  clean-rate 0.45).
+- **Prescreen gate (combined, regenerated 2026-06-09): yield 5.0/item,
+  clean-rate 0.553** (`truncated` 9, `parse_leak` 10, `not_atomic` 38,
+  `near_duplicate` 13). The offset-0 batch was mechanically cleaner than the
+  offset-12 batch (0.483 alone); all 9 truncations come from offset-12.
+  **Diagnosis correction:** the nine candidates previously counted as
+  `claim_vs_gap` are in fact unfinished "Of ..."-clauses that never reach
+  their absence scaffold — a decoding/parse truncation artifact, not a
+  prompt claim-form regression. v0.3e therefore removed the dominant
+  round-004 failure mode *completely* (round 004: 30 claim_vs_gap at
+  clean-rate 0.45; round 005: 0). The remaining mechanical work is
+  truncation (decoding budget / line parser), not absence-phrasing.
 - **Blind packets**: 229 blinded candidates (114 model + 115 baseline), 458
   rows (2 reviewers).
 - **Key is intentionally NOT committed.** The shuffle is deterministic, so
@@ -187,8 +200,9 @@ and rubber-stamping**, not for arm recognition. A future round can swap in
 
 - **Atomiciteit** — 38/114 model-kandidaten mechanisch `not_atomic` (o.a. TEST_9
   "… 171 of het bedrag …" stapelt met " of "). Kandidaat `too_broad`/`not_atomic`.
-- **Claim vs gap** — 9 kandidaten (offset-12 batch) zijn beweringen i.p.v.
-  afwezigheden → `style_not_gap`.
+- **Truncatie** — 9 kandidaten (offset-12 batch) zijn afgekapte
+  "Of ..."-bijzinnen zonder afgemaakt scaffold; de reviewers wezen alle 9 af
+  als `not_testable`. (Eerder onterecht als claim-vs-gap geteld.)
 - **Parse-leak** — 10 kandidaten met ingebedde nummering of afgekapte zinnen.
 - **Over-generatie / near-duplicates** within an item (TEST_1: 5× "Of de tweede
   team een *X* heeft genoemd"; logische ontkenningen) → `duplicate`/`trivial`.

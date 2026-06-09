@@ -125,7 +125,7 @@ fold. Presentation-only; lowest risk; no workflow or Python change.
 |---|---|
 | A regression | strong |
 | B small benchmark | usable |
-| C open-set | infrastructure, evidence pending |
+| C open-set | first evidence — quality warning (round 005, acceptance 0.29) |
 | D adversarial Gate | first evidence (F1 1.0) |
 | E probe utility | first evidence |
 | F domain transfer | absent |

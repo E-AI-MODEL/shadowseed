@@ -7,9 +7,17 @@ gaps ("kandidaat-lacunes") against the v0.3e prompt's own guardrails.
 IMPORTANT — what this is and is NOT:
 
 - It is a *deterministic* triage aid. It only flags failure modes that can be
-  detected without reading for meaning (absence-phrasing, parse leaks, HTML
-  entities, English echo, few-shot copying, non-atomic shape, and redundant
-  near-duplicate restatements within an item).
+  detected without reading for meaning (absence-phrasing, truncated clauses,
+  parse leaks, HTML entities, English echo, few-shot copying, non-atomic
+  shape, and redundant near-duplicate restatements within an item).
+- ``truncated`` and ``claim_vs_gap`` are mutually exclusive diagnoses for a
+  missing absence marker. A candidate that opens a subordinate clause
+  ("Of ...") but never reaches its "wordt niet vermeld" scaffold was cut off
+  by the decoding budget or the line parser — that is a truncation artifact,
+  not a claim-form regression of the prompt. Conflating the two (as the
+  round 005 offset-12 batch showed: all nine "claim_vs_gap" flags there were
+  unfinished clauses, human-rejected as ``not_testable``) points the next
+  prompt iteration at the wrong root cause.
 - ``near_duplicate`` flags only near-identical rewordings of the SAME gap (high
   content-overlap). Distinct-but-related gaps are deliberately spared: in SSL a
   cluster of related gaps is potential Constellation material (4.5 §9.1), not
@@ -83,6 +91,38 @@ _ENGLISH_STOPWORDS: frozenset[str] = frozenset(
 # numbered item bled into one candidate.
 _EMBEDDED_NUMBER = re.compile(r"\S\s+\d+[.)]\s+[A-Z]")
 
+# Subordinate-clause openers of the v0.3e scaffold ("Of X ..., wordt niet
+# vermeld."). A candidate that starts with one of these but never reaches an
+# absence marker is an unfinished clause: the generation or the parser cut it
+# off before the scaffold could close. That is `truncated`, not `claim_vs_gap`.
+_SUBORDINATE_OPENERS: tuple[str, ...] = (
+    "of ",
+    "wat ",
+    "wie ",
+    "waar ",
+    "waarom ",
+    "wanneer ",
+    "hoe ",
+    "hoeveel ",
+    "welke ",
+    "in hoeverre ",
+)
+
+# Dutch function words that cannot end a complete sentence. A candidate whose
+# last word is one of these was cut off mid-clause, even if an absence marker
+# appears earlier in the sentence.
+_TRUNCATION_TAIL: frozenset[str] = frozenset(
+    {
+        "de", "het", "een", "te", "dat", "die", "of", "en", "met", "in", "op",
+        "aan", "van", "tot", "naar", "voor", "om", "per", "bij", "onder",
+        "over", "tussen", "door", "uit", "als", "dan", "maar", "want", "dus",
+        "er", "deze", "dit", "hun", "haar", "zal", "zullen", "kan", "kunnen",
+        "mag", "mogen", "moet", "moeten", "wil", "willen", "wordt", "worden",
+        "werd", "werden", "heeft", "hebben", "had", "hadden", "is", "was",
+        "waren", "zou", "zouden",
+    }
+)
+
 # Scaffold words shared by almost every v0.3e gap ("Of ... wordt niet vermeld").
 # They are stripped before measuring overlap so similarity reflects the *gap
 # content*, not the absence scaffold every seed shares.
@@ -107,6 +147,7 @@ _NEAR_DUPLICATE_THRESHOLD = 0.7
 # Mechanically detectable codes.
 MECHANICAL_CODES: tuple[str, ...] = (
     "claim_vs_gap",
+    "truncated",
     "parse_leak",
     "language_leak",
     "entity_bleed",
@@ -125,7 +166,13 @@ def prescreen_seed(seed: str, source_text: str = "") -> list[str]:
     codes: list[str] = []
     lowered = seed.lower()
 
-    if not any(marker in lowered for marker in _ABSENCE_MARKERS):
+    has_marker = any(marker in lowered for marker in _ABSENCE_MARKERS)
+    words = re.findall(r"[a-zà-ÿ0-9]+", lowered)
+    tail_truncated = bool(words) and words[-1] in _TRUNCATION_TAIL
+    opener_truncated = lowered.startswith(_SUBORDINATE_OPENERS) and not has_marker
+    if opener_truncated or tail_truncated:
+        codes.append("truncated")
+    elif not has_marker:
         codes.append("claim_vs_gap")
 
     if _EMBEDDED_NUMBER.search(seed):

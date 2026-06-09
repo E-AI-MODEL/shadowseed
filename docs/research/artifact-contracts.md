@@ -118,6 +118,11 @@ Contract notes:
 - the prescreen `near_duplicate` flag marks near-identical restatements of the
   same gap only; distinct-but-related gaps are spared as Constellation material
   (4.5 §9.1)
+- the prescreen `truncated` and `claim_vs_gap` codes are mutually exclusive
+  diagnoses for a missing absence marker: an unfinished subordinate clause
+  ("Of ..." without its scaffold) is a decoding/parse artifact (`truncated`),
+  not a prompt claim-form regression (`claim_vs_gap`); conflating them points
+  prompt iterations at the wrong root cause
 - the detector prompt enforces only generation-level rules (one gap, no
   fabrication, tied to this text); triviality, specificity and redundancy are
   review/Gate concerns, not generation blockades (02_atomic_seeds §2)

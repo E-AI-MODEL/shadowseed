@@ -33,6 +33,56 @@ def test_absence_form_is_not_flagged_as_claim_vs_gap() -> None:
     assert "claim_vs_gap" not in codes
 
 
+def test_unfinished_subordinate_clause_is_truncated_not_claim() -> None:
+    # An "Of ..." clause that never reaches its absence scaffold was cut off
+    # by the decoding budget — a truncation artifact, not a claim-form
+    # regression of the prompt.
+    codes = prescreen.prescreen_seed(
+        "Of Google een beperking heeft opgelegd aan het aantal aandelen dat."
+    )
+    assert "truncated" in codes
+    assert "claim_vs_gap" not in codes
+
+
+def test_function_word_tail_is_truncated_even_with_marker() -> None:
+    codes = prescreen.prescreen_seed("De reden wordt niet vermeld in de.")
+    assert "truncated" in codes
+    assert "claim_vs_gap" not in codes
+
+
+def test_complete_claim_is_not_truncated() -> None:
+    # A complete assertion without an opener stays claim_vs_gap.
+    codes = prescreen.prescreen_seed(
+        "De toezichthouder heeft geen onderzoek gedaan naar de zaak."
+    )
+    assert "claim_vs_gap" in codes
+    assert "truncated" not in codes
+
+
+def test_complete_absence_form_is_not_truncated() -> None:
+    codes = prescreen.prescreen_seed(
+        "Of de toezichthouder onderzoek heeft gedaan, wordt niet vermeld."
+    )
+    assert "truncated" not in codes
+    assert "claim_vs_gap" not in codes
+
+
+def test_round_005_offset12_truncations_are_not_claim_vs_gap() -> None:
+    # Evidence anchor: the nine missing-marker candidates in the reviewed
+    # offset-12 batch are unfinished clauses (human-rejected as not_testable),
+    # not prompt claim-form regressions. v0.3e removed claim_vs_gap entirely.
+    seed_output = json.loads(
+        Path(
+            "benchmarks/open_review/rounds/round_005/reviewed_offset12/"
+            "open_set_seed_output.json"
+        ).read_text(encoding="utf-8")
+    )
+    report = prescreen.prescreen_output(seed_output, round_label="round_005")
+    counts = report["failure_code_counts"]
+    assert counts["claim_vs_gap"] == 0
+    assert counts["truncated"] == 9
+
+
 def test_embedded_numbering_is_a_parse_leak() -> None:
     codes = prescreen.prescreen_seed(
         "De prijs wordt niet genoemd. 1. De leverancier wordt niet vermeld."

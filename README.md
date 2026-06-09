@@ -39,13 +39,15 @@ SSL hanteert één laag-taal voor bewijs, gelijk aan `docs/00_shadow_seed_learni
 |---|---|---|
 | **A** Regressie | Blijft de kernmechaniek werken? | **Sterk** — snelle CI-ruggengraat |
 | **B** Kleine benchmark | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** (bewust smal) |
-| **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Infra compleet; evidence pending** op menselijke review |
+| **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Eerste echte evidence — kwaliteitswaarschuwing** (round 005 offset-12: acceptance 0.29) |
 | **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** (nog klein) |
 | **E** Probe utility | Leveren promoted seeds betere vervolgstappen op? | **Eerste echte evidence** |
 | **F** Domeintransfer | Werkt SSL buiten de bekende domeinen? | **Nog leeg** |
 | **G** Modelintern | Steun in interne activaties (H-Neurons)? | **Onderzoekslaag**, niet operationeel |
 
 De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie- en kleine-benchmarklagen plus de aanvullende evidencelagen D (adversarial Gate) en E (probe utility). Die aanvullende lagen zijn echt bewijs, maar nog geen volledige eindvalidatie.
+
+De eerste mensgereviewde open-set batch (Laag C, round 005 offset-12, 41 seeds, twee reviewers) is eerlijk gezegd een waarschuwing: relevance 0.98, maar acceptance 0.29 omdat de gevonden afwezigheden overwegend triviaal of niet-toetsbaar zijn. De vorm is gefixt, de substantie nog niet — zie `benchmarks/open_review/rounds/round_005/reviewed_offset12/`.
 
 ## Wat de resultaten wel en niet betekenen
 

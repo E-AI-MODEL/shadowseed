@@ -1,7 +1,7 @@
 # Huidige Status van SSL-validatie
 
 > Status: current
-> Date: 2026-05-22 (open-set status refreshed 2026-06-06)
+> Date: 2026-05-22 (open-set status refreshed 2026-06-09, na PR #116)
 > Evidence layer: status snapshot across layers A-G
 > Source: 4.6 evidence model in `docs/00_shadow_seed_learning_4_6.md`
 
@@ -24,13 +24,13 @@ Dit document scheidt daarom vier dingen:
 
 De repo staat er sterk voor als benchmark-harness voor SSL-mechaniek. De kernlogica rond atomische seeds, `trace`, `weight`, Validation Gate, blinde labelscheiding, retrieval-smokes en rapportage is aanwezig en functioneel.
 
-De repo staat er nog niet sterk genoeg voor als volledig bewijs van het hele SSL-onderzoeksprogramma (4.5 als mechaniek, 4.6 als evaluatiekoers). Open-set validatie, domeintransfer en modelinterne validatie zijn nog niet op het niveau dat een brede algemene claim zou dragen. Adversarial Gate-evaluatie en probe-feedback gedrag hebben sinds 2026-05-22 wel eerste echte evidence (PRs #80 en #82).
+De repo staat er nog niet sterk genoeg voor als volledig bewijs van het hele SSL-onderzoeksprogramma (4.5 als mechaniek, 4.6 als evaluatiekoers). Open-set validatie, domeintransfer en modelinterne validatie zijn nog niet op het niveau dat een brede algemene claim zou dragen. Adversarial Gate-evaluatie en probe-feedback gedrag hebben sinds 2026-05-22 eerste echte evidence (PRs #80 en #82). Open-set seedkwaliteit heeft sinds 2026-06-09 een eerste echt mensgereviewde batch (PR #116, round 005 offset-12) — en die is inhoudelijk een kwaliteitswaarschuwing, geen succes.
 
 Korte totaalscore per laag (per 2026-05-22):
 
 - mechanische regressie: sterk
 - kleine benchmarkvalidatie: bruikbaar
-- open-set seedkwaliteit: infrastructuur compleet (v0.1/v0.2/v0.3 detectoren op main); round 004 (Qwen2.5-3B, v0.3d) is mensgereviewd, round 005 (v0.3e, 23 items + blinde baseline-control) gebouwd met review pending — eerste echte Laag-C evidence is dus in uitvoering, nog niet afgerond
+- open-set seedkwaliteit: **eerste echte evidence geland, met kwaliteitswaarschuwing** (PR #116). Round 005 offset-12 (Qwen2.5-3B, v0.3e) is volledig mensgereviewd: 41 unieke seeds, acceptance **0.29** (criterium was ≥ 0.60), relevance 0.98 maar non_triviality en follow_up_utility beide 0.29, reviewer agreement unaniem. v0.3e repareerde de vorm (claim-vs-gap 30 → 0 t.o.v. round 004) maar niet de substantie: de detector vindt on-topic maar overwegend triviale of niet-toetsbare afwezigheden. De offset-0 batch en de blinde control zijn inmiddels gesloten als gedelegeerde AI-review (zie hieronder)
 - adversarial Gate-evaluatie: eerste echte evidence (PR #80, F1 1.0 op 21 candidates met drie baselines)
 - probe utility behavioral: eerste echte evidence (PR #82, 10/10 lifecycle scenarios)
 - probe utility prompt-quality: bestaand scaffold in `ssl45_probe_utility_suite`
@@ -41,7 +41,7 @@ Korte totaalscore per laag (per 2026-05-22):
 
 | Fase | Status | Korte duiding |
 |---|---|---|
-| Fase 0: detectie | Infrastructure complete, evidence in uitvoering | Drie detectoren op main (v0.1/v0.2/v0.3); fixture-suites groen; round 004 mensgereviewd, round 005 (v0.3e) gebouwd met review pending |
+| Fase 0: detectie | First evidence (kwaliteitswaarschuwing) | Drie detectoren op main (v0.1/v0.2/v0.3); fixture-suites groen; round 004 mensgereviewd (acceptance 0.52), round 005 offset-12 mensgereviewd (acceptance 0.29, substantieprobleem); offset-0 + blind control gesloten via gedelegeerde AI-review (offset-0 0.185; control delta +0.219) |
 | Fase 1: multi-turn state | Partially implemented | Antwoordwinst is meetbaar op de benefit-suite (delta +0.92 op model-benefit, +0.80 op blind), maar de volledige A/B/C-conditievergelijking uit het testplan ontbreekt nog |
 | Fase 2: Validation Gate en probes | First evidence | Gate discrimineert correct op de uitgebreide adversarial fixture (PR #80, F1 1.0); probe-feedback lifecycle gevalideerd op 10 scenarios (PR #82); prompt-quality suite blijft naast de behavioral suite staan |
 | Fase 3: constellations | Planned / infrastructural | Bouwstenen bestaan, maar er is nog geen echte constellation-benchmark of clusterwaarde-evaluatie |
@@ -208,11 +208,15 @@ Dit is een bruikbare tussenlaag: goed voor vaste cases, te smal voor brede claim
 
 ## Open-world evaluatie
 
-Status: Infrastructure complete, evidence in uitvoering
+Status: First evidence (kwaliteitswaarschuwing)
 
 De drie detectiepaden zijn aanwezig op main: `open_set_candidate_adapter` v0.1 (regex baseline, default voor backwards compatibility), v0.2 text-grounded baseline, en v0.3 taalmodel-detector via de hf-transformers backend. De v0.3 detector voldoet aan de 4.6 één-zinsclaim wanneer met een echt model gedraaid. Workflow dispatch ondersteunt alle drie via `--detector` en `--model-backend`.
 
-Round-voortgang: round 001 is een gepauzeerde infrastructure baseline. Round 004 (Qwen2.5-3B, v0.3d) is volledig mensgereviewd door twee beoordelaars. Round 005 (v0.3e prompt, `ag_news_test` offset 0 + 12, 23 items) is gebouwd met een `adapter_v1` blinde baseline-control; de mensreview daarvan staat nog open. De mechanische prescreen laat zien dat v0.3e het dominante round-004-probleem (claim-vs-gap) wegneemt (30 → 0). Eerste echte Laag-C evidence is dus in uitvoering, nog niet als afgeronde evidence te claimen (zie `benchmarks/open_review/rounds/round_005/`, #41 en #81).
+Round-voortgang: round 001 is een gepauzeerde infrastructure baseline. Round 004 (Qwen2.5-3B, v0.3d) is volledig mensgereviewd door twee beoordelaars (acceptance 0.52, claim-vs-gap dominant). Round 005 offset-12 (v0.3e, Qwen2.5-3B, 12 `ag_news_test` Sci/Tech-items) is sinds PR #116 de **eerste geland Laag-C evidence**: 41 unieke seeds, twee reviewers, unaniem, acceptance **0.29**. Lees dat per criterium: relevance 0.98 (de detector blijft on-topic), maar non_triviality en follow_up_utility beide 0.29 — v0.3e heeft de vorm gerepareerd (claim-vs-gap 30 → 0) maar niet de substantie. Dominante afwijsredenen: `style_not_gap` (20), `not_testable` (18, waarvan 9 mechanisch aanwijsbaar als afgekapte zinnen — zie de prescreen-code `truncated`), `too_vague` (10).
+
+Round 005 is inmiddels gesloten op alle drie de armen. De offset-0 batch en de blinde model-vs-baseline control zijn afgerond als **gedelegeerde AI-review** (één reviewer `reviewer_ai_claude`, expliciet door de maintainer gedelegeerd, 98% accept-agreement met de menselijke offset-12 batch; nadrukkelijk gelabeld als AI, niet als mens — zie `benchmarks/open_review/rounds/round_005/ai_review/`). Uitkomsten: offset-0 acceptance **0.185** (relevance 0.91 maar testability 0.30, non_triviality 0.19 — zelfde patroon als de menselijke batch); blinde control model **0.219** vs baseline `adapter_v1` **0.0** (delta +0.219, model accepted-atomiciteit 1.0). De menselijke offset-12 batch blijft de gezaghebbende Laag-C evidence; de AI-armen zijn de secundaire robuustheidscheck en een eerste gelabelde lezing van offset-0.
+
+Dit is precies waarvoor de lagenscheiding bestaat: de eerste open-set meting is negatief uitgevallen en dat wordt gerapporteerd als meting, niet weggemiddeld. De juiste vervolgstap is de detector verbeteren (sterker model per #81, afkapprobleem oplossen) en opnieuw meten — niet het criterium verzachten.
 
 ## Adversarial Gate-evaluatie
 
@@ -280,4 +284,4 @@ Samen vormen ze:
 
 De repo is vandaag:
 
-> een sterke en serieuze SSL-benchmarkharness met goede mechanische discipline, met eerste echte evidence op de adversarial Gate (D) en probe-feedback (E) lagen, en open-set evidence (C) die wacht op een echte taalmodel-detector run met menselijke review.
+> een sterke en serieuze SSL-benchmarkharness met goede mechanische discipline, met eerste echte evidence op de adversarial Gate (D) en probe-feedback (E) lagen, en een eerste echt mensgereviewde open-set batch (C) die een eerlijke kwaliteitswaarschuwing oplevert: de detector vindt relevante maar overwegend triviale afwezigheden (acceptance 0.29). De volgende stap op C is detectorverbetering plus herhaalmeting, niet criteriumversoepeling.
