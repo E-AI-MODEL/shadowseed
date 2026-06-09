@@ -1,4 +1,4 @@
-# Mechanische prescreen — round_005_v0.3e_A (GEEN menselijke review)
+# Mechanische prescreen — round_005 (GEEN menselijke review)
 
 > **Status: deterministisch hulpmiddel, geen evidence.** Deterministische prescreen, GEEN menselijke review. Telt NIET als reviewer_a/reviewer_b en niet als open_set_seed_quality (Laag C) evidence, en geeft GEEN accept/reject-verdict. Bedoeld om aandacht te richten en de v0.3e-prompt te toetsen aan haar eigen regels.
 
@@ -21,8 +21,9 @@ Detector: `model` · backend: `hf-transformers:Qwen/Qwen2.5-3B-Instruct`
 - `not_atomic`: 38
 - `near_duplicate`: 13
 - `parse_leak`: 10
-- `claim_vs_gap`: 9
+- `truncated`: 9
 - `citation_fragment`: 0
+- `claim_vs_gap`: 0
 - `entity_bleed`: 0
 - `fewshot_leak`: 0
 - `language_leak`: 0

@@ -1,7 +1,7 @@
 {
   "artifact": "mechanical_prescreen",
   "disclaimer": "Deterministische prescreen, GEEN menselijke review. Telt NIET als reviewer_a/reviewer_b en niet als open_set_seed_quality (Laag C) evidence, en geeft GEEN accept/reject-verdict. Bedoeld om aandacht te richten en de v0.3e-prompt te toetsen aan haar eigen regels.",
-  "round": "round_005_v0.3e_A",
+  "round": "round_005",
   "detector": "model",
   "model_backend": "hf-transformers:Qwen/Qwen2.5-3B-Instruct",
   "yield": {
@@ -13,6 +13,7 @@
   },
   "mechanical_codes": [
     "claim_vs_gap",
+    "truncated",
     "parse_leak",
     "language_leak",
     "entity_bleed",
@@ -32,7 +33,8 @@
   "clean_rate": 0.553,
   "near_duplicate_rate": 0.114,
   "failure_code_counts": {
-    "claim_vs_gap": 9,
+    "claim_vs_gap": 0,
+    "truncated": 9,
     "parse_leak": 10,
     "language_leak": 0,
     "entity_bleed": 0,
@@ -638,7 +640,7 @@
       "position": 2,
       "seed": "Of de lumps onder de ijskust van Ganymede een natuurlijke of een.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
@@ -647,7 +649,7 @@
       "position": 3,
       "seed": "Of de lumps onder de ijskust van Ganymede een effect op de oppervlakte.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
@@ -656,7 +658,7 @@
       "position": 4,
       "seed": "Of de lumps onder de ijskust van Ganymede een impact hebben op de.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
@@ -665,7 +667,7 @@
       "position": 5,
       "seed": "Of de lumps onder de ijskust van Ganymede een invloed hebben op de.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
@@ -834,7 +836,7 @@
       "position": 1,
       "seed": "Of Google heeft een lijst met mensen die niet mogen proberen in te.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
@@ -843,7 +845,7 @@
       "position": 2,
       "seed": "Of Google een criteria heeft om te bepalen wie mogen proberen in te.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
@@ -852,7 +854,7 @@
       "position": 3,
       "seed": "Of Google een procedure heeft om te bepalen wie mogen proberen in te.",
       "codes": [
-        "claim_vs_gap",
+        "truncated",
         "near_duplicate"
       ],
       "clean": false
@@ -862,7 +864,7 @@
       "position": 4,
       "seed": "Of Google een beperking heeft opgelegd aan de prijs die mensen mogen.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
@@ -871,7 +873,7 @@
       "position": 5,
       "seed": "Of Google een beperking heeft opgelegd aan het aantal aandelen dat.",
       "codes": [
-        "claim_vs_gap"
+        "truncated"
       ],
       "clean": false
     },
