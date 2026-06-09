@@ -1,6 +1,9 @@
 {
   "artifact": "blind_control_summary",
-  "disclaimer": "Per-arm aggregatie van blinde menselijke review. Model vs adapter_v1-baseline op identieke items. Geen totaalscore; lagen blijven gescheiden.",
+  "disclaimer": "Per-arm aggregatie van blinde review. Model vs adapter_v1-baseline op identieke items. Geen totaalscore; lagen blijven gescheiden. Zie reviewer_ids voor de herkomst van de oordelen (mens of gedelegeerde AI).",
+  "reviewer_ids": [
+    "reviewer_ai_claude"
+  ],
   "per_arm": {
     "model": {
       "judged": 114,

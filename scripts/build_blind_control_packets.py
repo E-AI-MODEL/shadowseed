@@ -132,6 +132,7 @@ def unblind(
         arm: {"judged": 0, "accepted": 0, "accepted_atomic": 0} for arm in arms
     }
 
+    reviewer_ids: set[str] = set()
     for packet in filled_packets:
         arm = key.get(packet.get("blind_id", ""), {}).get("arm")
         if arm not in stats:
@@ -140,6 +141,9 @@ def unblind(
         accept = _is_accept(judgment)
         if accept is None:
             continue  # not yet reviewed
+        reviewer_id = str(packet.get("reviewer_id") or "").strip()
+        if reviewer_id:
+            reviewer_ids.add(reviewer_id)
         stats[arm]["judged"] += 1
         if accept:
             stats[arm]["accepted"] += 1
@@ -162,10 +166,12 @@ def unblind(
     return {
         "artifact": "blind_control_summary",
         "disclaimer": (
-            "Per-arm aggregatie van blinde menselijke review. Model vs "
+            "Per-arm aggregatie van blinde review. Model vs "
             "adapter_v1-baseline op identieke items. Geen totaalscore; lagen "
-            "blijven gescheiden."
+            "blijven gescheiden. Zie reviewer_ids voor de herkomst van de "
+            "oordelen (mens of gedelegeerde AI)."
         ),
+        "reviewer_ids": sorted(reviewer_ids),
         "per_arm": per_arm,
         "accept_rate_delta_model_minus_baseline": round(
             per_arm["model"]["accept_rate"] - per_arm["baseline"]["accept_rate"], 3
