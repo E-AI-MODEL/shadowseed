@@ -1,8 +1,8 @@
 # Open-set round 006 — substance iteration (Layer C) + first domain signal (Layer F)
 
-> **Status: planned, not dispatched.** This round is designed but waits on two
-> things: (1) round 005 completion (offset-0 single-arm review and the blind
-> model-vs-baseline un-blinding), and (2) a model/runner decision per #81.
+> **Status: planned, not dispatched.** Round 005 is now closed on all three
+> arms (offset-12 human, offset-0 and blind control via delegated AI review),
+> so the only remaining prerequisite is a model/runner decision per #81.
 > Nothing in this file is evidence.
 
 ## Why this round

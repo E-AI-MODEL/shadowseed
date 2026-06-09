@@ -12,10 +12,11 @@
 - **Review:** two reviewers (`reviewer_a`, `reviewer_b`), single-arm (model only,
   not the blind baseline control), all packets completed.
 
-This is the **primary** Layer-C metric source per `evaluation-matrix §3`. The
-blind model-vs-baseline control (round_005 top level) remains the **secondary**
-robustness check and is still un-reviewed; the offset-0 batch is also still
-pending review.
+This is the **primary** Layer-C metric source per `evaluation-matrix §3` and
+remains the authoritative human evidence for the round. The **secondary**
+blind model-vs-baseline control and the offset-0 batch were subsequently
+closed as delegated AI review (`../ai_review/`, single reviewer, 98%
+accept-agreement with this human batch); they do not change this batch.
 
 ## Results (read per layer, no total score)
 

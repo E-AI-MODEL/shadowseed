@@ -1,11 +1,18 @@
 # Open-set round 005 — first v0.3e Layer-C round, with blind model-vs-baseline control
 
-> **Status: partial evidence landed.** The offset-12 batch has completed
-> single-arm human review — see `reviewed_offset12/` (first real Layer-C
-> evidence: 41 seeds, acceptance 0.29). The offset-0 batch and the blind
-> model-vs-baseline control below are still pending review. The v0.3e model arm
-> and the adapter_v1 baseline are built and blinded; the prescreen gate passed.
-> See "Run notes" at the bottom for the concrete state of this round.
+> **Status: closed on all three arms.**
+> 1. **offset-12 — human** (`reviewed_offset12/`): authoritative Layer-C
+>    evidence, 41 seeds, acceptance 0.29.
+> 2. **offset-0 — delegated AI** (`ai_review/`): 54 seeds, acceptance 0.185 —
+>    same relevant-but-trivial pattern, consistent with the human batch.
+> 3. **blind model-vs-baseline control — delegated AI** (`ai_review/`): model
+>    0.219 vs baseline 0.0, delta +0.219, model accepted-atomicity 1.0.
+>
+> The offset-0 and blind-control arms were completed by a single AI reviewer
+> under explicit maintainer delegation (98% accept-agreement with the human
+> batch on the overlapping seeds). They are labeled AI, not human; see
+> `ai_review/README.md`. The substance gap (low non-triviality) stands and
+> hands off to round 006.
 
 ## Why this round
 

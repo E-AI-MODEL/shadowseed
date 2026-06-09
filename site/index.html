@@ -20,7 +20,7 @@
         </div>
         <div class="answer-card">
           <span>Eerlijke één-zin</span>
-          <strong>Op de gemeten lagen (A, B, D, E) is SSL meetbaar helpend; open-set (C) wacht op echte review; transfer (F) en modelinterne (G) zijn nog open.</strong>
+          <strong>Op de gemeten lagen (A, B, D, E) is SSL meetbaar helpend; open-set (C) heeft een eerste gereviewde batch en die is een kwaliteitswaarschuwing (relevant maar te triviaal); transfer (F) en modelinterne (G) zijn nog open.</strong>
         </div>
       </section>
 
@@ -37,7 +37,7 @@
             <tbody>
               <tr><td><strong>A</strong> Regressie</td><td>blijft de mechaniek werken?</td><td><span class="badge strong">sterk</span></td><td>volledige test-suite groen, lint schoon</td></tr>
               <tr><td><strong>B</strong> Kleine benchmark</td><td>scoort SSL op vaste suites?</td><td><span class="badge ok">bruikbaar</span></td><td>gap / false-positive / benefit / blind; benefit-delta zonder ongegronde toevoegingen</td></tr>
-              <tr><td><strong>C</strong> Open-set seedkwaliteit</td><td>werkt het op onbekende teksten?</td><td><span class="badge pending">eerste evidence — kwaliteitswaarschuwing</span></td><td>round 005 offset-12 mensgereviewd: 41 seeds, acceptance 0.29; relevant (0.98) maar overwegend triviaal/niet-toetsbaar; offset-0 + blind control nog open</td></tr>
+              <tr><td><strong>C</strong> Open-set seedkwaliteit</td><td>werkt het op onbekende teksten?</td><td><span class="badge pending">eerste evidence — kwaliteitswaarschuwing</span></td><td>round 005 offset-12 mensgereviewd: 41 seeds, acceptance 0.29; relevant (0.98) maar overwegend triviaal/niet-toetsbaar; offset-0 + blind control gesloten via gedelegeerde AI-review (control delta +0.219)</td></tr>
               <tr><td><strong>D</strong> Adversarial Gate</td><td>houdt de Gate misleidende seeds tegen?</td><td><span class="badge ok">eerste evidence</span></td><td>21 cases, precision 1.0, recall 1.0, F1 1.0; drie baselines vergeleken</td></tr>
               <tr><td><strong>E</strong> Probe utility</td><td>doet de feedback-loop echt iets?</td><td><span class="badge ok">eerste evidence</span></td><td>10/10 lifecycle-scenarios (reward/penalty/clamp/demotie/status-block)</td></tr>
               <tr><td><strong>F</strong> Domeintransfer</td><td>blijft kwaliteit overeind buiten bekende domeinen?</td><td><span class="badge absent">afwezig</span></td><td>geen module</td></tr>
