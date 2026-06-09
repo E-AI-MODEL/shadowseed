@@ -76,7 +76,7 @@ is baseline infrastructure or a regression fixture.
 | 003b | model + Qwen2.5-1.5B | full Dutch sentence gaps (big jump) but few-shot leakage + hallucination |
 | 003c (pending) | model + Qwen2.5-1.5B | re-dispatch against the v0.3c foreign-domain prompt + leak filter |
 | 004 (v0.3d, reviewed) | model + Qwen2.5-3B-Instruct | 12 AG News items. Human review complete (two reviewers); AI prescreen flagged claim-vs-gap, mistranslation, false-gap — addressed in the v0.3d/v0.3e prompt + entity filter |
-| 005 (v0.3e) | model + Qwen2.5-3B-Instruct | `ag_news_test` offset 0 + 12, 23 items / 114 candidates. v0.3e removed claim-vs-gap (prescreen: 30→0; clean-rate 0.553). Built with an `adapter_v1` blind baseline control; human review pending. See `benchmarks/open_review/rounds/round_005/` |
+| 005 (v0.3e) | model + Qwen2.5-3B-Instruct | `ag_news_test` offset 0 + 12, 23 items / 114 candidates. v0.3e removed claim-vs-gap (prescreen: 30→0; clean-rate 0.553). Built with an `adapter_v1` blind baseline control. **Offset-12 batch human-reviewed (PR #116): 41 seeds, acceptance 0.29 — relevance 0.98 but non-triviality/follow-up 0.29; form fixed, substance not.** Offset-0 + blind control still pending. See `benchmarks/open_review/rounds/round_005/` |
 
 ## Consequences
 
