@@ -67,6 +67,15 @@ def test_complete_absence_form_is_not_truncated() -> None:
     assert "claim_vs_gap" not in codes
 
 
+def test_subordinate_clause_verb_ending_is_not_truncated() -> None:
+    # Dutch subordinate clauses end in a verb; that is not truncation.
+    # (Round 006 false positive: "... waar de wildfires voorspeld worden.")
+    codes = prescreen.prescreen_seed(
+        "Specifieke geografische locaties waar de wildfires voorspeld worden."
+    )
+    assert "truncated" not in codes
+
+
 def test_round_005_offset12_truncations_are_not_claim_vs_gap() -> None:
     # Evidence anchor: the nine missing-marker candidates in the reviewed
     # offset-12 batch are unfinished clauses (human-rejected as not_testable),

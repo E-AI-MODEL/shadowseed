@@ -110,16 +110,17 @@ _SUBORDINATE_OPENERS: tuple[str, ...] = (
 
 # Dutch function words that cannot end a complete sentence. A candidate whose
 # last word is one of these was cut off mid-clause, even if an absence marker
-# appears earlier in the sentence.
+# appears earlier in the sentence. Verbs are deliberately NOT in this list:
+# Dutch subordinate clauses legitimately end in a verb ("... waar de
+# wildfires voorspeld worden."), so a verb tail is not evidence of truncation.
+# Truncated clauses that end in a verb (round 005: "... die mensen mogen.")
+# are still caught by the opener-without-marker rule above.
 _TRUNCATION_TAIL: frozenset[str] = frozenset(
     {
         "de", "het", "een", "te", "dat", "die", "of", "en", "met", "in", "op",
         "aan", "van", "tot", "naar", "voor", "om", "per", "bij", "onder",
         "over", "tussen", "door", "uit", "als", "dan", "maar", "want", "dus",
-        "er", "deze", "dit", "hun", "haar", "zal", "zullen", "kan", "kunnen",
-        "mag", "mogen", "moet", "moeten", "wil", "willen", "wordt", "worden",
-        "werd", "werden", "heeft", "hebben", "had", "hadden", "is", "was",
-        "waren", "zou", "zouden",
+        "er", "deze", "dit", "hun", "haar",
     }
 )
 
