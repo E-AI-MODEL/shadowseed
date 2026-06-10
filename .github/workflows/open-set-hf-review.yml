@@ -48,7 +48,10 @@ on:
           - TinyLlama/TinyLlama-1.1B-Chat-v1.0
           - Qwen/Qwen2.5-1.5B-Instruct
           - HuggingFaceTB/SmolLM2-1.7B-Instruct
+          - Qwen/Qwen3-1.7B
           - Qwen/Qwen2.5-3B-Instruct
+          - microsoft/Phi-3.5-mini-instruct
+          - Qwen/Qwen3-4B
       ollama_model_id:
         description: "Ollama modelnaam. Alleen gebruikt bij detector=model en model_backend=ollama."
         required: false
@@ -61,6 +64,7 @@ on:
           - llama3.2:1b
           - llama3.2:3b
           - gemma2:2b
+          - phi3.5
       model_id_custom:
         description: "Override voor de gekozen backend. HF-id bij hf-transformers, Ollama-modelnaam bij ollama. Leeg laten om de keuzelijst te gebruiken."
         required: false

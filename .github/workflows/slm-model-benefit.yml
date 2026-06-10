@@ -16,6 +16,8 @@ on:
           - HuggingFaceTB/SmolLM2-1.7B-Instruct
           - Qwen/Qwen3-1.7B
           - Qwen/Qwen2.5-3B-Instruct
+          - microsoft/Phi-3.5-mini-instruct
+          - Qwen/Qwen3-4B
       model_id_custom:
         description: "Override: een ander HF model-id (bv. gated). Leeg laten om de keuze hierboven te gebruiken."
         required: false

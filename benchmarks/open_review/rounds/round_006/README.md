@@ -39,10 +39,13 @@ isolated. One lever per comparison.
 ## Design: two batches, one model change
 
 **Model arm for both batches:** one step up the #81 ladder. Preferred:
-`microsoft/Phi-3.5-mini-instruct` (MIT license, ~8 GB, needs the large
-runner) or a ~7B model via the Ollama backend where available. Note that
-Qwen2.5-3B (rounds 004/005) carries a research-only license; moving to an
-MIT/Apache model also cleans that up.
+`microsoft/Phi-3.5-mini-instruct` (MIT license, in the workflow dropdown).
+No special runner is needed: the public-repo `ubuntu-latest` runner has 16 GB
+RAM, and the HF backends now load the checkpoint's native half precision on
+CPU (~8 GB for a 3.8B model instead of ~15 GB at float32). `Qwen/Qwen3-4B`
+(Apache-2.0) is the equally-sized alternative; `phi3.5` is available via the
+Ollama backend (Q4-quantized). Note that Qwen2.5-3B (rounds 004/005) carries
+a research-only license; moving to an MIT/Apache model also cleans that up.
 
 ### Batch 1 — substance replication (Layer C, anchored)
 
