@@ -74,9 +74,12 @@ class HFTransformersBackend:
         self.model_id = model_id
         self.max_new_tokens = max_new_tokens
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        model_kwargs = {}
         if torch.cuda.is_available():
             model_kwargs = {"torch_dtype": torch.float16, "device_map": "auto"}
+        else:
+            # CPU: keep the checkpoint's native (half) precision instead of
+            # upcasting to float32 — halves memory on CPU-only runners.
+            model_kwargs = {"torch_dtype": "auto"}
         model = AutoModelForCausalLM.from_pretrained(model_id, **model_kwargs)
         self.generator = pipeline(
             "text-generation",

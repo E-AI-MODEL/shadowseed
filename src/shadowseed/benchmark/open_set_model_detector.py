@@ -301,9 +301,14 @@ class HFTransformersDetectorBackend:
         self.model_id = model_id
         self.max_new_tokens = max_new_tokens
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        model_kwargs: dict[str, Any] = {}
         if torch.cuda.is_available():
-            model_kwargs = {"torch_dtype": torch.float16, "device_map": "auto"}
+            model_kwargs: dict[str, Any] = {"torch_dtype": torch.float16, "device_map": "auto"}
+        else:
+            # CPU: load the checkpoint's native (half) precision instead of
+            # upcasting to float32. Halves memory — a 3.8B model loads in
+            # ~8 GB instead of ~15 GB, which is what makes Phi-3.5-mini and
+            # Qwen3-4B fit on the public-repo ubuntu-latest runner (16 GB).
+            model_kwargs = {"torch_dtype": "auto"}
         model = AutoModelForCausalLM.from_pretrained(model_id, **model_kwargs)
         self.generator = pipeline(
             "text-generation",

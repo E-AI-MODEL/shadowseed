@@ -14,7 +14,10 @@ shadowseed = "shadowseed.cli:main"
 [project.optional-dependencies]
 models = [
   "sentence-transformers>=2.7",
-  "transformers>=4.40",
+  # 4.51 is the floor for the curated dropdown: Qwen3 needs >=4.51 and
+  # Phi-3.5-mini needs >=4.43. CI installs fresh, but a stale local env
+  # satisfying an older floor would advertise models it cannot load.
+  "transformers>=4.51",
   "torch>=2.2",
 ]
 paper = [
