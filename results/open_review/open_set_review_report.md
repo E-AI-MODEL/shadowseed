@@ -5,15 +5,15 @@ Status: `review_in_progress`
 
 ## Overview
 
-- packets: 20
+- packets: 96
 - completed packets: 0
 - invalid packets: 0
-- unique seeds: 10
+- unique seeds: 48
 - fully reviewed seeds: 0
 - accepted seeds: 0
 - rejected seeds: 0
 - mixed seeds: 0
-- pending seeds: 10
+- pending seeds: 48
 - invalid seeds: 0
 
 ## Core Rates
@@ -38,7 +38,7 @@ Status: `review_in_progress`
 
 ## Domain Coverage
 
-- `wetenschap - arXiv abstract`: 10
+- `wetenschap - arXiv abstract`: 48
 
 ## Follow-up
 

@@ -5,11 +5,11 @@ Deze artifactset komt uit een handmatige workflow met Hugging Face intake.
 Run-parameters:
 
 - source_id: `arxiv_abstracts`
-- limit: `2`
+- limit: `12`
 - offset: `0`
-- detector: `adapter_v1`
-- model_backend: `fixture`
-- model_id: `n.v.t.`
+- detector: `model`
+- model_backend: `hf-transformers`
+- model_id: `microsoft/Phi-3.5-mini-instruct`
 
 Inhoud:
 
