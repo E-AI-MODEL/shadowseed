@@ -194,6 +194,5 @@
         "label_name": "Sci/Tech"
       }
     }
-  ],
-  "provenance_note": "Reconstructed subset for round 006 batch 1 (run 27256277709, ag_news_test offset 0 limit 12): identical source items to the round_005 offset-0 intake; the run's own hf_batch.json lives in the Actions artifact (sha256:c364874e...)."
+  ]
 }
