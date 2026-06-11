@@ -136,3 +136,47 @@ def test_fetch_open_set_hf_batch_skips_short_rows(tmp_path: Path, monkeypatch) -
     assert result["source"]["returned_count"] == 1
     assert len(result["items"]) == 1
     assert result["items"][0]["id"] == "AG_NEWS_TEST_2"
+
+
+def test_arxiv_abstracts_source_maps_fields_from_real_registry(tmp_path: Path, monkeypatch) -> None:
+    """Drift guard for the committed arxiv_abstracts registry entry (Layer F).
+
+    Feeds a fake Datasets Server row in the gfissore/arxiv-abstracts-2021
+    shape through the REAL registry file, so a silent registry edit that
+    breaks the field mapping fails here instead of in a live dispatch.
+    """
+    payload = {
+        "rows": [
+            {
+                "row_idx": 7,
+                "row": {
+                    "title": "Topological order in quantum spin liquids",
+                    "abstract": (
+                        "We study the emergence of topological order in frustrated "
+                        "quantum magnets using a combination of exact diagonalization "
+                        "and tensor-network methods. We identify a gapped spin-liquid "
+                        "phase characterized by anyonic excitations and a fourfold "
+                        "topological ground-state degeneracy on the torus, and we map "
+                        "the phase boundary to neighboring magnetically ordered states."
+                    ),
+                    "categories": "cond-mat.str-el",
+                },
+            }
+        ]
+    }
+    monkeypatch.setattr(
+        "shadowseed.benchmark.open_set_hf.urlopen",
+        lambda *_args, **_kwargs: _FakeResponse(payload),
+    )
+
+    output = tmp_path / "hf_batch.json"
+    fetch_open_set_hf_batch(str(output), source_id="arxiv_abstracts", limit=1, offset=0)
+
+    result = json.loads(output.read_text(encoding="utf-8"))
+    assert result["source"]["dataset"] == "gfissore/arxiv-abstracts-2021"
+    assert result["source"]["license"] == "cc0-1.0"
+    item = result["items"][0]
+    assert item["id"] == "ARXIV_ABSTRACTS_7"
+    assert item["title"] == "Topological order in quantum spin liquids"
+    assert item["domain"] == "wetenschap - arXiv abstract"
+    assert item["text"].startswith("We study the emergence")
