@@ -58,9 +58,26 @@ a research-only license; moving to an MIT/Apache model also cleans that up.
 
 ### Batch 2 — first domain signal (Layer F, exploratory)
 
-- Source: a different domain with the **same** detector, prompt and rubric —
-  e.g. `ag_news` World/Business items or another HF source from
-  `docs/research/hf-open-set-dataset-plan.md`.
+- Source: **`arxiv_abstracts`** (`gfissore/arxiv-abstracts-2021`, CC0,
+  registered in `open_set_hf_sources.json` v0.2) — scientific abstracts,
+  maximally distant from the news priors of batches so far, with the **same**
+  detector, prompt and rubric.
+- **Verify before the model run** (the field mapping could not be live-checked
+  from the dev environment): one cheap smoke dispatch first —
+  `source_id=arxiv_abstracts, limit=2, detector=adapter_v1` (~1 min, no model
+  install). If the artifact contains two abstracts with real titles, dispatch
+  the model run:
+
+```yaml
+source_id: arxiv_abstracts
+limit: 12
+offset: 0
+detector: model
+model_backend: hf-transformers
+model_id: microsoft/Phi-3.5-mini-instruct
+max_new_tokens: 512
+```
+
 - This is the cheapest possible first Layer-F signal: it does not need new
   infrastructure, only a different input batch. It is exploratory; batch 1 is
   the anchored comparison.
