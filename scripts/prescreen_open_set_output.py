@@ -110,16 +110,38 @@ _SUBORDINATE_OPENERS: tuple[str, ...] = (
 
 # Dutch function words that cannot end a complete sentence. A candidate whose
 # last word is one of these was cut off mid-clause, even if an absence marker
-# appears earlier in the sentence.
+# appears earlier in the sentence. Verbs are deliberately NOT in this list:
+# Dutch subordinate clauses legitimately end in a verb ("... waar de
+# wildfires voorspeld worden.", "... wat ze mogen."), so a bare verb tail is
+# not evidence of truncation. Truncated clauses that end in a verb without a
+# marker (round 005: "... die mensen mogen.") are caught by the
+# opener-without-marker rule above; marker-bearing cutoffs at a dangling
+# auxiliary ("... wordt niet vermeld en zal") are caught by the
+# conjunction+auxiliary tail rule below.
 _TRUNCATION_TAIL: frozenset[str] = frozenset(
     {
         "de", "het", "een", "te", "dat", "die", "of", "en", "met", "in", "op",
         "aan", "van", "tot", "naar", "voor", "om", "per", "bij", "onder",
         "over", "tussen", "door", "uit", "als", "dan", "maar", "want", "dus",
-        "er", "deze", "dit", "hun", "haar", "zal", "zullen", "kan", "kunnen",
-        "mag", "mogen", "moet", "moeten", "wil", "willen", "wordt", "worden",
-        "werd", "werden", "heeft", "hebben", "had", "hadden", "is", "was",
-        "waren", "zou", "zouden",
+        "er", "deze", "dit", "hun", "haar",
+    }
+)
+
+# A modal/auxiliary as the very last word is legitimate in a subordinate
+# clause ("... wat ze mogen.") but is a dangling clause start when it
+# directly follows a conjunction or determiner ("... en zal", "... of een
+# wordt"). Only that combination counts as truncation evidence.
+_AUX_TAILS: frozenset[str] = frozenset(
+    {
+        "zal", "zullen", "kan", "kunnen", "mag", "mogen", "moet", "moeten",
+        "wil", "willen", "zou", "zouden", "wordt", "worden", "werd", "werden",
+        "heeft", "hebben", "had", "hadden", "is", "was", "waren",
+    }
+)
+_DANGLING_BEFORE_AUX: frozenset[str] = frozenset(
+    {
+        "en", "maar", "of", "want", "dus", "die", "dat", "deze", "dit",
+        "de", "het", "een", "te", "ook", "nog", "niet",
     }
 )
 
@@ -169,6 +191,13 @@ def prescreen_seed(seed: str, source_text: str = "") -> list[str]:
     has_marker = any(marker in lowered for marker in _ABSENCE_MARKERS)
     words = re.findall(r"[a-zà-ÿ0-9]+", lowered)
     tail_truncated = bool(words) and words[-1] in _TRUNCATION_TAIL
+    if (
+        not tail_truncated
+        and len(words) >= 2
+        and words[-1] in _AUX_TAILS
+        and words[-2] in _DANGLING_BEFORE_AUX
+    ):
+        tail_truncated = True
     opener_truncated = lowered.startswith(_SUBORDINATE_OPENERS) and not has_marker
     if opener_truncated or tail_truncated:
         codes.append("truncated")

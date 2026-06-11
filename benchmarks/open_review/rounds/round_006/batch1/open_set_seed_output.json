@@ -1,0 +1,129 @@
+{
+  "summary": {
+    "detector": "model",
+    "model_backend": "hf-transformers:microsoft/Phi-3.5-mini-instruct",
+    "provenance_note": "Reconstructed from the workflow-committed results/open_review/open_set_seed_review_summary.json of run 27256277709 (commit a6be6dd); candidate texts are verbatim. The raw open_set_seed_output.json is in the Actions artifact open-set-hf-review-batch-model-hf-transformers-microsoft-Phi-3.5-mini-instruct.",
+    "model_id": "microsoft/Phi-3.5-mini-instruct",
+    "run_id": 27256277709
+  },
+  "results": [
+    {
+      "item_id": "AG_NEWS_TEST_0",
+      "normalized_candidates": [
+        "Specifieke resultaten of uitkomsten van de talks.",
+        "De exacte bemiddelingsmethode of tussenpersoon.",
+        "Specifieke belangen of eisen van de werknemers.",
+        "De reactie of standpunt van Federal Mogul na de gesprekken."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_1",
+      "normalized_candidates": [
+        "Specifieke datum voor de eerste lancering.",
+        "Details over de technologie van de rocket.",
+        "De naam van de tweede private team.",
+        "Specifieke criteria voor het winnen van de Ansari X Prize.",
+        "De locatie waar de lancering zal plaatsvinden."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_2",
+      "normalized_candidates": [
+        "Specifieke soorten peptides die in de studie worden onderzocht.",
+        "Omvang van het gehonoreerde grant.",
+        "De specifieke gebruikssituatie of toepassing van betere peptides.",
+        "De exacte universiteit waar de chemie researcher aan het begin van het bedrijf werkte.",
+        "De geplande duur of termijn van de peptide-productie method."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_3",
+      "normalized_candidates": [
+        "Specifieke geografische locaties waar de wildfires voorspeld worden.",
+        "Precisiesnelheden of nauwkeurigheidspercentages van de Prediction Unit.",
+        "De specifieke methodologie of techniek die door de Prediction Unit wordt gebruikt.",
+        "Historische nauwkeurigheid van voorspellingen van de Prediction Unit voor wildfires.",
+        "Impact of Prediction Unit's forecasts on wildfire prevention or response strategies."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_4",
+      "normalized_candidates": [
+        "Specifieke technische maatregelen om emissies van dairy cow manure te verminderen.",
+        "De impact van de nieuwe regelgeving op de algehele luchtkwaliteit in Southern California.",
+        "De reactie van de landbouwsector op de adoptie van deze regels.",
+        "De specifieke tijdlijn of deadline voor de implementatie van de nieuwe regels.",
+        "De verwachte effectiviteit van de regelgeving op de vermindering van smog."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_5",
+      "normalized_candidates": [
+        "Het specifieke doel van de \"Music Manifesto\" campagne van de DfES.",
+        "De exacte details van de samenwerking tussen de DfES en de muziekindustrie.",
+        "Specifieke beleidsmaatregelen of acties die door EMI zijn onderhandeld.",
+        "De impact van deze indoctrinatie op de scholieren in de Britse scholen.",
+        "Eventuele reacties of acties van andere belanghebbenden of organisaties na het schrijven van het open brief."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_6",
+      "normalized_candidates": [
+        "De specifieke strategieën die door Sophos zijn gebruikt om de virussen te identificeren.",
+        "Details over de juridische consequenties van Jaschan's veroordeling.",
+        "De specifieke technische details van hoe Jaschan de Netsky en Sasser worms heeft geprogrammeerd.",
+        "De impact van de arrestatie op de algehele trend van virusinfecties in de daaropvolgende periode."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_7",
+      "normalized_candidates": [
+        "De specifieke manier waarop de bloom filter wordt gebruikt voor de PGP.",
+        "De procedure voor het invoegen van PGP keyfingerprints in de FOAF.",
+        "De manier waarop de client het whitelist vult vanuit de sociale netwerk.",
+        "De encryptiebehoeften van de bron FOAF file voor veiligheid.",
+        "De relatie tussen de directe vrienden en de bloom filter van hun PGP."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_9",
+      "normalized_candidates": [
+        "Het exacte aantal geredde kredietkaarten buiten de 36,000 die worden vermeld.",
+        "De specifieke soorten misdrijven waarmee de card fraud unit is betrokken.",
+        "Het exacte aantal gevallen waarin de card fraud unit heeft bijgedragen aan de arrestatie van verdachten.",
+        "De exacte kosten die zijn bespaard door de inzet van de card fraud unit.",
+        "De periode waarin de card fraud unit haar prestaties heeft gemeten."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_10",
+      "normalized_candidates": [
+        "Specifieke technische specificaties van de nieuwe high-speed wireless format.",
+        "De exacte groep technologiebedrijven die de voorstellen doen.",
+        "De timing en details van het voorstelpresentatie.",
+        "Potentiële impact en vooruitzichten van de nieuwe high-speed wireless standard.",
+        "Andere technologiebedrijven of belanghebbenden die mogelijk betrokken zijn bij het voorstel."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_11",
+      "normalized_candidates": [
+        "Specifieke functies van de nieuwe program voor real-time motion graphics.",
+        "De prijs van de discount video-editing software bundle.",
+        "De beschikbaarheid van de software in verschillende regio's.",
+        "Specifieke updates of verbeteringen ten opzichte van eerdere versies van Final Cut Pro.",
+        "Reviews of feedback van gebruikers na de lancering van de software."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_12",
+      "normalized_candidates": [
+        "Specifieke functies van de nieuwe download service.",
+        "De reactie van Apple Computer Inc. op de lancering.",
+        "De impact van de nieuwe download service op de Europese muziekmarkt.",
+        "Details over de concurrentie tussen Free Record Shop en andere spelers.",
+        "De timing en locatie van de lancering buiten Nederland."
+      ]
+    }
+  ]
+}

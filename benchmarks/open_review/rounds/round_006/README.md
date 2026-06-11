@@ -1,9 +1,11 @@
 # Open-set round 006 — substance iteration (Layer C) + first domain signal (Layer F)
 
-> **Status: planned, not dispatched.** Round 005 is now closed on all three
-> arms (offset-12 human, offset-0 and blind control via delegated AI review),
-> so the only remaining prerequisite is a model/runner decision per #81.
-> Nothing in this file is evidence.
+> **Status: batch 1 executed and AI-reviewed.** The Phi-3.5-mini run is real
+> (Actions run 27256277709); the review is delegated AI (`reviewer_ai_claude`)
+> — see `batch1/README.md`. Headline (same-reviewer comparison vs the round
+> 005 AI pass): acceptance 0.185 → **0.50**, non-triviality 0.19 → **0.50**,
+> zero truncation/duplicates/stacking. The model lever works; substance is
+> halved, not solved. Batch 2 (domain transfer) is the remaining open step.
 
 ## Why this round
 

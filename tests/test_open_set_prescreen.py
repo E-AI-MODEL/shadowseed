@@ -67,6 +67,31 @@ def test_complete_absence_form_is_not_truncated() -> None:
     assert "claim_vs_gap" not in codes
 
 
+def test_subordinate_clause_verb_ending_is_not_truncated() -> None:
+    # Dutch subordinate clauses end in a verb; that is not truncation.
+    # (Round 006 false positive: "... waar de wildfires voorspeld worden.")
+    codes = prescreen.prescreen_seed(
+        "Specifieke geografische locaties waar de wildfires voorspeld worden."
+    )
+    assert "truncated" not in codes
+
+
+def test_dangling_auxiliary_after_marker_is_truncated() -> None:
+    # A marker-bearing candidate cut off at a conjunction+auxiliary is still
+    # a truncation (Codex review on #120).
+    codes = prescreen.prescreen_seed("De reden wordt niet vermeld en zal.")
+    assert "truncated" in codes
+
+
+def test_bare_modal_subordinate_ending_is_not_truncated() -> None:
+    # "... wat ze mogen." is a complete subordinate clause; a bare modal tail
+    # without a dangling conjunction/determiner before it is not truncation.
+    codes = prescreen.prescreen_seed(
+        "Wat de werknemers volgens de cao mogen, wordt niet vermeld."
+    )
+    assert "truncated" not in codes
+
+
 def test_round_005_offset12_truncations_are_not_claim_vs_gap() -> None:
     # Evidence anchor: the nine missing-marker candidates in the reviewed
     # offset-12 batch are unfinished clauses (human-rejected as not_testable),
