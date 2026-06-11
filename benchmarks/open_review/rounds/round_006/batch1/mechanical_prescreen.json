@@ -9,7 +9,7 @@
     "items_with_candidates": 12,
     "items_empty": 0,
     "empty_rate": 0.0,
-    "mean_candidates_per_item": 4.833
+    "mean_candidates_per_item": 5.0
   },
   "mechanical_codes": [
     "claim_vs_gap",
@@ -27,20 +27,20 @@
     "mistranslation",
     "grammar"
   ],
-  "seed_count": 58,
-  "flagged_count": 58,
+  "seed_count": 60,
+  "flagged_count": 60,
   "clean_count": 0,
   "clean_rate": 0.0,
   "near_duplicate_rate": 0.0,
   "failure_code_counts": {
-    "claim_vs_gap": 58,
+    "claim_vs_gap": 60,
     "truncated": 0,
     "parse_leak": 0,
     "language_leak": 0,
     "entity_bleed": 0,
     "citation_fragment": 0,
     "fewshot_leak": 0,
-    "not_atomic": 0,
+    "not_atomic": 2,
     "near_duplicate": 0
   },
   "verdicts": [
@@ -77,6 +77,16 @@
       "seed": "De reactie of standpunt van Federal Mogul na de gesprekken.",
       "codes": [
         "claim_vs_gap"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_0",
+      "position": 5,
+      "seed": "De mogelijke impact of gevolgen voor T N pension.",
+      "codes": [
+        "claim_vs_gap",
+        "not_atomic"
       ],
       "clean": false
     },
@@ -317,6 +327,16 @@
     {
       "item_id": "AG_NEWS_TEST_6",
       "position": 2,
+      "seed": "De exacte percentages van andere veroorzakende factoren voor virusinfecties in 2004.",
+      "codes": [
+        "claim_vs_gap",
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_6",
+      "position": 3,
       "seed": "Details over de juridische consequenties van Jaschan's veroordeling.",
       "codes": [
         "claim_vs_gap"
@@ -325,7 +345,7 @@
     },
     {
       "item_id": "AG_NEWS_TEST_6",
-      "position": 3,
+      "position": 4,
       "seed": "De specifieke technische details van hoe Jaschan de Netsky en Sasser worms heeft geprogrammeerd.",
       "codes": [
         "claim_vs_gap"
@@ -334,7 +354,7 @@
     },
     {
       "item_id": "AG_NEWS_TEST_6",
-      "position": 4,
+      "position": 5,
       "seed": "De impact van de arrestatie op de algehele trend van virusinfecties in de daaropvolgende periode.",
       "codes": [
         "claim_vs_gap"

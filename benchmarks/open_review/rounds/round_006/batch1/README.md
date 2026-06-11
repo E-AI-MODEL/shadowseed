@@ -13,26 +13,32 @@
   prompt **unchanged** (one lever per round), `max_new_tokens=512`, greedy.
 - **Input:** `ag_news_test` offset 0, limit 12 — the same 12 source items as
   the round 005 offset-0 batch, so the model effect is isolated.
-- **Artifacts:** `open_set_seed_output.json` here is reconstructed verbatim
-  from the workflow-committed summary (commit a6be6dd); the raw run output
-  lives in the Actions artifact
-  `open-set-hf-review-batch-model-hf-transformers-microsoft-Phi-3.5-mini-instruct`
-  (sha256 c364874e…). Candidate texts are identical.
+- **Artifacts:** `input/hf_batch.json` and `open_set_seed_output.json` are the
+  **verbatim run artifacts** (maintainer-uploaded from the Actions artifact,
+  sha256 c364874e…). The run produced **60 raw candidates**; the SSLManager
+  atomicity gate rejected 2 before packet generation (both "of"-stacked /
+  category-worded: "De mogelijke impact of gevolgen voor T N pension.",
+  "De exacte percentages van andere veroorzakende factoren …"), leaving the
+  **58 reviewed candidates**. `run_review_packets_pending.json` preserves the
+  run's own untouched two-reviewer packets, so a human review pass remains
+  possible later.
 
 ## Mechanical prescreen (triage, not evidence)
 
-58 candidates over 12 items (yield 4.8). Versus round 005 (same items + offset
-12, Qwen2.5-3B):
+60 raw candidates over 12 items (yield 5.0); the prescreen's `not_atomic`
+flags exactly the 2 candidates the manager gate also rejected — independent
+confirmation of that gate. Versus round 005 (same items + offset 12,
+Qwen2.5-3B):
 
 | Code | Round 005 | Batch 1 (Phi) |
 |---|---:|---:|
-| `not_atomic` | 38 | **0** |
+| `not_atomic` | 38 | **2** |
 | `near_duplicate` | 13 | **0** |
 | `parse_leak` | 10 | **0** |
 | `truncated` | 9 | **0** |
-| `claim_vs_gap` | 0 | **58** |
+| `claim_vs_gap` | 0 | **60** |
 
-**The 58 `claim_vs_gap` flags are scaffold non-compliance, not claims.** Phi
+**The 60 `claim_vs_gap` flags are scaffold non-compliance, not claims.** Phi
 ignores the v0.3e rule "formuleer als afwezigheid ('… wordt niet vermeld')"
 and instead follows the few-shot examples — which are themselves bare noun
 phrases in the canonical 4.5 seed form ("Koloniaal kapitaal als
