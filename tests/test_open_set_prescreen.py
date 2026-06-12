@@ -33,6 +33,51 @@ def test_absence_form_is_not_flagged_as_claim_vs_gap() -> None:
     assert "claim_vs_gap" not in codes
 
 
+def test_gap_label_noun_phrase_is_not_a_claim() -> None:
+    # v0.3g: the canonical candidate form is the gap-label noun phrase —
+    # it has no main-clause verb and can assert nothing.
+    for seed in (
+        "De prijs van de discount video-editing software bundle.",
+        "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen.",
+        "Ontbreken van de reactie van Apple op de nieuwe service.",
+    ):
+        assert "claim_vs_gap" not in prescreen.prescreen_seed(seed), seed
+
+
+def test_relative_clause_verb_is_not_a_claim() -> None:
+    # Finite verbs inside relative/subordinate clauses do not assert facts.
+    for seed in (
+        "Specifieke fase-ruimte waarin de berekening het meest betrouwbaar is.",
+        "Specifieke diphoton paarverdelingen die zijn voorspeld voor LHC.",
+        "Details over hoe de basis ramp en shock methoden worden gekoppeld.",
+    ):
+        assert "claim_vs_gap" not in prescreen.prescreen_seed(seed), seed
+
+
+def test_main_clause_assertion_is_a_claim() -> None:
+    # A finite verb in the main clause without an absence marker asserts a
+    # fact — the failure mode the code exists for (round 004 signature).
+    for seed in (
+        "De toezichthouder heeft geen onderzoek gedaan naar de zaak.",
+        "De Prediction Unit weet niet precies waar branden zich bevinden.",
+    ):
+        assert "claim_vs_gap" in prescreen.prescreen_seed(seed), seed
+
+
+def test_round_006_batches_are_claim_free_under_v03g_contract() -> None:
+    # Evidence anchor: under the v0.3g form contract both Phi batches carry
+    # zero assertions; the only remaining mechanical flags are the manager
+    # gate's not_atomic (b1: 2, b2: 12) plus b2's truncations/near-dup.
+    for batch in ("batch1", "batch2"):
+        seed_output = json.loads(
+            Path(
+                f"benchmarks/open_review/rounds/round_006/{batch}/open_set_seed_output.json"
+            ).read_text(encoding="utf-8")
+        )
+        report = prescreen.prescreen_output(seed_output, round_label=batch)
+        assert report["failure_code_counts"]["claim_vs_gap"] == 0, batch
+
+
 def test_unfinished_subordinate_clause_is_truncated_not_claim() -> None:
     # An "Of ..." clause that never reaches its absence scaffold was cut off
     # by the decoding budget — a truncation artifact, not a claim-form

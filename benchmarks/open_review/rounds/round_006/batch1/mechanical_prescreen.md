@@ -11,16 +11,16 @@ Detector: `model` · backend: `hf-transformers:microsoft/Phi-3.5-mini-instruct`
 
 ## Kwaliteit van geleverde kandidaten (60 kandidaat-lacunes)
 
-- clean (geen mechanische vlag): **0**
-- geflagd: **60**
-- clean-rate: **0.0**
+- clean (geen mechanische vlag): **58**
+- geflagd: **2**
+- clean-rate: **0.967**
 - near-duplicate-rate: **0.0**
 
 ## Mechanische faalcodes
 
-- `claim_vs_gap`: 60
 - `not_atomic`: 2
 - `citation_fragment`: 0
+- `claim_vs_gap`: 0
 - `entity_bleed`: 0
 - `fewshot_leak`: 0
 - `language_leak`: 0

@@ -58,9 +58,16 @@ def _numbered(lines: tuple[str, ...]) -> str:
     return "\n".join(f"{i}. {line}" for i, line in enumerate(lines, start=1))
 
 
-# Prompt iteration v0.3e: keeps v0.3d's gap-phrasing guardrails, but names
-# detector output kandidaat-lacunes so only review/manager/gate/core can later
-# grant seed, evidence, or Round 001 status through the existing SSL route.
+# Prompt iteration v0.3g: resolves the scaffold contradiction that round 006
+# exposed. v0.3e's RULE demanded absence sentences ("... wordt niet vermeld")
+# while its few-shot EXAMPLES showed bare noun phrases — the canonical 4.5
+# seed form ("Koloniaal kapitaal als financieringsbron ..."). Qwen followed
+# the rule; Phi followed the examples (and form compliance proved
+# domain-dependent: 0/60 scaffolded on news, 18/60 on science). v0.3g aligns
+# the rule with the examples: the gap-label noun phrase is canonical, the
+# absence sentence stays allowed, and asserting a fact stays forbidden. A
+# noun phrase cannot assert a fact (no main-clause verb), so the
+# claim-vs-gap failure mode this rule exists for is structurally excluded.
 #
 # Note (02_atomic_seeds §2): generation enforces only "one gap per seed", "no
 # fabricated facts", and "tie the gap to THIS text". Value judgments —
@@ -84,13 +91,14 @@ Regels:
   hele Nederlandse zin.
 - De output is alleen detectoroutput voor latere review. Ken zelf geen seed-,
   evidence- of Round 001-status toe.
-- Formuleer elke kandidaat-lacune als een AFWEZIGHEID, niet als een bewering.
-  Gebruik een vorm als "... wordt niet genoemd", "... is niet aangegeven",
-  "... ontbreekt".
+- Benoem elke kandidaat-lacune als het ONTBREKENDE element zelf: een korte,
+  concrete zinsnede, in de vorm van de goede voorbeelden hieronder. Een
+  volledige afwezigheidszin ("... wordt niet vermeld.") mag ook.
   Schrijf NIET een stelling alsof je een nieuw feit beweert.
   * Fout (bewering): "De toezichthouder heeft geen onderzoek gedaan."
-  * Goed (afwezigheid): "Of de toezichthouder onderzoek heeft gedaan, wordt
-    niet vermeld."
+  * Goed (lacune-label): "De uitkomst van het onderzoek van de toezichthouder."
+  * Ook goed (afwezigheidszin): "Of de toezichthouder onderzoek heeft gedaan,
+    wordt niet vermeld."
 - Noem alleen iets als ontbrekend wanneer het ECHT niet in de tekst staat.
   Staat het er al (een naam, bedrag, datum), dan is het geen gap; sla het over.
 - Elke kandidaat-lacune verwijst concreet naar het onderwerp van DEZE

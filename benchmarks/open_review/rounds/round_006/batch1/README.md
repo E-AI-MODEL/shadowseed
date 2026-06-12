@@ -46,11 +46,14 @@ financieringsbron…"). All 58 were manually read: none asserts a fact as true
 (the Qwen failure mode this check was built for). The maintainer reviewed
 this reading and ruled **GO** on the gate.
 
-Open prompt question for a future iteration (NOT changed this round): either
-make the noun-phrase form canonical (and retire the absence-marker prescreen
-check), or harden the scaffold rule for models that follow examples over
-rules. That is a form decision, not a value rule, so it is doctrine-safe
-either way.
+**Resolved after this round in prompt v0.3g:** the noun-phrase gap label (the
+canonical 4.5 form, and what the few-shot examples already showed) is now the
+rule as well; absence sentences stay allowed. The prescreen `claim_vs_gap`
+check was redefined accordingly: it now detects actual assertions
+(main-clause finite verb without an absence marker) instead of requiring a
+marker. Under that contract this batch is claim-free (the committed prescreen
+artifact reflects the current code; the 58-flag reading below is the
+historical state at review time).
 
 ## AI review result (single reviewer, same bar as the round 005 AI pass)
 
