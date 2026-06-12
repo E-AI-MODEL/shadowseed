@@ -1,19 +1,19 @@
 {
   "summary": {
     "evidence_layer": "open_set_seed_quality",
-    "packet_count": 96,
+    "packet_count": 108,
     "completed_packet_count": 0,
-    "pending_packet_count": 96,
+    "pending_packet_count": 108,
     "invalid_packet_count": 0,
     "accepted_packet_count": 0,
     "rejected_packet_count": 0,
     "packet_acceptance_rate": 0.0,
-    "unique_seed_count": 48,
+    "unique_seed_count": 54,
     "completed_seed_count": 0,
     "accepted_seed_count": 0,
     "rejected_seed_count": 0,
     "mixed_seed_count": 0,
-    "pending_seed_count": 48,
+    "pending_seed_count": 54,
     "invalid_seed_count": 0,
     "agreement_eligible_seed_count": 0,
     "unanimous_seed_count": 0,
@@ -41,7 +41,9 @@
       "reviewer_b"
     ],
     "domain_seed_counts": {
-      "wetenschap - arXiv abstract": 48
+      "nieuws - Sports": 12,
+      "nieuws - World": 37,
+      "nieuws - Business": 5
     },
     "status": "review_in_progress",
     "artifacts": {
@@ -52,11 +54,11 @@
   },
   "results": [
     {
-      "item_id": "ARXIV_ABSTRACTS_0",
-      "title": "Calculation of prompt diphoton production cross sections at Tevatron and LHC energies",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_30",
+      "title": "AG News Sports #30",
+      "domain": "nieuws - Sports",
       "seed_id": "ss_001",
-      "seed_text": "Specifieke fase-ruimte waarin de berekening het meest betrouwbaar is.",
+      "seed_text": "Bill Belichick's beslissing over de receivers.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -115,11 +117,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_0",
-      "title": "Calculation of prompt diphoton production cross sections at Tevatron and LHC energies",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_30",
+      "title": "AG News Sports #30",
+      "domain": "nieuws - Sports",
       "seed_id": "ss_002",
-      "seed_text": "Precisiesniveau van initial-state gluon radiation resomming.",
+      "seed_text": "De impact van de acties op Belichick's beslissing.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -178,11 +180,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_0",
-      "title": "Calculation of prompt diphoton production cross sections at Tevatron and LHC energies",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_30",
+      "title": "AG News Sports #30",
+      "domain": "nieuws - Sports",
       "seed_id": "ss_003",
-      "seed_text": "Specifieke diphoton paarverdelingen die zijn voorspeld voor LHC.",
+      "seed_text": "De context of omstandigheden van de gebeurtenissen van vrijdagavond.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -241,11 +243,200 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_0",
-      "title": "Calculation of prompt diphoton production cross sections at Tevatron and LHC energies",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_31",
+      "title": "AG News Sports #31",
+      "domain": "nieuws - Sports",
+      "seed_id": "ss_001",
+      "seed_text": "De exacte stand van de AL Central lead na de wedstrijd.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_31",
+      "title": "AG News Sports #31",
+      "domain": "nieuws - Sports",
+      "seed_id": "ss_002",
+      "seed_text": "De naam van de tegenstander die werd gespeeld.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_31",
+      "title": "AG News Sports #31",
+      "domain": "nieuws - Sports",
+      "seed_id": "ss_003",
+      "seed_text": "De specifieke spelers die home runs scoorden.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_31",
+      "title": "AG News Sports #31",
+      "domain": "nieuws - Sports",
       "seed_id": "ss_004",
-      "seed_text": "Contrast tussen Higgs boson decayen en QCD processen in LHC.",
+      "seed_text": "De totale aantal punten gescoord tijdens de wedstrijd.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -304,11 +495,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_0",
-      "title": "Calculation of prompt diphoton production cross sections at Tevatron and LHC energies",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_31",
+      "title": "AG News Sports #31",
+      "domain": "nieuws - Sports",
       "seed_id": "ss_005",
-      "seed_text": "Methoden voor selectie van evenementen voor verbeterde signalgevoeligheid.",
+      "seed_text": "De datum en tijd waarop de wedstrijd werd gespeeld.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -367,11 +558,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_1",
-      "title": "Sparsity-certifying Graph Decompositions",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_32",
+      "title": "AG News World #32",
+      "domain": "nieuws - World",
       "seed_id": "ss_001",
-      "seed_text": "Specifieke eigenschappen van de $(k,\\ell)$-sparse grafen die worden gecharacteriseerd.",
+      "seed_text": "Verklaring van de sister voor de acties van de chief constable.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -430,11 +621,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_1",
-      "title": "Sparsity-certifying Graph Decompositions",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_32",
+      "title": "AG News World #32",
+      "domain": "nieuws - World",
       "seed_id": "ss_002",
-      "seed_text": "Details van de algoritmen voor tree decompositions van grafen gebaseerd op het $(k,\\ell)$-pebble game.",
+      "seed_text": "De specifieke bevelen die tot de confrontatie leidden.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -493,11 +684,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_1",
-      "title": "Sparsity-certifying Graph Decompositions",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_32",
+      "title": "AG News World #32",
+      "domain": "nieuws - World",
       "seed_id": "ss_003",
-      "seed_text": "Specifieke toepassingen van de $(k,\\ell)$-sparse grafen in rigiditeitstheorie.",
+      "seed_text": "De reden voor de resignation van de chief constable.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -556,11 +747,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_1",
-      "title": "Sparsity-certifying Graph Decompositions",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_32",
+      "title": "AG News World #32",
+      "domain": "nieuws - World",
       "seed_id": "ss_004",
-      "seed_text": "Het exacte aantal pebbles dat kan worden gebruikt in het $(k,\\ell)$-pebble game met kleuren.",
+      "seed_text": "De perspectief van de police op de incident.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -619,704 +810,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_2",
-      "title": "The evolution of the Earth-Moon system based on the dark matter field fluid model",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_001",
-      "seed_text": "De specifieke rol van tidal friction in de evolutie van het aardoppervlak wordt niet vermeld.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_2",
-      "title": "The evolution of the Earth-Moon system based on the dark matter field fluid model",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_002",
-      "seed_text": "De exacte relatie tussen de dark matter field fluid constant en de geologische processen van de aarde.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_2",
-      "title": "The evolution of the Earth-Moon system based on the dark matter field fluid model",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_003",
-      "seed_text": "De implicaties van de modelvoorstelling voor de bewegingspatronen van andere hemellichamen.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_5",
-      "title": "Bosonic characters of atomic Cooper pairs across resonance",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_001",
-      "seed_text": "De specifieke manier waarop de Feshbach resonance de interactiviteitstransformatie beheert, wordt niet vermeld.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_6",
-      "title": "Polymer Quantum Mechanics and its Continuum Limit",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_001",
-      "seed_text": "De specifieke relatie tussen polymer representation en Planck scale physics wordt niet gedetailleerd.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_6",
-      "title": "Polymer Quantum Mechanics and its Continuum Limit",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_002",
-      "seed_text": "De exacte methodologie voor het overgaan van de polymer quantum mechanics naar de continuümlimiet wordt niet beschreven.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_6",
-      "title": "Polymer Quantum Mechanics and its Continuum Limit",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_003",
-      "seed_text": "De implicaties van de polymer representation voor de loop quantum gravity, specifiek loop quantum cosmology, worden niet uitgebreid.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_7",
-      "title": "Numerical solution of shock and ramp compression for general material properties",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_001",
-      "seed_text": "Specifieke materialmodellen die in de formulatie zijn opgenomen.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_7",
-      "title": "Numerical solution of shock and ramp compression for general material properties",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_002",
-      "seed_text": "Precisiesnede van de numerieke methoden voor shock en ramp compressie.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_7",
-      "title": "Numerical solution of shock and ramp compression for general material properties",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_003",
-      "seed_text": "Analyse van de robuustheid en flexibiliteit van de numerieke methoden.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_7",
-      "title": "Numerical solution of shock and ramp compression for general material properties",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_004",
-      "seed_text": "Details over hoe de basis ramp en shock methoden worden gekoppeld voor composite deformatie.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_7",
-      "title": "Numerical solution of shock and ramp compression for general material properties",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_32",
+      "title": "AG News World #32",
+      "domain": "nieuws - World",
       "seed_id": "ss_005",
-      "seed_text": "Specifieke effecten van plastic werk op temperaturen in quasi-isentropische en shock-release experimenten.",
+      "seed_text": "De juridische implicaties van de confrontatie.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1375,11 +873,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_8",
-      "title": "The Spitzer c2d Survey of Large, Nearby, Insterstellar Clouds. IX. The Serpens YSO Population As Observed With IRAC and MIPS",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_33",
+      "title": "AG News World #33",
+      "domain": "nieuws - World",
       "seed_id": "ss_001",
-      "seed_text": "De exacte methode voor het isoleren van bona fide YSO's uit de achtergrondcontaminaatie.",
+      "seed_text": "De specifieke details van het geschil over de cashsetteling.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1438,11 +936,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_8",
-      "title": "The Spitzer c2d Survey of Large, Nearby, Insterstellar Clouds. IX. The Serpens YSO Population As Observed With IRAC and MIPS",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_33",
+      "title": "AG News World #33",
+      "domain": "nieuws - World",
       "seed_id": "ss_002",
-      "seed_text": "De specifieke criteria gebruikt voor het bepalen van de hoge betrouwbaarheid van de YSO's.",
+      "seed_text": "De exacte omvang van de gevraagde compensatie.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1501,11 +999,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_8",
-      "title": "The Spitzer c2d Survey of Large, Nearby, Insterstellar Clouds. IX. The Serpens YSO Population As Observed With IRAC and MIPS",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_33",
+      "title": "AG News World #33",
+      "domain": "nieuws - World",
       "seed_id": "ss_003",
-      "seed_text": "De exacte omvang van het gebied dat werd bestudeerd met IRAC en MIPS.",
+      "seed_text": "De reden voor het verlangen naar een cashsetteling.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1564,11 +1062,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_8",
-      "title": "The Spitzer c2d Survey of Large, Nearby, Insterstellar Clouds. IX. The Serpens YSO Population As Observed With IRAC and MIPS",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_33",
+      "title": "AG News World #33",
+      "domain": "nieuws - World",
       "seed_id": "ss_004",
-      "seed_text": "De specifieke methoden gebruikt om de lagere betrouwbaarheid YSO's te identificeren.",
+      "seed_text": "De tijdrelatie tussen het verlangen naar de cashsetteling en de geloofwaardigheid van het geschil.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1627,11 +1125,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_8",
-      "title": "The Spitzer c2d Survey of Large, Nearby, Insterstellar Clouds. IX. The Serpens YSO Population As Observed With IRAC and MIPS",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_33",
+      "title": "AG News World #33",
+      "domain": "nieuws - World",
       "seed_id": "ss_005",
-      "seed_text": "De exacte details van de color-color diagrammen en de modelresultaten voor star/disk/envelope systemen.",
+      "seed_text": "De impact van de aanvankelijke geheimhouding op het geschil.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1690,11 +1188,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_9",
-      "title": "Partial cubes: structures, characterizations, and constructions",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_34",
+      "title": "AG News World #34",
+      "domain": "nieuws - World",
       "seed_id": "ss_001",
-      "seed_text": "De specifieke dimensie van de hypercubes waar de partial cubes deel van uitmaken, wordt niet vermeld.",
+      "seed_text": "De reden voor de terugkeer van U.S. troepen in Najaf.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1753,11 +1251,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_9",
-      "title": "Partial cubes: structures, characterizations, and constructions",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_34",
+      "title": "AG News World #34",
+      "domain": "nieuws - World",
       "seed_id": "ss_002",
-      "seed_text": "De exacte manier waarop semicubes de structuren op de graf definiëren, wordt niet beschreven.",
+      "seed_text": "De details van de collapsie van de onderhandelingen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -1816,137 +1314,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_10",
-      "title": "Computing genus 2 Hilbert-Siegel modular forms over $\\Q(\\sqrt{5})$ via the Jacquet-Langlands correspondence",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_001",
-      "seed_text": "De specifieke eigenschappen van de real quadratic field $\\Q(\\sqrt{5})$.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_10",
-      "title": "Computing genus 2 Hilbert-Siegel modular forms over $\\Q(\\sqrt{5})$ via the Jacquet-Langlands correspondence",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_002",
-      "seed_text": "De exacte methodologie van het algoritme voor het berekenen van Hecke eigensystemen.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_10",
-      "title": "Computing genus 2 Hilbert-Siegel modular forms over $\\Q(\\sqrt{5})$ via the Jacquet-Langlands correspondence",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_34",
+      "title": "AG News World #34",
+      "domain": "nieuws - World",
       "seed_id": "ss_003",
-      "seed_text": "De definitie van Hilbert-Siegel cusp forms in de context van de tekst.",
+      "seed_text": "De impact van de explosies op de lokale bevolking.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2005,11 +1377,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_10",
-      "title": "Computing genus 2 Hilbert-Siegel modular forms over $\\Q(\\sqrt{5})$ via the Jacquet-Langlands correspondence",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_34",
+      "title": "AG News World #34",
+      "domain": "nieuws - World",
       "seed_id": "ss_004",
-      "seed_text": "De manier waarop de identiteit van Hilbert eigenforms met Hilbert-Siegel eigenforms wordt geïdentificeerd.",
+      "seed_text": "De reactie van andere internationale actoren op de gebeurtenissen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2068,11 +1440,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_10",
-      "title": "Computing genus 2 Hilbert-Siegel modular forms over $\\Q(\\sqrt{5})$ via the Jacquet-Langlands correspondence",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_34",
+      "title": "AG News World #34",
+      "domain": "nieuws - World",
       "seed_id": "ss_005",
-      "seed_text": "Het aantal of de aard van de illustratieve voorbeelden gebruikt in het voorbeeld.",
+      "seed_text": "De voortgang van de onderhandelingen na de explosies.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2131,11 +1503,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_11",
-      "title": "Distribution of integral Fourier Coefficients of a Modular Form of Half Integral Weight Modulo Primes",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_35",
+      "title": "AG News World #35",
+      "domain": "nieuws - World",
       "seed_id": "ss_001",
-      "seed_text": "De specifieke distributioneigenschap die cusp forms niet voor modulo odd primes $p$.",
+      "seed_text": "De specifieke gezondheidsproblemen van de pilgrims.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2194,11 +1566,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_11",
-      "title": "Distribution of integral Fourier Coefficients of a Modular Form of Half Integral Weight Modulo Primes",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_35",
+      "title": "AG News World #35",
+      "domain": "nieuws - World",
       "seed_id": "ss_002",
-      "seed_text": "De exacte eigenschappen van modular forms van half integral weight die in de.",
+      "seed_text": "De omvang van de pilgrimageerbevolking.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2257,11 +1629,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_11",
-      "title": "Distribution of integral Fourier Coefficients of a Modular Form of Half Integral Weight Modulo Primes",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_35",
+      "title": "AG News World #35",
+      "domain": "nieuws - World",
       "seed_id": "ss_003",
-      "seed_text": "De methodologische details over het gebruik van de Rankin-Cohen Bracket in.",
+      "seed_text": "De omvang van de openbare bijeenkomst.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2320,11 +1692,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_11",
-      "title": "Distribution of integral Fourier Coefficients of a Modular Form of Half Integral Weight Modulo Primes",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_35",
+      "title": "AG News World #35",
+      "domain": "nieuws - World",
       "seed_id": "ss_004",
-      "seed_text": "De precieze eigenschappen van traces van singular moduli en Hurwitz class number.",
+      "seed_text": "De specifieke verzoeken of gebaren van de Pope tijdens de homilie.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2383,11 +1755,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_11",
-      "title": "Distribution of integral Fourier Coefficients of a Modular Form of Half Integral Weight Modulo Primes",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_35",
+      "title": "AG News World #35",
+      "domain": "nieuws - World",
       "seed_id": "ss_005",
-      "seed_text": "De analoge aspecten van Newman's conjecture voor overpartitions die in het onderzoek.",
+      "seed_text": "De historische betekenis van Lourdes voor de pilgrimage.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2446,11 +1818,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_12",
-      "title": "$p$-adic Limit of Weakly Holomorphic Modular Forms of Half Integral Weight",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_36",
+      "title": "AG News World #36",
+      "domain": "nieuws - World",
       "seed_id": "ss_001",
-      "seed_text": "De specifieke half integral weegingen waarvoor de resultaten worden uitgebreid.",
+      "seed_text": "De mogelijke fraudpreventiemaatregelen voor de recall-stemmen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2509,11 +1881,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_12",
-      "title": "$p$-adic Limit of Weakly Holomorphic Modular Forms of Half Integral Weight",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_36",
+      "title": "AG News World #36",
+      "domain": "nieuws - World",
       "seed_id": "ss_002",
-      "seed_text": "De exacte linear relaties tussen Fourier coefficients die worden gebruikt in de bewijsvoering.",
+      "seed_text": "De stemmenbevragingprocedure voor de recall.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2572,11 +1944,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_12",
-      "title": "$p$-adic Limit of Weakly Holomorphic Modular Forms of Half Integral Weight",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_36",
+      "title": "AG News World #36",
+      "domain": "nieuws - World",
       "seed_id": "ss_003",
-      "seed_text": "De specifieke congruenties van Borcherds exponenten die worden verkregen.",
+      "seed_text": "De reacties van oppositiepartijen op de voorbereidingen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2635,11 +2007,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_12",
-      "title": "$p$-adic Limit of Weakly Holomorphic Modular Forms of Half Integral Weight",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_36",
+      "title": "AG News World #36",
+      "domain": "nieuws - World",
       "seed_id": "ss_004",
-      "seed_text": "De precieze congruenties van quotiënten van Eisentein series die worden verkregen.",
+      "seed_text": "De impact van de stemmen op de stabiliteit van de Venezolaanse economie.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2698,74 +2070,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_12",
-      "title": "$p$-adic Limit of Weakly Holomorphic Modular Forms of Half Integral Weight",
-      "domain": "wetenschap - arXiv abstract",
-      "seed_id": "ss_005",
-      "seed_text": "De specifieke punten waar de congruenties van $L$-functies worden verkregen.",
-      "reviewers": [
-        {
-          "reviewer_id": "reviewer_a",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        },
-        {
-          "reviewer_id": "reviewer_b",
-          "review_status": "pending",
-          "decision": "pending",
-          "review_fields": {
-            "atomicity": null,
-            "relevance": null,
-            "testability": null,
-            "non_triviality": null,
-            "follow_up_utility": null
-          },
-          "reject_reason": null,
-          "reviewer_notes": ""
-        }
-      ],
-      "criterion_true_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_false_counts": {
-        "atomicity": 0,
-        "relevance": 0,
-        "testability": 0,
-        "non_triviality": 0,
-        "follow_up_utility": 0
-      },
-      "criterion_pending_counts": {
-        "atomicity": 2,
-        "relevance": 2,
-        "testability": 2,
-        "non_triviality": 2,
-        "follow_up_utility": 2
-      },
-      "reject_reason_counts": {},
-      "completed_reviewer_count": 0,
-      "reviewer_count": 2,
-      "aggregate_verdict": "pending",
-      "pairwise_decision_agreement": null
-    },
-    {
-      "item_id": "ARXIV_ABSTRACTS_14",
-      "title": "Fermionic superstring loop amplitudes in the pure spinor formalism",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_37",
+      "title": "AG News World #37",
+      "domain": "nieuws - World",
       "seed_id": "ss_001",
-      "seed_text": "Methoden om de integralen in pure spinor superspace te evalueren.",
+      "seed_text": "Re-integratieproces voor militaire dienstuitvoerenden.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2824,11 +2133,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_14",
-      "title": "Fermionic superstring loop amplitudes in the pure spinor formalism",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_37",
+      "title": "AG News World #37",
+      "domain": "nieuws - World",
       "seed_id": "ss_002",
-      "seed_text": "Procedure voor het berekenen van de kinematische factoren van de one-loop amplitudes.",
+      "seed_text": "Specifieke beschermingsniveaus voor verschillende diensttijden.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2887,11 +2196,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_14",
-      "title": "Fermionic superstring loop amplitudes in the pure spinor formalism",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_37",
+      "title": "AG News World #37",
+      "domain": "nieuws - World",
       "seed_id": "ss_003",
-      "seed_text": "Procedure voor het berekenen van de kinematische factoren van de twee-loop amplitudes.",
+      "seed_text": "Procedure voor het claimen van re-integratie-uitkeringen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -2950,11 +2259,11 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_14",
-      "title": "Fermionic superstring loop amplitudes in the pure spinor formalism",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_37",
+      "title": "AG News World #37",
+      "domain": "nieuws - World",
       "seed_id": "ss_004",
-      "seed_text": "De rol van de Ramond-staten in de vier-puntamplitudesberekening.",
+      "seed_text": "Onderzoek naar de effectiviteit van de 1994 law.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
@@ -3013,11 +2322,1082 @@
       "pairwise_decision_agreement": null
     },
     {
-      "item_id": "ARXIV_ABSTRACTS_14",
-      "title": "Fermionic superstring loop amplitudes in the pure spinor formalism",
-      "domain": "wetenschap - arXiv abstract",
+      "item_id": "AG_NEWS_TEST_38",
+      "title": "AG News World #38",
+      "domain": "nieuws - World",
+      "seed_id": "ss_001",
+      "seed_text": "De specifieke soorten missielussen die Iran heeft.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_38",
+      "title": "AG News World #38",
+      "domain": "nieuws - World",
+      "seed_id": "ss_002",
+      "seed_text": "De beschikbare afstanden van de Iranische missielussen.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_38",
+      "title": "AG News World #38",
+      "domain": "nieuws - World",
+      "seed_id": "ss_003",
+      "seed_text": "De mogelijke impact van de missielussen op Israëlische infrastructuur.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_38",
+      "title": "AG News World #38",
+      "domain": "nieuws - World",
+      "seed_id": "ss_004",
+      "seed_text": "De strategische planning van Iran met betrekking tot de missielussen.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_39",
+      "title": "AG News World #39",
+      "domain": "nieuws - World",
+      "seed_id": "ss_001",
+      "seed_text": "De reden voor de interventie van de Afghanische strijdkrachten.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_39",
+      "title": "AG News World #39",
+      "domain": "nieuws - World",
+      "seed_id": "ss_002",
+      "seed_text": "De specifieke locatie waar de strijdkrachten landden.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_39",
+      "title": "AG News World #39",
+      "domain": "nieuws - World",
+      "seed_id": "ss_003",
+      "seed_text": "De soort luchtvaartuigen die door de U.S. en NATO werden gebruikt.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_39",
+      "title": "AG News World #39",
+      "domain": "nieuws - World",
+      "seed_id": "ss_004",
+      "seed_text": "De doelstelling van de terugkeer naar de contesteerde luchthaven.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_39",
+      "title": "AG News World #39",
+      "domain": "nieuws - World",
       "seed_id": "ss_005",
-      "seed_text": "Manifeste supersymmetrie in de one-loop en twee-loop amplitudes.",
+      "seed_text": "De datum of tijd van de officiële verklaring.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_40",
+      "title": "AG News Sports #40",
+      "domain": "nieuws - Sports",
+      "seed_id": "ss_001",
+      "seed_text": "De reden voor Johnson's vierhitter in de negende inning.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_40",
+      "title": "AG News Sports #40",
+      "domain": "nieuws - Sports",
+      "seed_id": "ss_002",
+      "seed_text": "De impact van Johnson's performance op de negen-game losing streak.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_40",
+      "title": "AG News Sports #40",
+      "domain": "nieuws - Sports",
+      "seed_id": "ss_003",
+      "seed_text": "De reactie van Steve Trachsel op Johnson's vierhitter.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_40",
+      "title": "AG News Sports #40",
+      "domain": "nieuws - Sports",
+      "seed_id": "ss_004",
+      "seed_text": "De strategische aanpak van de Arizona Diamondbacks tijdens de negende inning.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_41",
+      "title": "AG News Business #41",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_001",
+      "seed_text": "De specifieke stijlkeuzes die retailers aanbieden om de interesse van teenagers en jonge volwassenen te wekken.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_41",
+      "title": "AG News Business #41",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_002",
+      "seed_text": "De mate van budgettering door studenten en ouders voor back-to-school aankopen.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_41",
+      "title": "AG News Business #41",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_003",
+      "seed_text": "De effectiviteit van de back-to-school mode van retailers bij het aantrekken van de doelmarkt.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_41",
+      "title": "AG News Business #41",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_004",
+      "seed_text": "De economische omstandigheden die de aankoopbeslissingen van studenten en jonge volwassenen beïnvloeden.",
+      "reviewers": [
+        {
+          "reviewer_id": "reviewer_a",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        },
+        {
+          "reviewer_id": "reviewer_b",
+          "review_status": "pending",
+          "decision": "pending",
+          "review_fields": {
+            "atomicity": null,
+            "relevance": null,
+            "testability": null,
+            "non_triviality": null,
+            "follow_up_utility": null
+          },
+          "reject_reason": null,
+          "reviewer_notes": ""
+        }
+      ],
+      "criterion_true_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_false_counts": {
+        "atomicity": 0,
+        "relevance": 0,
+        "testability": 0,
+        "non_triviality": 0,
+        "follow_up_utility": 0
+      },
+      "criterion_pending_counts": {
+        "atomicity": 2,
+        "relevance": 2,
+        "testability": 2,
+        "non_triviality": 2,
+        "follow_up_utility": 2
+      },
+      "reject_reason_counts": {},
+      "completed_reviewer_count": 0,
+      "reviewer_count": 2,
+      "aggregate_verdict": "pending",
+      "pairwise_decision_agreement": null
+    },
+    {
+      "item_id": "AG_NEWS_TEST_41",
+      "title": "AG News Business #41",
+      "domain": "nieuws - Business",
+      "seed_id": "ss_005",
+      "seed_text": "De concurrentie tussen retailers in het aanbieden van back-to-school aanbiedingen.",
       "reviewers": [
         {
           "reviewer_id": "reviewer_a",
