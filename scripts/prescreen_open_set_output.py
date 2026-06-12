@@ -2,7 +2,9 @@
 
 This script reads an ``open_set_seed_output.json`` produced by
 ``shadowseed run-open-set-seed-review --detector model`` and flags candidate
-gaps ("kandidaat-lacunes") against the v0.3e prompt's own guardrails.
+gaps ("kandidaat-lacunes") against the v0.3g prompt's own form contract:
+the canonical candidate is a gap-label noun phrase (or an absence sentence);
+asserting a fact is the failure mode.
 
 IMPORTANT — what this is and is NOT:
 
@@ -90,6 +92,42 @@ _ENGLISH_STOPWORDS: frozenset[str] = frozenset(
 # An embedded "<n>. " mid-sentence indicates a parser/numbering leak: a second
 # numbered item bled into one candidate.
 _EMBEDDED_NUMBER = re.compile(r"\S\s+\d+[.)]\s+[A-Z]")
+
+# --- claim detection (v0.3g form contract) -----------------------------------
+# Since v0.3g the canonical candidate form is the gap-label noun phrase
+# ("De prijs van de bundle.", "Koloniaal kapitaal als financieringsbron ...");
+# the absence sentence ("... wordt niet vermeld.") stays allowed. What is
+# forbidden is ASSERTING a fact. A noun phrase has no main-clause finite verb,
+# so `claim_vs_gap` now means: a finite verb occurs in the MAIN clause (before
+# any relative/subordinating word) and no absence marker is present. Finite
+# verbs inside relative clauses ("... die zijn voorspeld voor LHC") are fine.
+# The verb list covers auxiliaries, copulas and common finite verbs; rare main
+# verbs can slip through — this stays a triage heuristic, not a verdict.
+_FINITE_VERBS = re.compile(
+    r"\b(is|zijn|was|waren|wordt|worden|werd|werden|heeft|hebben|had|hadden|"
+    r"kan|kunnen|mag|mogen|moet|moeten|wil|willen|zal|zullen|zou|zouden|"
+    r"blijkt|blijken|lijkt|lijken|gaat|gaan|doet|doen|maakt|maken|geeft|geven|"
+    r"staat|staan|komt|komen|ligt|liggen|valt|vallen|vormt|vormen|biedt|bieden|"
+    r"speelt|spelen|leidt|leiden|zorgt|zorgen|betekent|betekenen|toont|tonen|"
+    r"bevat|bevatten|weet|weten|ontbreekt|ontbreken)\b"
+)
+_SUBORDINATOR = re.compile(
+    r"\b(die|dat|waar|waarin|waarmee|waarop|waarvan|waarbij|waardoor|waarvoor|"
+    r"waaraan|waaruit|waarover|wat|wie|welke|hoe|hoeveel|waarom|wanneer|"
+    r"zoals|omdat|doordat|terwijl|hoewel|of)\b"
+)
+
+
+def _asserts_a_fact(lowered: str) -> bool:
+    """True when a finite verb appears in the main clause (pre-subordinator)."""
+    cut = _SUBORDINATOR.search(lowered)
+    main_clause = lowered[: cut.start()] if cut else lowered
+    # "ontbreekt/ontbreken" as the main verb is the legitimate absence form,
+    # not an assertion ("Kapitaalvorming ontbreekt.").
+    match = _FINITE_VERBS.search(main_clause)
+    if not match:
+        return False
+    return match.group(1) not in ("ontbreekt", "ontbreken")
 
 # Subordinate-clause openers of the v0.3e scaffold ("Of X ..., wordt niet
 # vermeld."). A candidate that starts with one of these but never reaches an
@@ -201,7 +239,7 @@ def prescreen_seed(seed: str, source_text: str = "") -> list[str]:
     opener_truncated = lowered.startswith(_SUBORDINATE_OPENERS) and not has_marker
     if opener_truncated or tail_truncated:
         codes.append("truncated")
-    elif not has_marker:
+    elif not has_marker and _asserts_a_fact(lowered):
         codes.append("claim_vs_gap")
 
     if _EMBEDDED_NUMBER.search(seed):

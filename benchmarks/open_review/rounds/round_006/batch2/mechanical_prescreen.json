@@ -28,12 +28,12 @@
     "grammar"
   ],
   "seed_count": 60,
-  "flagged_count": 53,
-  "clean_count": 7,
-  "clean_rate": 0.117,
+  "flagged_count": 15,
+  "clean_count": 45,
+  "clean_rate": 0.75,
   "near_duplicate_rate": 0.017,
   "failure_code_counts": {
-    "claim_vs_gap": 42,
+    "claim_vs_gap": 0,
     "truncated": 2,
     "parse_leak": 0,
     "language_leak": 0,
@@ -48,89 +48,70 @@
       "item_id": "ARXIV_ABSTRACTS_0",
       "position": 1,
       "seed": "Specifieke fase-ruimte waarin de berekening het meest betrouwbaar is.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_0",
       "position": 2,
       "seed": "Precisiesniveau van initial-state gluon radiation resomming.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_0",
       "position": 3,
       "seed": "Specifieke diphoton paarverdelingen die zijn voorspeld voor LHC.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_0",
       "position": 4,
       "seed": "Contrast tussen Higgs boson decayen en QCD processen in LHC.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_0",
       "position": 5,
       "seed": "Methoden voor selectie van evenementen voor verbeterde signalgevoeligheid.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_1",
       "position": 1,
       "seed": "Specifieke eigenschappen van de $(k,\\ell)$-sparse grafen die worden gecharacteriseerd.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_1",
       "position": 2,
       "seed": "Details van de algoritmen voor tree decompositions van grafen gebaseerd op het $(k,\\ell)$-pebble game.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_1",
       "position": 3,
       "seed": "Specifieke toepassingen van de $(k,\\ell)$-sparse grafen in rigiditeitstheorie.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_1",
       "position": 4,
       "seed": "Het exacte aantal pebbles dat kan worden gebruikt in het $(k,\\ell)$-pebble game met kleuren.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_1",
       "position": 5,
       "seed": "De specifieke verbeteringen of nieuwe resultaten die door het gebruik van de gekleurde pebbles worden geleverd ten opzichte van de eerdere resultaten van Lee en Streinu.",
       "codes": [
-        "claim_vs_gap",
         "not_atomic"
       ],
       "clean": false
@@ -146,17 +127,14 @@
       "item_id": "ARXIV_ABSTRACTS_2",
       "position": 2,
       "seed": "De exacte relatie tussen de dark matter field fluid constant en de geologische processen van de aarde.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_2",
       "position": 3,
       "seed": "De methodologie of experimenten die de nauwkeurigheid van de modelafstemming met geologisch en fossiel bewijs ondersteunen.",
       "codes": [
-        "claim_vs_gap",
         "not_atomic"
       ],
       "clean": false
@@ -165,17 +143,14 @@
       "item_id": "ARXIV_ABSTRACTS_2",
       "position": 4,
       "seed": "De implicaties van de modelvoorstelling voor de bewegingspatronen van andere hemellichamen.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_2",
       "position": 5,
       "seed": "De rol van andere mogelijke krachten of processen naast de dark matter field fluid in de evolutie van het aardoppervlak.",
       "codes": [
-        "claim_vs_gap",
         "not_atomic"
       ],
       "clean": false
@@ -266,91 +241,71 @@
       "item_id": "ARXIV_ABSTRACTS_7",
       "position": 1,
       "seed": "Specifieke materialmodellen die in de formulatie zijn opgenomen.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_7",
       "position": 2,
       "seed": "Precisiesnede van de numerieke methoden voor shock en ramp compressie.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_7",
       "position": 3,
       "seed": "Analyse van de robuustheid en flexibiliteit van de numerieke methoden.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_7",
       "position": 4,
       "seed": "Details over hoe de basis ramp en shock methoden worden gekoppeld voor composite deformatie.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_7",
       "position": 5,
       "seed": "Specifieke effecten van plastic werk op temperaturen in quasi-isentropische en shock-release experimenten.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_8",
       "position": 1,
       "seed": "De exacte methode voor het isoleren van bona fide YSO's uit de achtergrondcontaminaatie.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_8",
       "position": 2,
       "seed": "De specifieke criteria gebruikt voor het bepalen van de hoge betrouwbaarheid van de YSO's.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_8",
       "position": 3,
       "seed": "De exacte omvang van het gebied dat werd bestudeerd met IRAC en MIPS.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_8",
       "position": 4,
       "seed": "De specifieke methoden gebruikt om de lagere betrouwbaarheid YSO's te identificeren.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_8",
       "position": 5,
       "seed": "De exacte details van de color-color diagrammen en de modelresultaten voor star/disk/envelope systemen.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_9",
@@ -397,55 +352,43 @@
       "item_id": "ARXIV_ABSTRACTS_10",
       "position": 1,
       "seed": "De specifieke eigenschappen van de real quadratic field $\\Q(\\sqrt{5})$.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_10",
       "position": 2,
       "seed": "De exacte methodologie van het algoritme voor het berekenen van Hecke eigensystemen.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_10",
       "position": 3,
       "seed": "De definitie van Hilbert-Siegel cusp forms in de context van de tekst.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_10",
       "position": 4,
       "seed": "De manier waarop de identiteit van Hilbert eigenforms met Hilbert-Siegel eigenforms wordt geïdentificeerd.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_10",
       "position": 5,
       "seed": "Het aantal of de aard van de illustratieve voorbeelden gebruikt in het voorbeeld.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_11",
       "position": 1,
       "seed": "De specifieke distributioneigenschap die cusp forms niet voor modulo odd primes $p$.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_11",
@@ -469,89 +412,70 @@
       "item_id": "ARXIV_ABSTRACTS_11",
       "position": 4,
       "seed": "De precieze eigenschappen van traces van singular moduli en Hurwitz class number.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_11",
       "position": 5,
       "seed": "De analoge aspecten van Newman's conjecture voor overpartitions die in het onderzoek.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_12",
       "position": 1,
       "seed": "De specifieke half integral weegingen waarvoor de resultaten worden uitgebreid.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_12",
       "position": 2,
       "seed": "De exacte linear relaties tussen Fourier coefficients die worden gebruikt in de bewijsvoering.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_12",
       "position": 3,
       "seed": "De specifieke congruenties van Borcherds exponenten die worden verkregen.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_12",
       "position": 4,
       "seed": "De precieze congruenties van quotiënten van Eisentein series die worden verkregen.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_12",
       "position": 5,
       "seed": "De specifieke punten waar de congruenties van $L$-functies worden verkregen.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_14",
       "position": 1,
       "seed": "Methoden om de integralen in pure spinor superspace te evalueren.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_14",
       "position": 2,
       "seed": "Procedure voor het berekenen van de kinematische factoren van de one-loop amplitudes.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_14",
       "position": 3,
       "seed": "Procedure voor het berekenen van de kinematische factoren van de twee-loop amplitudes.",
       "codes": [
-        "claim_vs_gap",
         "near_duplicate"
       ],
       "clean": false
@@ -560,19 +484,15 @@
       "item_id": "ARXIV_ABSTRACTS_14",
       "position": 4,
       "seed": "De rol van de Ramond-staten in de vier-puntamplitudesberekening.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     },
     {
       "item_id": "ARXIV_ABSTRACTS_14",
       "position": 5,
       "seed": "Manifeste supersymmetrie in de one-loop en twee-loop amplitudes.",
-      "codes": [
-        "claim_vs_gap"
-      ],
-      "clean": false
+      "codes": [],
+      "clean": true
     }
   ]
 }
