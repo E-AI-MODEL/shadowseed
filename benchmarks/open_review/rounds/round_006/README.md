@@ -1,11 +1,13 @@
 # Open-set round 006 — substance iteration (Layer C) + first domain signal (Layer F)
 
-> **Status: batch 1 executed and AI-reviewed.** The Phi-3.5-mini run is real
-> (Actions run 27256277709); the review is delegated AI (`reviewer_ai_claude`)
-> — see `batch1/README.md`. Headline (same-reviewer comparison vs the round
-> 005 AI pass): acceptance 0.185 → **0.50**, non-triviality 0.19 → **0.50**,
-> zero truncation/duplicates/stacking. The model lever works; substance is
-> halved, not solved. Batch 2 (domain transfer) is the remaining open step.
+> **Status: both batches executed and AI-reviewed — round complete.**
+> Batch 1 (news, run 27256277709): acceptance 0.185 → **0.50** vs the round
+> 005 AI pass — the model lever works. Batch 2 (arXiv abstracts, run
+> 27350504602, first Layer-F data point): acceptance **0.458**, and 0.51
+> excluding the one LaTeX-mangled item — **the quality transfers across
+> domains**; what shifts is the failure profile ("of"-stacking upstream,
+> LaTeX truncation), not the substance. Both reviews are delegated AI
+> (`reviewer_ai_claude`); see `batch1/README.md` and `batch2/README.md`.
 
 ## Why this round
 
