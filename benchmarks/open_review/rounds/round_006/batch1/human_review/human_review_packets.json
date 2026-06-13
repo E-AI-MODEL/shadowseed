@@ -1,6 +1,6 @@
 {
   "evidence_layer": "open_set_seed_quality",
-  "review_note": "BLIND human second pass. Fill review_fields (5 booleans), review_status accepted/rejected, and reject_reason on reject. Do NOT open ../ai_review/ while reviewing. Reject codes: too_broad, too_vague, trivial, not_relevant, not_testable, duplicate, style_not_gap.",
+  "review_note": "BLIND human second pass. Fill review_fields (5 booleans), review_status accepted/rejected, and reject_reason on reject. Do NOT open ../ai_review/ while reviewing. Reject codes: too_broad, too_vague, trivial, not_relevant, not_testable, duplicate, style_not_gap. | Filled from maintainer human review (binary accept/reject; '?' doubts abstained).",
   "criteria": [
     "atomicity",
     "relevance",
@@ -18,13 +18,13 @@
       "seed_text": "De specifieke tijdlijn of deadline voor de implementatie van de nieuwe regels.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -37,14 +37,14 @@
       "seed_text": "De exacte bemiddelingsmethode of tussenpersoon.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -56,13 +56,13 @@
       "seed_text": "Specifieke technische specificaties van de nieuwe high-speed wireless format.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -75,14 +75,14 @@
       "seed_text": "De specifieke strategieën die door Sophos zijn gebruikt om de virussen te identificeren.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -102,7 +102,7 @@
       },
       "review_status": "pending",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "abstain (?)"
     },
     {
       "item_id": "AG_NEWS_TEST_10",
@@ -113,13 +113,13 @@
       "seed_text": "De timing en details van het voorstelpresentatie.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -132,14 +132,14 @@
       "seed_text": "De encryptiebehoeften van de bron FOAF file voor veiligheid.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -151,13 +151,13 @@
       "seed_text": "Eventuele reacties of acties van andere belanghebbenden of organisaties na het schrijven van het open brief.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -170,14 +170,14 @@
       "seed_text": "De impact van de nieuwe download service op de Europese muziekmarkt.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -189,13 +189,13 @@
       "seed_text": "De impact van de arrestatie op de algehele trend van virusinfecties in de daaropvolgende periode.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -208,14 +208,14 @@
       "seed_text": "De relatie tussen de directe vrienden en de bloom filter van hun PGP.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -227,14 +227,14 @@
       "seed_text": "De impact van deze indoctrinatie op de scholieren in de Britse scholen.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -246,13 +246,13 @@
       "seed_text": "De reactie of standpunt van Federal Mogul na de gesprekken.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -265,13 +265,13 @@
       "seed_text": "De specifieke soorten misdrijven waarmee de card fraud unit is betrokken.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -284,14 +284,14 @@
       "seed_text": "Het exacte aantal gevallen waarin de card fraud unit heeft bijgedragen aan de arrestatie van verdachten.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -303,13 +303,13 @@
       "seed_text": "Specifieke criteria voor het winnen van de Ansari X Prize.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -322,14 +322,14 @@
       "seed_text": "Potentiële impact en vooruitzichten van de nieuwe high-speed wireless standard.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -341,13 +341,13 @@
       "seed_text": "Andere technologiebedrijven of belanghebbenden die mogelijk betrokken zijn bij het voorstel.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -360,13 +360,13 @@
       "seed_text": "Specifieke datum voor de eerste lancering.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -379,14 +379,14 @@
       "seed_text": "De periode waarin de card fraud unit haar prestaties heeft gemeten.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -398,13 +398,13 @@
       "seed_text": "Specifieke technische maatregelen om emissies van dairy cow manure te verminderen.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -417,14 +417,14 @@
       "seed_text": "Het exacte aantal geredde kredietkaarten buiten de 36,000 die worden vermeld.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -436,14 +436,14 @@
       "seed_text": "Het specifieke doel van de \"Music Manifesto\" campagne van de DfES.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -455,13 +455,13 @@
       "seed_text": "De prijs van de discount video-editing software bundle.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -474,14 +474,14 @@
       "seed_text": "Historische nauwkeurigheid van voorspellingen van de Prediction Unit voor wildfires.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -493,13 +493,13 @@
       "seed_text": "Specifieke resultaten of uitkomsten van de talks.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -512,14 +512,14 @@
       "seed_text": "De manier waarop de client het whitelist vult vanuit de sociale netwerk.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -531,14 +531,14 @@
       "seed_text": "De specifieke manier waarop de bloom filter wordt gebruikt voor de PGP.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -550,14 +550,14 @@
       "seed_text": "Reviews of feedback van gebruikers na de lancering van de software.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -569,13 +569,13 @@
       "seed_text": "De exacte groep technologiebedrijven die de voorstellen doen.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -588,13 +588,13 @@
       "seed_text": "Specifieke geografische locaties waar de wildfires voorspeld worden.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -607,13 +607,13 @@
       "seed_text": "Specifieke functies van de nieuwe download service.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -626,14 +626,14 @@
       "seed_text": "De exacte universiteit waar de chemie researcher aan het begin van het bedrijf werkte.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -653,7 +653,7 @@
       },
       "review_status": "pending",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "abstain (?)"
     },
     {
       "item_id": "AG_NEWS_TEST_5",
@@ -664,13 +664,13 @@
       "seed_text": "Specifieke beleidsmaatregelen of acties die door EMI zijn onderhandeld.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -683,13 +683,13 @@
       "seed_text": "De exacte details van de samenwerking tussen de DfES en de muziekindustrie.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -702,13 +702,13 @@
       "seed_text": "De reactie van de landbouwsector op de adoptie van deze regels.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -721,13 +721,13 @@
       "seed_text": "De reactie van Apple Computer Inc. op de lancering.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -740,13 +740,13 @@
       "seed_text": "Specifieke soorten peptides die in de studie worden onderzocht.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -759,13 +759,13 @@
       "seed_text": "Omvang van het gehonoreerde grant.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -778,13 +778,13 @@
       "seed_text": "De specifieke methodologie of techniek die door de Prediction Unit wordt gebruikt.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -797,13 +797,13 @@
       "seed_text": "Specifieke belangen of eisen van de werknemers.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -816,13 +816,13 @@
       "seed_text": "De naam van de tweede private team.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -835,13 +835,13 @@
       "seed_text": "Details over de concurrentie tussen Free Record Shop en andere spelers.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -854,13 +854,13 @@
       "seed_text": "De locatie waar de lancering zal plaatsvinden.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -873,14 +873,14 @@
       "seed_text": "De specifieke technische details van hoe Jaschan de Netsky en Sasser worms heeft geprogrammeerd.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -900,7 +900,7 @@
       },
       "review_status": "pending",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "abstain (?)"
     },
     {
       "item_id": "AG_NEWS_TEST_2",
@@ -911,13 +911,13 @@
       "seed_text": "De specifieke gebruikssituatie of toepassing van betere peptides.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -930,13 +930,13 @@
       "seed_text": "Details over de juridische consequenties van Jaschan's veroordeling.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -949,14 +949,14 @@
       "seed_text": "Details over de technologie van de rocket.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -968,14 +968,14 @@
       "seed_text": "Precisiesnelheden of nauwkeurigheidspercentages van de Prediction Unit.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -987,13 +987,13 @@
       "seed_text": "Specifieke functies van de nieuwe program voor real-time motion graphics.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -1006,13 +1006,13 @@
       "seed_text": "Impact of Prediction Unit's forecasts on wildfire prevention or response strategies.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -1025,13 +1025,13 @@
       "seed_text": "De verwachte effectiviteit van de regelgeving op de vermindering van smog.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": true,
+        "relevance": true,
+        "testability": true,
+        "non_triviality": true,
+        "follow_up_utility": true
       },
-      "review_status": "pending",
+      "review_status": "accepted",
       "reject_reason": null,
       "reviewer_notes": ""
     },
@@ -1044,14 +1044,14 @@
       "seed_text": "Specifieke updates of verbeteringen ten opzichte van eerdere versies van Final Cut Pro.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -1063,14 +1063,14 @@
       "seed_text": "De impact van de nieuwe regelgeving op de algehele luchtkwaliteit in Southern California.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     },
     {
@@ -1090,7 +1090,7 @@
       },
       "review_status": "pending",
       "reject_reason": null,
-      "reviewer_notes": ""
+      "reviewer_notes": "abstain (?)"
     },
     {
       "item_id": "AG_NEWS_TEST_9",
@@ -1101,14 +1101,14 @@
       "seed_text": "De exacte kosten die zijn bespaard door de inzet van de card fraud unit.",
       "reviewer_id": "reviewer_human_1",
       "review_fields": {
-        "atomicity": null,
-        "relevance": null,
-        "testability": null,
-        "non_triviality": null,
-        "follow_up_utility": null
+        "atomicity": false,
+        "relevance": false,
+        "testability": false,
+        "non_triviality": false,
+        "follow_up_utility": false
       },
-      "review_status": "pending",
-      "reject_reason": null,
+      "review_status": "rejected",
+      "reject_reason": "not_relevant",
       "reviewer_notes": ""
     }
   ]
