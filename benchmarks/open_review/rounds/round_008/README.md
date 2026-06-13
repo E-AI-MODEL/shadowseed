@@ -56,11 +56,28 @@ human anchor: a **first signal** on whether seeds help, never "SSL improves
 answers" unqualified. Blind, order-randomized, length-controlled, or it does not
 count.
 
-## Dispatch (after the judgment layer lands)
+## Dispatch (harness is built — ready to run)
 
-```yaml
-# generation (exact flags finalized when the blind-judgment layer is added)
-run-model-benefit-suite --model-backend hf-transformers \
-  --model-id microsoft/Phi-3.5-mini-instruct
-# then: build blind answer-pair packets -> reader judgment -> win-rate score
+The blind answer-pair scaffold already lives in `run-model-benefit-suite`
+(`blind_review_items` + hidden `blind_answer_key`), and the win-rate scorer
+(`scripts/answer_pair_winrate.py`) now closes the loop. Flow:
+
+```bash
+# 1. generate baseline + ssl_guided answers on a real model (~per-item cost)
+shadowseed run-model-benefit-suite --model-backend hf-transformers \
+  --model-id microsoft/Phi-3.5-mini-instruct \
+  --output results/ssl45_model_benefit_suite.json
+
+# 2. a blind reader fills scores_to_fill.better_answer (A/B/tie) in
+#    blind_review_items — without reading blind_answer_key. Reader = the
+#    kappa-0.63-validated AI judge, with a human anchor on a subset.
+
+# 3. win-rate (unblinds via the key; length-controlled)
+python scripts/answer_pair_winrate.py results/ssl45_model_benefit_suite.json
 ```
+
+Output: `ssl_win_rate` (ssl_wins / decided) and `ssl_win_rate_length_neutral`
+(restricted to pairs where the SSL answer was not longer) + tie/pending counts.
+
+The only remaining input is a model dispatch; everything downstream is in place
+and unit-tested.
