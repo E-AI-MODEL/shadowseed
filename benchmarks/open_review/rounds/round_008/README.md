@@ -64,7 +64,7 @@ The blind answer-pair scaffold already lives in `run-model-benefit-suite`
 
 ```bash
 # 1. generate baseline + ssl_guided answers on a real model (~per-item cost)
-shadowseed run-model-benefit-suite --model-backend hf-transformers \
+shadowseed run-model-benefit-suite --backend hf-transformers \
   --model-id microsoft/Phi-3.5-mini-instruct \
   --output results/ssl45_model_benefit_suite.json
 
