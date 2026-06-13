@@ -22,7 +22,7 @@ seeds). It currently scores them on deterministic token coverage-delta. Round
 actually better.**
 
 1. **Generate** baseline + ssl_guided answers on ~12 items
-   (`run-model-benefit-suite --model-backend hf-transformers`,
+   (`run-model-benefit-suite --backend hf-transformers`,
    Phi-3.5-mini). Seeds come from the already-reviewed batches so the
    "validated seed" input is real, not synthetic.
 2. **Blind pairwise judgment**: present the two answers per item with arm hidden
