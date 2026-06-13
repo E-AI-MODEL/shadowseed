@@ -34,13 +34,15 @@
 | round 006 batch 1 | 0 | 0.50 |
 | round 007 batch A | 30 | **0.333** |
 
-News acceptance drops out of sample too — and the cause is the same one batch B
-showed for science: **fact-complete short wire items have almost no gaps.**
-Item 31 (Indians beat Twins) and item 40 (D-Backs end slide) are 3-line
-box-score recaps that state opponent, score, scorers, standing and day — 0/5
-and 1/5 accepted, every rejected candidate a stated fact. The gap-rich items
-are the narrative World stories (item 37 USERRA provisions-stub 3/5, Najaf 2/5,
-Afghan army 2/5).
+News acceptance drops out of sample too (pooled z ≈ 1.8 SE on 29/58 vs 18/54,
+per-seed — marginal, and weaker once clustered by item). Per-item it *looked*
+like fact-complete short wire items have fewer gaps — item 31 (Indians beat
+Twins) and item 40 (D-Backs end slide) are 3-line box-score recaps scoring
+0/5 and 1/5, while narrative World stories score higher (item 37 USERRA
+provisions-stub 3/5). **But that "text density" reading does not survive a
+check:** `scripts/analyze_acceptance_vs_density.py` finds |r| < 0.25 between
+per-item acceptance and five surface proxies across all 48 round-006/007 items.
 
-So the news/science distinction is **not** the driver; text density is. See the
-round-level synthesis in `../README.md`.
+So the news/science split is **not** the driver — and neither is a measurable
+text-density proxy. The driver is currently unidentified; see the round-level
+synthesis in `../README.md`.
