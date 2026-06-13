@@ -283,7 +283,12 @@ jobs:
             fi
             echo "Push geweigerd op poging $attempt; rebase op origin/main."
             git fetch origin main || true
-            if ! git rebase origin/main; then
+            # --autostash: het werkstation bevat na de run ook niet-gecommitte
+            # bestanden (o.a. de input-batch en raw outputs die alleen als
+            # artifact meegaan). Zonder autostash weigert rebase met "You have
+            # unstaged changes" zodra twee runs parallel draaien — precies de
+            # race waarvoor deze retry-lus bestaat (run 27438927839).
+            if ! git rebase --autostash origin/main; then
               echo "::error::Rebase op origin/main mislukte (conflict op resultaatbestanden). Artifact is wel geupload."
               git rebase --abort || true
               exit 1

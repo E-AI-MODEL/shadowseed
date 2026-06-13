@@ -1,0 +1,150 @@
+{
+  "summary": {
+    "detector": "model",
+    "model_backend": "hf-transformers:microsoft/Phi-3.5-mini-instruct",
+    "run_id": 27438917843,
+    "source_id": "ag_news_test",
+    "offset": 30,
+    "provenance_note": "Reconstructed from the workflow-committed summary (run 27438917843, commit cd7fc24); candidate texts verbatim. Raw seed_output + input batch live only in the Actions artifact — needed for the AI review."
+  },
+  "results": [
+    {
+      "item_id": "AG_NEWS_TEST_30",
+      "title": "AG News Sports #30",
+      "domain": "nieuws - Sports",
+      "normalized_candidates": [
+        "Bill Belichick's beslissing over de receivers.",
+        "De impact van de acties op Belichick's beslissing.",
+        "De context of omstandigheden van de gebeurtenissen van vrijdagavond."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_31",
+      "title": "AG News Sports #31",
+      "domain": "nieuws - Sports",
+      "normalized_candidates": [
+        "De exacte stand van de AL Central lead na de wedstrijd.",
+        "De naam van de tegenstander die werd gespeeld.",
+        "De specifieke spelers die home runs scoorden.",
+        "De totale aantal punten gescoord tijdens de wedstrijd.",
+        "De datum en tijd waarop de wedstrijd werd gespeeld."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_32",
+      "title": "AG News World #32",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "Verklaring van de sister voor de acties van de chief constable.",
+        "De specifieke bevelen die tot de confrontatie leidden.",
+        "De reden voor de resignation van de chief constable.",
+        "De perspectief van de police op de incident.",
+        "De juridische implicaties van de confrontatie."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_33",
+      "title": "AG News World #33",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "De specifieke details van het geschil over de cashsetteling.",
+        "De exacte omvang van de gevraagde compensatie.",
+        "De reden voor het verlangen naar een cashsetteling.",
+        "De tijdrelatie tussen het verlangen naar de cashsetteling en de geloofwaardigheid van het geschil.",
+        "De impact van de aanvankelijke geheimhouding op het geschil."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_34",
+      "title": "AG News World #34",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "De reden voor de terugkeer van U.S. troepen in Najaf.",
+        "De details van de collapsie van de onderhandelingen.",
+        "De impact van de explosies op de lokale bevolking.",
+        "De reactie van andere internationale actoren op de gebeurtenissen.",
+        "De voortgang van de onderhandelingen na de explosies."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_35",
+      "title": "AG News World #35",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "De specifieke gezondheidsproblemen van de pilgrims.",
+        "De omvang van de pilgrimageerbevolking.",
+        "De omvang van de openbare bijeenkomst.",
+        "De specifieke verzoeken of gebaren van de Pope tijdens de homilie.",
+        "De historische betekenis van Lourdes voor de pilgrimage."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_36",
+      "title": "AG News World #36",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "De mogelijke fraudpreventiemaatregelen voor de recall-stemmen.",
+        "De stemmenbevragingprocedure voor de recall.",
+        "De reacties van oppositiepartijen op de voorbereidingen.",
+        "De impact van de stemmen op de stabiliteit van de Venezolaanse economie."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_37",
+      "title": "AG News World #37",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "Re-integratieproces voor militaire dienstuitvoerenden.",
+        "Specifieke beschermingsniveaus voor verschillende diensttijden.",
+        "Procedure voor het claimen van re-integratie-uitkeringen.",
+        "Onderzoek naar de effectiviteit van de 1994 law."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_38",
+      "title": "AG News World #38",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "De specifieke soorten missielussen die Iran heeft.",
+        "De beschikbare afstanden van de Iranische missielussen.",
+        "De mogelijke impact van de missielussen op Israëlische infrastructuur.",
+        "De strategische planning van Iran met betrekking tot de missielussen."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_39",
+      "title": "AG News World #39",
+      "domain": "nieuws - World",
+      "normalized_candidates": [
+        "De reden voor de interventie van de Afghanische strijdkrachten.",
+        "De specifieke locatie waar de strijdkrachten landden.",
+        "De soort luchtvaartuigen die door de U.S. en NATO werden gebruikt.",
+        "De doelstelling van de terugkeer naar de contesteerde luchthaven.",
+        "De datum of tijd van de officiële verklaring."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_40",
+      "title": "AG News Sports #40",
+      "domain": "nieuws - Sports",
+      "normalized_candidates": [
+        "De reden voor Johnson's vierhitter in de negende inning.",
+        "De impact van Johnson's performance op de negen-game losing streak.",
+        "De reactie van Steve Trachsel op Johnson's vierhitter.",
+        "De strategische aanpak van de Arizona Diamondbacks tijdens de negende inning."
+      ]
+    },
+    {
+      "item_id": "AG_NEWS_TEST_41",
+      "title": "AG News Business #41",
+      "domain": "nieuws - Business",
+      "normalized_candidates": [
+        "De specifieke stijlkeuzes die retailers aanbieden om de interesse van teenagers en jonge volwassenen te wekken.",
+        "De mate van budgettering door studenten en ouders voor back-to-school aankopen.",
+        "De effectiviteit van de back-to-school mode van retailers bij het aantrekken van de doelmarkt.",
+        "De economische omstandigheden die de aankoopbeslissingen van studenten en jonge volwassenen beïnvloeden.",
+        "De concurrentie tussen retailers in het aanbieden van back-to-school aanbiedingen."
+      ]
+    }
+  ]
+}
