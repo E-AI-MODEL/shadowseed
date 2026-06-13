@@ -4,9 +4,9 @@ Deze artifactset komt uit een handmatige workflow met Hugging Face intake.
 
 Run-parameters:
 
-- source_id: `arxiv_abstracts`
+- source_id: `ag_news_test`
 - limit: `12`
-- offset: `0`
+- offset: `30`
 - detector: `model`
 - model_backend: `hf-transformers`
 - model_id: `microsoft/Phi-3.5-mini-instruct`
