@@ -9,9 +9,10 @@
 > 2. **The model lever holds out of sample** — news 0.333, science 0.268, both
 >    well above round 005's Qwen baseline (0.185). Phi >> Qwen replicates.
 > 3. **Round 006's absolute levels (0.50 / 0.458) were optimistic, and the
->    news/science framing was wrong.** Out of sample both drop to ~0.30, and
->    the driver is not domain but **text density**: news offset 30 (0.333) ≈
->    science offset 20 (0.268), both below the gap-rich offset-0 batches.
+>    news/science framing was wrong.** Out of sample both drop to ~0.30
+>    (news offset 30 = 0.333 ≈ science offset 20 = 0.268), so the split is not
+>    domain. An initial "text density" explanation did **not** survive a proxy
+>    check (see below); the driver of the drop is currently unidentified.
 
 ## The five-point picture (delegated AI review, one reviewer, one rubric)
 
@@ -23,18 +24,29 @@
 | **007 batch A** | Phi-3.5-mini | ag_news | 30 | **0.333** |
 | **007 batch B** | Phi-3.5-mini | arXiv | 20 | **0.268** |
 
-**The unifying variable is how much the source text leaves unsaid.**
-Fact-complete short wire items (Indians-beat-Twins box scores) and
-results-dense physics abstracts (stated Hopf bifurcations, stated kondo peaks)
-both yield few genuine gaps; narrative World stories and discursive abstracts
-yield more. A stated finding is not a gap, and the detector is correctly
-rejected on it. This is a property of the corpus, not a detector regression —
-and it means a fair Layer-C/F number needs a **density-controlled** item
-sample, not just more items. (Candidate for round 008: stratify intake by
-text density, or measure gap-yield against a density proxy.)
+**What drives the drop is not yet identified.** Reading the items suggested a
+"text density" story — fact-complete wire items (Indians-beat-Twins box scores)
+and results-dense physics abstracts (stated Hopf bifurcations, stated kondo
+peaks) leave few genuine gaps. That reading is intuitive but **does not survive
+a check**: `scripts/analyze_acceptance_vs_density.py` correlates per-item
+acceptance against five deterministic surface proxies (length, number density,
+proper-noun density, type-token ratio, words/sentence) over all 48 reviewed
+items and finds **|r| < 0.25 for every one**, with the batch ordering
+non-monotone in each (007_A has the highest proper-noun density yet low
+acceptance). So:
+
+> The out-of-sample drop is real (batch differences are several standard
+> errors apart), but "density" as measured by simple surface features does
+> **not** explain it. The driver is unidentified; candidates that this n=48,
+> single-reviewer setup cannot separate include sub-domain difficulty, item
+> selection, and reviewer variance.
 
 Round 006 was right to flag *single-batch noise*; out-of-sample replication
-shows the caveat mattered.
+shows the caveat mattered. The honest implication for round 008 is **not** a
+density-stratified intake (the proxy that would drive it doesn't work) but
+**reducing measurement variance**: a second independent reviewer (or a human
+anchor) on the existing complete batches, and larger n, before more detector
+iteration.
 
 ## Why this round
 
