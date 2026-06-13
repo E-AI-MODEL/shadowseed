@@ -34,6 +34,7 @@ Korte totaalscore per laag (per 2026-05-22):
 - adversarial Gate-evaluatie: eerste echte evidence (PR #80, F1 1.0 op 21 candidates met drie baselines)
 - probe utility behavioral: eerste echte evidence (PR #82, 10/10 lifecycle scenarios)
 - probe utility prompt-quality: bestaand scaffold in `ssl45_probe_utility_suite`
+- open-set/domeintransfer replicatie (round 007, v0.3g, verse items): de model-hefboom houdt out-of-sample stand (nieuws 0.333, wetenschap 0.268 — beide ruim boven Qwen 0.185), maar de round-006 niveaus (0.50/0.458) waren optimistisch en de nieuws-vs-wetenschap-framing onjuist: de driver is **tekstdichtheid**, niet domein (feit-complete wire-items en resultaat-dichte abstracts leveren weinig echte gaps). v0.3g lost de vorm overal op (prescreen clean-rate 0.90/0.95, claim_vs_gap 0). Zie `benchmarks/open_review/rounds/round_007/`
 - domeintransfer: **eerste signaal** (2026-06-11, round 006 batch 2): zelfde Phi-3.5-mini + v0.3e op 12 arXiv-abstracts levert AI-gereviewde acceptance **0.458** vs 0.50 op nieuws (zelfde reviewer/model/prompt) — kwaliteit transfereert; het faalprofiel verschuift ("of"-stapeling, LaTeX-truncatie). Eén exploratieve batch, AI-gereviewd: signaal, geen validatie
 - modelinterne validatie: nog onderzoekswerk per 4.6 doc
 
