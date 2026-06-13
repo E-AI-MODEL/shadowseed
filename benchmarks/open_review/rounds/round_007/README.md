@@ -67,11 +67,18 @@ asymmetrically so:
 
 The **0.50 headline batch swings the most** and collapses toward the
 out-of-sample numbers; the strict rule compresses the cross-batch spread from
-0.232 to 0.146. So part of the in-sample/out-of-sample gap was **reviewer
-leniency on generic detail-asks, not only items**. This is a self-consistency
-bound (same agent, alternative rule), not independent review — the blind human
-pass (`round_006/batch1/human_review/`) arbitrates which rule is closer to a
-human's.
+0.232 to 0.146. This is a self-consistency bound (same agent, alternative
+rule), not independent review.
+
+**Update — the human pass arbitrated, and it landed on the lenient side.**
+The blind maintainer review of batch 1 (`round_006/batch1/human_review/`) gives
+human acceptance **0.593 ≥ AI 0.519**, κ = 0.63 (substantial). So the strict
+rule (0.328) is the *pessimistic* bracket, not the truth: the in-sample
+headline is **not** inflated by AI leniency — a real human is slightly more
+generous. The residual human-vs-AI disagreement is concentrated on the
+impact/speculation boundary, the softest part of the rubric. The
+rubric-sensitivity table below therefore bounds how low a stricter reading
+could push acceptance; the human anchor bounds the realistic high end.
 
 ## Why this round
 
