@@ -51,6 +51,28 @@ density-stratified intake (the proxy that would drive it doesn't work) but
 anchor) on the existing complete batches, and larger n, before more detector
 iteration.
 
+### Rubric-sensitivity bound (`scripts/analyze_rubric_sensitivity.py`)
+
+Re-aggregating the same AI verdicts under one deliberately stricter,
+deterministic rule (demote accepts that are generic detail / impact /
+speculation asks) shows the acceptance numbers are **rubric-fragile**, and
+asymmetrically so:
+
+| batch | AI acceptance | strict | swing |
+|---|---:|---:|---:|
+| 006_b1 (news off0) | 0.500 | **0.328** | −0.172 |
+| 006_b2 (sci off0) | 0.458 | 0.396 | −0.062 |
+| 007_A (news off30) | 0.333 | 0.296 | −0.037 |
+| 007_B (sci off20) | 0.268 | 0.250 | −0.018 |
+
+The **0.50 headline batch swings the most** and collapses toward the
+out-of-sample numbers; the strict rule compresses the cross-batch spread from
+0.232 to 0.146. So part of the in-sample/out-of-sample gap was **reviewer
+leniency on generic detail-asks, not only items**. This is a self-consistency
+bound (same agent, alternative rule), not independent review — the blind human
+pass (`round_006/batch1/human_review/`) arbitrates which rule is closer to a
+human's.
+
 ## Why this round
 
 Round 006 established two signals with one batch each: the model lever works
