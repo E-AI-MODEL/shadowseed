@@ -1,9 +1,17 @@
 # Open-set round 007 — out-of-sample replication under prompt v0.3g
 
-> **Status: dispatched.** Two batches, both `microsoft/Phi-3.5-mini-instruct`
-> with the v0.3g prompt (gap-label noun phrase canonical), on **fresh items**
-> never used in earlier rounds. Goal: test whether the round 006 signals
-> (news 0.50, science 0.458, AI-reviewed) replicate out of sample.
+> **Status: batch B complete; batch A prescreen-only (review pending its
+> artifact).** Both ran `microsoft/Phi-3.5-mini-instruct` with the **v0.3g**
+> prompt on fresh items. Headline so far: v0.3g fixes form everywhere
+> (prescreen clean-rate 1.0 on news, 0.95 on science — `claim_vs_gap` 0,
+> `truncated` 0), but the science replication **does not hold**: arXiv offset
+> 20 scored AI-reviewed acceptance **0.268** vs round 006's 0.458, because the
+> offset-20 items are results-dense physics abstracts that state their
+> findings (28/56 candidates restate a stated result). The transfer is
+> **density-dependent**: form transfers, but the supply of genuine gaps
+> depends on how much the source leaves unsaid. See `batchB/README.md`
+> (complete) and `batchA/README.md` (news offset 30, prescreen clean-rate 1.0,
+> review pending the Actions artifact for run 27438917843).
 
 ## Why this round
 
