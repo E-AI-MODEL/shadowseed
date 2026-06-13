@@ -62,7 +62,7 @@ asymmetrically so:
 |---|---:|---:|---:|
 | 006_b1 (news off0) | 0.500 | **0.328** | −0.172 |
 | 006_b2 (sci off0) | 0.458 | 0.396 | −0.062 |
-| 007_A (news off30) | 0.333 | 0.296 | −0.037 |
+| 007_A (news off30) | 0.333 | 0.278 | −0.055 |
 | 007_B (sci off20) | 0.268 | 0.250 | −0.018 |
 
 The **0.50 headline batch swings the most** and collapses toward the

@@ -16,6 +16,12 @@ def test_demote_flags_impact_and_generic_asks() -> None:
     assert rs.demote("Details over hoe de methoden worden gekoppeld.")
 
 
+def test_demote_flags_speculation() -> None:
+    # the rule's docstring names speculation; the predicate must catch it
+    assert rs.demote("De mogelijke fraudpreventiemaatregelen voor de recall-stemmen.")
+    assert rs.demote("De verwachte effecten van de regeling.")
+
+
 def test_demote_keeps_specific_named_gaps() -> None:
     assert not rs.demote("De prijs van de discount video-editing software bundle.")
     assert not rs.demote("De naam van de tweede private team.")

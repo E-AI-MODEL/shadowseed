@@ -40,12 +40,25 @@ _GENERIC_HEAD = re.compile(
     re.I,
 )
 _VAGUE = re.compile(r"^details over\b", re.I)
+# Speculation: asks about hypothetical/expected things rather than a concrete
+# stated-or-clearly-missing fact ("De *mogelijke* fraudpreventiemaatregelen ...").
+_SPECULATION = re.compile(r"\b(mogelijk\w*|potenti\w*|eventuel\w*|verwacht\w*)\b", re.I)
 
 
 def demote(seed_text: str) -> bool:
-    """True if a stricter reviewer would most plausibly reject this accept."""
+    """True if a stricter reviewer would most plausibly reject this accept.
+
+    Covers the four mechanically-detectable softness patterns named in the
+    module docstring: impact/reaction asks, generic class-head asks, vague
+    "details over" openers, and speculation about hypotheticals.
+    """
     t = seed_text.strip()
-    return bool(_IMPACT.search(t) or _GENERIC_HEAD.match(t) or _VAGUE.match(t))
+    return bool(
+        _IMPACT.search(t)
+        or _GENERIC_HEAD.match(t)
+        or _VAGUE.match(t)
+        or _SPECULATION.search(t)
+    )
 
 
 def analyze_batch(batch_dir: Path) -> dict[str, Any]:
