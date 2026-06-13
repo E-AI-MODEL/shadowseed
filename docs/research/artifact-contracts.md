@@ -64,8 +64,8 @@ These artifacts are not guaranteed in every standard CI run.
 | Evidence layer | CLI command or workflow | Primary input | Canonical output | Analyzer lookup | Artifact type | Status |
 |---|---|---|---|---|---|---|
 | Open-set HF batch | `fetch-open-set-hf-batch` in `.github/workflows/open-set-hf-review.yml` | HF source registry | `benchmarks/open_review/input/hf_batch.json` | not read by analyzer | intake batch | Manual research |
-| Open-set seed output | `run-open-set-seed-review` | `benchmarks/open_review/input/hf_batch.json` | `results/open_review/open_set_seed_output.json` | not read by analyzer | raw output | Manual research |
-| Open-set review packets | `run-open-set-seed-review --review-packets` | open-set seed output | `results/open_review/open_set_review_packets.json` | not read by analyzer | human-review input | Manual research |
+| Open-set seed output | `run-open-set-seed-review` | `benchmarks/open_review/input/hf_batch.json` | `results/open_review/open_set_seed_output.json` | not read by analyzer | raw output | Manual research; **gitignored** (transient: Actions artifact + per-round copy) |
+| Open-set review packets | `run-open-set-seed-review --review-packets` | open-set seed output | `results/open_review/open_set_review_packets.json` | not read by analyzer | human-review input | Manual research; **gitignored** (transient: Actions artifact + per-round copy) |
 | Open-set summary, CLI default | `summarize-open-set-seed-review` | `results/open_review/open_set_review_packets.json` | `results/open_set_seed_review_summary.json` | `results/open_set_seed_review_summary.json` | summary | Analyzer-facing manual result |
 | Open-set summary, HF workflow write-back | `.github/workflows/open-set-hf-review.yml` | `results/open_review/open_set_review_packets.json` | `results/open_review/open_set_seed_review_summary.json` (nested) | not currently read by the analyzer at this nested path; a future fix should either copy to `results/open_set_seed_review_summary.json` after commit or extend the analyzer lookup | summary | Manual result; workflow path drift acknowledged |
 | Open-set disagreements | `summarize-open-set-seed-review --disagreements-output` | review packets | `results/open_review/open_set_disagreements.json` | not read by analyzer | follow-up artifact | Manual research |
@@ -115,6 +115,15 @@ only human review on the packets counts as `open_set_seed_quality` evidence.
 | `blind_control_summary.json` | `scripts/build_blind_control_packets.py unblind` | summary | per-arm accept/atomic rates + model-minus-baseline delta, after un-blinding |
 
 Contract notes:
+- `results/open_review/open_set_seed_output.json` and
+  `open_set_review_packets.json` are **gitignored, not committed**. The
+  HF-review workflow's write-back commits only the summary set
+  (`open_set_seed_review_summary.json` + disagreements + report + README), so
+  tracking the two transient files froze them at the PR #76 state while the
+  summary advanced (Codex finding on #128). The coherent per-run set lives in
+  the Actions artifact and the curated `benchmarks/open_review/rounds/round_NNN/`
+  copy; `tests/test_open_review_artifact_coherence.py` guards against
+  re-tracking them.
 - the prescreen `near_duplicate` flag marks near-identical restatements of the
   same gap only; distinct-but-related gaps are spared as Constellation material
   (4.5 §9.1)
