@@ -33,25 +33,25 @@
 - reject codes: **`style_not_gap` 28**, `not_relevant` 8, `too_vague` 4,
   `trivial` 1
 
-## The honest finding: transfer is density-dependent, and it complicates round 006
+## The finding: acceptance drops out of sample; the cause is NOT confirmed
 
 | arXiv batch | offset | acceptance | dominant reject |
 |---|---|---|---|
 | round 006 batch 2 | 0 | 0.458 | mixed |
 | round 007 batch B | 20 | **0.268** | `style_not_gap` 28 |
 
-The drop is real, not noise, and it has a clear cause: the offset-20 items are
-**results-dense physics abstracts that state their findings explicitly**
-("patterns result from Hopf and wave bifurcations", "effective dipolar pinning
-takes place at the edges", "resistivity has a double kondo peak"). Half the
-candidates restate a finding the abstract already gives — correctly rejected as
-`style_not_gap`, because a stated finding is not a gap. So:
+The drop is **marginal** (pooled two-proportion z ≈ 2.0 SE on 22/48 vs 15/56,
+and that is per-seed — weaker once clustered by the 12 items). 28/56
+candidates were rejected `style_not_gap` because they restate a finding the
+abstract already gives — a stated finding is not a gap.
 
-> Form transfers cleanly across domains (v0.3g); **seed *acceptance* depends on
-> how much the source text leaves genuinely unsaid.** Terse,
-> results-complete abstracts yield fewer real gaps than narrative news or
-> discursive abstracts. This is a property of the *text*, not a regression of
-> the detector.
+Reading the items suggested a "results-dense text leaves fewer gaps" (text
+density) story. **That explanation was tested and failed:**
+`scripts/analyze_acceptance_vs_density.py` finds |r| < 0.25 between per-item
+acceptance and five deterministic surface proxies across all 48 round-006/007
+items, with the batch ordering non-monotone in each. So the per-item driver is
+**unidentified**; do not read this batch as evidence that "density" explains
+the drop. See the round-level synthesis in `../README.md`.
 
 ### New failure mode worth flagging
 

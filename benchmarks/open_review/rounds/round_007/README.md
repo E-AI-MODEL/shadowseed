@@ -35,9 +35,12 @@ items and finds **|r| < 0.25 for every one**, with the batch ordering
 non-monotone in each (007_A has the highest proper-noun density yet low
 acceptance). So:
 
-> The out-of-sample drop is real (batch differences are several standard
-> errors apart), but "density" as measured by simple surface features does
-> **not** explain it. The driver is unidentified; candidates that this n=48,
+> The same-domain out-of-sample drops are **marginal, not decisive**: pooled
+> two-proportion z is ~1.8 SE (news, 29/58 → 18/54) and ~2.0 SE (arXiv,
+> 22/48 → 15/56), and that is per-seed — treating seeds as independent when
+> they cluster by item (n=12), so the real evidence is weaker still.
+> "Density" as measured by simple surface features does **not** explain the
+> drop. The driver is unidentified; candidates that this n=48,
 > single-reviewer setup cannot separate include sub-domain difficulty, item
 > selection, and reviewer variance.
 
