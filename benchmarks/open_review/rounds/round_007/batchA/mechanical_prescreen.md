@@ -7,24 +7,24 @@ Detector: `model` · backend: `hf-transformers:microsoft/Phi-3.5-mini-instruct`
 ## Yield (levert het model kandidaten op?)
 
 - items: **12** · met kandidaten: **12** · leeg: **0** (empty-rate **0.0**)
-- gemiddeld kandidaten per item: **4.5**
+- gemiddeld kandidaten per item: **5.0**
 
-## Kwaliteit van geleverde kandidaten (54 kandidaat-lacunes)
+## Kwaliteit van geleverde kandidaten (60 kandidaat-lacunes)
 
 - clean (geen mechanische vlag): **54**
-- geflagd: **0**
-- clean-rate: **1.0**
+- geflagd: **6**
+- clean-rate: **0.9**
 - near-duplicate-rate: **0.0**
 
 ## Mechanische faalcodes
 
+- `not_atomic`: 6
 - `citation_fragment`: 0
 - `claim_vs_gap`: 0
 - `entity_bleed`: 0
 - `fewshot_leak`: 0
 - `language_leak`: 0
 - `near_duplicate`: 0
-- `not_atomic`: 0
 - `parse_leak`: 0
 - `truncated`: 0
 

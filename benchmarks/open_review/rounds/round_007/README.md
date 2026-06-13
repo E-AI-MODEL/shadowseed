@@ -1,17 +1,40 @@
 # Open-set round 007 — out-of-sample replication under prompt v0.3g
 
-> **Status: batch B complete; batch A prescreen-only (review pending its
-> artifact).** Both ran `microsoft/Phi-3.5-mini-instruct` with the **v0.3g**
-> prompt on fresh items. Headline so far: v0.3g fixes form everywhere
-> (prescreen clean-rate 1.0 on news, 0.95 on science — `claim_vs_gap` 0,
-> `truncated` 0), but the science replication **does not hold**: arXiv offset
-> 20 scored AI-reviewed acceptance **0.268** vs round 006's 0.458, because the
-> offset-20 items are results-dense physics abstracts that state their
-> findings (28/56 candidates restate a stated result). The transfer is
-> **density-dependent**: form transfers, but the supply of genuine gaps
-> depends on how much the source leaves unsaid. See `batchB/README.md`
-> (complete) and `batchA/README.md` (news offset 30, prescreen clean-rate 1.0,
-> review pending the Actions artifact for run 27438917843).
+> **Status: complete — both batches run, verbatim artifacts, AI-reviewed.**
+> Both ran `microsoft/Phi-3.5-mini-instruct` with the **v0.3g** prompt on fresh
+> out-of-sample items. Three findings, in order of confidence:
+>
+> 1. **v0.3g fixes form everywhere** — prescreen clean-rate 0.90 (news) / 0.95
+>    (science), `claim_vs_gap` 0, `truncated` 0 on both. Solid.
+> 2. **The model lever holds out of sample** — news 0.333, science 0.268, both
+>    well above round 005's Qwen baseline (0.185). Phi >> Qwen replicates.
+> 3. **Round 006's absolute levels (0.50 / 0.458) were optimistic, and the
+>    news/science framing was wrong.** Out of sample both drop to ~0.30, and
+>    the driver is not domain but **text density**: news offset 30 (0.333) ≈
+>    science offset 20 (0.268), both below the gap-rich offset-0 batches.
+
+## The five-point picture (delegated AI review, one reviewer, one rubric)
+
+| round | detector | source | offset | acceptance |
+|---|---|---|---|---:|
+| 005 (AI arm) | Qwen2.5-3B | ag_news | 0 | 0.185 |
+| 006 batch 1 | Phi-3.5-mini | ag_news | 0 | 0.50 |
+| 006 batch 2 | Phi-3.5-mini | arXiv | 0 | 0.458 |
+| **007 batch A** | Phi-3.5-mini | ag_news | 30 | **0.333** |
+| **007 batch B** | Phi-3.5-mini | arXiv | 20 | **0.268** |
+
+**The unifying variable is how much the source text leaves unsaid.**
+Fact-complete short wire items (Indians-beat-Twins box scores) and
+results-dense physics abstracts (stated Hopf bifurcations, stated kondo peaks)
+both yield few genuine gaps; narrative World stories and discursive abstracts
+yield more. A stated finding is not a gap, and the detector is correctly
+rejected on it. This is a property of the corpus, not a detector regression —
+and it means a fair Layer-C/F number needs a **density-controlled** item
+sample, not just more items. (Candidate for round 008: stratify intake by
+text density, or measure gap-yield against a density proxy.)
+
+Round 006 was right to flag *single-batch noise*; out-of-sample replication
+shows the caveat mattered.
 
 ## Why this round
 

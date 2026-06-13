@@ -9,7 +9,7 @@
     "items_with_candidates": 12,
     "items_empty": 0,
     "empty_rate": 0.0,
-    "mean_candidates_per_item": 4.5
+    "mean_candidates_per_item": 5.0
   },
   "mechanical_codes": [
     "claim_vs_gap",
@@ -27,10 +27,10 @@
     "mistranslation",
     "grammar"
   ],
-  "seed_count": 54,
-  "flagged_count": 0,
+  "seed_count": 60,
+  "flagged_count": 6,
   "clean_count": 54,
-  "clean_rate": 1.0,
+  "clean_rate": 0.9,
   "near_duplicate_rate": 0.0,
   "failure_code_counts": {
     "claim_vs_gap": 0,
@@ -40,30 +40,48 @@
     "entity_bleed": 0,
     "citation_fragment": 0,
     "fewshot_leak": 0,
-    "not_atomic": 0,
+    "not_atomic": 6,
     "near_duplicate": 0
   },
   "verdicts": [
     {
       "item_id": "AG_NEWS_TEST_30",
       "position": 1,
+      "seed": "De specifieke acties die Ricky Bryant, Chas Gessner, Michael Jennings, en David Patten ondernomen.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_30",
+      "position": 2,
       "seed": "Bill Belichick's beslissing over de receivers.",
       "codes": [],
       "clean": true
     },
     {
       "item_id": "AG_NEWS_TEST_30",
-      "position": 2,
+      "position": 3,
       "seed": "De impact van de acties op Belichick's beslissing.",
       "codes": [],
       "clean": true
     },
     {
       "item_id": "AG_NEWS_TEST_30",
-      "position": 3,
+      "position": 4,
       "seed": "De context of omstandigheden van de gebeurtenissen van vrijdagavond.",
       "codes": [],
       "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_30",
+      "position": 5,
+      "seed": "De gevolgen of resultaten van de acties van de vier individuen.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
     },
     {
       "item_id": "AG_NEWS_TEST_31",
@@ -250,20 +268,29 @@
     {
       "item_id": "AG_NEWS_TEST_36",
       "position": 2,
+      "seed": "De gevolgen van Chavez's nederlaag voor de wereldwijde oliehandel.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_36",
+      "position": 3,
       "seed": "De stemmenbevragingprocedure voor de recall.",
       "codes": [],
       "clean": true
     },
     {
       "item_id": "AG_NEWS_TEST_36",
-      "position": 3,
+      "position": 4,
       "seed": "De reacties van oppositiepartijen op de voorbereidingen.",
       "codes": [],
       "clean": true
     },
     {
       "item_id": "AG_NEWS_TEST_36",
-      "position": 4,
+      "position": 5,
       "seed": "De impact van de stemmen op de stabiliteit van de Venezolaanse economie.",
       "codes": [],
       "clean": true
@@ -278,20 +305,29 @@
     {
       "item_id": "AG_NEWS_TEST_37",
       "position": 2,
+      "seed": "Juridische gevolgen voor werkgevers die niet voldoen aan USERRA.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_37",
+      "position": 3,
       "seed": "Specifieke beschermingsniveaus voor verschillende diensttijden.",
       "codes": [],
       "clean": true
     },
     {
       "item_id": "AG_NEWS_TEST_37",
-      "position": 3,
+      "position": 4,
       "seed": "Procedure voor het claimen van re-integratie-uitkeringen.",
       "codes": [],
       "clean": true
     },
     {
       "item_id": "AG_NEWS_TEST_37",
-      "position": 4,
+      "position": 5,
       "seed": "Onderzoek naar de effectiviteit van de 1994 law.",
       "codes": [],
       "clean": true
@@ -323,6 +359,15 @@
       "seed": "De strategische planning van Iran met betrekking tot de missielussen.",
       "codes": [],
       "clean": true
+    },
+    {
+      "item_id": "AG_NEWS_TEST_38",
+      "position": 5,
+      "seed": "Reakties of voorbereidingen van Israël en de Verenigde Staten op de Iranische missielussen.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
     },
     {
       "item_id": "AG_NEWS_TEST_39",
@@ -383,6 +428,15 @@
     {
       "item_id": "AG_NEWS_TEST_40",
       "position": 4,
+      "seed": "De gevolgen van de 2-0 overwinning voor de New York Mets.",
+      "codes": [
+        "not_atomic"
+      ],
+      "clean": false
+    },
+    {
+      "item_id": "AG_NEWS_TEST_40",
+      "position": 5,
       "seed": "De strategische aanpak van de Arizona Diamondbacks tijdens de negende inning.",
       "codes": [],
       "clean": true
