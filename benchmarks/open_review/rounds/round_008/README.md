@@ -1,6 +1,6 @@
 # Round 008 — the payoff test: does acting on validated seeds improve answers?
 
-> **Status: planned.** This is the strategic pivot (see
+> **Status: two runs done.** `payoff_run_01/` free rewrite = SSL win 0.333 (1/3, derailed); `payoff_run_02/` no-harm append = SSL win 1.0 (3/3). The run-01 losses were the rewrite step, not the seeds (n=3; run-02 win is a superset-by-construction floor — see its caveats).** This is the strategic pivot (see
 > `docs/research/milestone-open-set-2026-06.md`). Rounds 004–007 answered "can
 > the system detect/validate gaps?" (yes, near-human on a capable model). Round
 > 008 asks the question that actually decides SSL's worth: **does *using*
