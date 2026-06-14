@@ -22,16 +22,20 @@ revision lost two of three blind comparisons.
 
 ## Independent corroboration (deterministic, not my judgment)
 
-The suite's own token gap-coverage delta agrees exactly with the blind reader:
+The suite's own token gap-coverage delta corroborates the one SSL **win** and,
+on the two losses, shows **no SSL coverage gain** (a tie, not an independent
+vote for baseline — the reader made that call):
 
-| scenario | baseline cov | ssl cov | reader winner |
-|---|---:|---:|---|
-| MODEL_A (industrial revolution) | 0.0 | 0.0 | baseline |
-| MODEL_B (consumer law) | 0.0 | **0.5** | **ssl** |
-| MODEL_C (HealthTrack app) | 0.0 | 0.0 | baseline |
+| scenario | baseline cov | ssl cov | coverage says | reader winner |
+|---|---:|---:|---|---|
+| MODEL_A (industrial revolution) | 0.0 | 0.0 | tie (no SSL gain) | baseline |
+| MODEL_B (consumer law) | 0.0 | **0.5** | **SSL gain** | **ssl** |
+| MODEL_C (HealthTrack app) | 0.0 | 0.0 | tie (no SSL gain) | baseline |
 
-Only MODEL_B improved on either metric. Two independent measures (reader + token
-coverage) point to the same single success.
+So coverage independently confirms only the single MODEL_B success; on MODEL_A
+and MODEL_C it neither helps nor hurts on tokens, and the baseline preference
+rests on the reader judgment alone (the SSL revisions there derailed in ways a
+token-overlap metric cannot see).
 
 ## Why SSL lost — the mechanism (this is the useful part)
 
