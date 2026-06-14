@@ -1,6 +1,6 @@
 # Round 008 — the payoff test: does acting on validated seeds improve answers?
 
-> **Status: planned.** This is the strategic pivot (see
+> **Status: first run done — see `payoff_run_01/` (SSL win rate 0.333 at n=3, negative-leaning).** This is the strategic pivot (see
 > `docs/research/milestone-open-set-2026-06.md`). Rounds 004–007 answered "can
 > the system detect/validate gaps?" (yes, near-human on a capable model). Round
 > 008 asks the question that actually decides SSL's worth: **does *using*
