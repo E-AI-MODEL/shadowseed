@@ -40,6 +40,14 @@ jobs:
     name: SLM model benefit
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      # Mirror the working open-set-hf-review workflow: anonymous Hugging Face
+      # Hub requests can fail with connection/rate errors on Actions runners
+      # ("couldn't connect to huggingface.co"), which sank run 27490316841 at
+      # tokenizer download. A token makes the download reliable; a longer
+      # timeout absorbs transient slowness.
+      HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+      HF_HUB_DOWNLOAD_TIMEOUT: "60"
 
     steps:
       - uses: actions/checkout@v4
