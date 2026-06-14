@@ -223,6 +223,27 @@ def build_ssl_revision_prompt(scenario: dict, baseline_answer: str, ssl_seeds: l
     )
 
 
+def ssl_append_answer(baseline_answer: str, ssl_seeds: list[str]) -> str:
+    """No-harm seed injection: keep the baseline answer verbatim and append a
+    bounded paragraph naming the validated seeds as open points.
+
+    This is the round-008 "do no harm" strategy (run 02). Unlike the free
+    rewrite (`build_ssl_revision_prompt`), the baseline cannot be corrupted —
+    it is preserved byte-for-byte — and the seeds are added as a clearly
+    delimited addendum, with no model call in the merge. It honours the
+    weightless-seed / Gate principle at the answer level: acting on seeds can
+    only add, never overwrite a good answer.
+    """
+    baseline = baseline_answer.strip()
+    seeds = [s.strip() for s in ssl_seeds if s and s.strip()]
+    if not seeds:
+        return baseline
+    addendum = "Aanvullende aandachtspunten die in het antwoord ontbreken:\n" + "\n".join(
+        f"- {seed}" for seed in seeds
+    )
+    return f"{baseline}\n\n{addendum}" if baseline else addendum
+
+
 def promoted_ssl_seeds(scenario: dict, baseline_answer: str, turns: int) -> tuple[list[str], list[dict], list[list[str]]]:
     manager = SSLManager(
         embedding_fn=lambda text: __import__(
