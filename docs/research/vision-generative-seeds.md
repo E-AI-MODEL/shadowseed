@@ -188,7 +188,7 @@ voorbij-RAG* maken ontbreken nog, geprioriteerd:
    doen:** een echte model-dispatch + blinde review (round 009) die toetst of
    "kunnen staan"-seeds inhoudelijk rijker zijn dan de omissie-seeds — gebouwd
    is niet hetzelfde als bewezen.
-2. **Retrieval Probe operationeel (de brug SSL→RAG).** De manager berekent een
+2. **Retrieval Probe operationeel (de brug SSL→RAG).** ✅ *Bridge gebouwd (2026-06-15):* `seed_retrieval_probe.py` — de query komt uit de seed/centroid i.p.v. de vraag; `retrieval_probe_vs_question` levert `seed_only_chunk_ids` (wat de seed vindt en de vraag niet), de meethandle voor gat 3. Deterministisch getest. **Nog te doen:** koppelen aan de manager-centroid in een live run, en de head-to-head (gat 3). De manager berekent een
    constellation-centroid en zet `probe_type="retrieval"`, maar niets consumeert
    die centroid om echt te zoeken en het antwoord te verrijken. De twee helften
    (seeds, retrieval) staan los; juist de verbinding laat een seed vinden wat RAG
