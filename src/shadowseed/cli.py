@@ -353,7 +353,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ssl_vs_rag.add_argument("--data", default="src/shadowseed/data/ssl_vs_rag_benchmark.json")
     ssl_vs_rag.add_argument("--output", default="results/ssl_vs_rag_benchmark.json")
-    ssl_vs_rag.add_argument("--model-backend", choices=MODEL_BACKENDS, default="fixture")
+    # Only the backends make_output_model actually supports — advertising
+    # ollama here would crash at runtime (Codex #139).
+    ssl_vs_rag.add_argument("--model-backend", choices=["fixture", "hf-transformers"], default="fixture")
     ssl_vs_rag.add_argument("--model-id", default=None)
     ssl_vs_rag.add_argument("--max-new-tokens", type=int, default=220)
     ssl_vs_rag.add_argument("--top-k", type=int, default=3)
