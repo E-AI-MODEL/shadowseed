@@ -10,7 +10,7 @@ from shadowseed.cli_dispatch import execute_command
 
 
 VECTOR_BACKENDS = ["memory", "faiss", "chroma"]
-MODEL_BACKENDS = ["fixture", "hf-transformers", "ollama"]
+MODEL_BACKENDS = ["fixture", "hf-transformers", "ollama", "openai"]
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -107,7 +107,9 @@ def build_parser() -> argparse.ArgumentParser:
             "hf-transformers = echt lokaal model via de transformers stack "
             "(vereist --model-id en de models extra). ollama = echt model via "
             "een lokale Ollama-server (vereist --model-id en een draaiende "
-            "`ollama serve` met het model gepulld)."
+            "`ollama serve` met het model gepulld). openai = gehost model via "
+            "de OpenAI API (vereist --model-id, de openai extra en "
+            "OPENAI_API_KEY in de omgeving)."
         ),
     )
     model_benefit.add_argument("--model-id", default=None)
@@ -354,8 +356,10 @@ def build_parser() -> argparse.ArgumentParser:
     ssl_vs_rag.add_argument("--data", default="src/shadowseed/data/ssl_vs_rag_benchmark.json")
     ssl_vs_rag.add_argument("--output", default="results/ssl_vs_rag_benchmark.json")
     # Only the backends make_output_model actually supports — advertising
-    # ollama here would crash at runtime (Codex #139).
-    ssl_vs_rag.add_argument("--model-backend", choices=["fixture", "hf-transformers"], default="fixture")
+    # ollama here would crash at runtime (Codex #139). openai is supported.
+    ssl_vs_rag.add_argument(
+        "--model-backend", choices=["fixture", "hf-transformers", "openai"], default="fixture"
+    )
     ssl_vs_rag.add_argument("--model-id", default=None)
     ssl_vs_rag.add_argument("--max-new-tokens", type=int, default=220)
     ssl_vs_rag.add_argument("--top-k", type=int, default=3)

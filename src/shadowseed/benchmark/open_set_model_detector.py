@@ -468,7 +468,41 @@ class OllamaDetectorBackend:
         )
 
 
-SUPPORTED_MODEL_BACKENDS: tuple[str, ...] = ("fixture", "hf-transformers", "ollama")
+class OpenAIDetectorBackend:
+    """Detector backend backed by a hosted OpenAI chat model.
+
+    Opt-in (needs the ``openai`` extra). The API key is read from
+    ``OPENAI_API_KEY``. Decoding is greedy (temperature 0, fixed seed) so the
+    same input produces the same seeds as far as the API allows.
+    """
+
+    def __init__(
+        self,
+        model_id: str,
+        max_new_tokens: int = 400,
+        prompt_variant: str = "absence",
+    ) -> None:
+        from shadowseed.benchmark.openai_client import OpenAIClient
+
+        self.prompt_variant = prompt_variant
+        self.name = f"openai:{model_id}"
+        self.model_id = model_id
+        self.max_new_tokens = max_new_tokens
+        self.client = OpenAIClient(model=model_id)
+
+    def detect_seeds(self, item: dict[str, Any], max_seeds: int = 5) -> list[str]:
+        text = str(item.get("text") or item.get("input") or "").strip()
+        if not text:
+            return []
+        prompt = build_detection_prompt(text, max_seeds=max_seeds, variant=self.prompt_variant)
+        raw = self.client.generate(prompt, max_new_tokens=self.max_new_tokens)
+        # the prompt ends with "1.\n" — re-prepend so the parser sees the first item
+        return parse_numbered_seeds(
+            "1. " + raw, max_seeds=max_seeds, source_text=text
+        )
+
+
+SUPPORTED_MODEL_BACKENDS: tuple[str, ...] = ("fixture", "hf-transformers", "ollama", "openai")
 
 
 def make_detector_backend(
@@ -495,6 +529,14 @@ def make_detector_backend(
                 "--model-id is required for --model-backend ollama"
             )
         return OllamaDetectorBackend(
+            model_id=model_id, max_new_tokens=max_new_tokens, prompt_variant=prompt_variant
+        )
+    if backend == "openai":
+        if not model_id:
+            raise ValueError(
+                "--model-id is required for --model-backend openai"
+            )
+        return OpenAIDetectorBackend(
             model_id=model_id, max_new_tokens=max_new_tokens, prompt_variant=prompt_variant
         )
     raise ValueError(
