@@ -116,6 +116,7 @@ def run_open_set_seed_review(
     model_backend: str = "fixture",
     model_id: str | None = None,
     max_new_tokens: int = 400,
+    prompt_variant: str = "absence",
 ) -> Path:
     if detector not in SUPPORTED_DETECTORS:
         raise ValueError(
@@ -131,6 +132,7 @@ def run_open_set_seed_review(
             backend=model_backend,
             model_id=model_id,
             max_new_tokens=max_new_tokens,
+            prompt_variant=prompt_variant,
         )
         model_backend_name = model_backend_obj.name
 
@@ -214,6 +216,7 @@ def run_open_set_seed_review(
         "candidate_source_counts": candidate_source_counts,
         "detector": detector,
         "model_backend": model_backend_name,
+        "prompt_variant": prompt_variant if detector == "model" else None,
         **contract,
         "reviewer_ids": reviewer_ids_normalized,
         "reviewer_count": len(reviewer_ids_normalized),

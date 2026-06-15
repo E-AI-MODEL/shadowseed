@@ -119,6 +119,7 @@ def _run_open_set_seed_review(args: argparse.Namespace) -> str:
         model_backend=args.model_backend,
         model_id=args.model_id,
         max_new_tokens=args.max_new_tokens,
+        prompt_variant=getattr(args, "prompt_variant", "absence"),
     )
 
 

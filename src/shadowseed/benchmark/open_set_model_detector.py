@@ -53,6 +53,16 @@ _FEWSHOT_GOOD = (
     "Rechtsbevoegdheid bij een grensoverschrijdend consumentengeschil.",
 )
 
+# Generative ("kunnen staan") few-shot: not an omission to fill but an
+# explanatory FRAME / lens / dimension that could lift the answer beyond what is
+# literally retrievable. Still bare noun phrases (the canonical form), still
+# foreign-domain (form only), but bigger in scope than the absence examples.
+_FEWSHOT_GOOD_GENERATIVE = (
+    "Koloniaal kapitaal als verklarend kader naast technologische innovatie.",
+    "Privacy-by-design als ontwerpprincipe dat de hele architectuur raakt.",
+    "Internationaal privaatrecht als bepalende lens voor deze consumentencasus.",
+)
+
 
 def _numbered(lines: tuple[str, ...]) -> str:
     return "\n".join(f"{i}. {line}" for i, line in enumerate(lines, start=1))
@@ -252,12 +262,83 @@ def parse_numbered_seeds(
     return seeds
 
 
-def build_detection_prompt(text: str, max_seeds: int = 5) -> str:
-    return OPEN_SET_DETECTION_PROMPT.format(
+# Prompt variant v0.4-gen ("kunnen staan"): the generative linchpin from
+# docs/research/vision-generative-seeds.md (gap 1). Where the absence prompt asks
+# "wat ONTBREEKT" (omission, completeness), this asks "wat had hier KUNNEN
+# staan" — the not-taken angle / frame / relation that could lift the answer
+# beyond what retrieval would surface. It is deliberately more generative, and
+# is doctrine-safe precisely because of weightlessness: a candidate is born at
+# weight 0, so a bold-but-wrong possibility costs nothing and is filtered
+# downstream by the Gate (02_atomic_seeds §2). The one hard generation rule that
+# stays: name a direction/frame to explore, never assert an invented fact.
+OPEN_SET_GENERATIVE_PROMPT = """
+Je bent een epistemische analist met verbeeldingskracht.
+
+Je krijgt een korte inputtekst. Je taak is NIET samenvatten, citeren of
+parafraseren. Je taak is om te vinden wat hier had KUNNEN staan: welke
+invalshoek, welk verklarend kader, welke relatie of dimensie was mogelijk
+geweest en had het begrip van dit specifieke onderwerp kunnen optillen — iets
+wat een gewone samenvatting of zoekopdracht niet vanzelf oppikt?
+
+Dit is geen checklist van wat ontbreekt; het is de niet-genomen weg.
+
+Regels:
+- Geef maximaal {max_seeds} kandidaat-richtingen.
+- Elke kandidaat is precies één invalshoek/kader/relatie, als korte Nederlandse
+  zinsnede in de vorm van de goede voorbeelden hieronder.
+- Benoem een RICHTING om te verkennen, geen bewering. Schrijf geen stelling
+  alsof je een nieuw feit als waar poneert.
+  * Fout (bewering): "De koloniale handel financierde de fabrieken."
+  * Goed (richting/kader): "Koloniaal kapitaal als verklarend kader naast
+    technologische innovatie."
+- Verzin GEEN concrete feiten, namen, cijfers of citaten die niet in de tekst
+  staan. Een invalshoek mag nieuw zijn; een feit niet.
+- Elke kandidaat verwijst concreet naar het onderwerp van DEZE inputtekst, niet
+  naar een willekeurige tekst van dit type.
+- De output is alleen detectoroutput voor latere review en weegt niets (gewicht
+  0); ken zelf geen seed-, evidence- of statuswaarde toe.
+- Behoud vaktermen en eigennamen in hun oorspronkelijke vorm; schrijf verder in
+  het Nederlands; echo geen hele Engelse zinsdelen.
+- Geen samengestelde kaders of lijsten binnen één kandidaat; geen losse woorden
+  of acroniemen zonder relatie.
+
+De volgende voorbeelden komen uit ANDERE teksten (geschiedenis, software,
+recht). Ze tonen alleen de VORM en het ambitieniveau. Kopieer hun inhoud niet.
+
+Niet goed (vorm-voorbeelden, niet kopiëren):
+{bad_examples}
+
+Wel goed (vorm-voorbeelden uit andere domeinen, niet kopiëren):
+{good_examples}
+
+Inputtekst:
+{text}
+
+Geef nu maximaal {max_seeds} kandidaat-richtingen over het onderwerp van deze
+inputtekst. Begin direct met "1.".
+
+Output:
+1.
+""".strip()
+
+
+OPEN_SET_GENERATIVE_DETECTOR_ID = "ssl46_open_set_model_detector_v0.4-gen"
+PROMPT_VARIANTS: tuple[str, ...] = ("absence", "generative")
+
+
+def build_detection_prompt(text: str, max_seeds: int = 5, variant: str = "absence") -> str:
+    """Build the detector prompt. ``variant='absence'`` (default) asks what is
+    missing (omission); ``variant='generative'`` asks what could have been here
+    (the not-taken frame) — gap 1 of the vision."""
+    if variant not in PROMPT_VARIANTS:
+        raise ValueError(f"Onbekende prompt-variant {variant!r}. Toegestaan: {PROMPT_VARIANTS}.")
+    template = OPEN_SET_GENERATIVE_PROMPT if variant == "generative" else OPEN_SET_DETECTION_PROMPT
+    good = _FEWSHOT_GOOD_GENERATIVE if variant == "generative" else _FEWSHOT_GOOD
+    return template.format(
         text=text.strip(),
         max_seeds=max_seeds,
         bad_examples=_numbered(_FEWSHOT_BAD),
-        good_examples=_numbered(_FEWSHOT_GOOD),
+        good_examples=_numbered(good),
     )
 
 
@@ -265,6 +346,9 @@ class FixtureDetectorBackend:
     """Deterministic CI backend. Marks every seed with ``[FIXTURE]``."""
 
     name = "fixture"
+
+    def __init__(self, prompt_variant: str = "absence") -> None:
+        self.prompt_variant = prompt_variant
 
     def detect_seeds(self, item: dict[str, Any], max_seeds: int = 5) -> list[str]:
         text = str(item.get("text") or item.get("input") or "").strip()
@@ -281,6 +365,11 @@ class FixtureDetectorBackend:
             tokens.append(token)
             if len(tokens) >= max_seeds:
                 break
+        if self.prompt_variant == "generative":
+            return [
+                f"[FIXTURE] {token} als verklarend kader voor deze tekst."
+                for token in tokens
+            ]
         return [
             f"[FIXTURE] Ontbrekende toelichting bij {token} in deze tekst."
             for token in tokens
@@ -295,7 +384,8 @@ class HFTransformersDetectorBackend:
     greedy and deterministic so the same input produces the same seeds.
     """
 
-    def __init__(self, model_id: str, max_new_tokens: int = 400) -> None:
+    def __init__(self, model_id: str, max_new_tokens: int = 400, prompt_variant: str = "absence") -> None:
+        self.prompt_variant = prompt_variant
         try:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
@@ -329,7 +419,7 @@ class HFTransformersDetectorBackend:
         text = str(item.get("text") or item.get("input") or "").strip()
         if not text:
             return []
-        prompt = build_detection_prompt(text, max_seeds=max_seeds)
+        prompt = build_detection_prompt(text, max_seeds=max_seeds, variant=self.prompt_variant)
         output = self.generator(
             prompt,
             max_new_tokens=self.max_new_tokens,
@@ -356,9 +446,11 @@ class OllamaDetectorBackend:
         model_id: str,
         max_new_tokens: int = 400,
         host: str | None = None,
+        prompt_variant: str = "absence",
     ) -> None:
         from shadowseed.benchmark.ollama_client import OllamaClient
 
+        self.prompt_variant = prompt_variant
         self.name = f"ollama:{model_id}"
         self.model_id = model_id
         self.max_new_tokens = max_new_tokens
@@ -368,7 +460,7 @@ class OllamaDetectorBackend:
         text = str(item.get("text") or item.get("input") or "").strip()
         if not text:
             return []
-        prompt = build_detection_prompt(text, max_seeds=max_seeds)
+        prompt = build_detection_prompt(text, max_seeds=max_seeds, variant=self.prompt_variant)
         raw = self.client.generate(prompt, max_new_tokens=self.max_new_tokens)
         # the prompt ends with "1.\n" — re-prepend so the parser sees the first item
         return parse_numbered_seeds(
@@ -383,16 +475,19 @@ def make_detector_backend(
     backend: str,
     model_id: str | None = None,
     max_new_tokens: int = 400,
+    prompt_variant: str = "absence",
 ) -> DetectorBackend:
+    if prompt_variant not in PROMPT_VARIANTS:
+        raise ValueError(f"Onbekende prompt-variant {prompt_variant!r}. Toegestaan: {PROMPT_VARIANTS}.")
     if backend == "fixture":
-        return FixtureDetectorBackend()
+        return FixtureDetectorBackend(prompt_variant=prompt_variant)
     if backend == "hf-transformers":
         if not model_id:
             raise ValueError(
                 "--model-id is required for --model-backend hf-transformers"
             )
         return HFTransformersDetectorBackend(
-            model_id=model_id, max_new_tokens=max_new_tokens
+            model_id=model_id, max_new_tokens=max_new_tokens, prompt_variant=prompt_variant
         )
     if backend == "ollama":
         if not model_id:
@@ -400,7 +495,7 @@ def make_detector_backend(
                 "--model-id is required for --model-backend ollama"
             )
         return OllamaDetectorBackend(
-            model_id=model_id, max_new_tokens=max_new_tokens
+            model_id=model_id, max_new_tokens=max_new_tokens, prompt_variant=prompt_variant
         )
     raise ValueError(
         f"Onbekende model-backend {backend!r}. "
