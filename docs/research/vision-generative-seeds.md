@@ -193,7 +193,7 @@ voorbij-RAG* maken ontbreken nog, geprioriteerd:
    die centroid om echt te zoeken en het antwoord te verrijken. De twee helften
    (seeds, retrieval) staan los; juist de verbinding laat een seed vinden wat RAG
    niet vindt.
-3. **SSL-seed vs RAG head-to-head.** Er is geen test van de claim "beter dan een
+3. **SSL-seed vs RAG head-to-head.** ✅ *Harness gebouwd (2026-06-15):* `ssl_vs_rag_benchmark.py` + `run-ssl-vs-rag` — zelfde model/prompt, alleen de retrieval-query verschilt (vraag vs gap); blinde paren + `answer_pair_winrate`. Fixture-getest. **Nog te doen:** een echte run met een hf-embeddingmodel (de `lexical_embedding`-hash is te grof voor betekenisvolle retrieval) + blinde review — dat levert het eerste 'voorbij RAG'-getal. Er is geen test van de claim "beter dan een
    LLM met RAG ooit zelf zou vinden". Nodig: dezelfde vraag/corpus, waarbij de
    seed een richting opent die gewone RAG mist. Dit *bewijst* de unieke waarde.
 4. **Echte falsificatie voor speculatieve seeds** — uiteindelijk modelintern

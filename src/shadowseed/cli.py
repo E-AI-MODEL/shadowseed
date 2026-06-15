@@ -347,6 +347,22 @@ def build_parser() -> argparse.ArgumentParser:
     retrieval_model.add_argument("--max-new-tokens", type=int, default=220)
     retrieval_model.add_argument("--top-k", type=int, default=3)
 
+    ssl_vs_rag = subparsers.add_parser(
+        "run-ssl-vs-rag",
+        help="[manual/research] gap 3: SSL Retrieval Probe (query=gap) vs gewone RAG (query=vraag)",
+    )
+    ssl_vs_rag.add_argument("--data", default="src/shadowseed/data/ssl_vs_rag_benchmark.json")
+    ssl_vs_rag.add_argument("--output", default="results/ssl_vs_rag_benchmark.json")
+    ssl_vs_rag.add_argument("--model-backend", choices=MODEL_BACKENDS, default="fixture")
+    ssl_vs_rag.add_argument("--model-id", default=None)
+    ssl_vs_rag.add_argument("--max-new-tokens", type=int, default=220)
+    ssl_vs_rag.add_argument("--top-k", type=int, default=3)
+    ssl_vs_rag.add_argument(
+        "--use-centroid",
+        action="store_true",
+        help="Eén centroid-query voor de seed-constellation i.p.v. per-seed union.",
+    )
+
     analyze = subparsers.add_parser(
         "analyze-results",
         help="[reporting] maak rapport en grafieken uit resultaatbestanden",
