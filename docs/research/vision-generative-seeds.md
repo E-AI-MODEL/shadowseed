@@ -178,12 +178,16 @@ boekhouding* van seeds goed (detectie, gewichtloze opslag, Gate, levenscyclus,
 constellations) plus een losse, gewone RAG-pijplijn. De stukken die SSL *uniek en
 voorbij-RAG* maken ontbreken nog, geprioriteerd:
 
-1. **Generatieve seed-modus ("kunnen staan").** De detector
-   (`open_set_model_detector.py`) is nu volledig afwezigheids-/omissie-gericht.
-   Een modus die de niet-genomen weg / het ontbrekende kader genereert ontbreekt.
-   **De linchpin** — alle volgende stappen hebben deze als input. Doctrine-veilig:
-   generatie levert gewichtloze kandidaten; waarde wordt downstream geoordeeld
-   (`02_atomic_seeds` §2).
+1. **Generatieve seed-modus ("kunnen staan").** ✅ *Capability gebouwd
+   (2026-06-15).* Naast de omissie-prompt is er nu een `generative`-variant in
+   `open_set_model_detector.py` (prompt v0.4-gen) die de niet-genomen
+   weg / het verklarende kader vraagt, bedraad door `make_detector_backend` →
+   `run-open-set-seed-review --prompt-variant generative` → summary-provenance.
+   Doctrine-veilig: gewichtloze kandidaten, geen verzonnen feiten, gebonden aan
+   déze tekst; waarde downstream geoordeeld (`02_atomic_seeds` §2). **Nog te
+   doen:** een echte model-dispatch + blinde review (round 009) die toetst of
+   "kunnen staan"-seeds inhoudelijk rijker zijn dan de omissie-seeds — gebouwd
+   is niet hetzelfde als bewezen.
 2. **Retrieval Probe operationeel (de brug SSL→RAG).** De manager berekent een
    constellation-centroid en zet `probe_type="retrieval"`, maar niets consumeert
    die centroid om echt te zoeken en het antwoord te verrijken. De twee helften

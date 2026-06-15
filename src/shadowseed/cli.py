@@ -216,6 +216,17 @@ def build_parser() -> argparse.ArgumentParser:
         default=400,
         help="Maximale tokens die de v0.3 model-backend per item genereert.",
     )
+    open_set.add_argument(
+        "--prompt-variant",
+        choices=["absence", "generative"],
+        default="absence",
+        help=(
+            "Detector-prompt. absence = 'wat ONTBREEKT' (omissie, default). "
+            "generative = 'wat had hier KUNNEN staan' (de niet-genomen "
+            "invalshoek/kader; gat 1 uit vision-generative-seeds.md). Alleen "
+            "relevant als --detector model."
+        ),
+    )
 
     open_set_summary = subparsers.add_parser(
         "summarize-open-set-seed-review",
