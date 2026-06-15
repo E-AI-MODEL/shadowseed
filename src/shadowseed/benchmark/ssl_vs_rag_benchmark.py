@@ -68,7 +68,12 @@ def run_ssl_vs_rag_benchmark(
             store, question, seeds, top_k=top_k, use_centroid=use_centroid
         )
         rag_chunks = _chunks_from_hits(contrast["question_hits"])
-        probe_chunks = _chunks_from_hits(contrast["probe_hits"])
+        # Equal context budget: the per-seed probe union can exceed top_k, which
+        # would give the SSL arm more chunks/tokens than RAG and overstate its
+        # wins. Cap to the same top_k (probe_hits are score-sorted) so the only
+        # variable is the retrieval QUERY, not the amount of context (Codex #139).
+        probe_hits_used = contrast["probe_hits"][:top_k]
+        probe_chunks = _chunks_from_hits(probe_hits_used)
 
         rag_answer = model_generate(
             model, build_retrieval_prompt(question, rag_chunks), rag_chunks, "retrieval"
@@ -106,6 +111,7 @@ def run_ssl_vs_rag_benchmark(
                 "answer_length_delta_words": word_count(probe_answer) - word_count(rag_answer),
                 "rag_chunk_ids": contrast["question_chunk_ids"],
                 "probe_chunk_ids": contrast["probe_chunk_ids"],
+                "probe_answer_chunk_ids": [h["chunk_id"] for h in probe_hits_used],
                 "seed_only_chunk_ids": contrast["seed_only_chunk_ids"],
                 "rag_answer": rag_answer,
                 "ssl_probe_answer": probe_answer,
