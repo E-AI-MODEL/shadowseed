@@ -20,6 +20,9 @@ models = [
   "transformers>=4.51",
   "torch>=2.2",
 ]
+openai = [
+  "openai>=1.40",
+]
 paper = [
   "pymupdf>=1.24",
 ]
@@ -38,7 +41,7 @@ test = [
   "ruff>=0.6",
 ]
 dev = [
-  "shadowseed[test,models,vector,paper]",
+  "shadowseed[test,models,vector,paper,openai]",
 ]
 
 [build-system]

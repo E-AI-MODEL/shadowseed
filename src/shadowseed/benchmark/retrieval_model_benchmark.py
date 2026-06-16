@@ -21,6 +21,7 @@ from pathlib import Path
 from shadowseed.benchmark.ssl45_gap_suite import lexical_embedding
 from shadowseed.benchmark.ssl45_model_benefit_suite import (
     HFTransformersBackend,
+    OpenAIBackend,
     coverage,
     word_count,
 )
@@ -43,6 +44,10 @@ def make_output_model(model_backend: str, model_id: str | None, max_new_tokens: 
         if not model_id:
             raise ValueError("--model-id is required for hf-transformers")
         return HFTransformersBackend(model_id=model_id, max_new_tokens=max_new_tokens)
+    if model_backend == "openai":
+        if not model_id:
+            raise ValueError("--model-id is required for openai")
+        return OpenAIBackend(model_id=model_id, max_new_tokens=max_new_tokens)
     raise ValueError(f"Unknown model backend: {model_backend}")
 
 

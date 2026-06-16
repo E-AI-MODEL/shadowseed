@@ -119,6 +119,28 @@ class OllamaBackend:
         return self.client.generate(prompt, max_new_tokens=self.max_new_tokens)
 
 
+class OpenAIBackend:
+    """Hosted OpenAI backend.
+
+    Calls a strong hosted chat model so the SSL-guided revision step is not
+    bottlenecked on a weak local SLM. The API key is read from
+    ``OPENAI_API_KEY`` (never passed as an argument). Decoding is greedy
+    (temperature 0, fixed seed) for reproducibility. Opt-in: needs the
+    ``openai`` extra.
+    """
+
+    def __init__(self, model_id: str, max_new_tokens: int = 220) -> None:
+        from shadowseed.benchmark.openai_client import OpenAIClient
+
+        self.name = f"openai:{model_id}"
+        self.model_id = model_id
+        self.max_new_tokens = max_new_tokens
+        self.client = OpenAIClient(model=model_id)
+
+    def generate(self, prompt: str, scenario: dict, mode: str, ssl_seeds: list[str]) -> str:
+        return self.client.generate(prompt, max_new_tokens=self.max_new_tokens)
+
+
 def make_backend(backend: str, model_id: str | None, max_new_tokens: int) -> ModelBackend:
     if backend == "fixture":
         return FixtureBackend()
@@ -130,6 +152,10 @@ def make_backend(backend: str, model_id: str | None, max_new_tokens: int) -> Mod
         if not model_id:
             raise ValueError("--model-id is required for backend ollama")
         return OllamaBackend(model_id=model_id, max_new_tokens=max_new_tokens)
+    if backend == "openai":
+        if not model_id:
+            raise ValueError("--model-id is required for backend openai")
+        return OpenAIBackend(model_id=model_id, max_new_tokens=max_new_tokens)
     raise ValueError(f"Unknown backend: {backend}")
 
 
