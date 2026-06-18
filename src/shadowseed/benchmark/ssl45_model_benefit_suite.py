@@ -346,8 +346,15 @@ def run_ssl45_model_benefit_suite(
             baseline_answer,
             turns=turns,
         )
-        ssl_prompt = build_ssl_revision_prompt(scenario, baseline_answer, promoted)
-        ssl_answer = model.generate(ssl_prompt, scenario, "ssl", promoted)
+        # Do-no-harm by construction: with no promoted seeds there is nothing to
+        # act on, so keep the baseline verbatim instead of asking the model to
+        # "revise with zero seeds" (round 010 DNH control: a strong model then
+        # appends a spurious generic SSL-seed line — harmless but noise).
+        if promoted:
+            ssl_prompt = build_ssl_revision_prompt(scenario, baseline_answer, promoted)
+            ssl_answer = model.generate(ssl_prompt, scenario, "ssl", promoted)
+        else:
+            ssl_answer = baseline_answer
 
         baseline_cov, baseline_covered = coverage(baseline_answer, scenario["expected_ssl_additions"])
         ssl_cov, ssl_covered = coverage(ssl_answer, scenario["expected_ssl_additions"])
