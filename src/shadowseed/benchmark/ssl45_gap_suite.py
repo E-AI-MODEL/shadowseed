@@ -48,6 +48,42 @@ DOMAIN_PRIORS = {
         "Rate-limiting op API's die gezondheidsdata verwerken.",
         "Horizontale schaalbaarheid bij piekbelasting van real-time synchronisatie.",
     ],
+    "geneeskunde en publieke gezondheid": [
+        "Langetermijnbijwerkingen bij chronisch gebruik van het medicijn.",
+        "Contra-indicaties bij patiënten met bestaande aandoeningen.",
+        "Kosteneffectiviteit en toegankelijkheid voor patiënten.",
+        "Gewichtstoename na het stoppen met het medicijn.",
+    ],
+    "klimaat en energie": [
+        "Opslag van energie bij intermitterende zonproductie.",
+        "Netintegratie en balancering bij grootschalige zonne-energie.",
+        "Levenscyclus en mijnbouw van materialen voor zonnepanelen.",
+        "Landgebruik en ruimtebeslag van zonneparken.",
+    ],
+    "financiën en beleggen": [
+        "Volgorde-risico van rendementen rond de pensioneringsdatum.",
+        "Inflatie-erosie van nominale rendementen op lange termijn.",
+        "Fiscale behandeling van dividenden en vermogenswinst.",
+        "Concentratierisico in marktgewogen indexfondsen.",
+    ],
+    "voeding en gezondheid": [
+        "Suppletie van vitamine B12 bij een plantaardig dieet.",
+        "Biobeschikbaarheid van ijzer en zink uit plantaardige bronnen.",
+        "Eiwitcompleetheid en combinatie van aminozuren.",
+        "Omega-3-voorziening via ALA versus EPA en DHA.",
+    ],
+    "machine learning": [
+        "Monitoring van datadrift na deployment.",
+        "Bias- en fairness-audit op beschermde groepen.",
+        "Labellekkage tussen trainings- en testdata.",
+        "Kalibratie van voorspelde waarschijnlijkheden.",
+    ],
+    "stadsplanning en mobiliteit": [
+        "Veiligheid op kruispunten en conflictpunten met autoverkeer.",
+        "Toegankelijkheid voor mensen met een beperking.",
+        "Onderhoud en sneeuwruiming van vrijliggende fietspaden.",
+        "Verschuiving van parkeerruimte en verkeersverdringing.",
+    ],
 }
 
 LEGAL_MECHANISM_TOKENS = {
