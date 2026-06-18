@@ -116,21 +116,67 @@ the gap, and can over-narrow when the question already covers the ground.
 
 ---
 
+## Experiment B′ — gap 3 redone with **real** embeddings (the caveat mattered)
+
+Run 27790952137 (job 82239480150), `--embedding-backend openai`
+(`text-embedding-3-small`, 1536-d). Same items, same model, same top_k; the
+*only* change from B is the retriever: real embeddings instead of the 128-d hash.
+
+**The toy-retriever caveat was load-bearing. The B headline does not survive.**
+
+| item | toy embedding (B) | real embedding (B′) |
+|---|---|---|
+| SSLRAG_LAW | RAG retrieved the **wrong** (industrie) chunks → non-answer; probe → correct answer | RAG retrieves the **3 correct law chunks**; `seed_only_chunk_ids = []` — the probe finds nothing the question didn't |
+| SSLRAG_IR | probe surfaced `eu_rights` (noise) | RAG complete (incl. `innovation`); probe trades `innovation` for `labour` (`seed_only = [labour]`) |
+
+- **SSLRAG_LAW**: with a real embedder, ordinary RAG on the *question* already
+  retrieves `law::enforcement / eu_rights / jurisdiction` and answers correctly.
+  `seed_only_chunk_ids` is **empty**. The dramatic "RAG fails → SSL wins" from B
+  was an **artifact of the weak hash retriever**, not a property of SSL.
+- **SSLRAG_IR**: the probe still reaches a seed-only chunk (`ir::labour`) the
+  question misses — the *mechanism* is real — but it drops the `innovation`
+  chunk, and the resulting answer omits the technology factor, so it is not
+  better for the core "why" question.
+
+Blind AI reader on B′: **0 SSL wins / 2 (RAG ≥ SSL on both).** On this fixture,
+with a real retriever, "a shadow seed finds a better answer than ordinary RAG"
+is **not supported**.
+
+### Why — and what it means for the thesis (not a refutation, a sharpening)
+
+The fixture's seeds are near-paraphrases of corpus chunks, and the answer *is*
+recoverable from the question once embeddings are semantic. SSL's value
+proposition is the opposite setting: where the gap is **orthogonal to the
+question's surface** and genuinely *not* recoverable by querying the question.
+This 7-chunk fixture cannot exercise that, and the toy retriever was masking it.
+So B′ is a **fixture/measurement verdict, not a verdict on SSL**: to test the
+real claim we need a corpus where the gap is not a paraphrase of a retrievable
+chunk. (Experiment A — acting on a *validated* seed during answering — is
+untouched by this; it does not depend on retrieval.)
+
 ## Honest verdict
 
 - **Payoff (A):** the round-008 negative was a *small-model revision-step
   artifact*, not an SSL flaw. On a capable model the revision adds validated
   substance without derailing (2 wins / 1 harmless tie / 0 losses, 0 unsupported
   additions). Still n=3, AI-judged → **strong signal, not Layer-C validation.**
-- **Gap 3 (B):** first end-to-end evidence that querying the gap can beat
-  querying the question (LAW: non-answer → correct answer), with an honest
-  counter-case (IR) and a **toy-retriever caveat** that bounds the claim.
+- **Gap 3 (B → B′):** under the toy retriever the gap-probe looked like it beat
+  RAG; under **real embeddings it does not** (0/2, `seed_only=[]` on LAW). The B
+  win was a retriever artifact. The probe *mechanism* (reaching a chunk the
+  question misses) is still real (IR `seed_only=[labour]`) but does not yield a
+  better answer on this fixture. **Verdict on the fixture/measurement, not on
+  SSL** — the corpus can't pose a gap that is orthogonal to the question.
 
 ## Next steps
 
-1. **Real embeddings for gap 3** (`openai_client.embed`) to remove the
-   toy-retriever confound, then re-run B.
-2. **Bigger n** for both — the 3-scenario / 2-item fixtures are too small for a
-   win-rate verdict; expand the fixtures.
-3. **Human anchor** on the blind answer pairs (reuse round-006 human tooling).
-4. **Fix the MODEL_B coverage-metric blind spot** (integrated seed scored 0).
+1. ~~Real embeddings for gap 3~~ ✅ done (B′) — and it overturned the B signal.
+2. **A fixture that actually exercises the claim**: items where the decisive gap
+   is *not* a paraphrase of a retrievable chunk (the question cannot reach it
+   even with good embeddings), so the gap-probe has something to find that RAG
+   structurally cannot. Without this, gap 3 is untestable.
+3. **Bigger n** for both experiments — 3 scenarios / 2 items can't carry a
+   win-rate verdict.
+4. **Human anchor** on the blind answer pairs (reuse round-006 human tooling).
+5. **Fix the MODEL_B coverage-metric blind spot** (integrated seed scored 0).
+6. Experiment A (payoff) is the durable positive and is **retrieval-independent**
+   — prioritise scaling A over rescuing the current gap-3 fixture.
