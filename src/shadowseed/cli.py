@@ -368,6 +368,22 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Eén centroid-query voor de seed-constellation i.p.v. per-seed union.",
     )
+    ssl_vs_rag.add_argument(
+        "--embedding-backend",
+        choices=["lexical", "openai"],
+        default="lexical",
+        help=(
+            "Retrieval-embedder. lexical = deterministische 128d-hash (CI, "
+            "speelgoed; mechanisme niet productie-RAG). openai = echte "
+            "embeddings (vereist de openai extra en OPENAI_API_KEY) — haalt de "
+            "toy-retriever-confound uit de gap-3 vergelijking."
+        ),
+    )
+    ssl_vs_rag.add_argument(
+        "--embedding-model",
+        default=None,
+        help="Embedding-model-id voor --embedding-backend openai (default text-embedding-3-small).",
+    )
 
     analyze = subparsers.add_parser(
         "analyze-results",

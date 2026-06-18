@@ -24,6 +24,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from shadowseed.benchmark.embedding_backends import make_embedding_fn
 from shadowseed.benchmark.retrieval_model_benchmark import (
     build_retrieval_prompt,
     index_retrieval_corpus,
@@ -49,10 +50,13 @@ def run_ssl_vs_rag_benchmark(
     top_k: int = 3,
     use_centroid: bool = False,
     vector_backend: str = "memory",
+    embedding_backend: str = "lexical",
+    embedding_model: str | None = None,
 ) -> Path:
     data = json.loads(Path(data_path).read_text(encoding="utf-8"))
-    store = create_vector_store(backend=vector_backend, dimensions=128)
-    index_retrieval_corpus(store, data)
+    embed_fn, embed_dim = make_embedding_fn(embedding_backend, embedding_model)
+    store = create_vector_store(backend=vector_backend, dimensions=embed_dim)
+    index_retrieval_corpus(store, data, embed_fn=embed_fn)
     model = make_output_model(model_backend, model_id, max_new_tokens)
 
     results: list[dict[str, Any]] = []
@@ -65,7 +69,7 @@ def run_ssl_vs_rag_benchmark(
         seeds = item["seed_texts"]
 
         contrast = retrieval_probe_vs_question(
-            store, question, seeds, top_k=top_k, use_centroid=use_centroid
+            store, question, seeds, top_k=top_k, use_centroid=use_centroid, embed_fn=embed_fn
         )
         rag_chunks = _chunks_from_hits(contrast["question_hits"])
         # Equal context budget: the per-seed probe union can exceed top_k, which
@@ -122,6 +126,8 @@ def run_ssl_vs_rag_benchmark(
         "summary": {
             "artifact": "ssl_vs_rag_benchmark",
             "backend": getattr(model, "name", model_backend),
+            "embedding_backend": embedding_backend,
+            "embedding_dimensions": embed_dim,
             "item_count": len(results),
             "top_k": top_k,
             "use_centroid": use_centroid,

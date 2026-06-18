@@ -37,6 +37,14 @@ on:
         description: "Max new tokens per generation"
         required: true
         default: "220"
+      embedding_backend:
+        description: "Retriever for ssl-vs-rag (gap 3). openai = real embeddings (removes the toy-retriever caveat)"
+        required: true
+        default: "openai"
+        type: choice
+        options:
+          - openai
+          - lexical
 
 permissions:
   contents: read
@@ -93,6 +101,7 @@ jobs:
             --model-backend openai \
             --model-id "${{ inputs.model_id }}" \
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --embedding-backend "${{ inputs.embedding_backend }}" \
             --output results/ssl_vs_rag_benchmark.json
 
       - name: Analyze results

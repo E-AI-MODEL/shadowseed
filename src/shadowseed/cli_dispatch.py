@@ -120,6 +120,8 @@ def _run_ssl_vs_rag_benchmark(args: argparse.Namespace) -> str:
             max_new_tokens=args.max_new_tokens,
             top_k=args.top_k,
             use_centroid=args.use_centroid,
+            embedding_backend=getattr(args, "embedding_backend", "lexical"),
+            embedding_model=getattr(args, "embedding_model", None),
         )
     )
 
