@@ -99,6 +99,30 @@ jobs:
         if: ${{ inputs.experiment == 'model-benefit' }}
         run: python -m shadowseed.cli analyze-results || true
 
+      - name: Print result summary to log
+        run: |
+          python - <<'PY'
+          import json
+          import glob
+
+          # Print the summary + blind review pairs to the job log so the result
+          # is readable via the Actions API even when artifact egress is blocked.
+          for path in sorted(glob.glob("results/*.json")):
+              print(f"\n===== {path} =====")
+              data = json.loads(open(path, encoding="utf-8").read())
+              summary = data.get("summary", {})
+              print("--- summary ---")
+              print(json.dumps(summary, indent=2, ensure_ascii=False))
+              for item in data.get("results", []):
+                  sid = item.get("scenario_id") or item.get("id")
+                  print(f"\n--- result: {sid} ---")
+                  print(json.dumps(item, indent=2, ensure_ascii=False))
+              key = data.get("blind_answer_key")
+              if key:
+                  print("\n--- blind_answer_key ---")
+                  print(json.dumps(key, indent=2, ensure_ascii=False))
+          PY
+
       - name: Normalize artifact name
         env:
           MODEL_ID: ${{ inputs.model_id }}
