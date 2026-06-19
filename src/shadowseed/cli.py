@@ -398,6 +398,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Embedding-model-id voor --embedding-backend openai (default text-embedding-3-small).",
     )
 
+    adv_payoff = subparsers.add_parser(
+        "run-adversarial-payoff",
+        help="[manual/research] discriminatietest: forceer een slechte seed in de revisie",
+    )
+    adv_payoff.add_argument("--input", default="src/shadowseed/data/adversarial_payoff_suite.json")
+    adv_payoff.add_argument("--output", default="results/adversarial_payoff_suite.json")
+    adv_payoff.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    adv_payoff.add_argument("--model-id", default=None)
+    adv_payoff.add_argument("--max-new-tokens", type=int, default=400)
+
     analyze = subparsers.add_parser(
         "analyze-results",
         help="[reporting] maak rapport en grafieken uit resultaatbestanden",
