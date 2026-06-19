@@ -89,6 +89,7 @@ jobs:
             --model-id "${{ inputs.model_id }}" \
             --turns "${{ inputs.turns }}" \
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --semantic-embedding-backend openai \
             --output results/ssl45_model_benefit_suite.json
 
       - name: Run SSL-vs-RAG head-to-head via OpenAI

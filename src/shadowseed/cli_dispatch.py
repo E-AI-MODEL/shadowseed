@@ -78,6 +78,9 @@ def _run_model_benefit_suite(args: argparse.Namespace) -> str:
         backend=args.backend,
         model_id=args.model_id,
         max_new_tokens=args.max_new_tokens,
+        semantic_embedding_backend=getattr(args, "semantic_embedding_backend", "none"),
+        embedding_model=getattr(args, "embedding_model", None),
+        semantic_threshold=getattr(args, "semantic_threshold", 0.55),
     )
 
 

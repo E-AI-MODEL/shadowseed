@@ -114,6 +114,19 @@ def build_parser() -> argparse.ArgumentParser:
     )
     model_benefit.add_argument("--model-id", default=None)
     model_benefit.add_argument("--max-new-tokens", type=int, default=220)
+    model_benefit.add_argument(
+        "--semantic-embedding-backend",
+        choices=["none", "lexical", "openai"],
+        default="none",
+        help=(
+            "Optionele semantische coverage-metric naast de lexicale. none = uit "
+            "(CI-default). lexical = deterministische hash. openai = echte "
+            "embeddings (vereist de openai extra en OPENAI_API_KEY) — meet of de "
+            "gap inhoudelijk geadresseerd is i.p.v. letterlijk herhaald."
+        ),
+    )
+    model_benefit.add_argument("--embedding-model", default=None)
+    model_benefit.add_argument("--semantic-threshold", type=float, default=0.55)
 
     blind = subparsers.add_parser(
         "run-blind-benchmark",
