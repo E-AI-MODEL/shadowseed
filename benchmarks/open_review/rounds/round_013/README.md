@@ -1,9 +1,10 @@
 # Round 013 — semantic coverage metric + blind human-review pack
 
-> **Status: objective metric restored, human anchor staged.** Two deliverables:
+> **Status: objective metric restored AND human-anchored.** Two deliverables:
 > (1) a meaning-based coverage metric that recovers the payoff signal the lexical
-> metric lost in round 012; (2) a blind human-review pack of the gpt-4.1 answer
-> pairs, ready for a maintainer to score.
+> metric lost in round 012 (+0.575 on gpt-4.1); (2) a blind human-review pack of
+> the gpt-4.1 answer pairs — now **scored**: 4 reviewers, unanimous, matching the
+> AI verdicts on 10/10 items (see `human_review/RESULTS.md`).
 
 ## Part 1 — semantic coverage corroborates the payoff
 
