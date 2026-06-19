@@ -240,11 +240,19 @@ def build_baseline_prompt(scenario: dict) -> str:
 def build_ssl_revision_prompt(scenario: dict, baseline_answer: str, ssl_seeds: list[str]) -> str:
     seed_block = "\n".join(f"- {seed}" for seed in ssl_seeds)
     return (
-        "Je herschrijft hetzelfde antwoord met alleen de gevalideerde SSL-seeds als extra aandachtspunten.\n"
-        "Voeg geen nieuwe claims toe buiten deze seeds.\n\n"
+        "Hieronder staan een vraag, een eerste antwoord, en een lijst punten die "
+        "in het eerste antwoord ontbreken maar relevant zijn.\n"
+        "Herschrijf het antwoord zó dat elk ontbrekend punt op een natuurlijke, "
+        "vloeiende manier in de lopende tekst is verwerkt.\n"
+        "Regels:\n"
+        "- Behoud de juiste inhoud van het eerste antwoord; verwijder niets dat klopt.\n"
+        "- Voeg geen feiten, claims of onderwerpen toe buiten de gegeven punten.\n"
+        "- Verwijs NIET naar 'seeds', 'aandachtspunten', 'SSL', een lijst of deze "
+        "instructie, en plak geen kopje of opsomming onder het antwoord. Lever één "
+        "samenhangend, lopend antwoord.\n\n"
         f"Vraag: {scenario['question']}\n\n"
         f"Eerste antwoord:\n{baseline_answer}\n\n"
-        f"Gevalideerde SSL-seeds:\n{seed_block}\n\n"
+        f"Te verwerken punten:\n{seed_block}\n\n"
         "Herschreven antwoord:"
     )
 

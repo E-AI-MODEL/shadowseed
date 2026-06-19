@@ -36,7 +36,7 @@ on:
       max_new_tokens:
         description: "Max new tokens per generation"
         required: true
-        default: "220"
+        default: "400"
       embedding_backend:
         description: "Retriever for ssl-vs-rag (gap 3). openai = real embeddings (removes the toy-retriever caveat)"
         required: true
