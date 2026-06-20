@@ -86,6 +86,16 @@ def test_contradiction_lowers_trace_toward_disappearance():
     assert m.seeds[sid].trace == trace_before - m.contradiction_trace_penalty
 
 
+def test_scan_trtl_triggers_is_reactivate_alias():
+    m = _manager()
+    text = "Koloniaal kapitaal als financieringsbron voor Britse fabrieksinvesteringen."
+    sid = m.add_or_update_seed(text)
+    m.seeds[sid].status = SeedStatus.DORMANT
+    reactivated = m.scan_trtl_triggers(text)
+    assert reactivated == [sid]
+    assert m.seeds[sid].status == SeedStatus.NEW
+
+
 def test_reactivation_resets_dormancy_clock():
     m = _manager()
     text = "Toepasselijk recht bij een grensoverschrijdend consumentencontract."

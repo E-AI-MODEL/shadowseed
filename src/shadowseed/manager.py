@@ -436,6 +436,11 @@ class SSLManager:
         return seed.status
 
     def decay_traces(self, turns_passed: int = 1) -> None:
+        """TTL (Time-to-Live): decay every seed's trace and run the disappearance
+        clock. Trace fades exponentially without recognition; a seed that stays
+        DORMANT for ``dormant_ttl_turns`` without a TrTL trigger becomes EXPIRED.
+        This is the mirror of ``reactivate_by_text`` (TrTL), which keeps seeds
+        alive. EXPIRED seeds are terminal and skipped."""
         for seed_id, seed in self.seeds.items():
             if seed.status == SeedStatus.EXPIRED:
                 continue
@@ -684,6 +689,13 @@ class SSLManager:
         return None
 
     def reactivate_by_text(self, text: str, threshold: float = 0.65) -> list[str]:
+        """TrTL (Trigger-to-Live): scan new input for triggers of DORMANT seeds
+        and revive the matches. A dormant seed survives by contextual
+        recognition — cosine similarity above ``threshold`` or a trigger-keyword
+        hit — which bumps its trace, returns it to NEW and resets the dormancy
+        (TTL) clock. This is the mirror of ``decay_traces`` (TTL): recognition
+        keeps a seed alive, neglect lets it expire. EXPIRED seeds are terminal
+        and are never reactivated."""
         query_emb = self.get_embedding(text)
         reactivated: list[str] = []
 
@@ -711,6 +723,12 @@ class SSLManager:
                 reactivated.append(seed_id)
 
         return reactivated
+
+    def scan_trtl_triggers(self, text: str, threshold: float = 0.65) -> list[str]:
+        """Canonical TrTL name for ``reactivate_by_text`` (4.5 §12.3
+        Trigger-matching). Same behaviour; kept so call sites can use the
+        doctrinal term."""
+        return self.reactivate_by_text(text, threshold=threshold)
 
     def find_uncertain_region(
         self,

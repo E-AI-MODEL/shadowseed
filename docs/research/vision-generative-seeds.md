@@ -127,6 +127,17 @@ zelf is de selectiedruk:** de goede seed wordt steeds opnieuw aangeraakt en groe
 de lege vervaagt zonder iets te kosten. Tijd doet het werk dat een vooraf-oordeel
 niet kan.
 
+Twee gespiegelde mechanismen dragen die selectiedruk, recht uit
+geheugenconsolidatie: **TrTL** (Trigger-to-Live) houdt een seed levend zodra het
+gesprek hem herkent, en **TTL** (Time-to-Live) laat hem vervagen als die
+herkenning uitblijft — tot **EXPIRED**, waarna hij terminaal verdwenen is. Een
+gefalsificeerde of irrelevante seed zakt niet alleen in `weight` maar loopt ook
+zijn TTL uit en kan niet terugkomen (geen reactivatie, geen Gate, geen
+dedup-herleving). Zo is "kosteloos wachten" geen "eeuwig blijven hangen": de
+schaduw die niets oplevert lost vanzelf en onomkeerbaar op. (Round 014 toonde
+waarom dat moet: een slechte seed die tóch de revisie haalt, schaadt — dus de
+veiligheid hoort in de levenscyclus vóór het handelen, niet in de revisiestap.)
+
 ## 5. Rugwind van binnenuit: H-neuronen en Niveau 2
 
 SSL leeft nu op **Niveau 1**: een externe vectorruimte, waar `weight` de
