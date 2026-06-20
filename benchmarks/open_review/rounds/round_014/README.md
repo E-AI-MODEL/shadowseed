@@ -66,8 +66,12 @@ it is off-topic. That is exactly the case the Gate exists to catch.
 
 1. **Human-review** the 9 pairs (pack staged) — confirm baseline is preferred on
    the two irrelevant-injected items.
-2. Feed the irrelevant cases back as a **Gate test**: confirm such seeds score 0
-   / fail the Validation Gate before they could ever reach the revision (closes
-   the loop: the Gate should have stopped these).
+2. ~~Feed the irrelevant cases back as a **Gate test**~~ ✅ done — the lifecycle
+   loop is closed end-to-end in `tests/test_bad_seed_dies_out.py`: an irrelevant
+   seed scores 0 → Gate contradicts it (weight 0, trace knocked down) → TTL decays
+   it to DORMANT → EXPIRED, after which TrTL, the Gate and dedup all refuse to
+   revive it. A control shows a genuinely recurring (TrTL-recognised) seed
+   survives the same decay pressure. The safety lives in the lifecycle, before the
+   revision, exactly as 4.5/4.6 doctrine requires.
 3. Consider a relevance guard in the revision prompt as defence-in-depth ("if a
    point is off-topic for the question, omit it"), then re-run.
