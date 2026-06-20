@@ -55,6 +55,7 @@ class ShadowSeed:
     occurrence_count: int = 1
     evidence_count: int = 0
     contradiction_score: float = 0.0
+    turns_dormant: int = 0
     status: SeedStatus = SeedStatus.NEW
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
     updated_at: str = field(default_factory=lambda: datetime.now().isoformat())
@@ -215,6 +216,8 @@ class SSLManager:
         self.reactivation_increment = self.config.reactivation_increment
         self.reward_step = self.config.reward_step
         self.penalty_step = self.config.penalty_step
+        self.dormant_ttl_turns = self.config.dormant_ttl_turns
+        self.contradiction_trace_penalty = self.config.contradiction_trace_penalty
         self.vector_constellation = vector_constellation
         self.validation_log: list[ValidationGateResult] = []
         self.event_log: list[SeedEvent] = []
@@ -360,6 +363,11 @@ class SSLManager:
 
     def _maybe_deduplicate_seed(self, new_embedding: np.ndarray) -> tuple[str, float] | None:
         for seed_id, seed in self.seeds.items():
+            # EXPIRED is terminal ("verwijderd uit shadow memory"): a degraded
+            # seed must not be resurrected by a near-duplicate re-detection. Skip
+            # it so a new seed is created instead of reviving the dead one.
+            if seed.status == SeedStatus.EXPIRED:
+                continue
             similarity = float(np.dot(new_embedding, seed.embedding))
             if similarity >= self.dedup_threshold:
                 return seed_id, similarity
@@ -369,6 +377,7 @@ class SSLManager:
         seed = self.seeds[seed_id]
         seed.occurrence_count += 1
         seed.trace = min(seed.trace + 0.5, self.max_trace)
+        seed.turns_dormant = 0
         if seed.status != SeedStatus.PROMOTED:
             seed.status = SeedStatus.ACTIVE
         self._touch_seed(seed)
@@ -427,6 +436,11 @@ class SSLManager:
         return seed.status
 
     def decay_traces(self, turns_passed: int = 1) -> None:
+        """TTL (Time-to-Live): decay every seed's trace and run the disappearance
+        clock. Trace fades exponentially without recognition; a seed that stays
+        DORMANT for ``dormant_ttl_turns`` without a TrTL trigger becomes EXPIRED.
+        This is the mirror of ``reactivate_by_text`` (TrTL), which keeps seeds
+        alive. EXPIRED seeds are terminal and skipped."""
         for seed_id, seed in self.seeds.items():
             if seed.status == SeedStatus.EXPIRED:
                 continue
@@ -434,6 +448,20 @@ class SSLManager:
             before_trace = seed.trace
             seed.trace *= math.exp(-turns_passed / self.half_life_turns)
             seed.status = self._status_after_decay(seed)
+
+            # TTL to disappearance (4.5 §10): count consecutive dormant turns; a
+            # seed that stays DORMANT without a re-recognising trigger for
+            # dormant_ttl_turns becomes EXPIRED ("te lang dormant zonder trigger").
+            expired = False
+            if seed.status == SeedStatus.DORMANT:
+                seed.turns_dormant += turns_passed
+                if self.dormant_ttl_turns > 0 and seed.turns_dormant >= self.dormant_ttl_turns:
+                    seed.status = SeedStatus.EXPIRED
+                    seed.weight = 0.0
+                    expired = True
+            else:
+                seed.turns_dormant = 0
+
             self._touch_seed(seed)
             self._record_and_sync(
                 "trace_decayed",
@@ -442,7 +470,12 @@ class SSLManager:
                 trace_before=before_trace,
                 trace_after=seed.trace,
                 status=seed.status.value,
+                turns_dormant=seed.turns_dormant,
             )
+            if expired:
+                self._record_event(
+                    "expired", seed_id, reason="dormant_ttl", turns_dormant=seed.turns_dormant
+                )
 
     def _validation_flags(self, seed: ShadowSeed, contradiction: bool) -> ValidationGateFlags:
         return ValidationGateFlags(
@@ -511,6 +544,13 @@ class SSLManager:
         seed.weight = max(0.0, seed.weight - self.contradiction_penalty)
         seed.contradiction_score = min(1.0, seed.contradiction_score + 0.25)
         seed.occurrence_count = 1
+        # Doctrine: falsified → weight 0, back to NEW. But also start the
+        # disappearance clock: lower trace so a degraded seed decays toward
+        # DORMANT/EXPIRED faster unless genuinely re-recognised (weight zakt én
+        # de TTL tot verdwijning loopt).
+        if self.contradiction_trace_penalty:
+            seed.trace = max(0.0, seed.trace - self.contradiction_trace_penalty)
+        seed.turns_dormant = 0
         seed.status = SeedStatus.NEW
         self._touch_seed(seed)
         result = self._build_validation_result(
@@ -551,6 +591,22 @@ class SSLManager:
         seed = self.seeds[seed_id]
         status_before = seed.status.value
         weight_before = seed.weight
+
+        # EXPIRED is terminal: a degraded/disappeared seed cannot be re-validated
+        # or re-promoted. No-op so it never climbs back from the dead.
+        if seed.status == SeedStatus.EXPIRED:
+            result = self._build_validation_result(
+                seed_id=seed_id,
+                seed=seed,
+                status_before=status_before,
+                weight_before=weight_before,
+                flags=ValidationGateFlags(False, False, not contradiction),
+                external_evidence=False,
+                contradiction=contradiction,
+                promoted=False,
+                verdict="expired",
+            )
+            return self._finalize_validation_result(result)
 
         if external_evidence:
             seed.evidence_count += 1
@@ -633,6 +689,13 @@ class SSLManager:
         return None
 
     def reactivate_by_text(self, text: str, threshold: float = 0.65) -> list[str]:
+        """TrTL (Trigger-to-Live): scan new input for triggers of DORMANT seeds
+        and revive the matches. A dormant seed survives by contextual
+        recognition — cosine similarity above ``threshold`` or a trigger-keyword
+        hit — which bumps its trace, returns it to NEW and resets the dormancy
+        (TTL) clock. This is the mirror of ``decay_traces`` (TTL): recognition
+        keeps a seed alive, neglect lets it expire. EXPIRED seeds are terminal
+        and are never reactivated."""
         query_emb = self.get_embedding(text)
         reactivated: list[str] = []
 
@@ -648,6 +711,7 @@ class SSLManager:
             if similarity >= threshold or keyword_hit:
                 seed.trace = min(seed.trace + self.reactivation_increment, self.max_trace)
                 seed.status = SeedStatus.NEW
+                seed.turns_dormant = 0
                 self._touch_seed(seed)
                 self._record_and_sync(
                     "reactivated",
@@ -659,6 +723,12 @@ class SSLManager:
                 reactivated.append(seed_id)
 
         return reactivated
+
+    def scan_trtl_triggers(self, text: str, threshold: float = 0.65) -> list[str]:
+        """Canonical TrTL name for ``reactivate_by_text`` (4.5 §12.3
+        Trigger-matching). Same behaviour; kept so call sites can use the
+        doctrinal term."""
+        return self.reactivate_by_text(text, threshold=threshold)
 
     def find_uncertain_region(
         self,

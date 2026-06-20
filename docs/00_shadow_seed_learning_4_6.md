@@ -138,6 +138,27 @@ NEW -> ACTIVE -> DECAYING -> DORMANT -> PROMOTED of EXPIRED
 
 Die statusketen is geen cosmetiek. Ze maakt het mogelijk om presence, invloed en veroudering uit elkaar te houden.
 
+Twee tegengestelde mechanismen sturen de keten — bewust spiegelbeelden van
+geheugenconsolidatie (versterken vs. vergeten):
+
+| Term | Betekenis | Effect | Code-anker |
+|---|---|---|---|
+| **TrTL** (Trigger-to-Live) | trace *overleeft* doordat nieuwe context de seed herkent (cosine-match of keyword-overlap) | reactivatie: `trace += increment`, status → NEW, dormancy-klok reset | `reactivate_by_text()` / `scan_trtl_triggers()` |
+| **TTL** (Time-to-Live) | trace *vervalt* exponentieel zonder herkenning; te lang dormant ⇒ verdwijning | decay → DECAYING → DORMANT → (na `dormant_ttl_turns`) **EXPIRED**, weight 0 | `decay_traces()` |
+
+De regel die deze twee verbindt:
+
+```text
+herkenning (TrTL) houdt een seed in leven; uitblijvende herkenning (TTL) laat hem verdwijnen
+```
+
+Falsificatie grijpt op beide assen in: `weight` → 0 en terug naar NEW (doctrine),
+en `trace` zakt mee, zodat een gedegradeerde seed sneller zijn TTL uitloopt in
+plaats van een vol nieuw leven te krijgen. **EXPIRED is terminaal**: zo'n seed
+wordt niet meer ge-decayed, niet gereactiveerd (TrTL), niet door de Gate
+gepromoot en niet ge-deduptiveerd op — een gedegradeerde of irrelevante seed kan
+dus niet terugkomen.
+
 ### 4. Validation Gate
 
 Promotie mag niet ontstaan uit één snelle herkenning.

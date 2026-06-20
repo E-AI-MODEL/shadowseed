@@ -240,11 +240,19 @@ def build_baseline_prompt(scenario: dict) -> str:
 def build_ssl_revision_prompt(scenario: dict, baseline_answer: str, ssl_seeds: list[str]) -> str:
     seed_block = "\n".join(f"- {seed}" for seed in ssl_seeds)
     return (
-        "Je herschrijft hetzelfde antwoord met alleen de gevalideerde SSL-seeds als extra aandachtspunten.\n"
-        "Voeg geen nieuwe claims toe buiten deze seeds.\n\n"
+        "Hieronder staan een vraag, een eerste antwoord, en een lijst punten die "
+        "in het eerste antwoord ontbreken maar relevant zijn.\n"
+        "Herschrijf het antwoord zó dat elk ontbrekend punt op een natuurlijke, "
+        "vloeiende manier in de lopende tekst is verwerkt.\n"
+        "Regels:\n"
+        "- Behoud de juiste inhoud van het eerste antwoord; verwijder niets dat klopt.\n"
+        "- Voeg geen feiten, claims of onderwerpen toe buiten de gegeven punten.\n"
+        "- Verwijs NIET naar 'seeds', 'aandachtspunten', 'SSL', een lijst of deze "
+        "instructie, en plak geen kopje of opsomming onder het antwoord. Lever één "
+        "samenhangend, lopend antwoord.\n\n"
         f"Vraag: {scenario['question']}\n\n"
         f"Eerste antwoord:\n{baseline_answer}\n\n"
-        f"Gevalideerde SSL-seeds:\n{seed_block}\n\n"
+        f"Te verwerken punten:\n{seed_block}\n\n"
         "Herschreven antwoord:"
     )
 
@@ -325,15 +333,32 @@ def run_ssl45_model_benefit_suite(
     backend: str = "fixture",
     model_id: str | None = None,
     max_new_tokens: int = 220,
+    semantic_embedding_backend: str = "none",
+    embedding_model: str | None = None,
+    semantic_threshold: float = 0.55,
 ) -> Path:
     suite = json.loads(Path(input_path).read_text(encoding="utf-8"))
     model = make_backend(backend=backend, model_id=model_id, max_new_tokens=max_new_tokens)
+
+    # Optional semantic coverage (round 012): the lexical coverage() only credits
+    # verbatim seed echoes, so a well-woven answer scores 0. A real embedder gives
+    # a meaning-based corroborator. "none" keeps the suite dependency-free.
+    semantic_embed_fn = None
+    semantic_dims = None
+    if semantic_embedding_backend != "none":
+        from shadowseed.benchmark.embedding_backends import make_embedding_fn
+
+        semantic_embed_fn, semantic_dims = make_embedding_fn(
+            semantic_embedding_backend, embedding_model
+        )
 
     results = []
     blind_review_items = []
     blind_answer_key = []
     baseline_coverages: list[float] = []
     ssl_coverages: list[float] = []
+    baseline_sem_coverages: list[float] = []
+    ssl_sem_coverages: list[float] = []
     length_deltas: list[int] = []
     unsupported_total = 0
     promoted_total = 0
@@ -346,12 +371,40 @@ def run_ssl45_model_benefit_suite(
             baseline_answer,
             turns=turns,
         )
-        ssl_prompt = build_ssl_revision_prompt(scenario, baseline_answer, promoted)
-        ssl_answer = model.generate(ssl_prompt, scenario, "ssl", promoted)
+        # Do-no-harm by construction: with no promoted seeds there is nothing to
+        # act on, so keep the baseline verbatim instead of asking the model to
+        # "revise with zero seeds" (round 010 DNH control: a strong model then
+        # appends a spurious generic SSL-seed line — harmless but noise).
+        if promoted:
+            ssl_prompt = build_ssl_revision_prompt(scenario, baseline_answer, promoted)
+            ssl_answer = model.generate(ssl_prompt, scenario, "ssl", promoted)
+        else:
+            ssl_answer = baseline_answer
 
         baseline_cov, baseline_covered = coverage(baseline_answer, scenario["expected_ssl_additions"])
         ssl_cov, ssl_covered = coverage(ssl_answer, scenario["expected_ssl_additions"])
         unsupported = unsupported_additions(promoted, scenario["expected_ssl_additions"])
+
+        semantic_block: dict | None = None
+        if semantic_embed_fn is not None:
+            from shadowseed.benchmark.semantic_coverage import semantic_coverage
+
+            exp = scenario["expected_ssl_additions"]
+            b_sem, _b_cov, b_pergap = semantic_coverage(
+                baseline_answer, exp, semantic_embed_fn, semantic_threshold
+            )
+            s_sem, _s_cov, s_pergap = semantic_coverage(
+                ssl_answer, exp, semantic_embed_fn, semantic_threshold
+            )
+            baseline_sem_coverages.append(b_sem)
+            ssl_sem_coverages.append(s_sem)
+            semantic_block = {
+                "baseline_semantic_coverage": b_sem,
+                "ssl_semantic_coverage": s_sem,
+                "semantic_coverage_delta": s_sem - b_sem,
+                "baseline_per_gap": b_pergap,
+                "ssl_per_gap": s_pergap,
+            }
         baseline_words = word_count(baseline_answer)
         ssl_words = word_count(ssl_answer)
         length_delta = ssl_words - baseline_words
@@ -391,6 +444,7 @@ def run_ssl45_model_benefit_suite(
                 "ssl_answer": ssl_answer,
                 "detected_by_turn": detected_by_turn,
                 "seed_scores": seed_scores,
+                **({"semantic_coverage": semantic_block} if semantic_block else {}),
             }
         )
 
@@ -399,6 +453,18 @@ def run_ssl45_model_benefit_suite(
     mean_length_delta = sum(length_deltas) / len(length_deltas)
     coverage_delta = ssl_mean - baseline_mean
     unsupported_rate = unsupported_total / promoted_total if promoted_total else 0.0
+    semantic_summary = None
+    if ssl_sem_coverages:
+        b_sem_mean = sum(baseline_sem_coverages) / len(baseline_sem_coverages)
+        s_sem_mean = sum(ssl_sem_coverages) / len(ssl_sem_coverages)
+        semantic_summary = {
+            "embedding_backend": semantic_embedding_backend,
+            "embedding_dimensions": semantic_dims,
+            "threshold": semantic_threshold,
+            "baseline_mean_semantic_coverage": b_sem_mean,
+            "ssl_mean_semantic_coverage": s_sem_mean,
+            "semantic_coverage_delta": s_sem_mean - b_sem_mean,
+        }
     summary = {
         "suite_version": suite.get("version"),
         "backend": model.name,
@@ -420,6 +486,7 @@ def run_ssl45_model_benefit_suite(
             "The fixture backend is a CI smoke test; hf-transformers is the real local model mode. "
             "Blind review items are included so human judges can score quality without knowing which answer used SSL."
         ),
+        **({"semantic_coverage": semantic_summary} if semantic_summary else {}),
     }
 
     output = Path(output_path)

@@ -10,6 +10,7 @@ from shadowseed.benchmark.absencebench_hf import fetch_absencebench_sample
 from shadowseed.benchmark.absencebench_local import run_local_absencebench
 from shadowseed.benchmark.absencebench_runner import AbsenceBenchRunner
 from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate_benchmark
+from shadowseed.benchmark.adversarial_payoff_suite import run_adversarial_payoff_suite
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
 from shadowseed.benchmark.open_set_review_summary import summarize_open_set_seed_review
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
@@ -78,6 +79,9 @@ def _run_model_benefit_suite(args: argparse.Namespace) -> str:
         backend=args.backend,
         model_id=args.model_id,
         max_new_tokens=args.max_new_tokens,
+        semantic_embedding_backend=getattr(args, "semantic_embedding_backend", "none"),
+        embedding_model=getattr(args, "embedding_model", None),
+        semantic_threshold=getattr(args, "semantic_threshold", 0.55),
     )
 
 
@@ -120,6 +124,20 @@ def _run_ssl_vs_rag_benchmark(args: argparse.Namespace) -> str:
             max_new_tokens=args.max_new_tokens,
             top_k=args.top_k,
             use_centroid=args.use_centroid,
+            embedding_backend=getattr(args, "embedding_backend", "lexical"),
+            embedding_model=getattr(args, "embedding_model", None),
+        )
+    )
+
+
+def _run_adversarial_payoff_suite(args: argparse.Namespace) -> str:
+    return str(
+        run_adversarial_payoff_suite(
+            args.input,
+            args.output,
+            backend=args.backend,
+            model_id=args.model_id,
+            max_new_tokens=args.max_new_tokens,
         )
     )
 
@@ -217,6 +235,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "fetch-open-set-hf-batch": _fetch_open_set_hf_batch,
     "run-open-set-seed-review": _run_open_set_seed_review,
     "run-ssl-vs-rag": _run_ssl_vs_rag_benchmark,
+    "run-adversarial-payoff": _run_adversarial_payoff_suite,
     "summarize-open-set-seed-review": _summarize_open_set_seed_review,
     "run-adversarial-gate-benchmark": _run_adversarial_gate_benchmark,
     "run-probe-utility-benchmark": _run_probe_utility_benchmark,

@@ -19,18 +19,33 @@ the operational handle for the SSL-vs-RAG head-to-head (gap 3).
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any
 
 import numpy as np
 
 from shadowseed.benchmark.ssl45_gap_suite import lexical_embedding
 
+EmbedFn = Callable[[str], np.ndarray]
 
-def centroid_of(seed_texts: list[str], dimensions: int = 128) -> np.ndarray:
+
+def _resolve_embed_fn(embed_fn: EmbedFn | None, dimensions: int) -> EmbedFn:
+    if embed_fn is not None:
+        return embed_fn
+    return lambda text: lexical_embedding(text, dimensions=dimensions)
+
+
+def centroid_of(
+    seed_texts: list[str],
+    dimensions: int = 128,
+    *,
+    embed_fn: EmbedFn | None = None,
+) -> np.ndarray:
     """Mean embedding of the seeds — the constellation query (4.5 §9.1)."""
     if not seed_texts:
         raise ValueError("centroid_of needs at least one seed text")
-    vectors = [lexical_embedding(t, dimensions=dimensions) for t in seed_texts]
+    embed = _resolve_embed_fn(embed_fn, dimensions)
+    vectors = [embed(t) for t in seed_texts]
     return np.mean(vectors, axis=0)
 
 
@@ -51,6 +66,8 @@ def run_seed_retrieval_probe(
     top_k: int = 5,
     *,
     use_centroid: bool = False,
+    embed_fn: EmbedFn | None = None,
+    dimensions: int = 128,
 ) -> list[dict[str, Any]]:
     """Retrieve context driven by the seeds.
 
@@ -59,17 +76,20 @@ def run_seed_retrieval_probe(
     - otherwise each seed is its own probe query; hits are unioned and
       deduplicated by ``chunk_id`` keeping the strongest score.
 
-    Returns hit dicts with the originating ``probe_query`` for provenance.
+    ``embed_fn`` selects the embedder (defaults to the deterministic
+    ``lexical_embedding``); pass a real embedder to remove the toy-retriever
+    confound. Returns hit dicts with the originating ``probe_query``.
     """
     if not seed_texts:
         return []
+    embed = _resolve_embed_fn(embed_fn, dimensions)
     if use_centroid:
-        hits = store.search(centroid_of(seed_texts), top_k=top_k)
+        hits = store.search(centroid_of(seed_texts, dimensions, embed_fn=embed), top_k=top_k)
         return [_hit_dict("__centroid__", h) for h in hits]
 
     best: dict[str, dict[str, Any]] = {}
     for seed in seed_texts:
-        for hit in store.search(lexical_embedding(seed), top_k=top_k):
+        for hit in store.search(embed(seed), top_k=top_k):
             d = _hit_dict(seed, hit)
             prev = best.get(d["chunk_id"])
             if prev is None or d["score"] > prev["score"]:
@@ -84,6 +104,8 @@ def retrieval_probe_vs_question(
     top_k: int = 5,
     *,
     use_centroid: bool = False,
+    embed_fn: EmbedFn | None = None,
+    dimensions: int = 128,
 ) -> dict[str, Any]:
     """Contrast plain-RAG (query = question) with the seed probe (query = gap).
 
@@ -92,12 +114,16 @@ def retrieval_probe_vs_question(
     finds what RAG, given the same question and corpus, would not". This is the
     measurement handle for the SSL-vs-RAG head-to-head (gap 3); it makes no
     quality claim by itself.
+
+    Both arms use the same ``embed_fn`` so the only variable is the query (the
+    question vs the gap), not the embedder.
     """
+    embed = _resolve_embed_fn(embed_fn, dimensions)
     question_hits = [
-        _hit_dict(question, h) for h in store.search(lexical_embedding(question), top_k=top_k)
+        _hit_dict(question, h) for h in store.search(embed(question), top_k=top_k)
     ]
     probe_hits = run_seed_retrieval_probe(
-        store, seed_texts, top_k=top_k, use_centroid=use_centroid
+        store, seed_texts, top_k=top_k, use_centroid=use_centroid, embed_fn=embed
     )
     question_ids = {h["chunk_id"] for h in question_hits}
     probe_ids = {h["chunk_id"] for h in probe_hits}

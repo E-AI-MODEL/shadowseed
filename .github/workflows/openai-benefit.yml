@@ -17,8 +17,9 @@ on:
         default: "model-benefit"
         type: choice
         options:
-          - model-benefit      # round 008: does acting on a seed help?
-          - ssl-vs-rag         # gap 3: retrieve toward the gap vs the question
+          - model-benefit         # round 008: does acting on a seed help?
+          - ssl-vs-rag            # gap 3: retrieve toward the gap vs the question
+          - adversarial-payoff    # round 014: does acting on a BAD seed harm?
       model_id:
         description: "OpenAI chat model id"
         required: true
@@ -36,7 +37,15 @@ on:
       max_new_tokens:
         description: "Max new tokens per generation"
         required: true
-        default: "220"
+        default: "400"
+      embedding_backend:
+        description: "Retriever for ssl-vs-rag (gap 3). openai = real embeddings (removes the toy-retriever caveat)"
+        required: true
+        default: "openai"
+        type: choice
+        options:
+          - openai
+          - lexical
 
 permissions:
   contents: read
@@ -81,6 +90,7 @@ jobs:
             --model-id "${{ inputs.model_id }}" \
             --turns "${{ inputs.turns }}" \
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --semantic-embedding-backend openai \
             --output results/ssl45_model_benefit_suite.json
 
       - name: Run SSL-vs-RAG head-to-head via OpenAI
@@ -93,11 +103,48 @@ jobs:
             --model-backend openai \
             --model-id "${{ inputs.model_id }}" \
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --embedding-backend "${{ inputs.embedding_backend }}" \
             --output results/ssl_vs_rag_benchmark.json
+
+      - name: Run adversarial payoff suite via OpenAI
+        if: ${{ inputs.experiment == 'adversarial-payoff' }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          mkdir -p results
+          python -m shadowseed.cli run-adversarial-payoff \
+            --backend openai \
+            --model-id "${{ inputs.model_id }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --output results/adversarial_payoff_suite.json
 
       - name: Analyze results
         if: ${{ inputs.experiment == 'model-benefit' }}
         run: python -m shadowseed.cli analyze-results || true
+
+      - name: Print result summary to log
+        run: |
+          python - <<'PY'
+          import json
+          import glob
+
+          # Print the summary + blind review pairs to the job log so the result
+          # is readable via the Actions API even when artifact egress is blocked.
+          for path in sorted(glob.glob("results/*.json")):
+              print(f"\n===== {path} =====")
+              data = json.loads(open(path, encoding="utf-8").read())
+              summary = data.get("summary", {})
+              print("--- summary ---")
+              print(json.dumps(summary, indent=2, ensure_ascii=False))
+              for item in data.get("results", []):
+                  sid = item.get("scenario_id") or item.get("id")
+                  print(f"\n--- result: {sid} ---")
+                  print(json.dumps(item, indent=2, ensure_ascii=False))
+              key = data.get("blind_answer_key")
+              if key:
+                  print("\n--- blind_answer_key ---")
+                  print(json.dumps(key, indent=2, ensure_ascii=False))
+          PY
 
       - name: Normalize artifact name
         env:
@@ -119,4 +166,5 @@ jobs:
           path: |
             results/ssl45_model_benefit_suite.json
             results/ssl_vs_rag_benchmark.json
+            results/adversarial_payoff_suite.json
           if-no-files-found: warn

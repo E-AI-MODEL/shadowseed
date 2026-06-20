@@ -114,6 +114,19 @@ def build_parser() -> argparse.ArgumentParser:
     )
     model_benefit.add_argument("--model-id", default=None)
     model_benefit.add_argument("--max-new-tokens", type=int, default=220)
+    model_benefit.add_argument(
+        "--semantic-embedding-backend",
+        choices=["none", "lexical", "openai"],
+        default="none",
+        help=(
+            "Optionele semantische coverage-metric naast de lexicale. none = uit "
+            "(CI-default). lexical = deterministische hash. openai = echte "
+            "embeddings (vereist de openai extra en OPENAI_API_KEY) — meet of de "
+            "gap inhoudelijk geadresseerd is i.p.v. letterlijk herhaald."
+        ),
+    )
+    model_benefit.add_argument("--embedding-model", default=None)
+    model_benefit.add_argument("--semantic-threshold", type=float, default=0.55)
 
     blind = subparsers.add_parser(
         "run-blind-benchmark",
@@ -368,6 +381,32 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Eén centroid-query voor de seed-constellation i.p.v. per-seed union.",
     )
+    ssl_vs_rag.add_argument(
+        "--embedding-backend",
+        choices=["lexical", "openai"],
+        default="lexical",
+        help=(
+            "Retrieval-embedder. lexical = deterministische 128d-hash (CI, "
+            "speelgoed; mechanisme niet productie-RAG). openai = echte "
+            "embeddings (vereist de openai extra en OPENAI_API_KEY) — haalt de "
+            "toy-retriever-confound uit de gap-3 vergelijking."
+        ),
+    )
+    ssl_vs_rag.add_argument(
+        "--embedding-model",
+        default=None,
+        help="Embedding-model-id voor --embedding-backend openai (default text-embedding-3-small).",
+    )
+
+    adv_payoff = subparsers.add_parser(
+        "run-adversarial-payoff",
+        help="[manual/research] discriminatietest: forceer een slechte seed in de revisie",
+    )
+    adv_payoff.add_argument("--input", default="src/shadowseed/data/adversarial_payoff_suite.json")
+    adv_payoff.add_argument("--output", default="results/adversarial_payoff_suite.json")
+    adv_payoff.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    adv_payoff.add_argument("--model-id", default=None)
+    adv_payoff.add_argument("--max-new-tokens", type=int, default=400)
 
     analyze = subparsers.add_parser(
         "analyze-results",

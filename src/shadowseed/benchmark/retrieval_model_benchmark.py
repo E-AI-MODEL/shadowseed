@@ -87,12 +87,13 @@ def model_generate(model, prompt: str, retrieved_chunks: list[str], mode: str) -
     return model.generate(prompt, {}, mode, [])
 
 
-def index_retrieval_corpus(store, retrieval_data: dict) -> None:
+def index_retrieval_corpus(store, retrieval_data: dict, embed_fn=None) -> None:
+    embed = embed_fn if embed_fn is not None else lexical_embedding
     for doc in retrieval_data["documents"]:
         for chunk in doc["chunks"]:
             store.add(
                 chunk["chunk_id"],
-                lexical_embedding(chunk["text"]),
+                embed(chunk["text"]),
                 {
                     "text": chunk["text"],
                     "doc_id": doc["doc_id"],
