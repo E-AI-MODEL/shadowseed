@@ -29,6 +29,14 @@ class SSLCoreConfig:
     min_evidence_for_gate: int = 2
     min_trace_for_gate: float = 0.5
     max_seed_words: int = 18
+    # TTL to disappearance (4.5 §10/§12.2): a seed that stays DORMANT without a
+    # re-recognising trigger for this many decay turns becomes EXPIRED — the
+    # doctrine's "te lang dormant zonder trigger → verwijderd uit shadow memory".
+    dormant_ttl_turns: int = 5
+    # Falsification lowers weight (→ NEW) AND nudges trace down, so a degraded
+    # seed starts running out its TTL toward disappearance instead of getting a
+    # full new life. 0.0 keeps the legacy behaviour (weight-only).
+    contradiction_trace_penalty: float = 0.5
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

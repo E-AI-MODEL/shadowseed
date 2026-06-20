@@ -30,9 +30,30 @@ De manager gebruikt nu een expliciete `SSLCoreConfig` met canonieke defaultwaard
 - `contradiction_penalty`
 - `max_trace`
 - `reactivation_increment`
+- `dormant_ttl_turns` (TTL tot verdwijning)
+- `contradiction_trace_penalty`
 - minimale Gate-voorwaarden
 
 Hiermee staat de technische 4.5-lijn op één plek in plaats van verspreid over losse magic numbers.
+
+### TTL tot verdwijning en terminale EXPIRED
+
+De 4.5-levenscyclus eindigt in `EXPIRED` wanneer een seed "te lang dormant zonder
+trigger" is (`docs/legacy/00_shadow_seed_learning_4_5.md` §10/§12.2: *verwijderd
+uit shadow memory*). De manager operationaliseert dat nu expliciet:
+
+- `decay_traces` telt opeenvolgende dormante beurten (`turns_dormant`); na
+  `dormant_ttl_turns` dormante beurten zonder reactivatie gaat de seed naar
+  `EXPIRED` met `weight = 0`.
+- **Falsificatie verlaagt naast `weight` (→ NEW, conform doctrine) ook `trace`**
+  met `contradiction_trace_penalty`, zodat een gedegradeerde seed sneller richting
+  de verdwijn-TTL loopt in plaats van een volledig nieuw leven te krijgen.
+- `EXPIRED` is **terminaal**: zo'n seed wordt niet meer meegenomen in decay, kan
+  niet meer door de Validation Gate (no-op met verdict `expired`), wordt niet
+  gereactiveerd, en wordt niet ge-deduptiveerd op (een bijna-duplicaat maakt een
+  nieuwe seed in plaats van de dode te doen herleven). Daarmee kan een
+  gedegradeerde/irrelevante seed niet alsnog terugkomen — de schade-route uit
+  round 014 (een slechte seed die de revisie haalt) wordt aan de bron afgeknepen.
 
 ### Injecteerbare embeddings
 
