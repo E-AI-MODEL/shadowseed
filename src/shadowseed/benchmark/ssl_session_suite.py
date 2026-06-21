@@ -70,6 +70,8 @@ def run_ssl_session(
     embedding_model: str | None = None,
     surface_threshold: float = 0.30,
     max_seeds_per_turn: int = 5,
+    dedup_threshold: float | None = None,
+    min_occurrences: int | None = None,
 ) -> Path:
     data = json.loads(Path(input_path).read_text(encoding="utf-8"))
     embed_fn, _dim = make_embedding_fn(embedding_backend, embedding_model)
@@ -78,13 +80,31 @@ def run_ssl_session(
         backend, model_id=model_id, max_new_tokens=max_new_tokens, prompt_variant="generative"
     )
 
+    # Per-run overrides ONLY (global doctrine defaults in SSLCoreConfig stay put).
+    # round 018 located the bottleneck: paraphrastic LLM gaps don't dedup at 0.85,
+    # so recurrence never accumulates. A looser dedup / lower recurrence bar lets
+    # the promotion machinery actually fire so the cross-turn payoff can be tested.
+    from dataclasses import replace as _replace
+
+    from shadowseed.core_config import SSLCoreConfig
+
+    run_config = SSLCoreConfig()
+    if min_occurrences is not None:
+        run_config = _replace(run_config, min_occurrences_for_gate=min_occurrences)
+
+    def _new_manager() -> SSLManager:
+        kwargs: dict[str, Any] = {"embedding_fn": embed_fn, "config": run_config}
+        if dedup_threshold is not None:
+            kwargs["dedup_threshold"] = dedup_threshold
+        return SSLManager(**kwargs)
+
     conversations: list[dict[str, Any]] = []
     blind_items: list[dict[str, Any]] = []
     blind_key: list[dict[str, Any]] = []
     cross_turn_events = 0
 
     for conv in data["conversations"]:
-        manager = SSLManager(embedding_fn=embed_fn)
+        manager = _new_manager()
         born_turn: dict[str, int] = {}
         history: list[tuple[str, str]] = []
         turn_records: list[dict[str, Any]] = []
@@ -210,6 +230,8 @@ def run_ssl_session(
         "embedding_backend": embedding_backend,
         "conversation_count": len(conversations),
         "cross_turn_payoff_events": cross_turn_events,
+        "dedup_threshold": dedup_threshold if dedup_threshold is not None else "default(0.85)",
+        "min_occurrences": min_occurrences if min_occurrences is not None else "default(3)",
         "diagnostics": {
             "total_candidates_detected": sum(d["total_candidates_detected"] for d in all_diag),
             "max_occurrence_count": max((d["max_occurrence_count"] for d in all_diag), default=0),

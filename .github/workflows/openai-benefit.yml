@@ -49,6 +49,14 @@ on:
         options:
           - openai
           - lexical
+      dedup_threshold:
+        description: "ssl-session only: per-run dedup threshold (blank = default 0.85; W9c uses ~0.6)"
+        required: false
+        default: ""
+      min_occurrences:
+        description: "ssl-session only: per-run recurrence bar for the Gate (blank = default 3)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -153,11 +161,15 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           mkdir -p results
+          EXTRA=""
+          [ -n "${{ inputs.dedup_threshold }}" ] && EXTRA="$EXTRA --dedup-threshold ${{ inputs.dedup_threshold }}"
+          [ -n "${{ inputs.min_occurrences }}" ] && EXTRA="$EXTRA --min-occurrences ${{ inputs.min_occurrences }}"
           python -m shadowseed.cli run-ssl-session \
             --backend openai \
             --model-id "${{ inputs.model_id }}" \
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
             --embedding-backend openai \
+            $EXTRA \
             --output results/ssl_session_suite.json
 
       - name: Analyze results

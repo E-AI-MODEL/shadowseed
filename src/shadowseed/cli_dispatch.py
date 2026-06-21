@@ -183,6 +183,8 @@ def _run_ssl_session(args: argparse.Namespace) -> str:
             max_new_tokens=args.max_new_tokens,
             embedding_backend=getattr(args, "embedding_backend", "lexical"),
             embedding_model=getattr(args, "embedding_model", None),
+            dedup_threshold=getattr(args, "dedup_threshold", None),
+            min_occurrences=getattr(args, "min_occurrences", None),
         )
     )
 

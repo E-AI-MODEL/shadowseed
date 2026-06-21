@@ -449,6 +449,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--embedding-backend", choices=["lexical", "openai"], default="lexical"
     )
     ssl_session.add_argument("--embedding-model", default=None)
+    ssl_session.add_argument(
+        "--dedup-threshold",
+        type=float,
+        default=None,
+        help="Per-run dedup-drempel (default 0.85). Lager merge paraphrastische gaps zodat recurrence accumuleert (W9c). Globale doctrine-default blijft.",
+    )
+    ssl_session.add_argument(
+        "--min-occurrences",
+        type=int,
+        default=None,
+        help="Per-run recurrence-drempel voor de Gate (default 3).",
+    )
 
     analyze = subparsers.add_parser(
         "analyze-results",
