@@ -51,11 +51,18 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   (round 017): pijplijn liep schoon, **0 cross-turn events** — diagnose:
   max_occurrence=2 < Gate-drempel 3, dus 0 promoties (gesprekken te kort/wisselend
   voor recurrence). Geen bug; mechanisme kreeg geen kans. Zie `round_017/`.
-- [ ] **W9b. Recurrence een eerlijke kans geven.** Langere gesprekken (≥8 beurten)
-  en/of bewust terugkerend thema, zodat een echte gap 3×+ recidiveert en op eigen
-  merites promoot; meet dan of een zelf-gepromote schaduw in een latere beurt
-  waarde toevoegt die de history-baseline mist. *Klaar wanneer:* ≥1 conversatie
-  waarin een seed promoot én cross-turn surfacet, blind beoordeeld.
+- [x] **W9b. Recurrence een eerlijke kans geven (langere gesprekken).** Gedaan
+  (round 018): 3 gesprekken, 22 beurten, **110 gaps** — maar `max_occurrence` nog
+  steeds **2**, 0 promoties. Bottleneck precies gelokaliseerd: **dedup (0.85) merge
+  paraphrastische LLM-gaps niet**, dus recurrence accumuleert nooit. Niet "te
+  kort"; het is de dedup/recurrence-parametrisering. Zie `round_018/`.
+- [ ] **W9c. Bottleneck deblokkeren (per-run knob, defaults intact).** Expose
+  `dedup_threshold`/`min_occurrences` als run-parameter; her-draai met lossere
+  dedup (~0.6) zodat paraphrastische recurrence kan mergen — puur om te testen:
+  *als promotie WEL kan vuren, surfacet een cross-turn schaduw dan waarde?*
+  *Klaar wanneer:* ≥1 promotie + cross-turn event, of een schoon negatief mét
+  werkende machinerie. Doctrine-defaults blijven ongewijzigd (round-014-veiligheid
+  blijft staan).
 - [!] **Doctrine-keuze (alleen als W9b ook leeg blijft):** promotie-drempel
   verlagen botst met de Gate-strengte die round 014 valideerde; alleen met
   TTL/EXPIRED als vangnet en als expliciete doctrine-wijziging. Multi-turn gesprek
