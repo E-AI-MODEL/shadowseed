@@ -21,16 +21,24 @@
 *Raakt Laag C + E + output-kwaliteit tegelijk. Tot nu zijn payoff-seeds
 auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
 
-- [ ] **W1. Open-set seeds als payoff-input.** Neem échte open-set-gedetecteerde
-  seeds (rounds 004–007, niet zelf verzonnen) en voer ze door de model-benefit /
-  revisie-pijplijn op gpt-4.1. *Klaar wanneer:* een run bestaat waarin de
-  gehandelde seeds uit de detector komen, niet uit een fixture.
-- [ ] **W2. Blinde human-review op de wild-payoff-paren** (hergebruik
-  round-013-tooling). *Klaar wanneer:* win-rate + human-vs-AI κ berekend op
-  niet-auteur-ontworpen seeds.
-- [ ] **W3. Eerlijke koppeling detectie↔payoff vastleggen** als round-note.
-  *Klaar wanneer:* één doc die de end-to-end claim (detectie-kwaliteit →
-  payoff-effect) met de eerlijke grenzen beschrijft.
+- [x] **W1. Open-set seeds als payoff-input.** Echte open-set-gedetecteerde seeds
+  (round 006 batch1, AI-accepted, κ 0.63) door de payoff-pijplijn op gpt-4.1
+  (round 015). **Resultaat: grotendeels negatief/directioneel** — een sterk model
+  vindt zélf ~82% van de gedetecteerde gaps (echt nieuw: ~2/29 niche). De
+  wild-loop loont dus níét op korte, makkelijke teksten. Zie `round_015/`.
+- [~] **W3. Eerlijke koppeling detectie↔payoff vastgelegd** (round 015):
+  detectie-kwaliteit op makkelijke teksten → lage payoff omdat het model de
+  triviale gaps zelf al ziet. Vervolg hieronder (W4–W6).
+- [ ] **W4. Harde/dichte teksten**: draai de wild-payoff op de round-007
+  wetenschap-batch / lange of technische teksten, waar het model de gap *niet*
+  spontaan ziet. *Klaar wanneer:* baseline-coverage van gedetecteerde gaps
+  duidelijk < dan op nieuws (detector voegt aantoonbaar toe).
+- [ ] **W5. Generatieve "kunnen staan"-frames door payoff** (gap 1, v0.4-gen):
+  niet-omissies maar niet-voor-de-hand-liggende invalshoeken. *Klaar wanneer:*
+  wild-payoff met generatieve seeds, baseline-coverage gemeten.
+- [ ] **W6. Blinde human-review** op de winnende variant (W4/W5), niet op de
+  redundante nieuws-set. *Klaar wanneer:* win-rate + κ op een set waar de
+  detector toegevoegde waarde laat zien.
 
 ## P1 — Laag C: open-set seedkwaliteit naar criterium (≥ 0.60)
 
@@ -95,3 +103,6 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
 
 - 2026-06-20 — PvA aangemaakt na merge van PR #142 (rounds 010–014 + lifecycle
   TTL/TrTL). Eerstvolgende focus: P0 (wild-lus).
+- 2026-06-21 — W1 gedaan (round 015): wild-loop op nieuws is grotendeels redundant
+  (model vindt ~82% zelf). W-taken bijgesteld naar harde teksten (W4) +
+  generatieve frames (W5), human-review (W6) pas op de winnende variant.
