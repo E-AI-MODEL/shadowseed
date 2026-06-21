@@ -21,6 +21,7 @@ on:
           - ssl-vs-rag            # gap 3: retrieve toward the gap vs the question
           - adversarial-payoff    # round 014: does acting on a BAD seed harm?
           - wild-payoff           # P0/W1: real detected seeds through the payoff
+          - generative-payoff     # P0/W5: generative 'kunnen staan' frames
       model_id:
         description: "OpenAI chat model id"
         required: true
@@ -132,6 +133,19 @@ jobs:
             --semantic-embedding-backend openai \
             --output results/wild_payoff_suite.json
 
+      - name: Run generative payoff suite via OpenAI
+        if: ${{ inputs.experiment == 'generative-payoff' }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          mkdir -p results
+          python -m shadowseed.cli run-generative-payoff \
+            --backend openai \
+            --model-id "${{ inputs.model_id }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --semantic-embedding-backend openai \
+            --output results/generative_payoff_suite.json
+
       - name: Analyze results
         if: ${{ inputs.experiment == 'model-benefit' }}
         run: python -m shadowseed.cli analyze-results || true
@@ -182,4 +196,5 @@ jobs:
             results/ssl_vs_rag_benchmark.json
             results/adversarial_payoff_suite.json
             results/wild_payoff_suite.json
+            results/generative_payoff_suite.json
           if-no-files-found: warn

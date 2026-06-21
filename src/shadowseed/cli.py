@@ -422,6 +422,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     wild_payoff.add_argument("--embedding-model", default=None)
 
+    gen_payoff = subparsers.add_parser(
+        "run-generative-payoff",
+        help="[manual/research] P0/W5: generatieve 'kunnen staan'-frames door de payoff-pijplijn",
+    )
+    gen_payoff.add_argument("--input", default="src/shadowseed/data/generative_payoff_suite.json")
+    gen_payoff.add_argument("--output", default="results/generative_payoff_suite.json")
+    gen_payoff.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    gen_payoff.add_argument("--model-id", default=None)
+    gen_payoff.add_argument("--max-new-tokens", type=int, default=400)
+    gen_payoff.add_argument(
+        "--semantic-embedding-backend", choices=["none", "lexical", "openai"], default="none"
+    )
+    gen_payoff.add_argument("--embedding-model", default=None)
+
     analyze = subparsers.add_parser(
         "analyze-results",
         help="[reporting] maak rapport en grafieken uit resultaatbestanden",
