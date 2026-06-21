@@ -47,8 +47,18 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   pijplijn-PROMOTED seed geboren in een eerdere beurt mag een later antwoord
   sturen. Pipeline-getrouwe test bewijst het pad (recurrence→Gate→promote→
   cross-turn surface). **Vervangt de losstaande W1/W5/W14-afgeleiden** (die de
-  manager NIET gebruikten — nu gemarkeerd als NIET-PIJPLIJN). Rest: draaien op
-  gpt-4.1 + blinde review van de cross-turn paren. Multi-turn gesprek
+  manager NIET gebruikten — nu gemarkeerd als NIET-PIJPLIJN). Eerste gpt-4.1-run
+  (round 017): pijplijn liep schoon, **0 cross-turn events** — diagnose:
+  max_occurrence=2 < Gate-drempel 3, dus 0 promoties (gesprekken te kort/wisselend
+  voor recurrence). Geen bug; mechanisme kreeg geen kans. Zie `round_017/`.
+- [ ] **W9b. Recurrence een eerlijke kans geven.** Langere gesprekken (≥8 beurten)
+  en/of bewust terugkerend thema, zodat een echte gap 3×+ recidiveert en op eigen
+  merites promoot; meet dan of een zelf-gepromote schaduw in een latere beurt
+  waarde toevoegt die de history-baseline mist. *Klaar wanneer:* ≥1 conversatie
+  waarin een seed promoot én cross-turn surfacet, blind beoordeeld.
+- [!] **Doctrine-keuze (alleen als W9b ook leeg blijft):** promotie-drempel
+  verlagen botst met de Gate-strengte die round 014 valideerde; alleen met
+  TTL/EXPIRED als vangnet en als expliciete doctrine-wijziging. Multi-turn gesprek
   waarin een weight-0 seed die vroeg gedetecteerd is meereist (TTL/TrTL) en pas
   later, als de context verschuift, alsnog in het antwoord kan landen. Baseline =
   normale chatbot met dezelfde gespreksgeschiedenis maar zónder shadow-memory.
