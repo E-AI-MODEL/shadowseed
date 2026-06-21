@@ -37,10 +37,20 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   uitgevoerd (round 016). **Convergent negatief**: gpt-4.1 dekt zelf ~88% van de
   generatieve frames (novel 3/24). Kanttekening: baseline was *geprimed* op
   "verklarende invalshoeken" → confound, zie W7. Zie `round_016/`.
-- [ ] **W7. DECIDER — naïeve baseline.** Herdraai W5 met een baseline zonder
-  framing-instructie ("beantwoord gewoon de vraag"). *Klaar wanneer:* duidelijk
-  is of de frames óók door een ongeprimede baseline gedekt worden (negatief
-  onweerlegbaar) óf niet (SSL voegt tóch toe; W5-getal was priming-artefact).
+- [!] **W7. (gedegradeerd) naïeve single-shot baseline.** Nuttige sanity-check,
+  maar niet meer de decider — scope-correctie hieronder: single-shot mist het
+  SSL-mechanisme.
+- [ ] **W9. DE ECHTE DECIDER — cross-turn payoff (gap 5).** Multi-turn gesprek
+  waarin een weight-0 seed die vroeg gedetecteerd is meereist (TTL/TrTL) en pas
+  later, als de context verschuift, alsnog in het antwoord kan landen. Baseline =
+  normale chatbot met dezelfde gespreksgeschiedenis maar zónder shadow-memory.
+  *Klaar wanneer:* gemeten is of de meegereisde seed in een latere beurt waarde
+  toevoegt die het model niet zelf uit de historie afleidt. Mag falen (sterk
+  model leidt zelf af); per het residu-argument telt zelfs een kleine
+  betrouwbare winst. **Scope-correctie (2026-06-21):** W1/W5 maten single-shot;
+  SSL's eigenlijke claim is dit cross-turn-mechanisme + dat het 3–10%-residu dat
+  zelfs een frontier-model mist betrouwbaar/persistent/gratis wordt gevangen — een
+  grote LLM-stap, geen marginale. Zie `round_016/`.
 - [ ] **W6. Blinde human-review** alleen op een variant die toegevoegde waarde
   laat zien (W4/W7), niet op de redundante sets. *Klaar wanneer:* win-rate + κ.
 - [ ] **W8. Andere claim-richtingen** indien W7 ook negatief: (a) zwakker model

@@ -64,10 +64,37 @@ covered, the negative is unimpeachable; if a naive baseline covers far fewer, SS
      on a good seed helps and does no harm; the issue is that few such seeds exist
      that a frontier model wouldn't raise itself.
 
-## Honest read
+## Scope correction (maintainer, 2026-06-21) — what W1/W5 actually measured
 
-This is the result the maintainer anticipated. SSL-as-external-frontier-detector
-is in serious doubt (convergent W1+W5). It is **not** a refutation of SSL on weak
-models, cross-turn, or Niveau 2 — those are genuinely different claims. The next
-move is W7 (clear the confound), then a decision: pursue one of the live claims,
-or write the honest "stand van SSL" synthesis.
+W1 and W5 are both **single-shot**: inject a seed into one answer, check if the
+model already had it. But that is **not** the SSL mechanism. SSL's mechanism is
+the **weightless shadow seed (weight 0) that travels across turns via TTL/TrTL
+and gets another chance to land later**, when the conversation shifts and the
+context finally triggers it. A seed that looks redundant *this* turn may be
+exactly the one that matters three turns on. So W1/W5 collapsed the cross-turn
+dynamic into one shot and therefore measure SSL's *weakest, degenerate* form.
+
+Two consequences:
+
+1. **Gap 5 (the living cross-turn shadow) is not "yet another untested claim" —
+   it is THE claim.** The real test is multi-turn persistence, not single-shot
+   injection. W7 (naive single-shot baseline) is therefore *not* the decider; the
+   cross-turn test is.
+2. **The 3–10% residual may be the prize, not the noise.** If a mechanism
+   *reliably and persistently* captures the blind spot even a frontier model
+   misses — at zero cost (weight 0) — that is a large step for LLM reasoning, not
+   a marginal one. Dismissing the residual as "small" was too quick.
+
+So W1/W5 stand as honest results **for single-shot external detection**, and that
+interpretation is genuinely weak on a frontier model. They do **not** speak to
+the cross-turn mechanism, which is next.
+
+## Next move (revised)
+
+Build the **cross-turn payoff test** (gap 5): a multi-turn conversation where a
+weight-0 seed detected early persists, decays/TrTL-reactivates, and gets a later
+chance to enter an answer — compared against a normal chatbot that has the same
+conversation history but no shadow memory. The fair question: does the carried
+seed surface value at a later turn that the model would *not* re-derive from
+history alone? It can fail (a strong model re-derives from history); that is the
+honest test, and per the residual argument even a small reliable win counts.
