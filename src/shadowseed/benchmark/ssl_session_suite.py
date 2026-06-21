@@ -182,10 +182,27 @@ def run_ssl_session(
                 "conversation_id": conv["id"],
                 "domain": conv.get("domain", ""),
                 "turns": turn_records,
+                "diagnostics": {
+                    "total_candidates_detected": sum(
+                        len(tr["detected_candidates"]) for tr in turn_records
+                    ),
+                    "distinct_seeds_created": len(manager.seeds),
+                    "max_occurrence_count": max(
+                        (s.occurrence_count for s in manager.seeds.values()), default=0
+                    ),
+                    "promoted_ever": sorted(
+                        {txt for tr in turn_records for txt in tr["promoted_total"]}
+                    ),
+                    "status_counts": {
+                        st.value: sum(1 for s in manager.seeds.values() if s.status == st)
+                        for st in {s.status for s in manager.seeds.values()}
+                    },
+                },
                 "final_constellations": [c.to_dict() for c in manager.find_constellations()],
             }
         )
 
+    all_diag = [c["diagnostics"] for c in conversations]
     summary = {
         "artifact": "ssl_session_suite",
         "backend": getattr(model, "name", backend),
@@ -193,6 +210,16 @@ def run_ssl_session(
         "embedding_backend": embedding_backend,
         "conversation_count": len(conversations),
         "cross_turn_payoff_events": cross_turn_events,
+        "diagnostics": {
+            "total_candidates_detected": sum(d["total_candidates_detected"] for d in all_diag),
+            "max_occurrence_count": max((d["max_occurrence_count"] for d in all_diag), default=0),
+            "total_seeds_ever_promoted": sum(len(d["promoted_ever"]) for d in all_diag),
+            "why_zero_hint": (
+                "Als max_occurrence_count laag is (~1) recidiveren gaps niet genoeg om "
+                "de Gate te halen (geen promotie -> geen cross-turn). Als er wel promoties "
+                "zijn maar 0 events, promoveerden ze pas in de laatste beurt of niet relevant."
+            ),
+        },
         "interpretation": (
             "SSL through the REAL pipeline (manager: weight-0 seeding, recurrence "
             "dedup, Validation Gate across turns, TTL decay, TrTL reactivation). "
