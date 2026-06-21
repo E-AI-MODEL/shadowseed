@@ -194,6 +194,15 @@ jobs:
                   sid = item.get("scenario_id") or item.get("id")
                   print(f"\n--- result: {sid} ---")
                   print(json.dumps(item, indent=2, ensure_ascii=False))
+              # ssl_session uses "conversations"; print the cross-turn payoff turns
+              for conv in data.get("conversations", []):
+                  for tr in conv.get("turns", []):
+                      if tr.get("is_cross_turn_payoff"):
+                          print(f"\n--- cross-turn: {conv['conversation_id']} t{tr['turn']} ---")
+                          print("Q: " + tr["question"])
+                          print("SURFACED (born earlier): " + " | ".join(tr["surfaced_cross_turn_seeds"]))
+                          print("[BASELINE]\n" + tr["baseline_answer"])
+                          print("[SSL]\n" + tr["ssl_answer"])
               key = data.get("blind_answer_key")
               if key:
                   print("\n--- blind_answer_key ---")
