@@ -33,12 +33,19 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   wetenschap-batch / lange of technische teksten, waar het model de gap *niet*
   spontaan ziet. *Klaar wanneer:* baseline-coverage van gedetecteerde gaps
   duidelijk < dan op nieuws (detector voegt aantoonbaar toe).
-- [ ] **W5. Generatieve "kunnen staan"-frames door payoff** (gap 1, v0.4-gen):
-  niet-omissies maar niet-voor-de-hand-liggende invalshoeken. *Klaar wanneer:*
-  wild-payoff met generatieve seeds, baseline-coverage gemeten.
-- [ ] **W6. Blinde human-review** op de winnende variant (W4/W5), niet op de
-  redundante nieuws-set. *Klaar wanneer:* win-rate + κ op een set waar de
-  detector toegevoegde waarde laat zien.
+- [x] **W5. Generatieve "kunnen staan"-frames door payoff** (gap 1, v0.4-gen):
+  uitgevoerd (round 016). **Convergent negatief**: gpt-4.1 dekt zelf ~88% van de
+  generatieve frames (novel 3/24). Kanttekening: baseline was *geprimed* op
+  "verklarende invalshoeken" → confound, zie W7. Zie `round_016/`.
+- [ ] **W7. DECIDER — naïeve baseline.** Herdraai W5 met een baseline zonder
+  framing-instructie ("beantwoord gewoon de vraag"). *Klaar wanneer:* duidelijk
+  is of de frames óók door een ongeprimede baseline gedekt worden (negatief
+  onweerlegbaar) óf niet (SSL voegt tóch toe; W5-getal was priming-artefact).
+- [ ] **W6. Blinde human-review** alleen op een variant die toegevoegde waarde
+  laat zien (W4/W7), niet op de redundante sets. *Klaar wanneer:* win-rate + κ.
+- [ ] **W8. Andere claim-richtingen** indien W7 ook negatief: (a) zwakker model
+  dat SSL-lift krijgt, (b) cross-turn accumulatie (gap 5), (c) Niveau 2. Elk is
+  een *andere* claim dan "externe detector verslaat frontier-model".
 
 ## P1 — Laag C: open-set seedkwaliteit naar criterium (≥ 0.60)
 
