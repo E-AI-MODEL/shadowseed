@@ -408,6 +408,20 @@ def build_parser() -> argparse.ArgumentParser:
     adv_payoff.add_argument("--model-id", default=None)
     adv_payoff.add_argument("--max-new-tokens", type=int, default=400)
 
+    wild_payoff = subparsers.add_parser(
+        "run-wild-payoff",
+        help="[manual/research] P0/W1: echte open-set seeds door de payoff-pijplijn",
+    )
+    wild_payoff.add_argument("--input", default="src/shadowseed/data/wild_payoff_suite.json")
+    wild_payoff.add_argument("--output", default="results/wild_payoff_suite.json")
+    wild_payoff.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    wild_payoff.add_argument("--model-id", default=None)
+    wild_payoff.add_argument("--max-new-tokens", type=int, default=400)
+    wild_payoff.add_argument(
+        "--semantic-embedding-backend", choices=["none", "lexical", "openai"], default="none"
+    )
+    wild_payoff.add_argument("--embedding-model", default=None)
+
     analyze = subparsers.add_parser(
         "analyze-results",
         help="[reporting] maak rapport en grafieken uit resultaatbestanden",
