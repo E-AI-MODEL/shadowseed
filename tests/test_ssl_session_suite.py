@@ -18,7 +18,7 @@ def test_fixture_smoke_runs(tmp_path: Path):
     )
     payload = json.loads(out.read_text(encoding="utf-8"))
     assert payload["summary"]["artifact"] == "ssl_session_suite"
-    assert payload["summary"]["conversation_count"] == 2
+    assert payload["summary"]["conversation_count"] == 3
 
 
 def test_chat_prompt_includes_history_and_surfaced():
