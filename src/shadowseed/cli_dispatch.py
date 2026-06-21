@@ -13,6 +13,7 @@ from shadowseed.benchmark.adversarial_gate_benchmark import run_adversarial_gate
 from shadowseed.benchmark.adversarial_payoff_suite import run_adversarial_payoff_suite
 from shadowseed.benchmark.wild_payoff_suite import run_wild_payoff_suite
 from shadowseed.benchmark.generative_payoff_suite import run_generative_payoff_suite
+from shadowseed.benchmark.ssl_session_suite import run_ssl_session
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
 from shadowseed.benchmark.open_set_review_summary import summarize_open_set_seed_review
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
@@ -172,6 +173,20 @@ def _run_generative_payoff_suite(args: argparse.Namespace) -> str:
     )
 
 
+def _run_ssl_session(args: argparse.Namespace) -> str:
+    return str(
+        run_ssl_session(
+            args.input,
+            args.output,
+            backend=args.backend,
+            model_id=args.model_id,
+            max_new_tokens=args.max_new_tokens,
+            embedding_backend=getattr(args, "embedding_backend", "lexical"),
+            embedding_model=getattr(args, "embedding_model", None),
+        )
+    )
+
+
 def _run_open_set_seed_review(args: argparse.Namespace) -> str:
     return run_open_set_seed_review(
         args.input,
@@ -268,6 +283,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "run-adversarial-payoff": _run_adversarial_payoff_suite,
     "run-wild-payoff": _run_wild_payoff_suite,
     "run-generative-payoff": _run_generative_payoff_suite,
+    "run-ssl-session": _run_ssl_session,
     "summarize-open-set-seed-review": _summarize_open_set_seed_review,
     "run-adversarial-gate-benchmark": _run_adversarial_gate_benchmark,
     "run-probe-utility-benchmark": _run_probe_utility_benchmark,

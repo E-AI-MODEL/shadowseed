@@ -64,6 +64,20 @@ covered, the negative is unimpeachable; if a naive baseline covers far fewer, SS
      on a good seed helps and does no harm; the issue is that few such seeds exist
      that a frontier model wouldn't raise itself.
 
+## CORRECTIE (maintainer, 2026-06-21) — deze suites zijn GEEN SSL-pijplijn
+
+Belangrijker nog dan de scope-correctie hieronder: `wild_payoff_suite`,
+`generative_payoff_suite` en `adversarial_payoff_suite` **gebruiken de
+`SSLManager`-pijplijn helemaal niet** — geen weight-0 seeding, geen Validation
+Gate, geen recurrence, geen TTL/TrTL, geen constellation, geen probe. Ze doen
+"detector-string → in de prompt → meten": een losstaande, zwakke afgeleide van
+SSL, geen test van het systeem dat we gebouwd hebben. De W1/W5/W14-"negatieven"
+**oordelen dus niet over de pijplijn** — alleen over naïeve single-shot
+string-injectie. De echte test moet door de componenten lopen
+(`ingest_detection_candidates` → `run_validation_gate` over beurten →
+`decay_traces` → `reactivate_by_text` → `find_constellations` → probe); pas wat de
+*pijplijn* promoot mag een later antwoord sturen. Zie `round_017`.
+
 ## Scope correction (maintainer, 2026-06-21) — what W1/W5 actually measured
 
 W1 and W5 are both **single-shot**: inject a seed into one answer, check if the

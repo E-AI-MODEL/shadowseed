@@ -1,4 +1,11 @@
-"""Wild-payoff suite (PvA P0/W1): real detected seeds through the payoff pipeline.
+"""
+[!] NIET-PIJPLIJN — single-shot afgeleide. Deze suite gebruikt de SSLManager-
+pijplijn NIET (geen weight-0 seeding, Gate, recurrence, TTL/TrTL, constellation
+of probe). Ze test "detector-string -> in de prompt -> meten". De echte,
+pijplijn-getrouwe payoff-test is ssl_session_suite.py (W9). Bewaard als
+baseline/contrast; lees resultaten (W1/W5/W14) NIET als oordeel over SSL-de-pijplijn.
+
+Wild-payoff suite (PvA P0/W1): real detected seeds through the payoff pipeline.
 
 Rounds 011–013 proved acting on *author-designed* valid seeds helps. The open
 honest gap was: are SSL's *own* detected gaps (open-set, not hand-written) worth

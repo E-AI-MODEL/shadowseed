@@ -1,4 +1,11 @@
-"""Generative-payoff suite (PvA P0/W5): the decisive test of SSL's vision claim.
+"""
+[!] NIET-PIJPLIJN — single-shot afgeleide. Deze suite gebruikt de SSLManager-
+pijplijn NIET (geen weight-0 seeding, Gate, recurrence, TTL/TrTL, constellation
+of probe). Ze test "detector-string -> in de prompt -> meten". De echte,
+pijplijn-getrouwe payoff-test is ssl_session_suite.py (W9). Bewaard als
+baseline/contrast; lees resultaten (W1/W5/W14) NIET als oordeel over SSL-de-pijplijn.
+
+Generative-payoff suite (PvA P0/W5): the decisive test of SSL's vision claim.
 
 W1 (round 015) showed SSL's *omission* seeds are largely redundant with a strong
 model's own gap-spotting on easy texts. But the vision's real claim is **not**

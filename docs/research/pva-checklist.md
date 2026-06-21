@@ -40,7 +40,15 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
 - [!] **W7. (gedegradeerd) naïeve single-shot baseline.** Nuttige sanity-check,
   maar niet meer de decider — scope-correctie hieronder: single-shot mist het
   SSL-mechanisme.
-- [ ] **W9. DE ECHTE DECIDER — cross-turn payoff (gap 5).** Multi-turn gesprek
+- [~] **W9. DE ECHTE DECIDER — cross-turn payoff (gap 5), via de ECHTE pijplijn.**
+  Harness gebouwd: `ssl_session_suite.py` draait een multi-turn gesprek door de
+  echte `SSLManager` (weight-0 ingest, recurrence-dedup, Validation Gate over
+  beurten, TTL-decay, TrTL-reactivatie, constellations); alleen een
+  pijplijn-PROMOTED seed geboren in een eerdere beurt mag een later antwoord
+  sturen. Pipeline-getrouwe test bewijst het pad (recurrence→Gate→promote→
+  cross-turn surface). **Vervangt de losstaande W1/W5/W14-afgeleiden** (die de
+  manager NIET gebruikten — nu gemarkeerd als NIET-PIJPLIJN). Rest: draaien op
+  gpt-4.1 + blinde review van de cross-turn paren. Multi-turn gesprek
   waarin een weight-0 seed die vroeg gedetecteerd is meereist (TTL/TrTL) en pas
   later, als de context verschuift, alsnog in het antwoord kan landen. Baseline =
   normale chatbot met dezelfde gespreksgeschiedenis maar zónder shadow-memory.

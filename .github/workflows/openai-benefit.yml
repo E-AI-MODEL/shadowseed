@@ -22,6 +22,7 @@ on:
           - adversarial-payoff    # round 014: does acting on a BAD seed harm?
           - wild-payoff           # P0/W1: real detected seeds through the payoff
           - generative-payoff     # P0/W5: generative 'kunnen staan' frames
+          - ssl-session           # W9: multi-turn through the REAL SSL pipeline
       model_id:
         description: "OpenAI chat model id"
         required: true
@@ -146,6 +147,19 @@ jobs:
             --semantic-embedding-backend openai \
             --output results/generative_payoff_suite.json
 
+      - name: Run SSL session (real pipeline) via OpenAI
+        if: ${{ inputs.experiment == 'ssl-session' }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          mkdir -p results
+          python -m shadowseed.cli run-ssl-session \
+            --backend openai \
+            --model-id "${{ inputs.model_id }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --embedding-backend openai \
+            --output results/ssl_session_suite.json
+
       - name: Analyze results
         if: ${{ inputs.experiment == 'model-benefit' }}
         run: python -m shadowseed.cli analyze-results || true
@@ -197,4 +211,5 @@ jobs:
             results/adversarial_payoff_suite.json
             results/wild_payoff_suite.json
             results/generative_payoff_suite.json
+            results/ssl_session_suite.json
           if-no-files-found: warn

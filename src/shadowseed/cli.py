@@ -436,6 +436,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     gen_payoff.add_argument("--embedding-model", default=None)
 
+    ssl_session = subparsers.add_parser(
+        "run-ssl-session",
+        help="[manual/research] W9: multi-turn SSL door de ECHTE pijplijn (manager, Gate, TTL/TrTL)",
+    )
+    ssl_session.add_argument("--input", default="src/shadowseed/data/ssl_session_suite.json")
+    ssl_session.add_argument("--output", default="results/ssl_session_suite.json")
+    ssl_session.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    ssl_session.add_argument("--model-id", default=None)
+    ssl_session.add_argument("--max-new-tokens", type=int, default=400)
+    ssl_session.add_argument(
+        "--embedding-backend", choices=["lexical", "openai"], default="lexical"
+    )
+    ssl_session.add_argument("--embedding-model", default=None)
+
     analyze = subparsers.add_parser(
         "analyze-results",
         help="[reporting] maak rapport en grafieken uit resultaatbestanden",

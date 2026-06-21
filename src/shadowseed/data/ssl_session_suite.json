@@ -1,0 +1,26 @@
+{
+  "version": "ssl-session-0.1",
+  "description": "Multi-turn conversations to test SSL through the REAL pipeline (SSLManager): weight-0 seeding, recurrence dedup, the Validation Gate across turns, TTL decay + TrTL reactivation, and only pipeline-PROMOTED seeds (born in an earlier turn) may shape a later answer. Conversations evolve so an angle seeded early can become relevant later; nothing is rigged to a specific seed -- the pipeline + model decide. Topics author-chosen; seeds detector-produced.",
+  "conversations": [
+    {
+      "id": "CONV_IR",
+      "domain": "geschiedenis en economie",
+      "turns": [
+        {"question": "Leg in het kort uit waarom de Industriële Revolutie juist in Groot-Brittannië kon ontstaan."},
+        {"question": "Hoe verspreidde de industrialisatie zich daarna naar het Europese vasteland?"},
+        {"question": "Wat verklaart waarom sommige regio's veel sneller industrialiseerden dan andere?"},
+        {"question": "Als je terugkijkt: welke factor wordt in standaarduitleg het meest onderschat?"}
+      ]
+    },
+    {
+      "id": "CONV_AI_WORK",
+      "domain": "technologie en samenleving",
+      "turns": [
+        {"question": "Wat betekent de opkomst van AI in het kort voor de arbeidsmarkt?"},
+        {"question": "Welke beroepen veranderen het sterkst en welke nieuwe rollen ontstaan er?"},
+        {"question": "Hoe zouden werknemers en werkgevers zich het beste kunnen aanpassen?"},
+        {"question": "Wat ontbreekt er meestal in optimistische verhalen over AI en werk?"}
+      ]
+    }
+  ]
+}
