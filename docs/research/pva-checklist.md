@@ -56,7 +56,21 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   steeds **2**, 0 promoties. Bottleneck precies gelokaliseerd: **dedup (0.85) merge
   paraphrastische LLM-gaps niet**, dus recurrence accumuleert nooit. Niet "te
   kort"; het is de dedup/recurrence-parametrisering. Zie `round_018/`.
-- [ ] **W9c. Bottleneck deblokkeren (per-run knob, defaults intact).** Expose
+- [x] **W9c. Bottleneck deblokkeren — GELUKT, eerste positief (round 019).** Met
+  dedup 0.6 + min_occ 2: max_occurrence 2→**10**, **11 promoties**, **10 cross-turn
+  events**. Gelezen (CONV_CITY t5–t8): vroeg-gezaaide frames (historische
+  gelaagdheid, informele netwerken, klimaatadaptatie) reizen mee en maken latere
+  antwoorden rijker/onderscheidender → eerste positieve signaal voor SSL's eigen
+  mechanisme (gap 5). Grenzen: nodig had het **onder-doctrine drempels** (default
+  0.85/3 vuurt niet, round 018), SSL-antwoorden zijn langer (confound), AI-
+  geoordeeld, n=10, auteur-gekozen terugkerende thema's. Signaal, geen validatie.
+  Zie `round_019/`.
+- [ ] **W9d. Blinde human-review** van de 10 cross-turn paren (round-013 tooling):
+  is "rijker" echt, niet lengte/AI-bias?
+- [ ] **W9e. Recurrence/dedup-model fixen** zodat promotie bij *veilige* drempels
+  vuurt (cluster-based recurrence i.p.v. paarsgewijs 0.85) — round-014-veiligheid
+  én round-019-promotie verzoenen; daarna her-draaien op de gefixte defaults.
+- [~] **W9c (oud). Bottleneck deblokkeren (per-run knob, defaults intact).** Expose
   `dedup_threshold`/`min_occurrences` als run-parameter; her-draai met lossere
   dedup (~0.6) zodat paraphrastische recurrence kan mergen — puur om te testen:
   *als promotie WEL kan vuren, surfacet een cross-turn schaduw dan waarde?*
