@@ -185,6 +185,7 @@ def _run_ssl_session(args: argparse.Namespace) -> str:
             embedding_model=getattr(args, "embedding_model", None),
             dedup_threshold=getattr(args, "dedup_threshold", None),
             min_occurrences=getattr(args, "min_occurrences", None),
+            promotion_threshold=getattr(args, "promotion_threshold", None),
         )
     )
 

@@ -65,10 +65,18 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   0.85/3 vuurt niet, round 018), SSL-antwoorden zijn langer (confound), AI-
   geoordeeld, n=10, auteur-gekozen terugkerende thema's. Signaal, geen validatie.
   Zie `round_019/`.
-- [~] **W9d. Blinde human-review** van de 10 cross-turn paren (round-013 tooling):
-  is "rijker" echt, niet lengte/AI-bias? **Pack gestaged**:
-  `round_019/human_review/` (10 blinde A/B-paren uit de echte pijplijn-run,
-  bronnen verborgen, AI-lean 8 ssl / 2 tie in de key). Rest: scoren + win-rate/κ.
+- [x] **W9d. Blinde human-review** van de 10 cross-turn paren — GEDAAN
+  (`round_019/human_review/RESULTS.md`): **2 onafhankelijke reviewers, 92% en 98%
+  eens met de AI** (AI-lean 8 ssl / 2 tie). Verankert R019 menselijk: cross-turn
+  SSL-antwoorden worden door onafhankelijke mensen rijker bevonden; geen
+  AI-bias/lengte-artefact (reviewers expliciet verteld dat substantiële lengte
+  mag). AI-jury nu tweemaal gevalideerd (ook round 013). Grenzen onveranderd
+  (onder-doctrine drempels, n=10, gekozen thema's).
+- [x] **Per-topic instelbare drempels** (maintainer-eis): hoeveel tegengehouden
+  vs doorgelaten verschilt per onderwerp → `ssl_session_suite` accepteert nu
+  per-conversatie overrides van `dedup_threshold`/`min_occurrences`/
+  `promotion_threshold` (winnen over run-level; globale doctrine-defaults intact).
+  Vastgelegd als ontwerpprincipe; W9e maakt dit adaptief.
 - [ ] **W9e. Recurrence/dedup-model fixen** zodat promotie bij *veilige* drempels
   vuurt (cluster-based recurrence i.p.v. paarsgewijs 0.85) — round-014-veiligheid
   én round-019-promotie verzoenen; daarna her-draaien op de gefixte defaults.

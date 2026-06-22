@@ -72,6 +72,7 @@ def run_ssl_session(
     max_seeds_per_turn: int = 5,
     dedup_threshold: float | None = None,
     min_occurrences: int | None = None,
+    promotion_threshold: float | None = None,
 ) -> Path:
     data = json.loads(Path(input_path).read_text(encoding="utf-8"))
     embed_fn, _dim = make_embedding_fn(embedding_backend, embedding_model)
@@ -80,23 +81,35 @@ def run_ssl_session(
         backend, model_id=model_id, max_new_tokens=max_new_tokens, prompt_variant="generative"
     )
 
-    # Per-run overrides ONLY (global doctrine defaults in SSLCoreConfig stay put).
-    # round 018 located the bottleneck: paraphrastic LLM gaps don't dedup at 0.85,
-    # so recurrence never accumulates. A looser dedup / lower recurrence bar lets
-    # the promotion machinery actually fire so the cross-turn payoff can be tested.
+    # Gate strictness — "how much is held back vs let through" — is topic-dependent
+    # (maintainer note, 2026-06-21). So thresholds are tunable at TWO levels, with
+    # the global SSLCoreConfig doctrine defaults always intact:
+    #   1. per-run: the dedup_threshold / min_occurrences / promotion_threshold args;
+    #   2. per-topic: a conversation may carry its own overrides (same keys), which
+    #      win over the run-level values. This lets a noisy topic hold more back and
+    #      a sparse topic let more through.
     from dataclasses import replace as _replace
 
     from shadowseed.core_config import SSLCoreConfig
 
-    run_config = SSLCoreConfig()
-    if min_occurrences is not None:
-        run_config = _replace(run_config, min_occurrences_for_gate=min_occurrences)
-
-    def _new_manager() -> SSLManager:
-        kwargs: dict[str, Any] = {"embedding_fn": embed_fn, "config": run_config}
-        if dedup_threshold is not None:
-            kwargs["dedup_threshold"] = dedup_threshold
-        return SSLManager(**kwargs)
+    def _new_manager(conv: dict[str, Any]) -> tuple[SSLManager, dict[str, Any]]:
+        d = conv.get("dedup_threshold", dedup_threshold)
+        mo = conv.get("min_occurrences", min_occurrences)
+        pt = conv.get("promotion_threshold", promotion_threshold)
+        cfg = SSLCoreConfig()
+        if mo is not None:
+            cfg = _replace(cfg, min_occurrences_for_gate=mo)
+        kwargs: dict[str, Any] = {"embedding_fn": embed_fn, "config": cfg}
+        if d is not None:
+            kwargs["dedup_threshold"] = d
+        if pt is not None:
+            kwargs["promotion_threshold"] = pt
+        applied = {
+            "dedup_threshold": d if d is not None else "default(0.85)",
+            "min_occurrences": mo if mo is not None else "default(3)",
+            "promotion_threshold": pt if pt is not None else "default(0.5)",
+        }
+        return SSLManager(**kwargs), applied
 
     conversations: list[dict[str, Any]] = []
     blind_items: list[dict[str, Any]] = []
@@ -104,7 +117,7 @@ def run_ssl_session(
     cross_turn_events = 0
 
     for conv in data["conversations"]:
-        manager = _new_manager()
+        manager, applied_thresholds = _new_manager(conv)
         born_turn: dict[str, int] = {}
         history: list[tuple[str, str]] = []
         turn_records: list[dict[str, Any]] = []
@@ -201,6 +214,7 @@ def run_ssl_session(
             {
                 "conversation_id": conv["id"],
                 "domain": conv.get("domain", ""),
+                "applied_thresholds": applied_thresholds,
                 "turns": turn_records,
                 "diagnostics": {
                     "total_candidates_detected": sum(

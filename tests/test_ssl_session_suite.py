@@ -21,6 +21,29 @@ def test_fixture_smoke_runs(tmp_path: Path):
     assert payload["summary"]["conversation_count"] == 3
 
 
+def test_per_topic_thresholds_override_run_level(tmp_path: Path):
+    # one conversation carries its own thresholds; they must win over run-level
+    conv = {
+        "version": "t",
+        "conversations": [
+            {"id": "A", "domain": "d", "dedup_threshold": 0.55, "min_occurrences": 2,
+             "turns": [{"question": "Q1?"}, {"question": "Q2?"}]},
+            {"id": "B", "domain": "d", "turns": [{"question": "Q1?"}, {"question": "Q2?"}]},
+        ],
+    }
+    inp = tmp_path / "in.json"
+    inp.write_text(json.dumps(conv), encoding="utf-8")
+    out = tmp_path / "s.json"
+    run_ssl_session(str(inp), str(out), backend="fixture", dedup_threshold=0.8)
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    by_id = {c["conversation_id"]: c for c in payload["conversations"]}
+    # A overrides to 0.55 / min_occ 2; B inherits run-level 0.8 / default min_occ
+    assert by_id["A"]["applied_thresholds"]["dedup_threshold"] == 0.55
+    assert by_id["A"]["applied_thresholds"]["min_occurrences"] == 2
+    assert by_id["B"]["applied_thresholds"]["dedup_threshold"] == 0.8
+    assert by_id["B"]["applied_thresholds"]["min_occurrences"] == "default(3)"
+
+
 def test_chat_prompt_includes_history_and_surfaced():
     p = build_chat_prompt([("Q1", "A1")], "Q2", ["Een meegedragen invalshoek."])
     assert "Q1" in p and "A1" in p and "Q2" in p

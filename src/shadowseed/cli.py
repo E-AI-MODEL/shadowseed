@@ -461,6 +461,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Per-run recurrence-drempel voor de Gate (default 3).",
     )
+    ssl_session.add_argument(
+        "--promotion-threshold",
+        type=float,
+        default=None,
+        help="Per-run promotie-drempel voor weight (default 0.5). Per-topic override kan in de conversatie-fixture.",
+    )
 
     analyze = subparsers.add_parser(
         "analyze-results",
