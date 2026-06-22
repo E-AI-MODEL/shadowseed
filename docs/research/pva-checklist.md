@@ -77,9 +77,16 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   per-conversatie overrides van `dedup_threshold`/`min_occurrences`/
   `promotion_threshold` (winnen over run-level; globale doctrine-defaults intact).
   Vastgelegd als ontwerpprincipe; W9e maakt dit adaptief.
-- [ ] **W9e. Recurrence/dedup-model fixen** zodat promotie bij *veilige* drempels
-  vuurt (cluster-based recurrence i.p.v. paarsgewijs 0.85) — round-014-veiligheid
-  én round-019-promotie verzoenen; daarna her-draaien op de gefixte defaults.
+- [x] **W9e. Recurrence-model gefixt — WERKT op veilige drempels (round 020).**
+  Cluster-based recurrence: identiteit/opslag blijft strikt (0.85 dedup), maar
+  recurrence wordt semantisch geteld (cluster). Op **veilige defaults** (dedup
+  0.85, Gate-bar 3) vuurt nu max_occurrence **29**, **49 promoties**, **10
+  cross-turn events** — vs R018 (zelfde veilige drempels, pairwise) = 0. Verzoent
+  round-014-veiligheid met round-019-payoff. Restpunten: cluster promoot nu álle
+  leden (49) i.p.v. een representant (verfijnen); kwaliteit op deze run nog niet
+  apart human-gereviewd (rust op R019 92/98%). Zie `round_020/`.
+- [ ] **W9f. Cluster-representant** promoten i.p.v. alle leden (49→clusteraantal),
+  daarna her-draaien + verse human-review op veilige drempels.
 - [~] **W9c (oud). Bottleneck deblokkeren (per-run knob, defaults intact).** Expose
   `dedup_threshold`/`min_occurrences` als run-parameter; her-draai met lossere
   dedup (~0.6) zodat paraphrastische recurrence kan mergen — puur om te testen:
