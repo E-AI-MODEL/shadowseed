@@ -186,6 +186,9 @@ def _run_ssl_session(args: argparse.Namespace) -> str:
             dedup_threshold=getattr(args, "dedup_threshold", None),
             min_occurrences=getattr(args, "min_occurrences", None),
             promotion_threshold=getattr(args, "promotion_threshold", None),
+            recurrence_mode=getattr(args, "recurrence_mode", "pairwise"),
+            cluster_threshold=getattr(args, "cluster_threshold", None),
+            auto_calibrate=getattr(args, "auto_calibrate", False),
         )
     )
 

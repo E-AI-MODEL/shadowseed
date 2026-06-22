@@ -467,6 +467,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Per-run promotie-drempel voor weight (default 0.5). Per-topic override kan in de conversatie-fixture.",
     )
+    ssl_session.add_argument(
+        "--recurrence-mode",
+        choices=["pairwise", "cluster"],
+        default="pairwise",
+        help="cluster (W9e): parafrastische gaps tellen samen als recurrence, zodat promotie bij de veilige Gate-drempel vuurt zonder de strikte 0.85-dedup te verlagen.",
+    )
+    ssl_session.add_argument("--cluster-threshold", type=float, default=None,
+        help="Cosine-drempel voor recurrence-clustering (default 0.6); alleen bij --recurrence-mode cluster.")
+    ssl_session.add_argument("--auto-calibrate", action="store_true",
+        help="Per-topic auto-kalibratie van de recurrence-bar op gespreksleng­te.")
 
     analyze = subparsers.add_parser(
         "analyze-results",

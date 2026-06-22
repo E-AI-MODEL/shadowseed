@@ -57,6 +57,14 @@ on:
         description: "ssl-session only: per-run recurrence bar for the Gate (blank = default 3)"
         required: false
         default: ""
+      recurrence_mode:
+        description: "ssl-session only: pairwise (strict 0.85) or cluster (W9e: semantic recurrence at safe Gate bar)"
+        required: false
+        default: "pairwise"
+        type: choice
+        options:
+          - pairwise
+          - cluster
 
 permissions:
   contents: read
@@ -164,6 +172,7 @@ jobs:
           EXTRA=""
           [ -n "${{ inputs.dedup_threshold }}" ] && EXTRA="$EXTRA --dedup-threshold ${{ inputs.dedup_threshold }}"
           [ -n "${{ inputs.min_occurrences }}" ] && EXTRA="$EXTRA --min-occurrences ${{ inputs.min_occurrences }}"
+          [ -n "${{ inputs.recurrence_mode }}" ] && EXTRA="$EXTRA --recurrence-mode ${{ inputs.recurrence_mode }}"
           python -m shadowseed.cli run-ssl-session \
             --backend openai \
             --model-id "${{ inputs.model_id }}" \

@@ -73,6 +73,9 @@ def run_ssl_session(
     dedup_threshold: float | None = None,
     min_occurrences: int | None = None,
     promotion_threshold: float | None = None,
+    recurrence_mode: str = "pairwise",
+    cluster_threshold: float | None = None,
+    auto_calibrate: bool = False,
 ) -> Path:
     data = json.loads(Path(input_path).read_text(encoding="utf-8"))
     embed_fn, _dim = make_embedding_fn(embedding_backend, embedding_model)
@@ -90,12 +93,21 @@ def run_ssl_session(
     #      a sparse topic let more through.
     from dataclasses import replace as _replace
 
+    from shadowseed.benchmark.recurrence_clustering import (
+        DEFAULT_CLUSTER_THRESHOLD,
+        RecurrenceClusterer,
+        auto_calibrated_min_occurrences,
+    )
     from shadowseed.core_config import SSLCoreConfig
 
     def _new_manager(conv: dict[str, Any]) -> tuple[SSLManager, dict[str, Any]]:
         d = conv.get("dedup_threshold", dedup_threshold)
         mo = conv.get("min_occurrences", min_occurrences)
         pt = conv.get("promotion_threshold", promotion_threshold)
+        # per-topic auto-calibration of the recurrence bar (W9e), only when not set
+        ac = conv.get("auto_calibrate", auto_calibrate)
+        if mo is None and ac:
+            mo = auto_calibrated_min_occurrences(len(conv.get("turns", [])))
         cfg = SSLCoreConfig()
         if mo is not None:
             cfg = _replace(cfg, min_occurrences_for_gate=mo)
@@ -104,12 +116,18 @@ def run_ssl_session(
             kwargs["dedup_threshold"] = d
         if pt is not None:
             kwargs["promotion_threshold"] = pt
+        mode = conv.get("recurrence_mode", recurrence_mode)
+        cth = conv.get("cluster_threshold", cluster_threshold)
+        cth = cth if cth is not None else DEFAULT_CLUSTER_THRESHOLD
         applied = {
             "dedup_threshold": d if d is not None else "default(0.85)",
             "min_occurrences": mo if mo is not None else "default(3)",
             "promotion_threshold": pt if pt is not None else "default(0.5)",
+            "recurrence_mode": mode,
+            "cluster_threshold": cth if mode == "cluster" else None,
         }
-        return SSLManager(**kwargs), applied
+        clusterer = RecurrenceClusterer(threshold=cth) if mode == "cluster" else None
+        return SSLManager(**kwargs), applied, clusterer
 
     conversations: list[dict[str, Any]] = []
     blind_items: list[dict[str, Any]] = []
@@ -117,7 +135,8 @@ def run_ssl_session(
     cross_turn_events = 0
 
     for conv in data["conversations"]:
-        manager, applied_thresholds = _new_manager(conv)
+        manager, applied_thresholds, clusterer = _new_manager(conv)
+        seed_to_cluster: dict[str, int] = {}
         born_turn: dict[str, int] = {}
         history: list[tuple[str, str]] = []
         turn_records: list[dict[str, Any]] = []
@@ -157,6 +176,22 @@ def run_ssl_session(
             ingest = manager.ingest_detection_candidates(candidates)
             for acc in ingest.get("accepted", []):
                 born_turn.setdefault(acc["seed_id"], t)
+
+            # --- cluster-based recurrence (W9e): paraphrastic gaps count together,
+            # so a seed's effective recurrence reflects its semantic cluster size.
+            # This drives the SAFE-default Gate without loosening the strict 0.85
+            # storage dedup. (Identity stays distinct; recurrence is semantic.)
+            if clusterer is not None:
+                for acc in ingest.get("accepted", []):
+                    sid = acc["seed_id"]
+                    seed = manager.seeds.get(sid)
+                    if seed is not None:
+                        seed_to_cluster[sid] = clusterer.add(seed.text, seed.embedding)
+                for sid, cid in seed_to_cluster.items():
+                    if sid in manager.seeds:
+                        manager.seeds[sid].occurrence_count = max(
+                            manager.seeds[sid].occurrence_count, clusterer.recurrence(cid)
+                        )
 
             # --- recurrence -> evidence -> Validation Gate ---
             promoted_now: list[str] = []
