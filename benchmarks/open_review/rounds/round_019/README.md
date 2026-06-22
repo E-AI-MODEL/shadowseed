@@ -52,8 +52,11 @@ mechanism shows value.
    recurrence/dedup model lets paraphrastic gaps accumulate.* At doctrine defaults
    it does not fire (round 018). The recurrence/dedup model needs real work (e.g.
    cluster-based recurrence) to be both safe (round 014) and able to promote.
-2. **Length confound.** SSL answers are longer; "richer" must be confirmed by a
-   blind reader who doesn't reward length. My read is AI judgment, not human.
+2. **Length.** SSL answers are longer. This is *not automatically* a confound in
+   this niche: the goal here is a richer, more complete answer, so extra length
+   that adds genuinely relevant non-obvious angles is an improvement, not padding.
+   The review judges whether the added content is *valuable* (not whether it is
+   longer); "richer" still needs a blind human, my read is AI judgment.
 3. **Author-chosen recurring-theme conversations.** Topics were picked so a gap
    *could* recur; that's fair (you can't observe recurrence without it) but it is
    not "in the wild".
