@@ -20,6 +20,9 @@ on:
           - model-benefit         # round 008: does acting on a seed help?
           - ssl-vs-rag            # gap 3: retrieve toward the gap vs the question
           - adversarial-payoff    # round 014: does acting on a BAD seed harm?
+          - wild-payoff           # P0/W1: real detected seeds through the payoff
+          - generative-payoff     # P0/W5: generative 'kunnen staan' frames
+          - ssl-session           # W9: multi-turn through the REAL SSL pipeline
       model_id:
         description: "OpenAI chat model id"
         required: true
@@ -46,6 +49,22 @@ on:
         options:
           - openai
           - lexical
+      dedup_threshold:
+        description: "ssl-session only: per-run dedup threshold (blank = default 0.85; W9c uses ~0.6)"
+        required: false
+        default: ""
+      min_occurrences:
+        description: "ssl-session only: per-run recurrence bar for the Gate (blank = default 3)"
+        required: false
+        default: ""
+      recurrence_mode:
+        description: "ssl-session only: pairwise (strict 0.85) or cluster (W9e: semantic recurrence at safe Gate bar)"
+        required: false
+        default: "pairwise"
+        type: choice
+        options:
+          - pairwise
+          - cluster
 
 permissions:
   contents: read
@@ -118,6 +137,50 @@ jobs:
             --max-new-tokens "${{ inputs.max_new_tokens }}" \
             --output results/adversarial_payoff_suite.json
 
+      - name: Run wild payoff suite via OpenAI
+        if: ${{ inputs.experiment == 'wild-payoff' }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          mkdir -p results
+          python -m shadowseed.cli run-wild-payoff \
+            --backend openai \
+            --model-id "${{ inputs.model_id }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --semantic-embedding-backend openai \
+            --output results/wild_payoff_suite.json
+
+      - name: Run generative payoff suite via OpenAI
+        if: ${{ inputs.experiment == 'generative-payoff' }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          mkdir -p results
+          python -m shadowseed.cli run-generative-payoff \
+            --backend openai \
+            --model-id "${{ inputs.model_id }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --semantic-embedding-backend openai \
+            --output results/generative_payoff_suite.json
+
+      - name: Run SSL session (real pipeline) via OpenAI
+        if: ${{ inputs.experiment == 'ssl-session' }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          mkdir -p results
+          EXTRA=""
+          [ -n "${{ inputs.dedup_threshold }}" ] && EXTRA="$EXTRA --dedup-threshold ${{ inputs.dedup_threshold }}"
+          [ -n "${{ inputs.min_occurrences }}" ] && EXTRA="$EXTRA --min-occurrences ${{ inputs.min_occurrences }}"
+          [ -n "${{ inputs.recurrence_mode }}" ] && EXTRA="$EXTRA --recurrence-mode ${{ inputs.recurrence_mode }}"
+          python -m shadowseed.cli run-ssl-session \
+            --backend openai \
+            --model-id "${{ inputs.model_id }}" \
+            --max-new-tokens "${{ inputs.max_new_tokens }}" \
+            --embedding-backend openai \
+            $EXTRA \
+            --output results/ssl_session_suite.json
+
       - name: Analyze results
         if: ${{ inputs.experiment == 'model-benefit' }}
         run: python -m shadowseed.cli analyze-results || true
@@ -140,6 +203,15 @@ jobs:
                   sid = item.get("scenario_id") or item.get("id")
                   print(f"\n--- result: {sid} ---")
                   print(json.dumps(item, indent=2, ensure_ascii=False))
+              # ssl_session uses "conversations"; print the cross-turn payoff turns
+              for conv in data.get("conversations", []):
+                  for tr in conv.get("turns", []):
+                      if tr.get("is_cross_turn_payoff"):
+                          print(f"\n--- cross-turn: {conv['conversation_id']} t{tr['turn']} ---")
+                          print("Q: " + tr["question"])
+                          print("SURFACED (born earlier): " + " | ".join(tr["surfaced_cross_turn_seeds"]))
+                          print("[BASELINE]\n" + tr["baseline_answer"])
+                          print("[SSL]\n" + tr["ssl_answer"])
               key = data.get("blind_answer_key")
               if key:
                   print("\n--- blind_answer_key ---")
@@ -167,4 +239,7 @@ jobs:
             results/ssl45_model_benefit_suite.json
             results/ssl_vs_rag_benchmark.json
             results/adversarial_payoff_suite.json
+            results/wild_payoff_suite.json
+            results/generative_payoff_suite.json
+            results/ssl_session_suite.json
           if-no-files-found: warn

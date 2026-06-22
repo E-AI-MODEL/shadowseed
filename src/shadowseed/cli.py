@@ -408,6 +408,76 @@ def build_parser() -> argparse.ArgumentParser:
     adv_payoff.add_argument("--model-id", default=None)
     adv_payoff.add_argument("--max-new-tokens", type=int, default=400)
 
+    wild_payoff = subparsers.add_parser(
+        "run-wild-payoff",
+        help="[manual/research] P0/W1: echte open-set seeds door de payoff-pijplijn",
+    )
+    wild_payoff.add_argument("--input", default="src/shadowseed/data/wild_payoff_suite.json")
+    wild_payoff.add_argument("--output", default="results/wild_payoff_suite.json")
+    wild_payoff.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    wild_payoff.add_argument("--model-id", default=None)
+    wild_payoff.add_argument("--max-new-tokens", type=int, default=400)
+    wild_payoff.add_argument(
+        "--semantic-embedding-backend", choices=["none", "lexical", "openai"], default="none"
+    )
+    wild_payoff.add_argument("--embedding-model", default=None)
+
+    gen_payoff = subparsers.add_parser(
+        "run-generative-payoff",
+        help="[manual/research] P0/W5: generatieve 'kunnen staan'-frames door de payoff-pijplijn",
+    )
+    gen_payoff.add_argument("--input", default="src/shadowseed/data/generative_payoff_suite.json")
+    gen_payoff.add_argument("--output", default="results/generative_payoff_suite.json")
+    gen_payoff.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    gen_payoff.add_argument("--model-id", default=None)
+    gen_payoff.add_argument("--max-new-tokens", type=int, default=400)
+    gen_payoff.add_argument(
+        "--semantic-embedding-backend", choices=["none", "lexical", "openai"], default="none"
+    )
+    gen_payoff.add_argument("--embedding-model", default=None)
+
+    ssl_session = subparsers.add_parser(
+        "run-ssl-session",
+        help="[manual/research] W9: multi-turn SSL door de ECHTE pijplijn (manager, Gate, TTL/TrTL)",
+    )
+    ssl_session.add_argument("--input", default="src/shadowseed/data/ssl_session_suite.json")
+    ssl_session.add_argument("--output", default="results/ssl_session_suite.json")
+    ssl_session.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    ssl_session.add_argument("--model-id", default=None)
+    ssl_session.add_argument("--max-new-tokens", type=int, default=400)
+    ssl_session.add_argument(
+        "--embedding-backend", choices=["lexical", "openai"], default="lexical"
+    )
+    ssl_session.add_argument("--embedding-model", default=None)
+    ssl_session.add_argument(
+        "--dedup-threshold",
+        type=float,
+        default=None,
+        help="Per-run dedup-drempel (default 0.85). Lager merge paraphrastische gaps zodat recurrence accumuleert (W9c). Globale doctrine-default blijft.",
+    )
+    ssl_session.add_argument(
+        "--min-occurrences",
+        type=int,
+        default=None,
+        help="Per-run recurrence-drempel voor de Gate (default 3).",
+    )
+    ssl_session.add_argument(
+        "--promotion-threshold",
+        type=float,
+        default=None,
+        help="Per-run promotie-drempel voor weight (default 0.5). Per-topic override kan in de conversatie-fixture.",
+    )
+    ssl_session.add_argument(
+        "--recurrence-mode",
+        choices=["pairwise", "cluster"],
+        default="pairwise",
+        help="cluster (W9e): parafrastische gaps tellen samen als recurrence, zodat promotie bij de veilige Gate-drempel vuurt zonder de strikte 0.85-dedup te verlagen.",
+    )
+    ssl_session.add_argument("--cluster-threshold", type=float, default=None,
+        help="Cosine-drempel voor recurrence-clustering (default 0.6); alleen bij --recurrence-mode cluster.")
+    ssl_session.add_argument("--auto-calibrate", action="store_true",
+        help="Per-topic auto-kalibratie van de recurrence-bar op gespreksleng­te.")
+
     analyze = subparsers.add_parser(
         "analyze-results",
         help="[reporting] maak rapport en grafieken uit resultaatbestanden",

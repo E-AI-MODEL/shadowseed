@@ -1,4 +1,11 @@
-"""Adversarial payoff suite — does acting on a BAD seed harm the answer?
+"""
+[!] NIET-PIJPLIJN — single-shot afgeleide. Deze suite gebruikt de SSLManager-
+pijplijn NIET (geen weight-0 seeding, Gate, recurrence, TTL/TrTL, constellation
+of probe). Ze test "detector-string -> in de prompt -> meten". De echte,
+pijplijn-getrouwe payoff-test is ssl_session_suite.py (W9). Bewaard als
+baseline/contrast; lees resultaten (W1/W5/W14) NIET als oordeel over SSL-de-pijplijn.
+
+Adversarial payoff suite — does acting on a BAD seed harm the answer?
 
 Rounds 011–013 showed that acting on *valid* gap-seeds reliably helps and does no
 harm (human-anchored). That is the do-no-harm claim for good seeds. The open
