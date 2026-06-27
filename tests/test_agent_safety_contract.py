@@ -52,6 +52,14 @@ def promotion_gate(seed_id: str = "seed-1") -> ValidationGateResult:
     )
 
 
+def test_shadowseed_agent_public_exports_import() -> None:
+    import shadowseed_agent
+
+    assert shadowseed_agent.AgentSafetyContract is AgentSafetyContract
+    assert shadowseed_agent.can_seed_trigger_retrieval is can_seed_trigger_retrieval
+    assert shadowseed_agent.evidence_can_support_gate is evidence_can_support_gate
+
+
 def test_weightless_seed_cannot_trigger_retrieval() -> None:
     seed = make_seed(status=SeedStatus.PROMOTED, weight=0.0)
 
