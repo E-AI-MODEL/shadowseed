@@ -1,18 +1,34 @@
 # Shadowseed Stabilization And Evidence-Hardening Roadmap
 
 > Status: current
-> Date: 2026-05-22
+> Date: 2026-06-27
 > Evidence layer: Top-level roadmap
 > Current source: yes
 
-
 Status: active
-Date: 2026-05-13
+Date: 2026-06-27
 Scope: repository stability, artifact discipline, workflow clarity, and next-step research hardening
 
 ## Goal
 
 Move `shadowseed` from a strong research harness with growing workflow complexity toward a more stable and easier-to-maintain research repository, without overstating the evidence level or introducing heavy tooling too early.
+
+## Current GitHub Issue Status Snapshot
+
+This snapshot aligns the roadmap text with the current GitHub issue state. It is a planning/status correction, not a new evidence claim.
+
+Closed or completed since the original roadmap pass:
+
+- #37 Phase 1: translate SWOT into work categories — closed as completed.
+- #41 Phase 5: complete first real open-set review round — closed as completed on 2026-06-09.
+- #45 Phase 9: clean up documentation — closed as completed.
+
+Still open:
+
+- #34 Roadmap parent issue — still useful as the coordination anchor, but its checklist needs to be read with this updated status.
+- #44 Phase 8: expand tooling slowly — still open; broader than the existing ruff/coverage work.
+- #46 Phase 10: revisit positioning and version discussion — intentionally still open until stronger evidence justifies a positioning decision.
+- #81 Model selection ladder — still open in GitHub, but the original dispatch blocker was largely superseded by merged PR #119, which made `microsoft/Phi-3.5-mini-instruct` dispatchable through CPU half-precision loading and workflow dropdown sync.
 
 ## Working Principle
 
@@ -26,6 +42,8 @@ The order matters:
 6. only then add heavier tooling or revisit a larger version claim
 
 ## Phase -1: Acute Alignment Fixes
+
+Status: completed via #35.
 
 Purpose: remove known contract mismatches before documenting the stack.
 
@@ -42,6 +60,8 @@ Done when:
 
 ## Phase 0: Freeze The Current Technical State
 
+Status: completed via #36.
+
 Purpose: stop working from memory or stale assumptions.
 
 Actions:
@@ -55,6 +75,8 @@ Done when:
 - no undated claims remain in the status layer
 
 ## Phase 1: Translate SWOT Into Work Categories
+
+Status: completed via #37.
 
 Purpose: turn the SWOT into a usable execution model.
 
@@ -80,6 +102,8 @@ Done when:
 
 ## Phase 2: Make Artifact And Analyzer-Publication Contracts Explicit
 
+Status: completed via #39.
+
 Purpose: stop CLI, workflows, analyzer, tests, docs, and public reporting from speaking different path dialects or mixing raw evidence with interpretive outputs implicitly.
 
 Actions:
@@ -99,6 +123,8 @@ Done when:
 
 ## Phase 3: Create A Workflow And Claim-Publication Map
 
+Status: completed via #40.
+
 Purpose: make workflow behavior readable without hunting through Actions YAML and make public claim-publication routes visible end to end.
 
 Actions:
@@ -117,6 +143,8 @@ Done when:
 - it is clear which workflow paths can affect public claim wording versus only raw artifacts or metrics
 
 ## Phase 4: Complete The First Real Open-Set Review Round
+
+Status: completed via #41 on 2026-06-09. The result is evidence, but not a broad validation claim.
 
 Purpose: move from pending review packets to actual human review evidence.
 
@@ -140,6 +168,8 @@ Done when:
 
 ## Phase 5: Deepen Adversarial Gate Evaluation
 
+Status: completed as first real Layer-D evidence via #42 / PR #80.
+
 Purpose: show that the current Gate is stronger than weaker promotion routes.
 
 Actions:
@@ -153,6 +183,8 @@ Done when:
 - examples and summary metrics support each other
 
 ## Phase 6: Evaluate Probe Feedback Behavior
+
+Status: completed as first real Layer-E behavioral evidence via #43 / PR #82.
 
 Purpose: verify that the reward and penalty loop is not only present but behaviorally meaningful.
 
@@ -168,12 +200,14 @@ Done when:
 
 ## Phase 7: Expand Tooling Slowly
 
+Status: partly complete; still tracked by #44.
+
 Purpose: add engineering discipline without creating noise.
 
 Possible order:
-1. `ruff check`
+1. `ruff check` — present in CI
 2. `ruff format --check`
-3. `pytest-cov`
+3. `pytest-cov` — present in CI
 4. `pyright` or `mypy`
 5. `pre-commit`
 6. lockfile
@@ -186,6 +220,8 @@ Done when:
 - churn stays low
 
 ## Phase 8: Clean Up Documentation
+
+Status: completed via #45; keep as ongoing maintenance discipline.
 
 Purpose: keep docs aligned with code, workflows, and evidence limits.
 
@@ -204,6 +240,8 @@ Done when:
 
 ## Phase 9: Revisit Positioning
 
+Status: still open via #46. Do not close until the evidence surface justifies a positioning decision.
+
 Purpose: decide whether the project should still present as an evolved 4.6 line or whether stronger evidence supports a bigger label.
 
 Continue as a 4.6-style line if:
@@ -217,18 +255,14 @@ Only revisit a 5.0-style shift if:
 - probe feedback shows meaningful learning behavior
 - docs, analyzer output, and workflow labeling cleanly separate evidence layers
 
-## Recommended Immediate Order
+## Remaining Immediate Order
 
-1. acute alignment fixes
-2. current technical status and doc-source clarity
-3. SWOT work categories
-4. artifact and analyzer-publication contracts
-5. workflow and claim-publication map
-6. first real open-set review round
-7. deeper adversarial Gate comparison
-8. probe feedback evaluation
-9. only then larger tooling and version-positioning decisions
+1. Update or close the stale parent checklist in #34 using this status snapshot.
+2. Close, retitle, or convert #81 into a follow-up dispatch/tracking issue now that PR #119 removed the original model-dropdown blocker.
+3. Continue #44 only as incremental tooling, with no benchmark-claim changes.
+4. Keep #46 open until the positioning decision is evidence-led rather than momentum-led.
+5. If an agent/RAG fork is created, keep it separate from this research roadmap until it has its own safety contract, gate tests, and audit replay.
 
 ## Summary
 
-The next best move for `shadowseed` is not to sound bigger, but to become more explicit, more stable, and more honest about what each layer actually proves.
+The next best move for `shadowseed` is not to sound bigger, but to keep the roadmap aligned with live evidence, live issues, and conservative claim boundaries. Several early stabilization phases are now completed; the remaining work is mainly issue hygiene, incremental tooling, and a later evidence-led positioning decision.
