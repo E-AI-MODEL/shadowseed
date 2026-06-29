@@ -137,6 +137,7 @@ def run_ssl_session(
     for conv in data["conversations"]:
         manager, applied_thresholds, clusterer = _new_manager(conv)
         seed_to_cluster: dict[str, int] = {}
+        cluster_rep: dict[int, str] = {}
         born_turn: dict[str, int] = {}
         history: list[tuple[str, str]] = []
         turn_records: list[dict[str, Any]] = []
@@ -185,12 +186,28 @@ def run_ssl_session(
                 for acc in ingest.get("accepted", []):
                     sid = acc["seed_id"]
                     seed = manager.seeds.get(sid)
-                    if seed is not None:
-                        seed_to_cluster[sid] = clusterer.add(seed.text, seed.embedding)
-                for sid, cid in seed_to_cluster.items():
-                    if sid in manager.seeds:
-                        manager.seeds[sid].occurrence_count = max(
-                            manager.seeds[sid].occurrence_count, clusterer.recurrence(cid)
+                    if seed is not None and sid not in seed_to_cluster:
+                        cid = clusterer.add(seed.text, seed.embedding)
+                        seed_to_cluster[sid] = cid
+                        # the earliest-born member anchors the cluster; record it once
+                        # as the representative. It is also naturally the one eligible
+                        # to surface cross-turn (born first), keeping the two notions
+                        # aligned.
+                        cluster_rep.setdefault(cid, sid)
+                # --- W9f: credit semantic recurrence to ONE representative per
+                # cluster, not every member. Round 020 bumped *all* members to the
+                # cluster size, so a single recurring (paraphrastic) gap promoted the
+                # whole cluster (49 promotions on tightly-themed convos). Crediting
+                # only the representative cuts that to ~one promotion per qualifying
+                # cluster, while keeping the strict 0.85 dedup, the SAFE Gate bar, and
+                # the same cross-turn surfacing (surfacing is relevance-gated, not
+                # volume-gated). Non-representative members keep their own (low)
+                # occurrence_count and stay below the bar.
+                for cid, rep_sid in cluster_rep.items():
+                    if rep_sid in manager.seeds:
+                        manager.seeds[rep_sid].occurrence_count = max(
+                            manager.seeds[rep_sid].occurrence_count,
+                            clusterer.recurrence(cid),
                         )
 
             # --- recurrence -> evidence -> Validation Gate ---

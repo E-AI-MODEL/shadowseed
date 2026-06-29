@@ -19,6 +19,13 @@ So a gap that recurs across turns *in different words* accumulates recurrence
 (cluster grows) and can promote at the SAFE default Gate bar (>=3), while a
 one-off irrelevant gap stays a singleton cluster and never promotes. This
 reconciles round-014 safety with round-019 payoff.
+
+W9f refinement: the cluster *size* is the recurrence signal, but the consumer
+(``ssl_session_suite``) credits that recurrence to a single cluster
+representative — the earliest-born member — rather than to every member. Round
+020's v1 promoted all members of a recurring cluster (49 promotions); crediting
+only the representative cuts promotion volume to ~one per qualifying cluster
+without touching identity/storage or the Gate bar.
 """
 
 from __future__ import annotations
