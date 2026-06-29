@@ -23,8 +23,23 @@ It now does:
 ```text
 representative = earliest-born member of the cluster
 representative.occurrence_count = max(own, cluster_size)   # only the rep clears the bar
-other members keep their own (low) occurrence_count        # they stay below the bar
+non-representative members are SKIPPED in the Gate         # they cannot promote on their own
 ```
+
+Two correctness points make this robust:
+
+- **Re-detections still count in the cluster.** When a *stored* member is detected
+  again in a later turn it dedups into its existing seed, so `ingest` returns it as
+  an accepted row. Membership is fixed on first sighting, but the recurrence must
+  still grow — so the suite calls `RecurrenceClusterer.bump(cluster_id)` for the
+  re-detection instead of re-clustering. Without this the cluster recurrence stays
+  too low (the representative may never promote) while the member's own
+  dedup-driven `occurrence_count` could quietly reach the Gate.
+- **Non-representatives are skipped in the Gate.** Because a member's own
+  `occurrence_count` climbs on verbatim re-detection, crediting the representative
+  alone is not enough — a non-rep could still self-promote. In cluster mode the
+  Gate loop therefore skips non-representative members entirely; only the
+  representative (or a singleton/unclustered seed) is validated.
 
 The cluster *size* is still the recurrence signal; only its **assignment**
 changed. Crucially:
@@ -58,8 +73,15 @@ strict 0.85 dedup. It asserts:
 - but **exactly one** seed promoted (`len(promoted_ever) == 1`), not the whole
   cluster.
 
+A second test
+`test_redetected_nonrep_counts_in_cluster_and_only_rep_promotes` covers the
+re-detection edge case: A creates the cluster, B joins it, then B is re-detected
+verbatim several times (its own occurrence_count climbs). It asserts the
+recurrence accumulates in the cluster (rep promotes) and **only** the
+representative promotes — never the re-detected non-rep.
+
 This is the engineering claim of W9f, verified without a model. Full suite green
-(283 passed, 4 skipped).
+(284 passed, 4 skipped).
 
 ## Honest qualifiers
 
