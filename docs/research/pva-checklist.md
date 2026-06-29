@@ -85,8 +85,14 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   round-014-veiligheid met round-019-payoff. Restpunten: cluster promoot nu álle
   leden (49) i.p.v. een representant (verfijnen); kwaliteit op deze run nog niet
   apart human-gereviewd (rust op R019 92/98%). Zie `round_020/`.
-- [ ] **W9f. Cluster-representant** promoten i.p.v. alle leden (49→clusteraantal),
-  daarna her-draaien + verse human-review op veilige drempels.
+- [~] **W9f. Cluster-representant** promoten i.p.v. alle leden (49→clusteraantal),
+  daarna her-draaien + verse human-review op veilige drempels. **Code geland**
+  (round 021): cluster-recurrence crediteert nu alleen de vroegst-geboren
+  representant per cluster; identiteit (0.85 dedup) en Gate-bar (3) onveranderd;
+  cross-turn surfacing is relevance-gated dus events blijven. Deterministische
+  test bewijst: 6 parafrasen blijven distinct, recurrence haalt de veilige bar,
+  maar exact 1 promoot. *Klaar wanneer:* live her-draai op gpt-4.1 + verse blinde
+  human-review op veilige drempels (pending, secrets-gated). Zie `round_021/`.
 - [~] **W9c (oud). Bottleneck deblokkeren (per-run knob, defaults intact).** Expose
   `dedup_threshold`/`min_occurrences` als run-parameter; her-draai met lossere
   dedup (~0.6) zodat paraphrastische recurrence kan mergen — puur om te testen:
@@ -179,3 +185,7 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
 - 2026-06-21 — W1 gedaan (round 015): wild-loop op nieuws is grotendeels redundant
   (model vindt ~82% zelf). W-taken bijgesteld naar harde teksten (W4) +
   generatieve frames (W5), human-review (W6) pas op de winnende variant.
+- 2026-06-29 — W9f code geland (round 021): cluster-recurrence promoot nu één
+  representant per cluster i.p.v. alle leden; deterministische test + volledige
+  suite groen. Live her-draai + verse human-review op veilige drempels is de
+  pending vervolgstap.

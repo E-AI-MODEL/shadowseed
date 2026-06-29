@@ -91,6 +91,78 @@ def test_cluster_mode_promotes_at_safe_bar(tmp_path: Path, monkeypatch):
     assert any(tr["promoted_total"] for tr in c["turns"]), "cluster recurrence should promote at the safe bar"
 
 
+def test_cluster_mode_promotes_one_representative_not_all_members(tmp_path: Path, monkeypatch):
+    # W9f: six DISTINCT paraphrases that CLUSTER together (pairwise cosine ~0.7,
+    # >= cluster bar 0.6) yet stay separate seeds under the strict 0.85 dedup.
+    # Round-020 v1 credited the cluster size to every member -> all six promoted.
+    # After W9f only the cluster representative is credited -> exactly one promotes,
+    # while the six seeds remain distinct in storage.
+    import math
+
+    paraphrases = [
+        "Privacy van gebruikersdata.",
+        "Bescherming van persoonlijke data.",
+        "Vertrouwen rond datagebruik.",
+        "Verantwoord omgaan met gegevens.",
+        "Transparantie over datagebruik.",
+        "Waarborgen van dataprivacy.",
+    ]
+    # one unique keyword per paraphrase so the embedder is robust to normalization
+    keywords = ["privacy", "bescherming", "vertrouwen", "verantwoord", "transparantie", "waarborgen"]
+
+    conv = {"version": "t", "conversations": [
+        {"id": "C", "domain": "d", "turns": [{"question": f"Q{i}?"} for i in range(6)]}]}
+    inp = tmp_path / "in.json"
+    inp.write_text(json.dumps(conv), encoding="utf-8")
+
+    class _Model:
+        name = "fake"
+        def generate(self, prompt, scenario, mode, seeds):
+            return "SSL." if mode == "ssl" else "Baseline."
+
+    class _Det:
+        name = "d"
+        def __init__(self): self.i = 0
+        def detect_seeds(self, item, max_seeds=5):
+            t = paraphrases[self.i % len(paraphrases)]; self.i += 1
+            return [t]
+
+    # shared e0 direction + a unique orthogonal axis per paraphrase, weighted so
+    # pairwise cosine = 7/(7+3) = 0.7: clusters at 0.6 but stays distinct at 0.85.
+    a, b = math.sqrt(7.0), math.sqrt(3.0)
+    dim = len(keywords) + 2  # axis 0 shared; axes 1..n unique; last axis for non-gaps
+
+    def _emb(backend, model_id=None, **kw):
+        def embed(text: str):
+            low = text.lower()
+            v = np.zeros(dim)
+            for idx, kw_ in enumerate(keywords):
+                if kw_ in low:
+                    v[0] = a
+                    v[idx + 1] = b
+                    return v / np.linalg.norm(v)
+            v[-1] = 1.0  # questions / anything else -> own direction, won't cluster
+            return v
+        return embed, dim
+
+    monkeypatch.setattr(sessmod(), "make_backend", lambda **k: _Model())
+    monkeypatch.setattr(sessmod(), "make_detector_backend", lambda *a, **k: _Det())
+    monkeypatch.setattr(sessmod(), "make_embedding_fn", _emb)
+
+    out = tmp_path / "s.json"
+    run_ssl_session(str(inp), str(out), backend="openai",
+                    recurrence_mode="cluster", cluster_threshold=0.6)
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    diag = payload["conversations"][0]["diagnostics"]
+
+    # the six paraphrases stayed distinct under strict 0.85 dedup ...
+    assert diag["distinct_seeds_created"] >= 5
+    # ... the cluster still accumulated recurrence to clear the SAFE bar ...
+    assert diag["max_occurrence_count"] >= 3
+    # ... but only the representative promoted, not the whole cluster.
+    assert len(diag["promoted_ever"]) == 1, diag["promoted_ever"]
+
+
 def sessmod():
     import shadowseed.benchmark.ssl_session_suite as m
     return m
