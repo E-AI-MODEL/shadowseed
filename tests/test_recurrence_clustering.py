@@ -43,7 +43,7 @@ def test_bump_keeps_recurrence_separate_from_centroid_weight():
     assert c.centroid_counts[cid] == 2
     before = c.centroids[cid].copy()
 
-    c_vec = np.array([0.8, -0.6])
+    c_vec = np.array([1.0, 0.0])
     assert c.add("C", c_vec) == cid
 
     expected = (before * 2 + c_vec) / 3
