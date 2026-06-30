@@ -1,29 +1,49 @@
 #!/usr/bin/env python3
 """Build a blind A/B review pack from an ssl_session_suite.json artifact.
 
-The script extracts only cross-turn payoff events from the SSL session suite,
-balances whether baseline or SSL is shown as answer A, and writes:
+The SSL session runner may still carry legacy embedded blind fields for debug
+compatibility. This script is the canonical review-pack generator: it extracts
+only cross-turn payoff events, balances whether baseline or SSL is shown as
+answer A, and writes one answer key that matches the review items.
 
-- w9f_blind_ab_review_items.json: blinded review items for the reviewer
-- w9f_blind_ab_answer_key.json: hidden answer key for analysis
-- w9f_blind_ab_review_form.md: human-readable review form
-- w9f_blind_ab_scoring_template.csv: optional structured scoring sheet
+Default output names are neutral so W9/W10/etc. rounds do not inherit stale
+labels:
+
+- ssl_session_blind_ab_review_items.json
+- ssl_session_blind_ab_answer_key.json
+- ssl_session_blind_ab_review_form.md
+- ssl_session_blind_ab_scoring_template.csv
+- ssl_session_blind_ab_summary.json
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import random
+import re
 from pathlib import Path
 from typing import Any
+
+
+SCHEMA_VERSION = "ssl-session-blind-ab.v2"
 
 
 def _safe_text(value: Any) -> str:
     if value is None:
         return ""
     return str(value)
+
+
+def _sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _sha256_json(data: Any) -> str:
+    payload = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return _sha256_text(payload)
 
 
 def _turn_number(turn: dict[str, Any]) -> int:
@@ -39,13 +59,39 @@ def _item_id(conversation_id: str, turn: dict[str, Any], index: int) -> str:
     return f"{conversation_id}-t{turn_no:02d}-{index:02d}"
 
 
+def _word_count(text: str) -> int:
+    return len(re.findall(r"[A-Za-zÀ-ÿ0-9_]+", text or ""))
+
+
+def _answer_diagnostics(text: str) -> dict[str, Any]:
+    stripped = (text or "").strip()
+    if not stripped:
+        return {
+            "word_count": 0,
+            "char_count": 0,
+            "ends_with_sentence_punctuation": False,
+            "likely_truncated": False,
+        }
+
+    ends_cleanly = stripped.endswith((".", "!", "?", "…", ")", "]", '"', "'", "”", "’"))
+    last_line = stripped.splitlines()[-1].strip()
+    dangling_marker = bool(re.match(r"^(\d+\.|[-*•])\s*$", last_line))
+    likely_truncated = (not ends_cleanly) or dangling_marker
+
+    return {
+        "word_count": _word_count(stripped),
+        "char_count": len(stripped),
+        "ends_with_sentence_punctuation": ends_cleanly,
+        "likely_truncated": likely_truncated,
+    }
+
+
 def _balanced_ssl_a_assignments(count: int, *, seed: int) -> list[bool]:
     """Return a reproducible, near-balanced SSL-as-A assignment list.
 
-    A plain stream of random bits can produce a long prefix with the same value
-    for small review packs. The W9f pack has only nine payoff items, so that
-    can accidentally put every SSL answer on the same side. Instead we build a
-    balanced bag first and shuffle it reproducibly.
+    A plain stream of random bits can accidentally put most SSL answers on one
+    side for small review packs. Build a balanced bag first, then shuffle it
+    reproducibly.
     """
     if count <= 0:
         return []
@@ -97,6 +143,7 @@ def build_review_pack(payload: dict[str, Any], *, seed: int) -> tuple[list[dict[
 
         review_items.append(
             {
+                "schema_version": SCHEMA_VERSION,
                 "item_id": item_id,
                 "conversation_id": conversation_id,
                 "domain": domain,
@@ -104,6 +151,10 @@ def build_review_pack(payload: dict[str, Any], *, seed: int) -> tuple[list[dict[
                 "question": _safe_text(turn.get("question")),
                 "answer_A": answer_a,
                 "answer_B": answer_b,
+                "answer_diagnostics": {
+                    "A": _answer_diagnostics(answer_a),
+                    "B": _answer_diagnostics(answer_b),
+                },
                 "post_choice_seed_context": {
                     "surfaced_cross_turn_seeds": surfaced_seeds,
                     "promoted_seeds_this_turn": promoted_seeds,
@@ -120,11 +171,13 @@ def build_review_pack(payload: dict[str, Any], *, seed: int) -> tuple[list[dict[
                     "motivation": "",
                     "seed_effect_after_choice": "",  # clear_help, some_help, no_difference, noise
                     "noise_or_hallucinated_relevance": "",  # yes/no
+                    "exclude_from_winrate": "",  # yes/no; use yes for truncated or otherwise invalid items
                 },
             }
         )
         answer_key.append(
             {
+                "schema_version": SCHEMA_VERSION,
                 "item_id": item_id,
                 "conversation_id": conversation_id,
                 "turn": _turn_number(turn),
@@ -132,6 +185,8 @@ def build_review_pack(payload: dict[str, Any], *, seed: int) -> tuple[list[dict[
                 "B": "baseline" if ssl_is_a else "ssl",
                 "ssl_answer_key": "A" if ssl_is_a else "B",
                 "baseline_answer_key": "B" if ssl_is_a else "A",
+                "answer_A_sha256": _sha256_text(answer_a),
+                "answer_B_sha256": _sha256_text(answer_b),
                 "surfaced_cross_turn_seeds": surfaced_seeds,
             }
         )
@@ -154,17 +209,30 @@ def write_form(path: Path, review_items: list[dict[str, Any]], *, title: str) ->
         "1. Kies eerst A, B of gelijk zonder naar de seed-context te kijken.",
         "2. Score daarna beide antwoorden op de criteria.",
         "3. Bekijk pas daarna de seed-context en beoordeel het seed-effect.",
+        "4. Markeer een item als ongeldig voor win-rate als een antwoord duidelijk is afgekapt.",
         "",
         "Scores: 1 = zwak, 5 = sterk.",
         "",
     ]
     for item in review_items:
+        diag_a = item["answer_diagnostics"]["A"]
+        diag_b = item["answer_diagnostics"]["B"]
+        trunc_note = ""
+        if diag_a["likely_truncated"] or diag_b["likely_truncated"]:
+            trunc_note = (
+                "\n\n> Let op: dit item heeft een truncation-vlag. Review inhoudelijk, "
+                "maar overweeg uitsluiting uit win-rate als de afkap beoordeling kleurt."
+            )
         parts.extend(
             [
                 f"## Item {item['item_id']}",
                 "",
                 f"- Conversation: `{item['conversation_id']}`",
+                f"- Domain: `{item['domain']}`",
                 f"- Turn: `{item['turn']}`",
+                f"- Diagnostics A: `{diag_a['word_count']} woorden`, likely_truncated=`{diag_a['likely_truncated']}`",
+                f"- Diagnostics B: `{diag_b['word_count']} woorden`, likely_truncated=`{diag_b['likely_truncated']}`",
+                trunc_note.strip(),
                 "",
                 "### Vraag/context",
                 "",
@@ -183,6 +251,7 @@ def write_form(path: Path, review_items: list[dict[str, Any]], *, title: str) ->
                 "- [ ] A is beter",
                 "- [ ] B is beter",
                 "- [ ] Gelijk / geen duidelijke winnaar",
+                "- [ ] Ongeldig voor win-rate door afkap / artifact-probleem",
                 "",
                 "### Scores",
                 "",
@@ -217,16 +286,18 @@ def write_form(path: Path, review_items: list[dict[str, Any]], *, title: str) ->
                 "- [ ] promoted seed helpt een beetje",
                 "- [ ] promoted seed maakt geen verschil",
                 "- [ ] promoted seed veroorzaakt ruis",
+                "- [ ] promoted seed vernauwt het antwoord",
                 "",
             ]
         )
-    path.write_text("\n".join(parts).rstrip() + "\n", encoding="utf-8")
+    path.write_text("\n".join(part for part in parts if part is not None).rstrip() + "\n", encoding="utf-8")
 
 
 def write_scoring_csv(path: Path, review_items: list[dict[str, Any]]) -> None:
     fields = [
         "item_id",
         "conversation_id",
+        "domain",
         "turn",
         "winner",
         "content_completeness_A",
@@ -241,6 +312,7 @@ def write_scoring_csv(path: Path, review_items: list[dict[str, Any]]) -> None:
         "usefulness_B",
         "seed_effect_after_choice",
         "noise_or_hallucinated_relevance",
+        "exclude_from_winrate",
         "motivation",
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
@@ -251,25 +323,82 @@ def write_scoring_csv(path: Path, review_items: list[dict[str, Any]]) -> None:
                 {
                     "item_id": item["item_id"],
                     "conversation_id": item["conversation_id"],
+                    "domain": item["domain"],
                     "turn": item["turn"],
+                    "exclude_from_winrate": (
+                        "suggest_review"
+                        if item["answer_diagnostics"]["A"]["likely_truncated"]
+                        or item["answer_diagnostics"]["B"]["likely_truncated"]
+                        else ""
+                    ),
                 }
             )
 
 
-def write_summary(path: Path, payload: dict[str, Any], review_items: list[dict[str, Any]], answer_key: list[dict[str, Any]]) -> None:
+def _source_artifact_bytes(input_path: Path) -> bytes:
+    return input_path.read_bytes()
+
+
+def write_summary(
+    path: Path,
+    payload: dict[str, Any],
+    review_items: list[dict[str, Any]],
+    answer_key: list[dict[str, Any]],
+    *,
+    input_path: Path,
+    seed: int,
+    prefix: str,
+) -> None:
     by_conv: dict[str, int] = {}
+    by_domain: dict[str, int] = {}
+    truncation_flags = 0
+
     for item in review_items:
         by_conv[item["conversation_id"]] = by_conv.get(item["conversation_id"], 0) + 1
+        domain = item.get("domain") or ""
+        by_domain[domain] = by_domain.get(domain, 0) + 1
+        if item["answer_diagnostics"]["A"]["likely_truncated"] or item["answer_diagnostics"]["B"]["likely_truncated"]:
+            truncation_flags += 1
+
+    review_items_sha = _sha256_json(review_items)
+    answer_key_sha = _sha256_json(answer_key)
+    source_bytes = _source_artifact_bytes(input_path)
+    legacy_embedded_key_present = bool(payload.get("blind_answer_key") or payload.get("legacy_internal_blind_answer_key"))
+
     summary = {
+        "schema_version": SCHEMA_VERSION,
         "source_summary": payload.get("summary", {}),
+        "source_artifact_path": str(input_path),
+        "source_artifact_sha256": hashlib.sha256(source_bytes).hexdigest(),
+        "review_pack_prefix": prefix,
+        "shuffle_seed": seed,
         "blind_review_item_count": len(review_items),
         "items_by_conversation": by_conv,
+        "items_by_domain": by_domain,
         "ssl_answer_distribution": {
             "A": sum(1 for key in answer_key if key["ssl_answer_key"] == "A"),
             "B": sum(1 for key in answer_key if key["ssl_answer_key"] == "B"),
         },
+        "truncation": {
+            "items_with_likely_truncated_answer": truncation_flags,
+            "policy": "Review inhoudelijk, maar sluit duidelijk afgekapte items uit van win-rate.",
+        },
+        "integrity": {
+            "review_items_sha256": review_items_sha,
+            "answer_key_sha256": answer_key_sha,
+            "answer_key_is_canonical": True,
+            "legacy_embedded_blind_key_present": legacy_embedded_key_present,
+            "note": (
+                "Use this generated answer key for unblinding. Any embedded SSL-session "
+                "blind fields are legacy/debug only and must not be used for scoring."
+            ),
+        },
     }
     write_json(path, summary)
+
+
+def _prefix_path(output_dir: Path, prefix: str, suffix: str) -> Path:
+    return output_dir / f"{prefix}_{suffix}"
 
 
 def main() -> None:
@@ -277,7 +406,8 @@ def main() -> None:
     parser.add_argument("--input", required=True, help="Path to ssl_session_suite.json")
     parser.add_argument("--output-dir", required=True, help="Directory for generated review files")
     parser.add_argument("--seed", type=int, default=45, help="Randomization seed for balanced A/B assignment")
-    parser.add_argument("--title", default="W9f blind A/B review", help="Review form title")
+    parser.add_argument("--prefix", default="ssl_session_blind_ab", help="Filename prefix for generated review files")
+    parser.add_argument("--title", default="SSL session blind A/B review", help="Review form title")
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -287,13 +417,21 @@ def main() -> None:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     review_items, answer_key = build_review_pack(payload, seed=args.seed)
 
-    write_json(output_dir / "w9f_blind_ab_review_items.json", review_items)
-    write_json(output_dir / "w9f_blind_ab_answer_key.json", answer_key)
-    write_form(output_dir / "w9f_blind_ab_review_form.md", review_items, title=args.title)
-    write_scoring_csv(output_dir / "w9f_blind_ab_scoring_template.csv", review_items)
-    write_summary(output_dir / "w9f_blind_ab_summary.json", payload, review_items, answer_key)
+    write_json(_prefix_path(output_dir, args.prefix, "review_items.json"), review_items)
+    write_json(_prefix_path(output_dir, args.prefix, "answer_key.json"), answer_key)
+    write_form(_prefix_path(output_dir, args.prefix, "review_form.md"), review_items, title=args.title)
+    write_scoring_csv(_prefix_path(output_dir, args.prefix, "scoring_template.csv"), review_items)
+    write_summary(
+        _prefix_path(output_dir, args.prefix, "summary.json"),
+        payload,
+        review_items,
+        answer_key,
+        input_path=input_path,
+        seed=args.seed,
+        prefix=args.prefix,
+    )
 
-    print(f"Generated {len(review_items)} blind A/B review items in {output_dir}")
+    print(f"Generated {len(review_items)} blind A/B review items in {output_dir} with prefix {args.prefix!r}")
 
 
 if __name__ == "__main__":
