@@ -1,7 +1,8 @@
 # Round 023 — blinde review van de use-time-discipline run (3 reviewers)
 
 > **Status: het round-023-doel (de round-022-ruis/vernauwing dempen) lijkt
-> gehaald; de payoff-win-rate blijft ≤0.5 en is vertroebeld door afkap.** Drie
+> grotendeels gehaald (sterke daling, niet nul); de payoff-win-rate blijft ≤0.5
+> en is vertroebeld door afkap.** Drie
 > onafhankelijke reviewers scoorden hetzelfde blinde A/B-pack van de
 > use-time-discipline run (10 cross-turn items, gpt-4.1, `recurrence_mode=cluster`,
 > nieuwe defaults `surface_top_k=2` + potentieel-prompt; run 28442142918).
@@ -29,13 +30,22 @@ Dit is een **scherpe verbetering t.o.v. round 022** (daar: winnaar-overeenstemmi
 
 ## Wat dit betekent
 
-**1. De ruis/vernauwing is gedempt — het round-023-doel.** Alle drie de reviewers
-rapporteren **≈0 ruis / hallucinated relevance** (r1: "Geen" ×10; r2: "geen" ×10;
-r3: "geen" ×8 + 2 kleine kanttekeningen die over het *baseline*-antwoord gaan, niet
-over seed-gedreven vernauwing). Vergelijk round 022, waar reviewer A herhaaldelijk
-"promoted seed veroorzaakt ruis" / "vernauwt" noteerde. De cap (`top_k=2`) +
-potentieel-niet-must-prompt hebben het diffuse/te-seed-gedreven faalpatroon
-zichtbaar weggenomen.
+**1. De ruis/vernauwing is sterk verminderd — het round-023-doel grotendeels
+gehaald (niet volledig).** Noise-notities per reviewer: r1 **0/10**, r2 **0/10**,
+r3 **3/10** (`geen` ×7). Die drie r3-noten, eerlijk uitgesplitst naar kant:
+
+- `CONV_STARTUP-t04`: **op de SSL-kant** — milde ruis in het SSL-antwoord
+  ("apparaatgegevens"); niet duidelijk seed-gedreven, maar wél SSL-zijdig;
+- `CONV_STARTUP-t06` en `-t08`: op het **baseline**-antwoord (harde benchmarks
+  resp. brede reguleringsclaims).
+
+De aparte seed-effect-kolom zegt nergens "ruis"/"vernauwt" (overal "helpt" of
+"maakt geen verschil"). Netto: **1 milde SSL-zijdige ruisnotitie op 30
+reviewer-items** (~3%). Vergelijk round 022, waar de SSL/seed-antwoorden
+hérhaald als ruis/vernauwing werden gemarkeerd (**~3 van 8, op de SSL-kant**). Het
+diffuse/te-seed-gedreven faalpatroon is dus **sterk teruggebracht, maar niet tot
+nul** — de cap (`top_k=2`) + potentieel-niet-must-prompt doen het grootste deel van
+het werk, met één milde rest.
 
 **2. Seed-effect = potentieel, geen must (werkend).** De seed-effect-labels zijn
 overal "helpt (duidelijk/een beetje)" of "maakt geen verschil" — **nooit ruis**.
@@ -56,9 +66,10 @@ niet SSL-kwaliteit, en vertroebelt de win-rate in beide richtingen.
 
 ## Conclusie
 
-- **Use-time discipline (round 023): geslaagd op eigen doel.** De round-022-ruis is
-  weg en de reviewers zijn het weer grotendeels eens. De "potentieel, geen must"-
-  fix doet wat hij moet.
+- **Use-time discipline (round 023): grotendeels geslaagd op eigen doel.** De
+  seed-zijdige ruis/vernauwing van round 022 (~3/8) is teruggebracht tot 1 milde
+  SSL-zijdige notitie (1/30), en de reviewers zijn het weer grotendeels eens. De
+  "potentieel, geen must"-fix doet het grootste deel van het werk — niet tot nul.
 - **Payoff-claim blijft "kandidaat".** Win-rate ~0.40 en de afkap-confound betekenen
   dat we niet kunnen zeggen dat SSL antwoorden gemiddeld beter maakt.
 - **Volgende schone stap:** her-draai zónder afkap-artefact (`max_new_tokens` ruim

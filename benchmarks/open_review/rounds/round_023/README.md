@@ -97,10 +97,13 @@ Stap 2 is uitgevoerd: 3 onafhankelijke reviewers scoorden het blinde A/B-pack.
 Volledige cijfers + analyse in `human_review/RESULTS.md`, ruwe scores in
 `human_review/scores.csv`. Kort:
 
-- **Ruis/vernauwing gedempt — het round-023-doel gehaald.** Alle 3 reviewers:
-  ≈0 ruis/hallucinated relevance (vs round 022's herhaalde "ruis"-flags). De
-  seed-effect-labels zijn overal "helpt" of "maakt geen verschil", nooit ruis —
-  potentieel-niet-must werkt.
+- **Ruis/vernauwing sterk verminderd — het round-023-doel grotendeels gehaald
+  (niet nul).** Noise-noten: r1 0/10, r2 0/10, r3 3/10. Eerlijk uitgesplitst:
+  `CONV_STARTUP-t04` is een milde ruisnotitie op de **SSL-kant** ("apparaatgegevens",
+  niet duidelijk seed-gedreven); t06/t08 gaan over het baseline-antwoord. Netto
+  1 milde SSL-zijdige notitie op 30 reviewer-items, vs round 022's ~3/8 seed-zijdige
+  ruis/vernauwing-flags. De seed-effect-kolom zegt nergens "ruis" — potentieel-
+  niet-must doet het grootste deel van het werk, met één milde rest.
 - **Overeenstemming hersteld:** 5/10 unaniem, ~0.67 pairwise — scherp beter dan
   round 022 (~0.125, de 1-vs-8 inversie is weg).
 - **Win-rate blijft ≤0.5** (SSL-voorkeur r1/r2/r3 = 5/3/4 van 10, ~0.40), en is
