@@ -100,7 +100,7 @@ def run_ssl_session(
     )
     from shadowseed.core_config import SSLCoreConfig
 
-    def _new_manager(conv: dict[str, Any]) -> tuple[SSLManager, dict[str, Any]]:
+    def _new_manager(conv: dict[str, Any]) -> tuple[SSLManager, dict[str, Any], Any]:
         d = conv.get("dedup_threshold", dedup_threshold)
         mo = conv.get("min_occurrences", min_occurrences)
         pt = conv.get("promotion_threshold", promotion_threshold)
@@ -141,6 +141,23 @@ def run_ssl_session(
         born_turn: dict[str, int] = {}
         history: list[tuple[str, str]] = []
         turn_records: list[dict[str, Any]] = []
+
+        def _refresh_cluster_representative(rep_seed: Any, source_seed: Any) -> None:
+            """Keep the representative live when its cluster recurs through a member."""
+            if rep_seed.status == SeedStatus.EXPIRED:
+                return
+            rep_seed.trace = min(
+                manager.max_trace,
+                max(
+                    rep_seed.trace,
+                    source_seed.trace,
+                    manager.config.min_trace_for_gate + 1e-9,
+                ),
+            )
+            rep_seed.turns_dormant = 0
+            if rep_seed.status != SeedStatus.PROMOTED:
+                rep_seed.status = SeedStatus.ACTIVE
+            manager._touch_seed(rep_seed)
 
         for t, turn in enumerate(conv["turns"]):
             q = turn["question"]
@@ -190,12 +207,18 @@ def run_ssl_session(
                         continue
                     if sid not in seed_to_cluster:
                         cid = clusterer.add(seed.text, seed.embedding)
+                        had_rep = cid in cluster_rep
                         seed_to_cluster[sid] = cid
                         # the earliest-born member anchors the cluster; record it
                         # once as the representative. It is also naturally the one
                         # eligible to surface cross-turn (born first), keeping the
                         # two notions aligned.
                         cluster_rep.setdefault(cid, sid)
+                        rep_sid = cluster_rep.get(cid)
+                        if had_rep and rep_sid is not None and rep_sid != sid:
+                            rep_seed = manager.seeds.get(rep_sid)
+                            if rep_seed is not None:
+                                _refresh_cluster_representative(rep_seed, seed)
                     else:
                         # a STORED member re-detected (deduped) in a later turn: the
                         # gap recurred, so grow its cluster's recurrence. Membership
@@ -203,7 +226,11 @@ def run_ssl_session(
                         # re-cluster. Skipping this would leave the cluster recurrence
                         # too low while the member's own dedup-driven occurrence_count
                         # could still reach the Gate and promote a non-representative.
-                        clusterer.bump(seed_to_cluster[sid])
+                        cid = seed_to_cluster[sid]
+                        clusterer.bump(cid)
+                        rep_seed = manager.seeds.get(cluster_rep.get(cid, ""))
+                        if rep_seed is not None and rep_seed is not seed:
+                            _refresh_cluster_representative(rep_seed, seed)
                 # --- W9f: credit semantic recurrence to ONE representative per
                 # cluster, not every member. Round 020 bumped *all* members to the
                 # cluster size, so a single recurring (paraphrastic) gap promoted the
