@@ -31,6 +31,20 @@ def test_chat_prompt_is_potential_not_must():
     assert "Betrek daarbij expliciet" not in p  # the old hard must-instruction is gone
 
 
+def test_transfer_suite_runs_through_pipeline(tmp_path: Path):
+    # W10: the doctrine-transfer dataset (new domains) must run through the same
+    # pipeline. Fixture backend -> deterministic, no model/secret needed.
+    out = tmp_path / "t.json"
+    run_ssl_session(
+        "src/shadowseed/data/ssl_session_transfer_suite.json", str(out), backend="fixture"
+    )
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    assert payload["summary"]["artifact"] == "ssl_session_suite"
+    assert payload["summary"]["conversation_count"] == 3
+    domains = {c["domain"] for c in payload["conversations"]}
+    assert domains == {"onderwijs", "publieke gezondheid", "beleid"}
+
+
 def test_surface_settings_recorded(tmp_path: Path):
     out = tmp_path / "s.json"
     run_ssl_session(
