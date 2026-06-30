@@ -51,12 +51,19 @@ class RecurrenceClusterer:
     ``add(text, embedding)`` assigns the gap to the nearest cluster whose centroid
     is within ``threshold`` cosine (updating that centroid as a running mean), or
     starts a new cluster. ``recurrence(cluster_id)`` returns the cluster size.
+
+    Centroid membership and recurrence are intentionally tracked separately:
+    a deduped re-detection should count as recurrence, but it must not distort
+    the centroid's running-mean denominator unless its embedding is included.
     """
 
     def __init__(self, threshold: float = DEFAULT_CLUSTER_THRESHOLD) -> None:
         self.threshold = threshold
         self.centroids: list[np.ndarray] = []
-        self.counts: list[int] = []
+        self.centroid_counts: list[int] = []
+        self.recurrence_counts: list[int] = []
+        # Backward-compatible alias for code that inspected counts directly.
+        self.counts = self.recurrence_counts
         self.members: list[list[str]] = []
 
     def add(self, text: str, embedding: np.ndarray) -> int:
@@ -70,12 +77,14 @@ class RecurrenceClusterer:
                 best = i
         if best < 0:
             self.centroids.append(emb.copy())
-            self.counts.append(1)
+            self.centroid_counts.append(1)
+            self.recurrence_counts.append(1)
             self.members.append([text])
             return len(self.centroids) - 1
-        n = self.counts[best]
+        n = self.centroid_counts[best]
         self.centroids[best] = (self.centroids[best] * n + emb) / (n + 1)
-        self.counts[best] += 1
+        self.centroid_counts[best] += 1
+        self.recurrence_counts[best] += 1
         self.members[best].append(text)
         return best
 
@@ -84,14 +93,14 @@ class RecurrenceClusterer:
 
         Used when a *stored* seed is re-detected (deduped) in a later turn: the gap
         recurred, so its cluster's recurrence must grow, but the seed's cluster
-        membership was already fixed on first sighting — so we only increment the
-        count, we do not re-cluster or add a new member.
+        membership was already fixed on first sighting. Only the recurrence count
+        grows; the centroid running mean and member list stay unchanged.
         """
-        self.counts[cluster_id] += 1
-        return self.counts[cluster_id]
+        self.recurrence_counts[cluster_id] += 1
+        return self.recurrence_counts[cluster_id]
 
     def recurrence(self, cluster_id: int) -> int:
-        return self.counts[cluster_id]
+        return self.recurrence_counts[cluster_id]
 
 
 def auto_calibrated_min_occurrences(n_turns: int, lo: int = 2, hi: int = 4) -> int:

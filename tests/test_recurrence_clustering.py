@@ -29,6 +29,29 @@ def test_paraphrases_cluster_unrelated_split():
     assert cb != ca and c.recurrence(cb) == 1  # unrelated stays a singleton
 
 
+def test_bump_keeps_recurrence_separate_from_centroid_weight():
+    c = RecurrenceClusterer(threshold=0.6)
+    a = np.array([1.0, 0.0])
+    b = np.array([0.8, 0.6])
+    cid = c.add("A", a)
+    assert c.add("B", b) == cid
+
+    for _ in range(4):
+        c.bump(cid)
+
+    assert c.recurrence(cid) == 6
+    assert c.centroid_counts[cid] == 2
+    before = c.centroids[cid].copy()
+
+    c_vec = np.array([1.0, 0.0])
+    assert c.add("C", c_vec) == cid
+
+    expected = (before * 2 + c_vec) / 3
+    assert c.recurrence(cid) == 7
+    assert c.centroid_counts[cid] == 3
+    np.testing.assert_allclose(c.centroids[cid], expected)
+
+
 def test_auto_calibrated_bar_clamped():
     assert auto_calibrated_min_occurrences(4) == 2
     assert auto_calibrated_min_occurrences(9) == 3
@@ -224,6 +247,68 @@ def test_redetected_nonrep_counts_in_cluster_and_only_rep_promotes(tmp_path: Pat
     assert diag["max_occurrence_count"] >= 3
     # exactly one promotion and it is the representative (A's cluster), not the
     # re-detected non-rep B (text is normalized, so match on the distinguishing word)
+    assert len(diag["promoted_ever"]) == 1, diag["promoted_ever"]
+    assert "privacy" in diag["promoted_ever"][0].lower(), diag["promoted_ever"]
+    assert all("bescherming" not in p.lower() for p in diag["promoted_ever"]), diag["promoted_ever"]
+
+
+def test_nonrep_recurrence_refreshes_decayed_representative(tmp_path: Path, monkeypatch):
+    # W9f follow-up: A is the representative, B is a non-rep in the same cluster.
+    # After several quiet turns A's trace falls below the Gate threshold. Later
+    # B re-detections must count as cluster recurrence AND keep A live enough to
+    # validate; otherwise B is skipped and A is too stale, so nothing promotes.
+    import math
+
+    A = "Privacy van gebruikersdata."
+    B = "Bescherming van persoonlijke data."
+    emissions = [[A], [B], [], [], [], [], [B], [B], [B], [B]]
+
+    conv = {"version": "t", "conversations": [
+        {"id": "C", "domain": "d", "turns": [{"question": f"Q{i}?"} for i in range(len(emissions))]}]}
+    inp = tmp_path / "in.json"
+    inp.write_text(json.dumps(conv), encoding="utf-8")
+
+    class _Model:
+        name = "fake"
+        def generate(self, prompt, scenario, mode, seeds):
+            return "SSL." if mode == "ssl" else "Baseline."
+
+    class _Det:
+        name = "d"
+        def __init__(self): self.i = 0
+        def detect_seeds(self, item, max_seeds=5):
+            out = emissions[self.i]
+            self.i += 1
+            return out
+
+    a, b = math.sqrt(7.0), math.sqrt(3.0)
+
+    def _emb(backend, model_id=None, **kw):
+        def embed(text: str):
+            low = text.lower()
+            v = np.zeros(4)
+            if "privacy" in low:
+                v[0] = a; v[1] = b
+            elif "bescherming" in low:
+                v[0] = a; v[2] = b
+            else:
+                v[3] = 1.0
+                return v
+            return v / np.linalg.norm(v)
+        return embed, 4
+
+    monkeypatch.setattr(sessmod(), "make_backend", lambda **k: _Model())
+    monkeypatch.setattr(sessmod(), "make_detector_backend", lambda *a, **k: _Det())
+    monkeypatch.setattr(sessmod(), "make_embedding_fn", _emb)
+
+    out = tmp_path / "s.json"
+    run_ssl_session(str(inp), str(out), backend="openai",
+                    recurrence_mode="cluster", cluster_threshold=0.6)
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    diag = payload["conversations"][0]["diagnostics"]
+
+    assert diag["distinct_seeds_created"] == 2
+    assert diag["max_occurrence_count"] >= 3
     assert len(diag["promoted_ever"]) == 1, diag["promoted_ever"]
     assert "privacy" in diag["promoted_ever"][0].lower(), diag["promoted_ever"]
     assert all("bescherming" not in p.lower() for p in diag["promoted_ever"]), diag["promoted_ever"]
