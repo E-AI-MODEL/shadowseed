@@ -260,7 +260,7 @@ jobs:
           import os
           from pathlib import Path
 
-          prefix = os.environ.get("REVIEW_PREFIX", "ssl_session_blind_ab")
+          prefix = (os.environ.get("REVIEW_PREFIX") or "ssl_session_blind_ab").strip() or "ssl_session_blind_ab"
           summary_path = Path("results/blind_ab_review") / f"{prefix}_summary.json"
           summary = json.loads(summary_path.read_text(encoding="utf-8"))
           source = summary.get("source_summary", {})
