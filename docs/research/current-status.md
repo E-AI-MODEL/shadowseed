@@ -1,315 +1,219 @@
 # Huidige Status van SSL-validatie
 
 > Status: current
-> Date: 2026-05-22 (open-set status refreshed 2026-06-09, na PR #116)
+> Date: 2026-06-30
 > Evidence layer: status snapshot across layers A-G
 > Source: 4.6 evidence model in `docs/00_shadow_seed_learning_4_6.md`
 
 ## Doel van dit document
 
-Dit document maakt expliciet wat de repository vandaag werkelijk aantoont, wat slechts gedeeltelijk is afgedekt, en wat nog gepland of conceptueel is.
+Dit document maakt expliciet wat de repository vandaag werkelijk aantoont, wat gedeeltelijk is afgedekt, en wat nog onderzoekswerk is.
 
-De kernregel is eenvoudig:
+De kernregel blijft:
 
-> wat mechanisch werkt is nog niet automatisch wetenschappelijk bewezen.
+> wat mechanisch werkt is nog niet automatisch een brede algemene claim.
 
-Dit document scheidt daarom vier dingen:
+Maar de status is sinds de eerdere 2026-05/06-snapshots verschoven. Vooral W9f heeft de cross-turn SSL-levenscyclus uit de sfeer van alleen belofte gehaald en als technische baseline vastgezet.
 
-- wat in code en workflows aantoonbaar aanwezig is;
-- wat als redelijke tussenstap geldt;
-- wat nog niet sluitend is gevalideerd;
-- wat nog onderzoekswerk is.
+## Korte samenvatting
 
-## Samenvatting
+De repo staat sterk voor:
 
-De repo staat er sterk voor als benchmark-harness voor SSL-mechaniek. De kernlogica rond atomische seeds, `trace`, `weight`, Validation Gate, blinde labelscheiding, retrieval-smokes en rapportage is aanwezig en functioneel.
+- de mechanische SSL-kern (`trace`, `weight`, TTL, TrTL, status lifecycle, Validation Gate);
+- regressie en kleine benchmarkvalidatie;
+- adversarial Gate-evaluatie als eerste echte ruiscontrole;
+- probe-feedback lifecycle als eerste behavioral bewijs;
+- cross-turn context-discovery en memory-surfacing via W9f.
 
-De repo staat er nog niet sterk genoeg voor als volledig bewijs van het hele SSL-onderzoeksprogramma (4.5 als mechaniek, 4.6 als evaluatiekoers). Open-set validatie, domeintransfer en modelinterne validatie zijn nog niet op het niveau dat een brede algemene claim zou dragen. Adversarial Gate-evaluatie en probe-feedback gedrag hebben sinds 2026-05-22 eerste echte evidence (PRs #80 en #82). Open-set seedkwaliteit heeft sinds 2026-06-09 een eerste echt mensgereviewde batch (PR #116, round 005 offset-12) — en die is inhoudelijk een kwaliteitswaarschuwing, geen succes.
+De repo staat nog niet sterk genoeg voor:
 
-Korte totaalscore per laag (per 2026-05-22):
+- een brede claim dat SSL elk antwoord verbetert;
+- algemene domein-onafhankelijkheid;
+- volledige productmatige betrouwbaarheid van automatisch seed-gebruik;
+- modelinterne validatie.
 
-- mechanische regressie: sterk
-- kleine benchmarkvalidatie: bruikbaar
-- open-set seedkwaliteit: **eerste echte evidence geland, met kwaliteitswaarschuwing** (PR #116). Round 005 offset-12 (Qwen2.5-3B, v0.3e) is volledig mensgereviewd: 41 unieke seeds, acceptance **0.29** (criterium was ≥ 0.60), relevance 0.98 maar non_triviality en follow_up_utility beide 0.29, reviewer agreement unaniem. v0.3e repareerde de vorm (claim-vs-gap 30 → 0 t.o.v. round 004) maar niet de substantie: de detector vindt on-topic maar overwegend triviale of niet-toetsbare afwezigheden. De offset-0 batch en de blinde control zijn inmiddels gesloten als gedelegeerde AI-review (zie hieronder)
-- adversarial Gate-evaluatie: eerste echte evidence (PR #80, F1 1.0 op 21 candidates met drie baselines)
-- probe utility behavioral: eerste echte evidence (PR #82, 10/10 lifecycle scenarios)
-- probe utility prompt-quality: bestaand scaffold in `ssl45_probe_utility_suite`
-- open-set/domeintransfer replicatie (round 007, v0.3g, verse items): de model-hefboom houdt out-of-sample stand (nieuws 0.333, wetenschap 0.268 — beide ruim boven Qwen 0.185), maar de round-006 niveaus (0.50/0.458) waren optimistisch en de nieuws-vs-wetenschap-framing onjuist: de daling is niet domein-gebonden (nieuws offset 30 = 0.333 ≈ wetenschap offset 20 = 0.268). Een 'tekstdichtheid'-verklaring hield géén stand bij toetsing: `scripts/analyze_acceptance_vs_density.py` vindt |r| < 0.25 voor vijf deterministische proxies over 48 items; de driver van de daling is dus nog onbekend (kandidaten die deze n=48 single-reviewer-opzet niet kan scheiden: subdomein-moeilijkheid, item-selectie, reviewer-variantie). v0.3g lost de vorm overal op (prescreen clean-rate 0.90/0.95, claim_vs_gap 0). Zie `benchmarks/open_review/rounds/round_007/`
-- domeintransfer: **eerste signaal** (2026-06-11, round 006 batch 2): zelfde Phi-3.5-mini + v0.3e op 12 arXiv-abstracts levert AI-gereviewde acceptance **0.458** vs 0.50 op nieuws (zelfde reviewer/model/prompt) — kwaliteit transfereert; het faalprofiel verschuift ("of"-stapeling, LaTeX-truncatie). Eén exploratieve batch, AI-gereviewd: signaal, geen validatie
-- human-vs-AI agreement (2026-06-13, eerste sinds round 005): blinde maintainer-review van round 006 batch 1 (54 beoordeeld, 4 abstain) geeft human acceptance **0.593** vs AI **0.519**, raw agreement 0.815, **Cohen's κ 0.627** (substantial). Conclusie: de gedelegeerde AI-reviews zijn een bruikbare proxy, en de 0.50-headline is niet opgeblazen — de mens is zelfs iets milder. De rest-onenigheid zit op de impact/speculatie-grens (de zachtste rubriek). Zie `round_006/batch1/human_review/RESULTS.md`. Nog steeds signaal, geen Laag-C-validatie (n=54, één reviewer, criterium ≥ 0.60)
-- rubric-fragiliteit (round 006-007, `scripts/analyze_rubric_sensitivity.py`): de AI-acceptance is gevoelig voor de uitlegregel. Onder één strengere deterministische regel zakt de 0.50-headline-batch naar 0.328 (swing -0.172) en krimpt de cross-batch spread van 0.232 naar 0.146 — een deel van het in-sample/out-of-sample-verschil was reviewer-mildheid, niet alleen items. Zelf-consistentie-grens (zelfde agent), geen onafhankelijke review; de blinde human pass (`round_006/batch1/human_review/`) beslist welke regel dichter bij een mens ligt
-- **strategische stand (2026-06-13, zie `docs/research/milestone-open-set-2026-06.md`)**: de vraag 'kan het systeem kleine gaps detecteren/valideren?' is grotendeels met JA beantwoord (detectie ~menskwaliteit op Phi-3.5, methodologie gevalideerd met κ 0.63). De openstaande, beslissende vraag is de payoff: *levert handelen op gevalideerde seeds meetbaar betere antwoorden op?* Detector-iteratie is gestopt bij v0.3g; de volgende stap is de end-to-end payoff-test (round 008), niet meer detectie-tuning
-- **payoff-test eerste signaal (2026-06-14, round 008 run 01)**: end-to-end vraag *maken seeds antwoorden beter?* op Phi-3.5-mini, blinde lezer-beoordeling. **SSL-win-rate 0.333 (1 van 3)** — criterium >0.5 niet gehaald, richting negatief (n=3, dus signaal geen verdict). De deterministische coverage-metric bevestigt onafhankelijk: alleen MODEL_B verbeterde (0→0.5). Mechanisme: de seeds zijn niet het probleem, de **revisie-stap derailt** op een klein model (gehallucineerd gedicht; verkeerd product erbij gehaald) — behalve MODEL_B waar de revisie échte juridische substantie injecteerde (de 4.6-belofte werkend). Conclusie: detectie is opgelost, de bottleneck verschuift naar de **seed-injectie/revisie-stap** en modelcapaciteit. Zie `round_008/payoff_run_01/`
-- **payoff run 02 (no-harm append)**: zelfde baselines + seeds, maar injectie als gewichtloze toevoeging i.p.v. vrije herschrijving → **SSL-win 1.0 (3/3)** vs 0.333 bij run 01. Bevestigt: de run-01-schade zat in de herschrijf-stap, niet in de seeds; seeds zijn 'potentieel, geen must' en voegen veilig waarde toe wanneer het handelen erop de Gate-filosofie volgt (do-no-harm op antwoordniveau). Kanttekening: de append is per constructie een superset (kan nauwelijks verliezen) en altijd langer — een vloer, geen plafond. Doel blijft: herschrijving die én do-no-harm én vloeiend integreert. Zie `round_008/payoff_run_02/`
-- **payoff op capabel model (2026-06-18, round 010, `openai:gpt-4o-mini`)**: de round-008 next-step ('groter model') uitgevoerd via de nieuwe OpenAI-backend (workflow `Research · SSL Benefit (OpenAI)`, secret-only key). Onder dezelfde **vrije** herschrijf-prompt die Phi-3.5 deed derailen: `unsupported_ssl_addition_rate = 0.0` op alle 3 scenario's, geen hallucinatie/topic-bleed. Blinde AI-lezer: **2 ssl-wins / 1 tie / 0 losses** (vs 1/2 bij Phi-3.5); MODEL_C coverage 0→1.0 schoon. Conclusie: de round-008-negatief was een **klein-model-artefact van de revisie-stap**, geen SSL-fout — do-no-harm ontstaat vanzelf bij een capabel model. Metrische kanttekening: MODEL_B's correcte seed is zichtbaar geïntegreerd maar door `coverage()` op 0 gescoord (jaccard/phrasing-artefact). n=3, AI-geoordeeld → sterk signaal, geen Laag-C. Zie `round_010/`
-- **semantische coverage-metric + human-pack (2026-06-19, round 013, gpt-4.1)**: nieuwe `semantic_coverage()` (per gap max-cosine tussen gap-embedding en antwoordzinnen, drempel, ruwe `max_sim` gerapporteerd) gedraaid met echte OpenAI-embeddings. **Lexicaal: 0.10→0.10 (+0.00); semantisch: 0.325→0.900 (+0.575)** — de round-012-instorting was dus een metric-artefact; de echte payoff is groot en nu objectief, en strookt met de blinde lezer (9/9 ingeweven). Drempel 0.55 bijt nog (MODEL_F gaps op 0.49–0.50 vallen eronder), dus geen rubber-stempel; 0 unsupported. Kanttekening: embeddings meten topical match, geen feitjuistheid (dat dekken de Gate/unsupported + de mens). **Generatieve payoff W5 — de beslissende visie-test (2026-06-21, round 016, gpt-4.1)**: de generatieve 'wat had hier KUNNEN staan'-frames (v0.4-gen detector) door de payoff-pijplijn. **Convergent negatief met W1**: gpt-4.1 werpt zelf ~88% van de detector-frames op (mean baseline frame-coverage 0.88; novel 3/24). Beide interpretaties — omissie (W1, 0.82) én generatief (W5, 0.88) — wijzen dezelfde kant op: op een frontier-model is het model z'n eigen gap/frame-generator, dus SSL's externe Niveau-1-meerwaarde is klein. **Confound**: de baseline was geprimed op 'verklarende invalshoeken' → W7 (naïeve baseline) is de onweerlegbare decider. Nog níét weerlegd: zwakke modellen, cross-turn accumulatie (gap 5), Niveau 2, en het payoff-bij-geldige-seed-resultaat (rounds 011–013). Zie `round_016/`. **Dit is, met W1, het signaal dat de maintainer aanvoelde — SSL-als-externe-frontier-detector staat onder druk.**
+De belangrijkste statuswijziging:
 
-**Cross-turn payoff WERKT op VEILIGE drempels (2026-06-22, round 020, gpt-4.1) — "make it work"**: cluster-based recurrence (W9e) telt parafrastische gaps semantisch samen, terwijl de strikte 0.85-opslag-dedup en de Gate-bar 3 intact blijven. Op veilige defaults (alleen `recurrence_mode=cluster`): max_occurrence **29**, **49 promoties**, **10 cross-turn events** — vs round 018 (zelfde veilige drempels, pairwise) = 0. De blokkade was dus niet gesprekleng­te of Gate-strengte, maar dat paarsgewijze 0.85 niet ziet dat parafrasen dezelfde gap zijn. Dit **verzoent round-014-veiligheid met round-019-payoff**: de cross-turn 'toekomstig antwoord'-mechaniek is nu reproduceerbaar op verdedigbare instellingen. Restpunten: cluster promoot v1 álle leden (49 i.p.v. representant — verfijnen, W9f); kwaliteit op deze run nog niet apart human-gereviewd (rust op R019 92/98% op equivalente inhoud); n klein, één model, gekozen thema's. Zie `round_020/`.
+> Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels (recurrence → Gate → surfacing vuurt reproduceerbaar). De *payoff-kwaliteit* is echter een baseline-kandidaat, niet afgesloten: de eerste blinde review op veilige drempels kwam gespleten terug (round 022). De volgende stap is daarom tweeledig — use-time seed-discipline (potentieel-vs-must) én doctrine-transfer (W10) — niet nog meer bewijs dat het mechanisme bestaat.
 
-**Cross-turn payoff MENSELIJK VERANKERD (2026-06-21, round 019 human review)**: 2 onafhankelijke beoordelaars, blind, **92% en 98% eens met de AI-oordelen** op de 10 cross-turn paren (AI-lean 8 ssl / 2 tie). Bevestigt dat de cross-turn SSL-antwoorden door onafhankelijke mensen als rijker worden beoordeeld — geen AI-bias en geen lengte-artefact (reviewers expliciet verteld dat een langer, inhoudelijk rijker antwoord in deze niche beter mag zijn). AI-jury nu tweemaal gevalideerd (ook round 013). Grenzen onveranderd: onder-doctrine drempels, n=10, gekozen thema's. **Plus**: Gate-drempels (dedup/recurrence/promotie) zijn nu **per-topic instelbaar** (maintainer-eis: hoeveel tegengehouden vs doorgelaten verschilt per onderwerp), globale doctrine-defaults intact. Zie `round_019/human_review/RESULTS.md`.
+Zie ook `docs/research/w9f-evaluatieconclusie.md` en `benchmarks/open_review/rounds/round_022/human_review/`.
 
-**Cross-turn payoff FIRES — eerste positief voor SSL's eigen mechanisme (2026-06-21, round 019, gpt-4.1, ECHTE pijplijn)**: na de correctie dat W1/W5 single-shot afgeleiden waren, draait nu een multi-turn sessie door `SSLManager` (weight-0, recurrence-dedup, Gate, TTL/TrTL). Met per-run lossere dedup (0.6) + recurrence-bar 2 mergen parafrasen: max_occurrence 2→**10**, **11 promoties**, **10 cross-turn events**. Gelezen (CONV_CITY t5–t8): vroeg-gezaaide niet-voor-de-hand-liggende frames reizen mee en maken latere antwoorden rijker/onderscheidender — exact het 'wat nu geen antwoord is, kan het later worden'. **Harde grenzen**: vuurt alleen onder-doctrine (default 0.85/3 → 0 promoties, round 018); SSL-antwoorden zijn langer (confound); AI-geoordeeld; n=10; auteur-gekozen terugkerende thema's. Bemoedigend signaal, geen validatie. Vervolg: blinde human-review (W9d) + recurrence/dedup-model dat bij véilige drempels promoot (W9e). Zie `round_019/`.
+## Statusoverzicht per laag
 
-**Wild-loop W1 — detectie→payoff op echte seeds (2026-06-21, round 015, gpt-4.1)**: echte open-set-gedetecteerde seeds (round 006 batch1, AI-accepted, κ 0.63) door de payoff-pijplijn i.p.v. auteur-ontworpen seeds. **Grotendeels negatief/directioneel**: een sterk model vindt zélf ~82% van de gedetecteerde gaps (mean baseline gap-coverage 0.82); van de 4/29 "gemiste" gaps zijn er ~2 metric-bijna-missers (baseline dekt ze in andere woorden), dus echt nieuw ~2/29 niche. Conclusie: op korte, makkelijke teksten zijn SSL's gaps grotendeels redundant met wat een sterk model zelf al benoemt — strookt met rounds 005/007 ("relevant maar triviaal"). SSL's payoff-waarde ligt dus niet hier; vervolg: harde/dichte teksten (W4), generatieve "kunnen staan"-frames (W5), human-review pas op de winnende variant (W6). Eerlijke grens: n=12, één corpus/model, metric ondertelt baseline-coverage (negatief is zo mogelijk onderschat). Zie `round_015/` en de PvA. **Dit is een belangrijke richtingbepaler, geen weerlegging op harde teksten.**
+| Laag | Vraag | Status per 2026-06-30 | Korte duiding |
+|---|---|---|---|
+| A — Regressie | Blijft de kernmechaniek werken? | **Sterk** | CI, manager-tests, lifecycle-tests en benchmark-smokes bewaken de kern. |
+| B — Kleine benchmarkvalidatie | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** | Geschikt als regressie en beperkte benchmark, niet als eindclaim. |
+| C — Open-set seedkwaliteit | Maakt SSL goede seeds zonder vaste ground truth? | **Eerste echte evidence, gemengd** | Menselijke en gedelegeerde reviews tonen relevantie, maar ook trivialiteit/testability-risico. |
+| D — Adversarial ruiscontrole | Weert de Gate misleidende gaps? | **Eerste echte evidence** | Gate presteert sterk op kleine adversarial set; bredere stress blijft wenselijk. |
+| E — Probe utility / payoff | Leveren promoted seeds nuttige vervolgstappen of antwoorden op? | **Positief voor W9f cross-turn; deels open voor productgebruik** | W9f toont cross-turn payoff; seed-vernauwing blijft foutklasse. |
+| F — Domeintransfer | Werkt dezelfde doctrine buiten bekende scenario's? | **Volgende stap** | W10 moet transfer van de levenscyclus meten, niet opnieuw W9f bewijzen. |
+| G — Modelintern | Is er interne modelsteun voor extern gemeten afwezigheid? | **Onderzoekslaag** | Niet nodig voor de huidige engineering-baseline. |
 
-**Lifecycle TTL tot verdwijning + terminale EXPIRED (2026-06-19)**: round 014 toonde dat een slechte seed die de revisie haalt schade doet, dus de veiligheid moet vóór het handelen zitten. De 4.5-doctrine (`docs/legacy` §10/§12.2) zegt: EXPIRED = "te lang dormant zonder trigger → verwijderd uit shadow memory", en falsificatie → weight 0, terug naar NEW. Die TTL-naar-EXPIRED ontbrak in de code. Nu geïmplementeerd: `decay_traces` telt dormante beurten en zet een seed na `dormant_ttl_turns` op EXPIRED (weight 0); falsificatie verlaagt naast weight óók trace (`contradiction_trace_penalty`) zodat een gedegradeerde seed sneller naar de verdwijn-TTL loopt; en **EXPIRED is terminaal** — geen decay, geen Gate (no-op verdict `expired`), geen reactivatie, geen dedup-herleving. Een gedegradeerde/irrelevante seed kan dus niet terugkomen. 257 tests groen (6 nieuwe lifecycle-tests). Zie `docs/architecture/manager-design.md`.
+## Mechanische kern
 
-**Adversariële discriminatietest (2026-06-19, round 014, gpt-4.1)**: opzettelijk slechte seed geforceerd in de revisie (Gate-failure gesimuleerd), 9 scenario's. **false_fact: model corrigeerde 3/3** (0 desinformatie geponeerd — bijv. "verandert het DNA *niet*"); **irrelevant: model plakte 2/3 de off-topic inhoud erbij** (pinguïns in een beleggingsantwoord, aquaduct-analogie in een app-review = ruis, baseline beter), 1/3 genegeerd; **redundant: 3/3 onschadelijk (tie)**. Kernconclusie: do-no-harm is NIET automatisch op antwoordniveau voor slechte seeds — een capabel model is een betrouwbare backstop tegen *valse* feiten maar niet tegen *irrelevante* seeds; de veiligheid zit dus in de **Gate/weightless-filtering**, niet in de revisiestap (doctrine 4.5/4.6 nu aangetoond i.p.v. aangenomen). Kanttekening: de deterministische falsehood-flag gaf 2/3 vals-positief (ziet de ontkenning niet); handmatige lezing = 0/3 geponeerd. Human-pack gestaged in `round_014/human_review/`. Vervolg: de irrelevante cases als Gate-test terugvoeren (horen op score 0 te vallen vóór de revisie). Zie `round_014/`
+De minimale SSL-definitie is technisch aanwezig en wordt bewaakt:
 
-**Human-anker geland**: de blinde gpt-4.1 A/B-paren zijn gescoord door **4 beoordelaars, unaniem, en in lijn met de AI-oordelen op 10/10 items** (maintainer-gerapporteerd, 2026-06-19). Human SSL-win-rate 9/9 gap-scenario's (DNH tie); human-vs-AI raw agreement 1.0 (κ degenereert bij perfecte overeenstemming — de kop is de match over 4 onafhankelijke lezers, sterker dan round-006's single-reviewer κ 0.63). Dit verankert de payoff menselijk én bevestigt de AI-jury als trouwe proxy (versterkt retroactief rounds 010–012); samen met de semantische metric (+0.575) liggen nu drie onafhankelijke signalen op één lijn. **Eerlijke grens onveranderd**: scenario's + ground-truth door mij ontworpen → dit valideert *dat handelen op een geldige gap-seed een door mensen beter beoordeeld antwoord oplevert*, niet dat SSL niet-voor-de-hand-liggende gaps in het wild vindt (open-set track). n=10, één model, één sessie. Zie `round_013/human_review/RESULTS.md`
-- **weave-prompt + sterkere modellen (2026-06-19, round 012, gpt-4o-mini/gpt-4o/gpt-4.1)**: revisie-prompt herschreven om seeds vloeiend in te weven en het "Gevalideerde SSL-seeds"-label te verbieden; tokenbudget 220→400. **Label-leak nu 0/9 op alle drie de modellen** (ook de zwakste mini, die in round 011 nog dumpte) — seeds worden uitgelegd, niet geparrot; gpt-4.1 herstructureert zelfs het hele antwoord rond de gap. Do-no-harm-fix houdt (DNH ssl==baseline, 0 unsupported overal). **Belangrijkste bevinding: de deterministische `coverage()` stortte in naar 0.00 op alle drie** ondanks 22–23 promoted seeds en +64–73 woorden correcte inhoud — vs +0.35 in round 011 met de oude dump-prompt. De metric scoort `jaccard≥0.70` en vuurt dus alleen bij **letterlijke** herhaling van de gap-zinsnede; natuurlijk inweven parafraseert en de match verdwijnt. Conclusie: `coverage()` beloont parroting en bestraft goed schrijven — het mat nooit of de gap werd geadresseerd; de "+0.35" was deels een echo-artefact. De blinde lezer blijft sterk positief (gpt-4.1: 9/9 gap-scenario's correct ingeweven, 0 schade), maar de payoff leunt nu volledig op leesoordeel → menselijke anker + semantische metric zijn nu de beslissende vervolgstap. Zie `round_012/`
-- **payoff geschaald naar n=10 (2026-06-18, round 011, `openai:gpt-4o-mini`)**: experiment A uitgebreid van 3 naar 10 scenario's (9 gap-domeinen + 1 do-no-harm-controle). Deterministisch: baseline-coverage 0.10 → SSL 0.45 (**+0.35**), 19 promoted seeds, **0 unsupported**. Blinde AI-lezer: **8 SSL-wins / 2 ties / 0 losses** (8 van 9 gap-scenario's verbeterd; MODEL_A no-op want niets gepromoot), **nul derailments/feitelijke schade** — het klein-model-faalpatroon van round 008 keert niet terug. De DNH-controle legde een lek bloot (bij 0 promoted seeds plakte het model een lege "Gevalideerde SSL-seeds"-platitude erbij) → **gefixt**: de suite slaat de revisie nu over en houdt de baseline verbatim als er niets gepromoot is. Open warts: enkele wins plakken seeds als gelabelde lijst i.p.v. weven (prompt-leak); `coverage()` ondertelt schoon geïntegreerde seeds (MODEL_B 0.0, MODEL_C 0.25). **Eerlijke grens**: scenario's én ground-truth door mij ontworpen, AI-geoordeeld, één reviewer → sterk signaal dat *handelen op een geldige gap-seed betrouwbaar verbetert en geen schade doet*, geen onafhankelijke validatie dat SSL niet-voor-de-hand-liggende gaps in het wild vindt. Zie `round_011/`
-- **gap-3 head-to-head (2026-06-18, round 010, B→B′) — signaal teruggedraaid door echte embeddings**: `run-ssl-vs-rag` op gpt-4o-mini, query=gap (SSL-probe) vs query=vraag (RAG), gelijk contextbudget. Met de **speelgoed-128d hash** (B) leek de SSL-probe te winnen op SSLRAG_LAW (RAG haalde verkeerde chunks → non-antwoord; probe → correct). Met **echte embeddings** (B′, `text-embedding-3-small` 1536d, run 27790952137) verdwijnt dat: gewone RAG op de vraag haalt nu zélf de 3 juiste recht-chunks, `seed_only_chunk_ids = []`. De B-winst was dus een **retriever-artefact**, geen SSL-eigenschap. Op SSLRAG_IR blijft het probe-*mechanisme* echt (`seed_only=[labour]`) maar het ruilt `innovation` weg en het antwoord wordt niet beter. Blinde AI-lezer B′: **0 SSL-wins / 2**. Conclusie: een **fixture/meet-verdict, geen SSL-verdict** — de corpus kan geen gap stellen die orthogonaal is aan de vraag (de seeds zijn parafrases van ophaalbare chunks). Vervolg: een fixture waar de beslissende gap niet uit de vraag ophaalbaar is; en schaal vooral experiment A (payoff, retrieval-onafhankelijk). Zie `round_010/`
-- **visie-aanscherping (2026-06-14, `docs/research/vision-generative-seeds.md`)**: het doelbeeld is generatieve "wat had hier KUNNEN staan"-seeds (voorbij het RAG-plafond), niet alleen omissie-detectie. Gewicht is de as mogelijkheid→noodzaak: een "kunnen staan" wordt een "moeten staan" als het gewicht via de Gate stijgt; gewicht 0 maakt ambitie gratis en ruisvrij. Nog niet in de repo: generatieve seed-modus, operationele Retrieval Probe (SSL→RAG-brug), SSL-vs-RAG head-to-head, echte falsificatie, levende cross-turn schaduwlaag
-- modelinterne validatie: nog onderzoekswerk per 4.6 doc
+- een seed moet atomisch zijn;
+- brede of samengestelde seeds kunnen worden geweigerd of gesplitst;
+- `trace` en `weight` zijn formeel gescheiden;
+- `trace` bewaart aanwezigheid;
+- `weight` start op `0.0` en meet pas na promotie invloed;
+- TTL laat onherkende seeds vervallen;
+- TrTL houdt seeds levend wanneer nieuwe context ze herkent;
+- EXPIRED is terminaal;
+- promotie loopt via de Validation Gate.
 
-## Statusoverzicht per fase
+Dit is het verschil tussen een los benchmarkidee en een reproduceerbare kernarchitectuur.
 
-| Fase | Status | Korte duiding |
-|---|---|---|
-| Fase 0: detectie | First evidence (kwaliteitswaarschuwing) | Drie detectoren op main (v0.1/v0.2/v0.3); fixture-suites groen; round 004 mensgereviewd (acceptance 0.52), round 005 offset-12 mensgereviewd (acceptance 0.29, substantieprobleem); offset-0 + blind control gesloten via gedelegeerde AI-review (offset-0 0.185; control delta +0.219) |
-| Fase 1: multi-turn state | Partially implemented | Antwoordwinst is meetbaar op de benefit-suite (delta +0.92 op model-benefit, +0.80 op blind), maar de volledige A/B/C-conditievergelijking uit het testplan ontbreekt nog |
-| Fase 2: Validation Gate en probes | First evidence | Gate discrimineert correct op de uitgebreide adversarial fixture (PR #80, F1 1.0); probe-feedback lifecycle gevalideerd op 10 scenarios (PR #82); prompt-quality suite blijft naast de behavioral suite staan |
-| Fase 3: constellations | Planned / infrastructural | Bouwstenen bestaan, maar er is nog geen echte constellation-benchmark of clusterwaarde-evaluatie |
-| Fase 4: modelinterne test | Planned | Geen operationele evaluatielaag aanwezig |
+## Open-set seedkwaliteit
+
+De open-set lijn heeft echte signalen opgeleverd, maar blijft inhoudelijk gemengd.
+
+Belangrijke stand:
+
+- round 005 offset-12 gaf de eerste mensgereviewde Laag-C evidence: relevantie hoog, maar acceptance laag door trivialiteit, vaagheid en toetsbaarheidsproblemen;
+- latere gedelegeerde AI-review en modelruns bevestigden dat sterkere modelpaden de vorm kunnen verbeteren, maar niet automatisch de volledige substantieclaim dragen;
+- human-vs-AI agreement was bruikbaar genoeg om gedelegeerde reviews als proxy te gebruiken, mits duidelijk gelabeld.
+
+Conclusie:
+
+> Open-set detectie is niet leeg, maar ook niet definitief opgelost. De waarschuwing is niet dat SSL niets vindt, maar dat gevonden seeds vaak relevant maar te triviaal of te weinig toetsbaar kunnen zijn.
+
+## Adversarial Gate en veiligheid
+
+De adversarial Gate-lijn toont dat veiligheid vóór antwoordgeneratie moet zitten.
+
+Belangrijke stand:
+
+- de Gate is sterker dan trace-only-achtige baselines op de huidige adversarial fixture;
+- slechte of irrelevante seeds kunnen een sterk model nog steeds richting ruis sturen wanneer ze de revisie halen;
+- een capabel model is een redelijke backstop tegen valse feiten, maar niet tegen irrelevante seed-injectie;
+- daarom blijft `weight = 0` tot Gate-promotie een kernonderdeel van de doctrine.
+
+Conclusie:
+
+> De Gate/weightless-filtering is geen formaliteit, maar de veiligheidslaag die antwoordruis moet voorkomen.
+
+## Probe utility en payoff
+
+De payoff-lijn heeft drie belangrijke lessen opgeleverd:
+
+1. handelen op geldige seeds kan antwoorden verbeteren;
+2. kleine of zwakke modellen kunnen derailen in de revisiestap;
+3. capabele modellen kunnen seeds vloeiend gebruiken zonder unsupported additions, mits de prompt en do-no-harm-regel goed staan.
+
+De semantische coverage- en human-review-lijnen tonen dat lexicale coverage te grof was: goed geïntegreerde seeds worden vaak geparafraseerd en moeten semantisch of menselijk beoordeeld worden.
+
+## W9f cross-turn baseline
+
+W9f is de belangrijkste recente statuswijziging.
+
+De eerdere W1/W5 single-shot resultaten lieten zien dat een frontiermodel vaak zelf veel frames of gaps kan noemen. Dat zette SSL als externe single-shot detector onder druk.
+
+W9f verschuift de claim terug naar SSL's eigen sterke mechanisme:
+
+> wat nu nog geen antwoord is, kan later in de sessie antwoordruimte worden.
+
+W9f operationaliseert dit via:
+
+- echte `SSLManager`-lifecycle;
+- weightless seeds;
+- recurrence;
+- Gate-promotie;
+- TTL/TrTL;
+- cluster-based recurrence voor parafrastische herhaling;
+- representative-based promotie in plaats van clusterbrede overpromotie;
+- blind A/B-review-pack als kwaliteitscontrole.
+
+### W9f-follow-up baseline
+
+De follow-up baseline na PR #148 corrigeerde twee belangrijke punten:
+
+- centroid-weging en recurrence-telling zijn gescheiden;
+- representatives blijven levend wanneer recurrence via non-representative members binnenkomt.
+
+De release `w9f-follow-up-baseline` bevriest deze stand.
+
+De laatste review-artifact met blind A/B-pack bevatte 8 cross-turn payoff items, met gebalanceerde A/B-toewijzing:
+
+- `CONV_STARTUP`: 4 review-items;
+- `CONV_CITY`: 4 review-items;
+- `CONV_IR_SHORT`: 0 review-items;
+- SSL als A: 4;
+- SSL als B: 4.
+
+### Interpretatie van de blind review
+
+De blind review moet niet worden gelezen als klassieke model-vs-model benchmark.
+
+Zonder SSL zouden de SSL-gestuurde antwoordvarianten niet als optie hebben bestaan. De review beoordeelt dus of door SSL geopende antwoordruimte bruikbaar is, niet of GPT-4.1 in abstracto wordt verslagen.
+
+De review (round 022, 8 cross-turn items, twee reviewers, veilige drempels) liet zien:
+
+- **geen consensus**: de twee reviewers kozen op 7/8 items een andere winnaar (overeenstemming 1/8);
+- de SSL/seed-variant werd door Reviewer A 1/8 en door Reviewer B 8/8 geprefereerd — vrijwel perfecte inversie;
+- `CONV_CITY` was het meest gepolariseerd (Reviewer A seed 0/4, Reviewer B 4/4), niet het sterkste positieve signaal;
+- het enige consensus-item was het meest concrete (operationaliserende seed); waar de seed breedte toevoegde, splitste het oordeel;
+- de gemarkeerde ruis zat in *gevalideerde, promoted* seeds — een use-time-discipline-vraag, geen bewijs dat de levenscyclus niet werkt.
+
+Zie `benchmarks/open_review/rounds/round_022/human_review/`.
+
+### W9f-besluit
+
+Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* is een baseline-kandidaat, niet afgesloten (round 022 kwam gespleten terug).
+
+Er komt geen nieuwe recurrence/promotion-tuning om te bewijzen dat het mechanisme bestaat — dat vuurt. De openstaande stap is use-time seed-discipline: wanneer mag een promoted seed het antwoord sturen?
 
 ## Wat de repo vandaag hard aantoont
 
-### 1. De minimale SSL-definitie is technisch aanwezig
-
-De repo toont overtuigend aan dat de volgende mechanische kern bestaat:
-
-- een seed moet atomisch zijn;
-- brede seeds kunnen worden geweigerd of gesplitst;
-- `trace` en `weight` zijn formeel gescheiden;
-- `weight` start op `0.0`;
-- promotie loopt via een Validation Gate;
-- promoted seeds kunnen vervolglogica sturen.
-
-Dat is belangrijk, omdat dit het verschil markeert tussen een los benchmarkidee en een reproduceerbare kernarchitectuur.
-
-### 2. Er is een bruikbare regressielaag rond scenario-gedreven detectie
-
-De repo heeft een kleine maar nette regressielaag:
-
-- Gap-Test Suite;
-- false-positive suite;
-- benefit-suite;
-- blind benchmark smoke;
-- retrieval- en SSOT-smokes.
-
-Deze laag is goed genoeg om regressies snel zichtbaar te maken en om de kernlogica van SSL stabiel te houden tijdens refactors.
-
-### 3. Blinde labelscheiding is serieus genomen
-
-De repo doet meer dan alleen scores uitrekenen. Ze bewaakt ook dat private labels niet in de detectielaag terechtkomen. Dat is methodologisch een sterk signaal.
-
-### 4. Reproduceerbare, goedkope CI-runs zijn bewust ontworpen
-
-De fixture-backends en deterministische paden maken de repo snel, goedkoop en redelijk stabiel. Voor engineeringkwaliteit is dat een pluspunt.
-
-## Wat gedeeltelijk staat, maar nog geen hard bewijs is
-
-## Fase 0: detectie
-
-### Wat staat
-
-- een vaste Gap-Test Suite met drie scenario's;
-- score 0, 1, 2;
-- atomische seedregels;
-- samenvattende metrics zoals scenario score en atomische hits.
-
-### Wat nog ontbreekt ten opzichte van de docs
-
-- expliciete precision;
-- expliciete recall;
-- expliciete F1 of `ΔF1` als primaire metric;
-- overtuigend bewijs buiten de kleine vaste suite;
-- loskoppeling van domein-priors in de detectielaag.
-
-### Statusoordeel
-
-Goed als kleine benchmark. Nog niet volledig als algemene detectievalidatie.
-
-## Fase 1: multi-turn state
-
-### Wat staat
-
-- benefit-suite voor antwoordverbetering;
-- model benefit-suite met fixture en optionele `hf-transformers` route;
-- gap coverage en unsupported additions;
-- blind review items voor menselijke vergelijking van antwoorden.
-
-### Wat nog ontbreekt ten opzichte van de docs
-
-- de volledige A/B/C-opzet uit het testplan:
-  - geen state;
-  - ruwe context;
-  - SSL-state;
-- expliciete metric voor turn-to-detection;
-- expliciete metric voor duplicate seeds;
-- bewijs dat SSL-state compacter of scherper werkt dan ruwe context.
-
-### Statusoordeel
-
-Veelbelovend, maar nog geen sluitende fase-1-validatie.
-
-## Fase 2: Validation Gate en probes
-
-### Wat staat
-
-- formele Validation Gate;
-- falsificatie- en contradiction-mechaniek;
-- SSOT-smoke die laat zien dat externe evidence promotie kan ondersteunen;
-- false-positive suite;
-- retrieval- en modelgerelateerde evaluatiepaden.
-
-### Wat nog ontbreekt ten opzichte van de docs
-
-- een harde vergelijking tussen de huidige Gate en zwakkere promotieregels;
-- echte adversarial false-positive evaluatie;
-- zelfstandige meting van Socratische probekwaliteit;
-- zelfstandige meting van Retrieval Probe-informatiewinst;
-- zelfstandige meting van dialectische kwaliteit als falsificatiemechaniek.
-
-### Belangrijke methodologische beperking
-
-De huidige false-positive suite laat promoted false positives feitelijk op nul eindigen zonder de Gate echt zwaar te belasten. Dat maakt de claim over ruisfiltering zwakker dan de documentatie soms suggereert.
-
-### Statusoordeel
-
-Mechaniek aanwezig, maar bewijs nog te vriendelijk en te smal.
-
-## Fase 3: constellations
-
-### Wat staat
-
-- de manager kan constellations vormen uit promoted seeds;
-- retrieval- en vectorstore-infrastructuur bestaat;
-- SSOT- en retrieval-benchmarks zijn aanwezig.
-
-### Wat nog ontbreekt
-
-- een echte constellation-benchmark;
-- vergelijking tussen losse seed-query en cluster-query;
-- metric voor clusterlabelkwaliteit;
-- meting van voorspelde nieuwe relevante seeds vanuit clusters.
-
-### Statusoordeel
-
-Architectonisch voorbereid. Nog niet experimenteel bewezen.
-
-## Fase 4: modelinterne test
-
-### Wat staat
-
-- conceptuele documentatie;
-- theoretische positionering;
-- verwijzing naar latere open-source modelanalyse.
-
-### Wat ontbreekt
-
-- activation extraction;
-- sparse classifier-evaluatie;
-- intervention testing;
-- correlatieanalyse tussen externe `weight` en interne signalen.
-
-### Statusoordeel
-
-Nog onderzoekswerk. Niet operationeel aanwezig in de repo.
-
-## Evaluatielagen buiten de fasen
-
-## Regressielaag
-
-Status: Strong
-
-Dit is de sterkste laag van de repo. Als doel is: regressies voorkomen, mechaniek bewaken, CI betrouwbaar houden, dan is de repo al behoorlijk volwassen.
-
-## Kleine benchmarkvalidatie
-
-Status: Usable
-
-Dit is een bruikbare tussenlaag: goed voor vaste cases, te smal voor brede claims.
-
-## Open-world evaluatie
-
-Status: First evidence (kwaliteitswaarschuwing)
-
-De drie detectiepaden zijn aanwezig op main: `open_set_candidate_adapter` v0.1 (regex baseline, default voor backwards compatibility), v0.2 text-grounded baseline, en v0.3 taalmodel-detector via de hf-transformers backend. De v0.3 detector voldoet aan de 4.6 één-zinsclaim wanneer met een echt model gedraaid. Workflow dispatch ondersteunt alle drie via `--detector` en `--model-backend`.
-
-Round-voortgang: round 001 is een gepauzeerde infrastructure baseline. Round 004 (Qwen2.5-3B, v0.3d) is volledig mensgereviewd door twee beoordelaars (acceptance 0.52, claim-vs-gap dominant). Round 005 offset-12 (v0.3e, Qwen2.5-3B, 12 `ag_news_test` Sci/Tech-items) is sinds PR #116 de **eerste geland Laag-C evidence**: 41 unieke seeds, twee reviewers, unaniem, acceptance **0.29**. Lees dat per criterium: relevance 0.98 (de detector blijft on-topic), maar non_triviality en follow_up_utility beide 0.29 — v0.3e heeft de vorm gerepareerd (claim-vs-gap 30 → 0) maar niet de substantie. Dominante afwijsredenen: `style_not_gap` (20), `not_testable` (18, waarvan 9 mechanisch aanwijsbaar als afgekapte zinnen — zie de prescreen-code `truncated`), `too_vague` (10).
-
-Round 005 is inmiddels gesloten op alle drie de armen. De offset-0 batch en de blinde model-vs-baseline control zijn afgerond als **gedelegeerde AI-review** (één reviewer `reviewer_ai_claude`, expliciet door de maintainer gedelegeerd, 98% accept-agreement met de menselijke offset-12 batch; nadrukkelijk gelabeld als AI, niet als mens — zie `benchmarks/open_review/rounds/round_005/ai_review/`). Uitkomsten: offset-0 acceptance **0.185** (relevance 0.91 maar testability 0.30, non_triviality 0.19 — zelfde patroon als de menselijke batch); blinde control model **0.219** vs baseline `adapter_v1` **0.0** (delta +0.219, model accepted-atomiciteit 1.0). De menselijke offset-12 batch blijft de gezaghebbende Laag-C evidence; de AI-armen zijn de secundaire robuustheidscheck en een eerste gelabelde lezing van offset-0.
-
-Round 006 batch 1 (2026-06-10, Phi-3.5-mini-instruct, v0.3e ongewijzigd, zelfde 12 bronitems als round 005 offset-0) bevestigt de model-hefboom in de zuivere zelfde-reviewer-vergelijking (AI vs AI): acceptance 0.185 → **0.50**, non_triviality 0.19 → **0.50**, atomiciteit 1.00, en nul truncaties/duplicaten/stapelingen in de prescreen. Kanttekeningen: de review is gedelegeerde AI (geen mens, geen Laag-C claim), Phi negeert het absentie-scaffold (vorm-afwijking, handmatig geverifieerd geen feit-beweringen; maintainer-GO op de poort), en de resterende fouten zijn vage impactvragen en false gaps op aanwezige cijfers. De raw run-artifacts (60 kandidaten; manager-poort weigerde er 2, prescreen `not_atomic` bevestigt onafhankelijk dezelfde 2) zijn integraal gecommit. De scaffold-kwestie is na round 006 opgelost in **prompt v0.3g**: de lacune-label-zinsnede (de canonieke 4.5-vorm, die de few-shot voorbeelden al toonden) is nu ook de regel; absentiezinnen blijven toegestaan; de prescreen-`claim_vs_gap` detecteert sindsdien echte beweringen (finiet werkwoord in de hoofdzin) in plaats van een verplichte marker — onder dat contract zijn beide Phi-batches claim-vrij en blijft de round-004 claimsignatuur (24) staan. Zie `benchmarks/open_review/rounds/round_006/batch1/`.
-
-Dit is precies waarvoor de lagenscheiding bestaat: de eerste open-set meting is negatief uitgevallen en dat wordt gerapporteerd als meting, niet weggemiddeld. De juiste vervolgstap is de detector verbeteren (sterker model per #81, afkapprobleem oplossen) en opnieuw meten — niet het criterium verzachten.
-
-## Adversarial Gate-evaluatie
-
-Status: First evidence
-
-PR #80 maakt van de adversarial Gate suite een echte discrimination-test in plaats van een refusal-only suite. De fixture bevat nu 10 scenarios met 21 candidates verdeeld over zes categorieën (volledig antwoord, stijl-zonder-gap, verleidelijke irrelevante, mixed positief-en-lure, near-duplicate paraphrase, plausibele wrong-domain) plus positieve controles met en zonder evidence. Drie baselines worden vergeleken: `current_gate`, `trace_only`, `trace_no_contradiction_check`. Resultaat: 21/21 correct outcomes, precision 1.0, recall 1.0 (op cases met evidence), F1 1.0, baseline-only blocked 16 (wat zwakkere baselines wel zouden doorlaten). Een refusal-only Gate zou nu falen met recall 0.
-
-Beperking: 21 candidates blijft klein en de contradiction-check is lexicaal. Bredere adversarial sets en niet-lexicale contradiction-detectie blijven open werk.
-
-## Probe utility
-
-Status: First evidence (behavioral + prompt-quality)
-
-Twee complementaire suites:
-
-- `ssl45_probe_utility_suite` (bestaand): meet prompt-kwaliteit van SSL-guided follow-up, retrieval en dialectiek versus baseline. Antwoordt op de 4.6 vraag "betere vervolgvragen / retrieval / falsificatie".
-- `probe_feedback_behavior_suite` (PR #82): meet of de feedback-loop in `SSLManager.apply_probe_feedback` zich gedraagt zoals de 4.6 spec claimt. 10 scenarios over 8 lifecycle-categorieën (strengthen, weaken, clamp upper, clamp lower, demotion PROMOTED -> ACTIVE, status_block voor DORMANT en EXPIRED, neutral no-op, promotion-block dat reward alleen niet promoteert, mixed). Resultaat: 10/10 correct outcomes, alle 8 categorieën pass. Bevat een expliciete regression-guard test die fixture-mutatie detecteert.
-
-Beperking: de behavioral suite test mechanism, niet usefulness in echte workflows. Dat blijft de taak van de open-set rounds met menselijke review.
-
-## Reproduceerbaarheid
-
-Status: Partial
-
-De intentie is sterk en de documentatie benoemt de juiste artefacten. Tegelijk zie ik nog niet een volledige operationele runlog-laag die het hele faseplan afdekt zoals in `07_reproduceerbaarheid.md` wordt gevraagd.
+De repo toont vandaag overtuigend aan dat:
+
+1. de SSL-levenscyclus technisch aanwezig is;
+2. `trace` en `weight` gescheiden blijven;
+3. TTL/TrTL reactivatie en verval operationeel maken;
+4. de Gate sterker is dan zwakkere promotieregels op de huidige adversarial set;
+5. probe-feedback lifecycle-effecten heeft;
+6. handelen op geldige seeds bij capabele modellen antwoordruimte kan verbeteren;
+7. cross-turn surfaced seeds in W9f extra antwoordruimte openen die de history-baseline niet zelf opwerpt (de *kwaliteit* daarvan is reviewer-afhankelijk — round 022).
+
+## Wat de repo niet moet claimen
+
+Niet claimen:
+
+- SSL maakt elk antwoord beter;
+- SSL verslaat GPT-4.1 algemeen;
+- elke promoted seed is waardevol;
+- open-set seedkwaliteit is volledig opgelost;
+- scenario-onafhankelijkheid is al hard bewezen;
+- modelinterne validatie is operationeel.
 
 ## Praktische betekenis voor repo-beslissingen
 
-De repo moet vanaf hier twee dingen tegelijk doen:
+De repo moet vanaf hier drie dingen doen:
 
-1. de huidige regressielaag behouden, want die is waardevol;
-2. de hoofdclaim verplaatsen naar sterkere evaluatielagen.
+1. de regressie- en lifecyclelaag behouden;
+2. het W9f-*mechanisme* niet opnieuw bewijzen (dat vuurt), maar de payoff-*discipline* aanpakken: wanneer mag een promoted seed sturen;
+3. de volgende onderzoeksstap richten op use-time seed-discipline én transfer van de doctrine.
 
 Dat betekent concreet:
 
-- scenario-suites niet weggooien;
-- scenario-suites herlabelen als regressie en kleine benchmarkvalidatie;
-- nieuwe evaluatielagen toevoegen voor open-set kwaliteit, adversarial false positives, probe utility en domeintransfer;
-- infrastructuur en rapportage consolideren zonder ongelijke bewijssoorten inhoudelijk samen te trekken.
-
-## Wat nu niet meer impliciet mag blijven
-
-Deze uitspraken moeten in de repo expliciet worden gemaakt:
-
-- de standaard CI bewijst vooral de meetketen, niet algemene SSL-prestatie;
-- fixture-runs zijn technische controle, geen eindbewijs;
-- fase 3 en 4 zijn nog niet experimenteel afgedekt;
-- scenario-scores zijn bruikbaar, maar niet voldoende als eindclaim;
-- open-set, adversarial en behavioral evaluatie horen niet te verdwijnen in één totaalscore.
+- scenario-suites blijven nuttig als regressie;
+- blind A/B blijft nuttig als kwaliteitscontrole op antwoordruimte;
+- seed-vernauwing en seed-ruis moeten expliciet als foutklasse blijven staan;
+- W10 moet meten of dezelfde lifecycle buiten de huidige scenario's werkt.
 
 ## Aanbevolen volgende documenten
 
-Na dit document horen twee andere documenten leidend te worden:
+Leidend na deze update:
 
-- `docs/research/scenario-independence-roadmap.md`
-- `docs/research/evaluation-matrix.md`
-
-Samen vormen ze:
-
-- huidige status;
-- gewenst doelbeeld;
-- concrete evaluatiestructuur.
+- `docs/00_shadow_seed_learning_4_6.md` — canonieke theorie;
+- `docs/research/w9f-evaluatieconclusie.md` — W9f-besluit;
+- `docs/research/evaluation-matrix.md` — laagstatus;
+- `docs/research/scenario-independence-roadmap.md` — overgang naar transfer.
 
 ## Korte eindkwalificatie
 
 De repo is vandaag:
 
-> een sterke en serieuze SSL-benchmarkharness met goede mechanische discipline, met eerste echte evidence op de adversarial Gate (D) en probe-feedback (E) lagen, en een eerste echt mensgereviewde open-set batch (C) die een eerlijke kwaliteitswaarschuwing oplevert: de detector vindt relevante maar overwegend triviale afwezigheden (acceptance 0.29). De volgende stap op C is detectorverbetering plus herhaalmeting, niet criteriumversoepeling.
+> een sterke SSL-researchharness met bewezen lifecycle-mechaniek, eerste echte open-set en adversarial evidence, en een bevestigd W9f cross-turn *mechanisme* op veilige drempels. De W9f-*payoff* is een baseline-kandidaat — de eerste blinde review op veilige drempels kwam gespleten terug (round 022). De brede claim blijft begrensd: de volgende stap is use-time seed-discipline (potentieel-vs-must) én doctrine-transfer (W10), niet nog meer bewijs dat het mechanisme bestaat.

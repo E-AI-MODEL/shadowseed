@@ -1,14 +1,9 @@
 # Current Stack Status
 
 > Status: current
-> Date: 2026-05-22
+> Date: 2026-06-30
 > Evidence layer: Repository stack snapshot
 > Current source: yes
-
-
-Status: current as of 2026-05-10
-Base commit: `087dc7f322a680d6e23b4e657ecc85966c98b3f4`
-Related issue: #36
 
 ## Purpose
 
@@ -33,26 +28,26 @@ The fixed runtime dependency set is intentionally small:
 
 Optional extras carry heavier dependencies:
 
-- `test`: `pytest>=8.0`
+- `test`: `pytest`, `pytest-cov`, `ruff`
 - `models`: `sentence-transformers`, `transformers`, `torch`
+- `openai`: `openai`
 - `paper`: `pymupdf`
 - `vector-faiss`: `faiss-cpu`
 - `vector-chroma`: `chromadb`
 - `vector`: bundles FAISS and Chroma extras
-- `dev`: bundles test, models, vector and paper extras
+- `dev`: bundles test, models, vector, paper and openai extras
 
 ## Current quality tooling
 
 Current state:
 
 - pytest is configured and used in CI.
-- No linter is configured yet.
-- No formatter is configured yet.
+- ruff check is configured and runs in CI.
+- pytest-cov is configured and runs in CI.
+- coverage XML is uploaded from the Python 3.11 job.
+- No formatter gate is configured yet.
 - No type checker is configured yet.
-- No coverage tooling is configured yet.
 - No pre-commit config is present.
-
-The next planned quality step is issue #38: add a minimal `ruff check` gate without formatting or typing changes.
 
 ## Standard CI baseline
 
@@ -62,23 +57,23 @@ It runs on:
 
 - `push`
 - `pull_request`
+- `workflow_dispatch`
 
-The pytest job runs on:
+The codecheck job runs on:
 
 - Python 3.10
 - Python 3.11
 
-The current codecheck installs `.[test]` and runs:
+The codecheck installs `.[test]` and runs:
 
 ```bash
-python -m pytest -q
+python -m ruff check src tests
+python -m pytest -q --cov=shadowseed --cov-report=term-missing --cov-report=xml
 ```
-
-No lint command is currently part of this workflow.
 
 ## Standard benchmark and analysis routes
 
-The standard CI workflow also runs these benchmark or reporting jobs after pytest:
+The standard CI workflow also runs benchmark or reporting jobs after pytest on `main`, including:
 
 - gap suite: `python -m shadowseed.cli run-gap-suite`
 - false-positive suite: `python -m shadowseed.cli run-false-positive-suite`
@@ -92,6 +87,34 @@ The standard CI workflow also runs these benchmark or reporting jobs after pytes
 - repeat-test matrix for different gap-suite turn counts
 
 The analysis job rebuilds a provenance-safe `results/` tree from downloaded artifacts through `shadowseed.analysis.artifact_snapshot` before running `analyze-results`.
+
+## Manual OpenAI benefit workflow
+
+The manual OpenAI workflow is `.github/workflows/openai-benefit.yml`.
+
+It is triggered with `workflow_dispatch` and uses:
+
+- `OPENAI_API_KEY`
+- `contents: read`
+
+Supported experiments:
+
+- `model-benefit`
+- `ssl-vs-rag`
+- `adversarial-payoff`
+- `wild-payoff`
+- `generative-payoff`
+- `ssl-session`
+
+For `ssl-session`, the workflow now also generates a blind A/B review pack from `results/ssl_session_suite.json`:
+
+- `results/blind_ab_review/w9f_blind_ab_review_items.json`
+- `results/blind_ab_review/w9f_blind_ab_answer_key.json`
+- `results/blind_ab_review/w9f_blind_ab_review_form.md`
+- `results/blind_ab_review/w9f_blind_ab_scoring_template.csv`
+- `results/blind_ab_review/w9f_blind_ab_summary.json`
+
+These files are uploaded in the same `ssl-openai-ssl-session-<model>` artifact. The answer key is for post-review unblinding only.
 
 ## Manual open-set workflow
 
@@ -130,7 +153,7 @@ This means open-set metrics stay `n/a` until the manual HF workflow has produced
 
 ## Current CLI defaults worth preserving
 
-Important defaults after the recent alignment work:
+Important defaults:
 
 - `summarize-open-set-seed-review --output`: `results/open_set_seed_review_summary.json`
 - `summarize-open-set-seed-review --disagreements-output`: `results/open_review/open_set_disagreements.json`
@@ -140,21 +163,26 @@ Important defaults after the recent alignment work:
 
 The AbsenceBench default is intentionally not `results/absencebench_smoke.json`, because the result writer places it under `benchmarks/results/`.
 
-## Backlog status
+## W9f baseline state
 
-The repository roadmap is now in:
+The W9f cross-turn *mechanism* is confirmed at safe doctrine thresholds (recurrence -> Gate -> surfacing fires reproducibly). The W9f *payoff quality* is a baseline candidate, not a closed result: the first blind review at safe thresholds came back split (round 022, two reviewers disagreed on 7/8).
 
-- `docs/research/roadmap-shadowseed-stabilization.md`
+Important repo state:
 
-Issue #34 is the parent backlog issue.
+- PR #148 merged the follow-up cluster-liveness fixes.
+- Release/tag `w9f-follow-up-baseline` freezes the mechanism state.
+- PR #150 merged automatic blind A/B review-pack generation for `ssl-session` runs.
+- Round 022 ran the first blind A/B review at safe thresholds; see `benchmarks/open_review/rounds/round_022/human_review/`.
 
-Issue #35 was closed after verifying that known acute open-set artifact drift from PR #31 and PR #32 was resolved.
+## Backlog direction
 
-Next planned steps:
+The next research direction is not more mechanism proof (it fires), but use-time seed-discipline plus W10 doctrine-transfer:
 
-1. issue #38: add a minimal `ruff check` quality gate
-2. issue #39: make artifact contracts explicit
-3. issue #40: create a workflow map
+- when may a promoted seed steer the answer (steer on sharpening, stay dormant on narrowing);
+- additional domains;
+- additional task types;
+- model transfer;
+- explicit seed-effect labels for help, no difference, ruis and vernauwing.
 
 ## Known limitations
 
@@ -164,6 +192,4 @@ Do not treat counts such as number of tests, workflow runs or wiki pages as stab
 
 ## Interpretation
 
-`shadowseed` is currently best understood as a Python research harness with a small runtime core, many benchmark and evidence routes, and a growing need for explicit artifact and workflow contracts.
-
-The next engineering step should be small: add a minimal lint gate without changing benchmark behavior.
+`shadowseed` is currently best understood as a Python SSL research harness with a strong lifecycle core, explicit artifact routes, and a confirmed W9f cross-turn *mechanism* at safe thresholds whose *payoff quality* is still reviewer-dependent (round 022). The next step is use-time seed-discipline plus doctrine transfer, not another proof loop around the mechanism.
