@@ -2,7 +2,7 @@
 """Build a blind A/B review pack from an ssl_session_suite.json artifact.
 
 The script extracts only cross-turn payoff events from the SSL session suite,
-randomizes whether baseline or SSL is shown as answer A, and writes:
+balances whether baseline or SSL is shown as answer A, and writes:
 
 - w9f_blind_ab_review_items.json: blinded review items for the reviewer
 - w9f_blind_ab_answer_key.json: hidden answer key for analysis
@@ -39,73 +39,102 @@ def _item_id(conversation_id: str, turn: dict[str, Any], index: int) -> str:
     return f"{conversation_id}-t{turn_no:02d}-{index:02d}"
 
 
-def build_review_pack(payload: dict[str, Any], *, seed: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    rng = random.Random(seed)
-    review_items: list[dict[str, Any]] = []
-    answer_key: list[dict[str, Any]] = []
+def _balanced_ssl_a_assignments(count: int, *, seed: int) -> list[bool]:
+    """Return a reproducible, near-balanced SSL-as-A assignment list.
 
-    global_index = 1
+    A plain stream of random bits can produce a long prefix with the same value
+    for small review packs. The W9f pack has only nine payoff items, so that
+    can accidentally put every SSL answer on the same side. Instead we build a
+    balanced bag first and shuffle it reproducibly.
+    """
+    if count <= 0:
+        return []
+
+    rng = random.Random(seed)
+    ssl_a_count = count // 2
+    if count % 2:
+        ssl_a_count += rng.randrange(2)
+    assignments = [True] * ssl_a_count + [False] * (count - ssl_a_count)
+    rng.shuffle(assignments)
+    return assignments
+
+
+def _cross_turn_candidates(payload: dict[str, Any]) -> list[tuple[str, str, dict[str, Any]]]:
+    candidates: list[tuple[str, str, dict[str, Any]]] = []
     for conv in payload.get("conversations", []):
         conversation_id = _safe_text(conv.get("conversation_id") or conv.get("id") or "conversation")
         domain = _safe_text(conv.get("domain"))
         for turn in conv.get("turns", []):
             if not turn.get("is_cross_turn_payoff"):
                 continue
-
             baseline_answer = _safe_text(turn.get("baseline_answer"))
             ssl_answer = _safe_text(turn.get("ssl_answer"))
             if not baseline_answer or not ssl_answer:
                 continue
+            candidates.append((conversation_id, domain, turn))
+    return candidates
 
-            ssl_is_a = bool(rng.getrandbits(1))
-            answer_a = ssl_answer if ssl_is_a else baseline_answer
-            answer_b = baseline_answer if ssl_is_a else ssl_answer
-            item_id = _item_id(conversation_id, turn, global_index)
 
-            surfaced_seeds = list(turn.get("surfaced_cross_turn_seeds") or [])
-            promoted_seeds = list(turn.get("promoted_seeds") or turn.get("promoted_this_turn") or [])
+def build_review_pack(payload: dict[str, Any], *, seed: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    review_items: list[dict[str, Any]] = []
+    answer_key: list[dict[str, Any]] = []
 
-            review_items.append(
-                {
-                    "item_id": item_id,
-                    "conversation_id": conversation_id,
-                    "domain": domain,
-                    "turn": _turn_number(turn),
-                    "question": _safe_text(turn.get("question")),
-                    "answer_A": answer_a,
-                    "answer_B": answer_b,
-                    "post_choice_seed_context": {
-                        "surfaced_cross_turn_seeds": surfaced_seeds,
-                        "promoted_seeds_this_turn": promoted_seeds,
-                    },
-                    "review": {
-                        "winner": "",  # A, B, or tie
-                        "scores": {
-                            "content_completeness": {"A": "", "B": ""},
-                            "question_relevance": {"A": "", "B": ""},
-                            "specificity_sharpness": {"A": "", "B": ""},
-                            "no_noise_or_hallucinated_relevance": {"A": "", "B": ""},
-                            "usefulness": {"A": "", "B": ""},
-                        },
-                        "motivation": "",
-                        "seed_effect_after_choice": "",  # clear_help, some_help, no_difference, noise
-                        "noise_or_hallucinated_relevance": "",  # yes/no
-                    },
-                }
-            )
-            answer_key.append(
-                {
-                    "item_id": item_id,
-                    "conversation_id": conversation_id,
-                    "turn": _turn_number(turn),
-                    "A": "ssl" if ssl_is_a else "baseline",
-                    "B": "baseline" if ssl_is_a else "ssl",
-                    "ssl_answer_key": "A" if ssl_is_a else "B",
-                    "baseline_answer_key": "B" if ssl_is_a else "A",
+    candidates = _cross_turn_candidates(payload)
+    assignments = _balanced_ssl_a_assignments(len(candidates), seed=seed)
+
+    for global_index, ((conversation_id, domain, turn), ssl_is_a) in enumerate(
+        zip(candidates, assignments),
+        start=1,
+    ):
+        baseline_answer = _safe_text(turn.get("baseline_answer"))
+        ssl_answer = _safe_text(turn.get("ssl_answer"))
+        answer_a = ssl_answer if ssl_is_a else baseline_answer
+        answer_b = baseline_answer if ssl_is_a else ssl_answer
+        item_id = _item_id(conversation_id, turn, global_index)
+
+        surfaced_seeds = list(turn.get("surfaced_cross_turn_seeds") or [])
+        promoted_seeds = list(turn.get("promoted_seeds") or turn.get("promoted_this_turn") or [])
+
+        review_items.append(
+            {
+                "item_id": item_id,
+                "conversation_id": conversation_id,
+                "domain": domain,
+                "turn": _turn_number(turn),
+                "question": _safe_text(turn.get("question")),
+                "answer_A": answer_a,
+                "answer_B": answer_b,
+                "post_choice_seed_context": {
                     "surfaced_cross_turn_seeds": surfaced_seeds,
-                }
-            )
-            global_index += 1
+                    "promoted_seeds_this_turn": promoted_seeds,
+                },
+                "review": {
+                    "winner": "",  # A, B, or tie
+                    "scores": {
+                        "content_completeness": {"A": "", "B": ""},
+                        "question_relevance": {"A": "", "B": ""},
+                        "specificity_sharpness": {"A": "", "B": ""},
+                        "no_noise_or_hallucinated_relevance": {"A": "", "B": ""},
+                        "usefulness": {"A": "", "B": ""},
+                    },
+                    "motivation": "",
+                    "seed_effect_after_choice": "",  # clear_help, some_help, no_difference, noise
+                    "noise_or_hallucinated_relevance": "",  # yes/no
+                },
+            }
+        )
+        answer_key.append(
+            {
+                "item_id": item_id,
+                "conversation_id": conversation_id,
+                "turn": _turn_number(turn),
+                "A": "ssl" if ssl_is_a else "baseline",
+                "B": "baseline" if ssl_is_a else "ssl",
+                "ssl_answer_key": "A" if ssl_is_a else "B",
+                "baseline_answer_key": "B" if ssl_is_a else "A",
+                "surfaced_cross_turn_seeds": surfaced_seeds,
+            }
+        )
 
     return review_items, answer_key
 
@@ -247,7 +276,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True, help="Path to ssl_session_suite.json")
     parser.add_argument("--output-dir", required=True, help="Directory for generated review files")
-    parser.add_argument("--seed", type=int, default=45, help="Randomization seed for A/B assignment")
+    parser.add_argument("--seed", type=int, default=45, help="Randomization seed for balanced A/B assignment")
     parser.add_argument("--title", default="W9f blind A/B review", help="Review form title")
     args = parser.parse_args()
 
