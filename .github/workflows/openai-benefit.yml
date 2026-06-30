@@ -181,6 +181,59 @@ jobs:
             $EXTRA \
             --output results/ssl_session_suite.json
 
+      - name: Generate blind A/B review pack
+        if: ${{ inputs.experiment == 'ssl-session' }}
+        run: |
+          python scripts/make_blind_ab_review.py \
+            --input results/ssl_session_suite.json \
+            --output-dir results/blind_ab_review \
+            --seed 45 \
+            --title "W9f blind A/B review"
+
+      - name: Add blind A/B review summary
+        if: ${{ inputs.experiment == 'ssl-session' }}
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+
+          summary_path = Path("results/blind_ab_review/w9f_blind_ab_summary.json")
+          summary = json.loads(summary_path.read_text(encoding="utf-8"))
+          source = summary.get("source_summary", {})
+          by_conv = summary.get("items_by_conversation", {})
+          dist = summary.get("ssl_answer_distribution", {})
+
+          print("## Blind A/B review pack")
+          print("")
+          print(f"Items: `{summary.get('blind_review_item_count', 0)}`")
+          print("")
+          print("### Source summary")
+          for key in [
+              "artifact",
+              "backend",
+              "detector",
+              "conversation_count",
+              "cross_turn_payoff_events",
+              "promoted_seed_count",
+          ]:
+              if key in source:
+                  print(f"- {key}: `{source[key]}`")
+          print("")
+          print("### Items by conversation")
+          for conv, count in sorted(by_conv.items()):
+              print(f"- `{conv}`: `{count}`")
+          print("")
+          print("### SSL answer distribution")
+          print(f"- A: `{dist.get('A', 0)}`")
+          print(f"- B: `{dist.get('B', 0)}`")
+          print("")
+          print("Artifacts:")
+          print("- `w9f_blind_ab_review_form.md`")
+          print("- `w9f_blind_ab_review_items.json`")
+          print("- `w9f_blind_ab_scoring_template.csv`")
+          print("- `w9f_blind_ab_answer_key.json` (do not show to reviewer before scoring)")
+          PY
+
       - name: Analyze results
         if: ${{ inputs.experiment == 'model-benefit' }}
         run: python -m shadowseed.cli analyze-results || true
@@ -242,4 +295,9 @@ jobs:
             results/wild_payoff_suite.json
             results/generative_payoff_suite.json
             results/ssl_session_suite.json
+            results/blind_ab_review/w9f_blind_ab_review_items.json
+            results/blind_ab_review/w9f_blind_ab_answer_key.json
+            results/blind_ab_review/w9f_blind_ab_review_form.md
+            results/blind_ab_review/w9f_blind_ab_scoring_template.csv
+            results/blind_ab_review/w9f_blind_ab_summary.json
           if-no-files-found: warn
