@@ -8,7 +8,37 @@ from pathlib import Path
 import numpy as np
 
 from shadowseed.benchmark import ssl_session_suite as sess
-from shadowseed.benchmark.ssl_session_suite import build_chat_prompt, run_ssl_session
+from shadowseed.benchmark.ssl_session_suite import (
+    build_chat_prompt,
+    run_ssl_session,
+    select_cross_turn_seeds,
+)
+
+
+def test_select_cross_turn_seeds_ranks_and_caps():
+    # round 023 use-time discipline: rank by similarity desc, keep top_k
+    cands = [(0.4, "a", "A"), (0.9, "b", "B"), (0.6, "c", "C")]
+    assert [t for _s, _i, t in select_cross_turn_seeds(cands, 2)] == ["B", "C"]
+    assert [t for _s, _i, t in select_cross_turn_seeds(cands, -1)] == ["B", "C", "A"]  # no cap
+    assert select_cross_turn_seeds(cands, 0) == []  # nothing steers
+
+
+def test_chat_prompt_is_potential_not_must():
+    p = build_chat_prompt([("Q1", "A1")], "Q2", ["Een meegedragen invalshoek."])
+    assert "Een meegedragen invalshoek." in p
+    # potential-not-must: may include only if it sharpens, may be dropped if it narrows
+    assert "aanscherpen" in p and "vernauwen" in p
+    assert "Betrek daarbij expliciet" not in p  # the old hard must-instruction is gone
+
+
+def test_surface_settings_recorded(tmp_path: Path):
+    out = tmp_path / "s.json"
+    run_ssl_session(
+        "src/shadowseed/data/ssl_session_suite.json", str(out), backend="fixture", surface_top_k=1
+    )
+    appl = json.loads(out.read_text(encoding="utf-8"))["conversations"][0]["applied_thresholds"]
+    assert appl["surface_top_k"] == 1
+    assert "surface_threshold" in appl
 
 
 def test_fixture_smoke_runs(tmp_path: Path):

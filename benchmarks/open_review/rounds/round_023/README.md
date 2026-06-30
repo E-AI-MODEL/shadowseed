@@ -1,0 +1,65 @@
+# Round 023 — W9f use-time seed-discipline: potentieel, geen must
+
+> **Status: mechanisme geland (deterministische test); live her-draai + verse
+> review is de pending validatie.** Round 022 liet zien dat de blinde review op
+> veilige drempels gespleten terugkwam, en dat de gemarkeerde ruis/vernauwing in
+> *gevalideerde, promoted* seeds zat — niet in ongefilterde supply. Dit round
+> pakt dat aan op het surfacing/use-moment, niet op de Gate.
+
+## De diagnose (uit round 022)
+
+De gesurfacete seeds zijn pijplijn-PROMOTED (recurrence ≥ Gate-bar,
+contradiction-vrij, born-earlier, cosine ≥ `surface_threshold`). Toch markeerde
+reviewer A meerdere antwoorden als "te seed-gedreven", "diffuus" of "vernauwt":
+
+- `CONV_CITY-t06`: "B probeert veel surfaced seeds te verwerken en wordt diffuus"
+  → **te veel** seeds tegelijk ingeweven;
+- `CONV_CITY-t05`: historische/economische seed verdringt de kernvraag
+  (vergroening) → **één** seed gedwongen ingeweven waar hij vernauwt.
+
+De Gate valideert persistentie + geen-contradictie, niet of déze promoted seed
+dít specifieke antwoord scherper of juist smaller maakt. SSL-doctrine zegt:
+weight = *potentieel, geen must*. De oude weave-stap dwong echter elke
+losjes-relevante promoted seed te sturen (`surface_threshold` ~0.30 +
+"betrek expliciet"). Potentieel werd must.
+
+## De wijziging (use-time discipline)
+
+In `ssl_session_suite` (geen Gate-/opslagwijziging):
+
+1. **Ranked + capped surfacing.** Eligible promoted seeds worden op relevantie
+   (cosine) gesorteerd en alleen de `surface_top_k` meest relevante mogen een
+   beurt sturen (`select_cross_turn_seeds`, default `top_k=2`, `-1` = geen
+   limiet). Dit dempt het "diffuse" faalpatroon. Het cross-turn mechanisme blijft
+   intact: het vuurt nog steeds zodra ≥1 seed kwalificeert.
+2. **Weave-prompt = potentieel, geen must.** Van *"betrek daarbij expliciet"*
+   naar: *"je mág deze invalshoek(en) betrekken — maar alléén als ze het antwoord
+   aantoonbaar aanscherpen; laat ze weg als ze zouden afleiden of vernauwen."*
+   Het model mag een seed dus laten vallen (do-no-harm op antwoordniveau).
+3. **Per-topic instelbaar.** `surface_threshold`/`surface_top_k` kunnen, net als
+   de Gate-knoppen, per conversatie worden overschreven; CLI: `--surface-top-k`,
+   `--surface-threshold`.
+
+## Bewijs in deze PR (deterministisch, geen model)
+
+- `select_cross_turn_seeds` rankt op relevantie en capt op `top_k` (unit test);
+- de weave-prompt bevat de potentieel-niet-must-formulering (aanscherpen/vernauwen)
+  en niet langer de harde "betrek expliciet"-instructie;
+- `surface_top_k`/`surface_threshold` worden vastgelegd in `applied_thresholds`.
+
+Volledige suite groen (291 passed, 4 skipped); ruff clean.
+
+## Honest scope / pending
+
+Dit is het *mechanisme* voor de discipline. Of het de round-022-ruiscases
+daadwerkelijk dempt **zonder de wins te verliezen** (vooral het
+consensus-item `CONV_STARTUP-t05`), is een modelrun-vraag:
+
+1. Her-draai de round-020/022-conversaties op `gpt-4.1`, veilige drempels,
+   `--recurrence-mode cluster`, met de nieuwe defaults (`surface_top_k=2`,
+   potentieel-prompt) via `Research · SSL Benefit (OpenAI)`.
+2. Verse blinde review (≥2 reviewers, mét answer key) en vergelijk met round 022:
+   dempen de ruis/vernauwing-cases, blijft `CONV_STARTUP-t05` een win?
+3. Pas daarna mag de payoff-claim van "kandidaat" opschuiven.
+
+Dit is spoor 1 van de twee na round 022; spoor 2 is W10 doctrine-transfer.

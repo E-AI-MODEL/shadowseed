@@ -450,6 +450,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ssl_session.add_argument("--embedding-model", default=None)
     ssl_session.add_argument(
+        "--surface-threshold",
+        type=float,
+        default=0.30,
+        help="Relevantiedrempel (cosine) waarboven een promoted seed in een latere beurt mag opduiken.",
+    )
+    ssl_session.add_argument(
+        "--surface-top-k",
+        type=int,
+        default=2,
+        help="Use-time discipline (round 023): max. aantal meest-relevante promoted seeds dat een beurt mag sturen. Promoted = potentieel, geen must; voorkomt diffuse/vernauwde antwoorden. -1 = geen limiet.",
+    )
+    ssl_session.add_argument(
         "--dedup-threshold",
         type=float,
         default=None,
