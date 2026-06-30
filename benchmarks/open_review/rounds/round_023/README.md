@@ -90,3 +90,23 @@ round 022 echt daalt en of `CONV_STARTUP-t05` een win blijft, vereist stap 2: ee
 **verse blinde review** (≥2 reviewers, mét answer key). De per-seed promoted-count
 en coverage staan in het artifact `ssl_session_suite.json` (niet hier overgenomen).
 De payoff-claim blijft "kandidaat" tot die review binnen is.
+
+## Blinde review binnen (3 reviewers) — zie `human_review/`
+
+Stap 2 is uitgevoerd: 3 onafhankelijke reviewers scoorden het blinde A/B-pack.
+Volledige cijfers + analyse in `human_review/RESULTS.md`, ruwe scores in
+`human_review/scores.csv`. Kort:
+
+- **Ruis/vernauwing gedempt — het round-023-doel gehaald.** Alle 3 reviewers:
+  ≈0 ruis/hallucinated relevance (vs round 022's herhaalde "ruis"-flags). De
+  seed-effect-labels zijn overal "helpt" of "maakt geen verschil", nooit ruis —
+  potentieel-niet-must werkt.
+- **Overeenstemming hersteld:** 5/10 unaniem, ~0.67 pairwise — scherp beter dan
+  round 022 (~0.125, de 1-vs-8 inversie is weg).
+- **Win-rate blijft ≤0.5** (SSL-voorkeur r1/r2/r3 = 5/3/4 van 10, ~0.40), en is
+  bovendien vertroebeld door **afkap** (veel keuzes hingen op welk antwoord minder
+  abrupt werd afgekapt bij `max_new_tokens=400`).
+
+Conclusie: use-time discipline geslaagd op eigen doel; payoff-claim blijft
+"kandidaat". Volgende schone stap: her-draai met ruim `max_new_tokens` (~900–1200)
+zodat de win-rate niet op afgekapte zinnen rust. Daarna W10 doctrine-transfer.
