@@ -3,7 +3,7 @@
 > Status: current
 > Date: 2026-06-30
 > Evidence layer: cross-turn payoff / lifecycle doctrine / blind review
-> Current source: ja
+> Current source: yes
 
 ## Doel van dit document
 
@@ -21,18 +21,21 @@ W9f toont dat deze levenscyclus in een echte sessie antwoordruimte kan openen di
 
 ## Kernconclusie
 
-W9f wordt geaccepteerd als werkende technische baseline voor cross-turn context-discovery en memory-surfacing.
+W9f bevestigt het cross-turn **mechanisme** op veilige doctrine-drempels, maar de **payoff-kwaliteit** is in de blinde review reviewer-afhankelijk gebleken. W9f is daarom een baseline-*kandidaat*, geen afgesloten bewijsronde.
 
-Dat betekent:
+Wat staat (mechanisme):
 
 - de pipeline detecteert terugkerende of latente context;
-- cluster-recurrence kan parafrastische herhaling samenbrengen zonder de veilige opslag-dedup los te laten;
-- representatives, niet hele clusters, horen door de Gate te gaan;
+- cluster-recurrence brengt parafrastische herhaling samen zonder de veilige opslag-dedup los te laten;
+- representatives, niet hele clusters, gaan door de Gate;
 - representatives blijven levend wanneer recurrence via non-representative members binnenkomt;
-- surfaced context kan later antwoordruimte openen;
-- blind review laat zien dat die extra antwoordruimte in meerdere gevallen als rijker, scherper of bruikbaarder wordt herkend.
+- surfaced context kan later antwoordruimte openen.
 
-Dit is voldoende om W9f als technische baseline te sluiten. Verdere recurrence- of promotion-tuning is niet nodig om opnieuw te bewijzen dat het mechanisme bestaat.
+Wat nog niet staat (kwaliteit/payoff):
+
+- de blinde review op veilige drempels kwam **gespleten** terug — twee reviewers oneens op 7/8 (zie `benchmarks/open_review/rounds/round_022/human_review/`), precies op de vraag of gesurfacete context verrijking of ruis is.
+
+Recurrence- of promotion-tuning is dus niet de openstaande stap — het mechanisme vuurt. De openstaande stap is **use-time discipline**: wanneer mag een promoted seed het antwoord sturen?
 
 ## Wat de blind A/B-review wel meet
 
@@ -64,42 +67,39 @@ Dat hoeft ook niet de W9f-claim te zijn.
 
 W9f ondersteunt de smallere en sterkere claim:
 
-> SSL kan latente sessiecontext gewichtloos vasthouden, later valideren of surfacen, en daardoor bruikbare aanvullende antwoordruimte openen.
+> SSL kan latente sessiecontext gewichtloos vasthouden, later valideren of surfacen, en daardoor aanvullende antwoordruimte openen die er anders niet was. Of die ruimte ook consistent *waardevol* is, is de open kwaliteitsvraag.
 
 Deze claim sluit aan op de 4.6-doctrine: wat een model mist wordt geen direct antwoordgewicht, maar eerst een trace. Pas na herhaalde herkenning en Gate-promotie mag de seed invloed krijgen.
 
-## Review-uitkomst in woorden
+## Review-uitkomst in cijfers
 
-De revieweruitkomsten zijn gemengd maar betekenisvol:
+Twee onafhankelijke reviewers scoorden hetzelfde blinde A/B-pack (8 cross-turn items, gpt-4.1, veilige drempels). Volledige data en analyse: `benchmarks/open_review/rounds/round_022/human_review/`.
 
-- sommige reviewers kiezen vaak voor de SSL-gestuurde variant;
-- andere reviewers markeren seed-vernauwing of ruis;
-- `CONV_CITY` blijft het sterkste signaal;
-- `CONV_STARTUP` toont dat brede sociale seeds het antwoord soms kunnen vernauwen.
+- **Inter-reviewer winnaar-overeenstemming: 1/8** (alleen CONV_STARTUP-t05). Dit is niet de round-019-overeenstemming (92%/98%); op veilige drempels is het oordeel reviewer-afhankelijk.
+- **SSL/seed-variant geprefereerd: Reviewer A 1/8, Reviewer B 8/8** — vrijwel perfecte inversie (SSL/baseline-toewijzing afgeleid uit motivaties; de kop-bevinding 1/8 staat daar los van).
+- **CONV_CITY is het meest gepolariseerd, niet het sterkste positieve signaal**: Reviewer A koos daar de seed-variant 0/4 ("ruis"/"diffuus"); Reviewer B 4/4.
+- Het enige consensus-item (CONV_STARTUP-t05) is het meest concrete: waar de seed *operationaliseert* (virale piek → autoscaling/queues/rate-limiting) zijn beide reviewers het eens dat hij helpt; waar hij *breedte/thema* toevoegt, splitst het.
 
-Dat patroon is precies informatief op de juiste laag:
+De onenigheid is structureel: Reviewer A straft "seed verdringt de vraag" af als ruis/vernauwing, Reviewer B beloont "rijker/geïntegreerd". Dat is de verrijking-vs-ruis-as.
 
-- positief voor discovery en surfacing;
-- waarschuwend voor automatisch seed-gebruik;
-- geen reden om de levenscyclusmechaniek opnieuw open te trekken.
+Cruciaal: de gemarkeerde ruis zit in **gevalideerde, promoted** seeds (post-Gate), niet in ongefilterde supply. De Gate valideert persistentie + geen-contradictie, niet of déze seed dít antwoord scherper of juist smaller maakt.
 
 ## Besluit
 
-W9f is afgerond als baseline.
+Het W9f-mechanisme staat; de payoff-discipline is de open vraag.
 
-Vanaf hier moet de repo niet blijven vragen:
+De repo hoeft niet te blijven vragen "bestaat het cross-turn mechanisme?" — dat vuurt reproduceerbaar op veilige drempels. De scherpe, falsifieerbare vraag is nu tweeledig:
 
-> werkt SSL eigenlijk wel?
-
-maar:
-
-> draagt dezelfde SSL-levenscyclus over naar andere domeinen, taken en modellen, en onder welke gebruiksdiscipline mag een surfaced seed het antwoord sturen?
+> 1. onder welke gebruiksdiscipline mag een surfaced seed het antwoord sturen — sturen bij aanscherping, dormant blijven bij vernauwing?
+> 2. draagt diezelfde levenscyclus over naar andere domeinen, taken en modellen?
 
 ## Volgende fase
 
-De volgende fase is W10: doctrine-transfer.
+De volgende fase heeft twee parallelle sporen:
 
-Niet groter in dezelfde A/B-opzet, maar transfer van de bestaande levenscyclus:
+**Spoor 1 — use-time seed-discipline (potentieel-vs-must).** De ruis/vernauwing in round 022 zat in *promoted* seeds: het probleem is niet de Gate-supply maar de surfacing-stap die een promoted seed altijd laat sturen (`surface_threshold` ~0.30 + "betrek expliciet"). Doctrine-zuiver: een seed stuurt wanneer hij aanscherpt en blijft dormant wanneer hij zou vernauwen. Klaar wanneer: een surfacing/weave-discipline die de round-022-ruiscases dempt zonder de wins te verliezen.
+
+**Spoor 2 — W10 doctrine-transfer.** Niet groter in dezelfde A/B-opzet, maar transfer van de bestaande levenscyclus:
 
 - trace/weight-scheiding;
 - TTL/TrTL;
@@ -122,9 +122,9 @@ Mogelijke transferassen:
 
 ## Repo-gevolg
 
-De statusdocs moeten W9f niet langer framen als open bewijsronde. De juiste status is:
+De juiste status in de statusdocs:
 
-- W9f: geaccepteerde technische baseline;
-- blind A/B: kwaliteitscontrole, geen absolute benchmark;
-- volgende stap: transfer en gebruiksdiscipline;
-- geen nieuwe W9f-validatie tenzij een regressie of nieuw domeinresultaat dat nodig maakt.
+- W9f-mechanisme: bevestigd op veilige drempels (cross-turn surfacing vuurt);
+- W9f-payoff: baseline-kandidaat, reviewer-afhankelijk gebleken (round 022, 1/8 overeenstemming);
+- blind A/B: kwaliteitscontrole op geopende antwoordruimte, geen absolute benchmark;
+- volgende stap: use-time seed-discipline (potentieel-vs-must) + doctrine-transfer (W10).

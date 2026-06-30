@@ -15,7 +15,7 @@ Een seed begint gewichtloos. Pas na validatie via de Validation Gate mag die inv
 
 - **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* of onderbelicht blijft, bewaart dat als een gewichtloze shadow seed, en laat alleen gevalideerde seeds meesturen in vervolgactie of antwoordruimte.
 - **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt via TTL en leeft op via TrTL) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
-- **Status:** werkende research-harness met sterke lifecycle- en regressielaag. W9f is geaccepteerd als technische baseline voor cross-turn context-discovery en memory-surfacing; de brede claim blijft bewust begrensd.
+- **Status:** werkende research-harness met sterke lifecycle- en regressielaag. Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* bleek in de blinde review reviewer-afhankelijk (round 022, 1/8 overeenstemming), dus W9f is een baseline-kandidaat, geen afgesloten bewijs. De brede claim blijft bewust begrensd.
 
 > Kernregel: één seed = één klein, toetsbaar ontbrekend punt.
 
@@ -41,7 +41,7 @@ SSL hanteert één laag-taal voor bewijs, gelijk aan `docs/00_shadow_seed_learni
 | **B** Kleine benchmark | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** — bewust smal |
 | **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Eerste evidence, gemengd** — relevantie hoog, trivialiteit/testability blijft risico |
 | **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** — kleine maar duidelijke stresstest |
-| **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f positief voor cross-turn discovery; productmatige seed-use discipline blijft open** |
+| **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; payoff-kwaliteit reviewer-afhankelijk (round 022, 1/8); use-time seed-discipline open** |
 | **F** Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende domeinen? | **Volgende stap: W10 doctrine-transfer** |
 | **G** Modelintern | Steun in interne activaties? | **Onderzoekslaag**, niet operationeel |
 
@@ -49,15 +49,15 @@ De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie
 
 ## W9f-status
 
-W9f is de huidige technische baseline voor cross-turn SSL.
+Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* is een baseline-kandidaat, nog niet afgesloten.
 
 De kernclaim is niet dat SSL elk antwoord beter maakt of GPT-4.1 algemeen verslaat. De claim is smaller:
 
-> SSL kan latente sessiecontext gewichtloos vasthouden, later valideren of surfacen, en daardoor bruikbare aanvullende antwoordruimte openen.
+> SSL kan latente sessiecontext gewichtloos vasthouden, later valideren of surfacen, en daardoor aanvullende antwoordruimte openen die er anders niet was.
 
-De blind A/B-review wordt daarom gelezen als kwaliteitscontrole op door SSL geopende antwoordruimte, niet als klassieke model-vs-model benchmark. Zonder SSL zouden de SSL-gestuurde antwoordvarianten niet als optie hebben bestaan.
+De blind A/B-review wordt gelezen als kwaliteitscontrole op door SSL geopende antwoordruimte, niet als klassieke model-vs-model benchmark — zonder SSL zouden die antwoordvarianten niet als optie hebben bestaan. Dat is een geldige herkadering, maar het *verandert* de lat, het verwijdert hem niet: de eerste blinde review op veilige drempels kwam **gespleten** terug (twee reviewers oneens op 7/8; round 022). De ruis zat bovendien in *gevalideerde, promoted* seeds, dus het open punt is use-time discipline: wanneer mag een promoted seed het antwoord sturen?
 
-Zie `docs/research/w9f-evaluatieconclusie.md`.
+Zie `docs/research/w9f-evaluatieconclusie.md` en `benchmarks/open_review/rounds/round_022/human_review/`.
 
 ## Wat de resultaten wel en niet betekenen
 

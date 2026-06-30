@@ -165,19 +165,20 @@ The AbsenceBench default is intentionally not `results/absencebench_smoke.json`,
 
 ## W9f baseline state
 
-W9f is accepted as the current technical baseline for cross-turn context-discovery and memory-surfacing.
+The W9f cross-turn *mechanism* is confirmed at safe doctrine thresholds (recurrence -> Gate -> surfacing fires reproducibly). The W9f *payoff quality* is a baseline candidate, not a closed result: the first blind review at safe thresholds came back split (round 022, two reviewers disagreed on 7/8).
 
 Important repo state:
 
 - PR #148 merged the follow-up cluster-liveness fixes.
-- Release/tag `w9f-follow-up-baseline` freezes the baseline.
+- Release/tag `w9f-follow-up-baseline` freezes the mechanism state.
 - PR #150 merged automatic blind A/B review-pack generation for `ssl-session` runs.
-- Issue #149 was closed as completed after reframing blind A/B as quality control rather than a classical model-vs-model pass/fail benchmark.
+- Round 022 ran the first blind A/B review at safe thresholds; see `benchmarks/open_review/rounds/round_022/human_review/`.
 
 ## Backlog direction
 
-The next research direction is not more W9f proof, but W10 doctrine-transfer:
+The next research direction is not more mechanism proof (it fires), but use-time seed-discipline plus W10 doctrine-transfer:
 
+- when may a promoted seed steer the answer (steer on sharpening, stay dormant on narrowing);
 - additional domains;
 - additional task types;
 - model transfer;
@@ -191,4 +192,4 @@ Do not treat counts such as number of tests, workflow runs or wiki pages as stab
 
 ## Interpretation
 
-`shadowseed` is currently best understood as a Python SSL research harness with a strong lifecycle core, explicit artifact routes, and an accepted W9f cross-turn baseline. The next step is transfer of the existing doctrine, not another proof loop around the same W9f setting.
+`shadowseed` is currently best understood as a Python SSL research harness with a strong lifecycle core, explicit artifact routes, and a confirmed W9f cross-turn *mechanism* at safe thresholds whose *payoff quality* is still reviewer-dependent (round 022). The next step is use-time seed-discipline plus doctrine transfer, not another proof loop around the mechanism.

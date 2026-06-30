@@ -3,7 +3,7 @@
 > Status: current
 > Date: 2026-06-30
 > Evidence layer: Evidence-layer matrix
-> Current source: ja
+> Current source: yes
 
 ## Doel van dit document
 
@@ -25,7 +25,7 @@ De matrix is geen scorekaart die alles samenvouwt tot één getal. Ze bewaakt ju
 | B — Kleine benchmarkvalidatie | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** | Behouden als beperkte benchmarklaag |
 | C — Open-set seedkwaliteit | Kan SSL goede seeds maken zonder vaste ground truth? | **Eerste evidence, gemengd** | Sterker en breder meten |
 | D — Adversarial ruiscontrole | Weert de Gate echte misleidende gaps? | **Eerste echte evidence** | Grotere stresssets |
-| E — Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f positief voor cross-turn; productkwaliteit deels open** | Transfer + seed-use discipline |
+| E — Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; payoff-kwaliteit reviewer-afhankelijk (round 022, 1/8)** | Use-time seed-discipline + transfer |
 | F — Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende scenario's? | **Volgende stap** | W10: doctrine-transfer |
 | G — Modelinterne validatie | Is er steun in interne activaties? | **Afwezig / later onderzoek** | Aparte onderzoekslijn |
 
@@ -200,9 +200,9 @@ Doen promoted of surfaced seeds iets aantoonbaar nuttigs?
 
 ### Huidige status
 
-Positief voor W9f cross-turn discovery en memory-surfacing; productmatige seed-use discipline blijft open.
+Het W9f-mechanisme vuurt op veilige drempels; de payoff-kwaliteit is reviewer-afhankelijk gebleken en daarmee nog open.
 
-W9f toont dat de bestaande doctrine (`trace`, `weight`, TTL, TrTL, Gate) in multi-turn sessies bruikbare extra antwoordruimte kan openen. De blind A/B-review is daarbij kwaliteitscontrole op de door SSL geopende antwoordruimte, geen klassieke model-vs-model benchmark.
+W9f toont dat de bestaande doctrine (`trace`, `weight`, TTL, TrTL, Gate) in multi-turn sessies extra antwoordruimte opent die de history-baseline niet zelf opwerpt. De blind A/B-review is kwaliteitscontrole op die geopende antwoordruimte, geen klassieke model-vs-model benchmark — maar de eerste review op veilige drempels kwam **gespleten** terug (round 022: twee reviewers oneens op 7/8, ruis in *promoted* seeds). Dat reframe verandert de lat, het verwijdert hem niet.
 
 ### Doel
 
@@ -277,8 +277,8 @@ Deze matrix moet voor repo-beslissingen als volgt worden gelezen:
 
 - regressie en kleine benchmarkvalidatie houden de repo stabiel;
 - open-set, adversarial en probe utility blijven gescheiden evidence-lagen;
-- W9f is een afgesloten technische baseline voor cross-turn context-discovery;
-- W10 moet transfer van de bestaande doctrine meten;
+- het W9f cross-turn mechanisme is bevestigd op veilige drempels; de payoff-kwaliteit is reviewer-afhankelijk gebleken (round 022) en blijft open;
+- de volgende stap is use-time seed-discipline (potentieel-vs-must) plus W10 doctrine-transfer;
 - modelinterne validatie blijft later onderzoek.
 
 ## Wat niet moet gebeuren

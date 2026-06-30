@@ -3,13 +3,13 @@
 > Status: current
 > Date: 2026-06-30
 > Evidence layer: Direction note after W9f
-> Current source: ja
+> Current source: yes
 
 ## Doel van dit document
 
 Dit document beschrijft hoe Shadow Seed Learning doorgroeit van scenario-gedreven validatie naar scenario-onafhankelijke validatie.
 
-De stand is sinds de eerdere roadmap veranderd. W9f is afgerond als werkende technische baseline voor cross-turn context-discovery en memory-surfacing. De vraag is daarom niet meer of de W9f-levenscyclus in de huidige setting bestaat, maar of dezelfde doctrine overdraagt naar andere domeinen, taken en modellen.
+De stand is sinds de eerdere roadmap veranderd. Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* is een baseline-kandidaat (de eerste blinde review op veilige drempels kwam gespleten terug, round 022). De openstaande vragen zijn daarom niet meer of het mechanisme bestaat, maar (1) onder welke use-time discipline een promoted seed mag sturen, en (2) of dezelfde doctrine overdraagt naar andere domeinen, taken en modellen.
 
 ## Korte samenvatting
 
@@ -204,10 +204,11 @@ Belangrijk blijft:
 
 ## 9. Eindoordeel
 
-De scenario-afhankelijkheid is niet meer het bewijsprobleem dat W9f moet oplossen. W9f is klaar als technische baseline.
+Scenario-afhankelijkheid is niet meer het bewijsprobleem: het W9f cross-turn *mechanisme* staat op veilige drempels. Maar W9f is geen afgesloten payoff-bewijs — de eerste blinde review op veilige drempels kwam gespleten terug (round 022).
 
-De volgende vraag is transfer:
+De volgende vragen zijn daarom:
 
-> blijft de SSL-levenscyclus werken wanneer de context verandert?
+> 1. onder welke use-time discipline mag een promoted seed het antwoord sturen (sturen bij aanscherping, dormant bij vernauwing)?
+> 2. blijft de SSL-levenscyclus werken wanneer de context verandert?
 
-Dat is de juiste volgende stap naar scenario-onafhankelijke SSL-validatie.
+Samen vormen die de juiste volgende stap naar scenario-onafhankelijke SSL-validatie.

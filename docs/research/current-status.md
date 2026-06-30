@@ -34,9 +34,9 @@ De repo staat nog niet sterk genoeg voor:
 
 De belangrijkste statuswijziging:
 
-> W9f is geaccepteerd als werkende technische baseline voor cross-turn context-discovery en memory-surfacing. De volgende stap is transfer van de doctrine, niet nog meer bewijs dat het W9f-mechanisme bestaat.
+> Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels (recurrence → Gate → surfacing vuurt reproduceerbaar). De *payoff-kwaliteit* is echter een baseline-kandidaat, niet afgesloten: de eerste blinde review op veilige drempels kwam gespleten terug (round 022). De volgende stap is daarom tweeledig — use-time seed-discipline (potentieel-vs-must) én doctrine-transfer (W10) — niet nog meer bewijs dat het mechanisme bestaat.
 
-Zie ook `docs/research/w9f-evaluatieconclusie.md`.
+Zie ook `docs/research/w9f-evaluatieconclusie.md` en `benchmarks/open_review/rounds/round_022/human_review/`.
 
 ## Statusoverzicht per laag
 
@@ -149,18 +149,21 @@ De blind review moet niet worden gelezen als klassieke model-vs-model benchmark.
 
 Zonder SSL zouden de SSL-gestuurde antwoordvarianten niet als optie hebben bestaan. De review beoordeelt dus of door SSL geopende antwoordruimte bruikbaar is, niet of GPT-4.1 in abstracto wordt verslagen.
 
-De review liet zien:
+De review (round 022, 8 cross-turn items, twee reviewers, veilige drempels) liet zien:
 
-- meerdere SSL-gestuurde antwoorden werden als rijker, scherper of bruikbaarder beoordeeld;
-- `CONV_CITY` bleef het sterkste signaal;
-- `CONV_STARTUP` liet risico op seed-vernauwing zien;
-- seed-ruis is een foutklasse voor gebruiksdiscipline, geen bewijs dat de levenscyclus niet werkt.
+- **geen consensus**: de twee reviewers kozen op 7/8 items een andere winnaar (overeenstemming 1/8);
+- de SSL/seed-variant werd door Reviewer A 1/8 en door Reviewer B 8/8 geprefereerd — vrijwel perfecte inversie;
+- `CONV_CITY` was het meest gepolariseerd (Reviewer A seed 0/4, Reviewer B 4/4), niet het sterkste positieve signaal;
+- het enige consensus-item was het meest concrete (operationaliserende seed); waar de seed breedte toevoegde, splitste het oordeel;
+- de gemarkeerde ruis zat in *gevalideerde, promoted* seeds — een use-time-discipline-vraag, geen bewijs dat de levenscyclus niet werkt.
+
+Zie `benchmarks/open_review/rounds/round_022/human_review/`.
 
 ### W9f-besluit
 
-W9f wordt geaccepteerd als werkende technische baseline voor cross-turn context-discovery en memory-surfacing.
+Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* is een baseline-kandidaat, niet afgesloten (round 022 kwam gespleten terug).
 
-Er komt geen nieuwe W9f-validatielus alleen om opnieuw te bewijzen dat het mechanisme bestaat.
+Er komt geen nieuwe recurrence/promotion-tuning om te bewijzen dat het mechanisme bestaat — dat vuurt. De openstaande stap is use-time seed-discipline: wanneer mag een promoted seed het antwoord sturen?
 
 ## Wat de repo vandaag hard aantoont
 
@@ -172,7 +175,7 @@ De repo toont vandaag overtuigend aan dat:
 4. de Gate sterker is dan zwakkere promotieregels op de huidige adversarial set;
 5. probe-feedback lifecycle-effecten heeft;
 6. handelen op geldige seeds bij capabele modellen antwoordruimte kan verbeteren;
-7. cross-turn surfaced seeds in W9f bruikbare extra antwoordruimte kunnen openen.
+7. cross-turn surfaced seeds in W9f extra antwoordruimte openen die de history-baseline niet zelf opwerpt (de *kwaliteit* daarvan is reviewer-afhankelijk — round 022).
 
 ## Wat de repo niet moet claimen
 
@@ -190,8 +193,8 @@ Niet claimen:
 De repo moet vanaf hier drie dingen doen:
 
 1. de regressie- en lifecyclelaag behouden;
-2. W9f niet opnieuw openen als bewijsronde tenzij er echte regressie is;
-3. de volgende onderzoeksstap richten op transfer van de doctrine.
+2. het W9f-*mechanisme* niet opnieuw bewijzen (dat vuurt), maar de payoff-*discipline* aanpakken: wanneer mag een promoted seed sturen;
+3. de volgende onderzoeksstap richten op use-time seed-discipline én transfer van de doctrine.
 
 Dat betekent concreet:
 
@@ -213,4 +216,4 @@ Leidend na deze update:
 
 De repo is vandaag:
 
-> een sterke SSL-researchharness met bewezen lifecycle-mechaniek, eerste echte open-set en adversarial evidence, en een geaccepteerde W9f-baseline voor cross-turn context-discovery en memory-surfacing. De brede algemene claim blijft begrensd: de volgende stap is transfer van de doctrine naar andere domeinen, taken en modellen, niet nog meer bewijs dat W9f bestaat.
+> een sterke SSL-researchharness met bewezen lifecycle-mechaniek, eerste echte open-set en adversarial evidence, en een bevestigd W9f cross-turn *mechanisme* op veilige drempels. De W9f-*payoff* is een baseline-kandidaat — de eerste blinde review op veilige drempels kwam gespleten terug (round 022). De brede claim blijft begrensd: de volgende stap is use-time seed-discipline (potentieel-vs-must) én doctrine-transfer (W10), niet nog meer bewijs dat het mechanisme bestaat.

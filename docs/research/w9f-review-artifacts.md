@@ -3,7 +3,7 @@
 > Status: current
 > Date: 2026-06-30
 > Evidence layer: W9f cross-turn payoff / blind review
-> Current source: ja
+> Current source: yes
 
 ## Doel
 
@@ -130,7 +130,7 @@ W9f is niet afhankelijk van een harde regel zoals "SSL moet elk item winnen".
 
 Na de W9f-review is het besluit:
 
-- W9f staat als technische baseline;
-- blind A/B blijft een kwaliteitsinstrument;
-- de volgende laag is W10 doctrine-transfer;
-- nieuwe reviews moeten vooral seed-effect, ruis en transfer meten.
+- het W9f cross-turn mechanisme staat op veilige drempels; de payoff-kwaliteit is een baseline-kandidaat (round 022 kwam gespleten terug, twee reviewers oneens op 7/8);
+- blind A/B blijft een kwaliteitsinstrument, geen pass/fail-benchmark — maar de reframing verandert de lat, ze verwijdert hem niet;
+- de volgende laag is use-time seed-discipline (potentieel-vs-must) plus W10 doctrine-transfer;
+- nieuwe reviews moeten vooral seed-effect, ruis/vernauwing en transfer meten, met ≥2 reviewers en de answer key.
