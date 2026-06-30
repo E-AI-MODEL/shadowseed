@@ -186,23 +186,32 @@ def run_ssl_session(
                 for acc in ingest.get("accepted", []):
                     sid = acc["seed_id"]
                     seed = manager.seeds.get(sid)
-                    if seed is not None and sid not in seed_to_cluster:
+                    if seed is None:
+                        continue
+                    if sid not in seed_to_cluster:
                         cid = clusterer.add(seed.text, seed.embedding)
                         seed_to_cluster[sid] = cid
-                        # the earliest-born member anchors the cluster; record it once
-                        # as the representative. It is also naturally the one eligible
-                        # to surface cross-turn (born first), keeping the two notions
-                        # aligned.
+                        # the earliest-born member anchors the cluster; record it
+                        # once as the representative. It is also naturally the one
+                        # eligible to surface cross-turn (born first), keeping the
+                        # two notions aligned.
                         cluster_rep.setdefault(cid, sid)
+                    else:
+                        # a STORED member re-detected (deduped) in a later turn: the
+                        # gap recurred, so grow its cluster's recurrence. Membership
+                        # was fixed on first sighting, so only count it — do not
+                        # re-cluster. Skipping this would leave the cluster recurrence
+                        # too low while the member's own dedup-driven occurrence_count
+                        # could still reach the Gate and promote a non-representative.
+                        clusterer.bump(seed_to_cluster[sid])
                 # --- W9f: credit semantic recurrence to ONE representative per
                 # cluster, not every member. Round 020 bumped *all* members to the
                 # cluster size, so a single recurring (paraphrastic) gap promoted the
                 # whole cluster (49 promotions on tightly-themed convos). Crediting
-                # only the representative cuts that to ~one promotion per qualifying
-                # cluster, while keeping the strict 0.85 dedup, the SAFE Gate bar, and
-                # the same cross-turn surfacing (surfacing is relevance-gated, not
-                # volume-gated). Non-representative members keep their own (low)
-                # occurrence_count and stay below the bar.
+                # only the representative — and skipping non-representatives in the
+                # Gate below — cuts that to ~one promotion per qualifying cluster,
+                # while keeping the strict 0.85 dedup, the SAFE Gate bar, and the
+                # relevance-gated cross-turn surfacing.
                 for cid, rep_sid in cluster_rep.items():
                     if rep_sid in manager.seeds:
                         manager.seeds[rep_sid].occurrence_count = max(
@@ -215,6 +224,14 @@ def run_ssl_session(
             for sid, seed in manager.seeds.items():
                 if seed.status == SeedStatus.EXPIRED:
                     continue
+                # W9f: in cluster mode the representative carries the cluster's
+                # recurrence; a non-representative member is folded into its rep and
+                # must not promote on its own dedup-driven occurrence_count. (A
+                # singleton / unclustered seed is its own representative.)
+                if clusterer is not None:
+                    cid = seed_to_cluster.get(sid)
+                    if cid is not None and cluster_rep.get(cid) != sid:
+                        continue
                 # recurrence (seen >1 time) is treated as confirming evidence
                 ext = seed.occurrence_count >= 2
                 verdict = manager.run_validation_gate(sid, external_evidence=ext)

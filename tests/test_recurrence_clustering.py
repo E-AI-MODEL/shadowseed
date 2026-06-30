@@ -163,6 +163,72 @@ def test_cluster_mode_promotes_one_representative_not_all_members(tmp_path: Path
     assert len(diag["promoted_ever"]) == 1, diag["promoted_ever"]
 
 
+def test_redetected_nonrep_counts_in_cluster_and_only_rep_promotes(tmp_path: Path, monkeypatch):
+    # W9f regression: A creates the cluster, B joins it, then B is RE-DETECTED
+    # verbatim several times (deduping into the stored B, so B's own
+    # occurrence_count climbs). The re-detections must accumulate in the CLUSTER so
+    # the representative (A) promotes, and B must NOT promote as a non-rep on its
+    # own occurrence_count. Exactly one promotion, and it is A.
+    import math
+
+    A = "Privacy van gebruikersdata."
+    B = "Bescherming van persoonlijke data."
+    emissions = [A, B, B, B, B, B]  # A once; B four+ times -> B dedups into itself
+
+    conv = {"version": "t", "conversations": [
+        {"id": "C", "domain": "d", "turns": [{"question": f"Q{i}?"} for i in range(len(emissions))]}]}
+    inp = tmp_path / "in.json"
+    inp.write_text(json.dumps(conv), encoding="utf-8")
+
+    class _Model:
+        name = "fake"
+        def generate(self, prompt, scenario, mode, seeds):
+            return "SSL." if mode == "ssl" else "Baseline."
+
+    class _Det:
+        name = "d"
+        def __init__(self): self.i = 0
+        def detect_seeds(self, item, max_seeds=5):
+            t = emissions[self.i]; self.i += 1
+            return [t]
+
+    a, b = math.sqrt(7.0), math.sqrt(3.0)  # A,B pairwise cosine 0.7 (cluster, not merge)
+
+    def _emb(backend, model_id=None, **kw):
+        def embed(text: str):
+            low = text.lower()
+            v = np.zeros(4)
+            if "privacy" in low:          # A -> axis 1
+                v[0] = a; v[1] = b
+            elif "bescherming" in low:    # B -> axis 2 (verbatim repeats -> identical)
+                v[0] = a; v[2] = b
+            else:
+                v[3] = 1.0
+                return v
+            return v / np.linalg.norm(v)
+        return embed, 4
+
+    monkeypatch.setattr(sessmod(), "make_backend", lambda **k: _Model())
+    monkeypatch.setattr(sessmod(), "make_detector_backend", lambda *a, **k: _Det())
+    monkeypatch.setattr(sessmod(), "make_embedding_fn", _emb)
+
+    out = tmp_path / "s.json"
+    run_ssl_session(str(inp), str(out), backend="openai",
+                    recurrence_mode="cluster", cluster_threshold=0.6)
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    diag = payload["conversations"][0]["diagnostics"]
+
+    # A and B stayed distinct (0.7 < 0.85 dedup)
+    assert diag["distinct_seeds_created"] == 2
+    # B's re-detections accumulated in the cluster -> recurrence cleared the bar
+    assert diag["max_occurrence_count"] >= 3
+    # exactly one promotion and it is the representative (A's cluster), not the
+    # re-detected non-rep B (text is normalized, so match on the distinguishing word)
+    assert len(diag["promoted_ever"]) == 1, diag["promoted_ever"]
+    assert "privacy" in diag["promoted_ever"][0].lower(), diag["promoted_ever"]
+    assert all("bescherming" not in p.lower() for p in diag["promoted_ever"]), diag["promoted_ever"]
+
+
 def sessmod():
     import shadowseed.benchmark.ssl_session_suite as m
     return m

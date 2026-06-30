@@ -79,6 +79,17 @@ class RecurrenceClusterer:
         self.members[best].append(text)
         return best
 
+    def bump(self, cluster_id: int) -> int:
+        """Count another occurrence in an existing cluster without re-adding a member.
+
+        Used when a *stored* seed is re-detected (deduped) in a later turn: the gap
+        recurred, so its cluster's recurrence must grow, but the seed's cluster
+        membership was already fixed on first sighting — so we only increment the
+        count, we do not re-cluster or add a new member.
+        """
+        self.counts[cluster_id] += 1
+        return self.counts[cluster_id]
+
     def recurrence(self, cluster_id: int) -> int:
         return self.counts[cluster_id]
 
