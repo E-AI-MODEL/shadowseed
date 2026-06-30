@@ -65,6 +65,10 @@ on:
         options:
           - pairwise
           - cluster
+      input_path:
+        description: "ssl-session only: input dataset (blank = default fixture set; W10 transfer = src/shadowseed/data/ssl_session_transfer_suite.json)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -173,6 +177,7 @@ jobs:
           [ -n "${{ inputs.dedup_threshold }}" ] && EXTRA="$EXTRA --dedup-threshold ${{ inputs.dedup_threshold }}"
           [ -n "${{ inputs.min_occurrences }}" ] && EXTRA="$EXTRA --min-occurrences ${{ inputs.min_occurrences }}"
           [ -n "${{ inputs.recurrence_mode }}" ] && EXTRA="$EXTRA --recurrence-mode ${{ inputs.recurrence_mode }}"
+          [ -n "${{ inputs.input_path }}" ] && EXTRA="$EXTRA --input ${{ inputs.input_path }}"
           python -m shadowseed.cli run-ssl-session \
             --backend openai \
             --model-id "${{ inputs.model_id }}" \
