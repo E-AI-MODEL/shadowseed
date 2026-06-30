@@ -121,6 +121,7 @@ Huidige bron- en researchstack:
 - `docs/00_shadow_seed_learning_4_6.md`
 - `docs/research/current-status.md`
 - `docs/research/w9f-evaluatieconclusie.md`
+- `docs/research/w9f-review-artifacts.md`
 - `docs/research/scenario-independence-roadmap.md`
 - `docs/research/evaluation-matrix.md`
 - `docs/research/work-categories.md`
