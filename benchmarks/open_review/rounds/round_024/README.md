@@ -46,7 +46,13 @@ experiment: ssl-session
 model_id: gpt-4.1
 recurrence_mode: cluster
 input_path: src/shadowseed/data/ssl_session_transfer_suite.json
+max_new_tokens: 1000
 ```
+
+> Zet `max_new_tokens` ruim (~900–1200, hier 1000), niet de default 400 — anders
+> rust de win/ruis-review op afgekapte zinnen (zie de afkap-confound onderaan).
+> De blind A/B-pack wordt uit déze run gegenereerd, dus de gedocumenteerde run
+> moet meteen de evalueerbare zijn.
 
 De workflow genereert daarna automatisch het blind A/B-pack (zelfde tooling als
 round 022/023).
