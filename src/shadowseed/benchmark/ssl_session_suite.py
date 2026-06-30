@@ -51,12 +51,33 @@ def build_chat_prompt(history: list[tuple[str, str]], question: str, surfaced: l
     if surfaced:
         block = "\n".join(f"- {s}" for s in surfaced)
         base += (
-            "Betrek daarbij expliciet, op een natuurlijke manier, de volgende eerder "
-            "in dit gesprek opgekomen maar nog onbenutte invalshoek(en); verzin geen "
-            "feiten en verwijs niet naar deze instructie:\n"
+            "Je mág de volgende eerder in dit gesprek opgekomen, nog onbenutte "
+            "invalshoek(en) betrekken — maar alléén als ze het antwoord op deze "
+            "vraag aantoonbaar aanscherpen. Laat een invalshoek weg als die zou "
+            "afleiden of het antwoord zou vernauwen. Verzin geen feiten en verwijs "
+            "niet naar deze instructie:\n"
             f"{block}\n\n"
         )
     return base + "Antwoord:"
+
+
+def select_cross_turn_seeds(
+    candidates: list[tuple[float, str, str]], top_k: int | None
+) -> list[tuple[float, str, str]]:
+    """Use-time seed-discipline (round 023): rank eligible promoted seeds by
+    relevance and keep only the ``top_k`` most relevant for this turn.
+
+    A promoted seed is *potential, not must*: it may steer a later answer, but it
+    should not flood or narrow it. Round 022's blind review flagged answers that
+    became diffuse or narrowed because every loosely-relevant promoted seed was
+    woven in. Capping to the most relevant few keeps the cross-turn mechanism
+    intact (it still fires when >=1 seed qualifies) while limiting use-time noise.
+    ``top_k=None`` or a negative value means no cap.
+    """
+    ranked = sorted(candidates, key=lambda c: c[0], reverse=True)
+    if top_k is not None and top_k >= 0:
+        ranked = ranked[:top_k]
+    return ranked
 
 
 def run_ssl_session(
@@ -69,6 +90,7 @@ def run_ssl_session(
     embedding_backend: str = "lexical",
     embedding_model: str | None = None,
     surface_threshold: float = 0.30,
+    surface_top_k: int = 2,
     max_seeds_per_turn: int = 5,
     dedup_threshold: float | None = None,
     min_occurrences: int | None = None,
@@ -136,6 +158,11 @@ def run_ssl_session(
 
     for conv in data["conversations"]:
         manager, applied_thresholds, clusterer = _new_manager(conv)
+        # use-time seed-discipline (round 023), per-topic tunable like the Gate knobs
+        eff_surface_threshold = conv.get("surface_threshold", surface_threshold)
+        eff_surface_top_k = conv.get("surface_top_k", surface_top_k)
+        applied_thresholds["surface_threshold"] = eff_surface_threshold
+        applied_thresholds["surface_top_k"] = eff_surface_top_k
         seed_to_cluster: dict[str, int] = {}
         cluster_rep: dict[int, str] = {}
         born_turn: dict[str, int] = {}
@@ -171,18 +198,22 @@ def run_ssl_session(
             baseline = model.generate(build_chat_prompt(history, q, []), turn, "baseline", [])
 
             # --- surface pipeline-PROMOTED seeds born earlier, relevant to q ---
+            # Use-time seed-discipline (round 023): collect eligible promoted seeds,
+            # then keep only the top_k most relevant. A promoted seed is potential,
+            # not must — it may steer a later answer but should not flood/narrow it.
             q_emb = manager.get_embedding(q)
-            surfaced: list[str] = []
-            surfaced_ids: list[str] = []
+            eligible: list[tuple[float, str, str]] = []
             for sid, seed in manager.seeds.items():
                 if seed.status != SeedStatus.PROMOTED:
                     continue
                 if born_turn.get(sid, t) >= t:  # must be born in an EARLIER turn
                     continue
                 sim = float(np.dot(q_emb, seed.embedding))
-                if sim >= surface_threshold:
-                    surfaced.append(seed.text)
-                    surfaced_ids.append(sid)
+                if sim >= eff_surface_threshold:
+                    eligible.append((sim, sid, seed.text))
+            selected = select_cross_turn_seeds(eligible, eff_surface_top_k)
+            surfaced = [text for _sim, _sid, text in selected]
+            surfaced_ids = [sid for _sim, sid, _text in selected]
             if surfaced:
                 cross_turn_events += 1
                 ssl = model.generate(build_chat_prompt(history, q, surfaced), turn, "ssl", surfaced)
