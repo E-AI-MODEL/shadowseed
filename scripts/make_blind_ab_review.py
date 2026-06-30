@@ -29,6 +29,7 @@ from typing import Any
 
 
 SCHEMA_VERSION = "ssl-session-blind-ab.v2"
+DEFAULT_PREFIX = "ssl_session_blind_ab"
 
 
 def _safe_text(value: Any) -> str:
@@ -41,9 +42,24 @@ def _sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def _sha256_json(data: Any) -> str:
-    payload = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return _sha256_text(payload)
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _safe_prefix(prefix: str) -> str:
+    """Treat prefix as a filename prefix, never as a path.
+
+    The workflow exposes this as a free-form input, so reject separators rather
+    than silently writing outside the review artifact directory.
+    """
+    value = (prefix or DEFAULT_PREFIX).strip() or DEFAULT_PREFIX
+    if value in {".", ".."} or value.startswith("."):
+        raise ValueError("--prefix must be a plain filename prefix, not a hidden or relative path")
+    if "/" in value or "\\" in value:
+        raise ValueError("--prefix must be a filename prefix and may not contain path separators")
+    if Path(value).is_absolute() or Path(value).name != value:
+        raise ValueError("--prefix must be a filename prefix inside --output-dir")
+    return value
 
 
 def _turn_number(turn: dict[str, Any]) -> int:
@@ -335,10 +351,6 @@ def write_scoring_csv(path: Path, review_items: list[dict[str, Any]]) -> None:
             )
 
 
-def _source_artifact_bytes(input_path: Path) -> bytes:
-    return input_path.read_bytes()
-
-
 def write_summary(
     path: Path,
     payload: dict[str, Any],
@@ -346,6 +358,8 @@ def write_summary(
     answer_key: list[dict[str, Any]],
     *,
     input_path: Path,
+    review_items_path: Path,
+    answer_key_path: Path,
     seed: int,
     prefix: str,
 ) -> None:
@@ -360,16 +374,13 @@ def write_summary(
         if item["answer_diagnostics"]["A"]["likely_truncated"] or item["answer_diagnostics"]["B"]["likely_truncated"]:
             truncation_flags += 1
 
-    review_items_sha = _sha256_json(review_items)
-    answer_key_sha = _sha256_json(answer_key)
-    source_bytes = _source_artifact_bytes(input_path)
     legacy_embedded_key_present = bool(payload.get("blind_answer_key") or payload.get("legacy_internal_blind_answer_key"))
 
     summary = {
         "schema_version": SCHEMA_VERSION,
         "source_summary": payload.get("summary", {}),
         "source_artifact_path": str(input_path),
-        "source_artifact_sha256": hashlib.sha256(source_bytes).hexdigest(),
+        "source_artifact_sha256": _sha256_file(input_path),
         "review_pack_prefix": prefix,
         "shuffle_seed": seed,
         "blind_review_item_count": len(review_items),
@@ -384,8 +395,9 @@ def write_summary(
             "policy": "Review inhoudelijk, maar sluit duidelijk afgekapte items uit van win-rate.",
         },
         "integrity": {
-            "review_items_sha256": review_items_sha,
-            "answer_key_sha256": answer_key_sha,
+            "review_items_sha256": _sha256_file(review_items_path),
+            "answer_key_sha256": _sha256_file(answer_key_path),
+            "hash_basis": "actual UTF-8 artifact bytes as written to disk",
             "answer_key_is_canonical": True,
             "legacy_embedded_blind_key_present": legacy_embedded_key_present,
             "note": (
@@ -398,7 +410,8 @@ def write_summary(
 
 
 def _prefix_path(output_dir: Path, prefix: str, suffix: str) -> Path:
-    return output_dir / f"{prefix}_{suffix}"
+    safe_prefix = _safe_prefix(prefix)
+    return output_dir / f"{safe_prefix}_{suffix}"
 
 
 def main() -> None:
@@ -406,32 +419,41 @@ def main() -> None:
     parser.add_argument("--input", required=True, help="Path to ssl_session_suite.json")
     parser.add_argument("--output-dir", required=True, help="Directory for generated review files")
     parser.add_argument("--seed", type=int, default=45, help="Randomization seed for balanced A/B assignment")
-    parser.add_argument("--prefix", default="ssl_session_blind_ab", help="Filename prefix for generated review files")
+    parser.add_argument("--prefix", default=DEFAULT_PREFIX, help="Filename prefix for generated review files")
     parser.add_argument("--title", default="SSL session blind A/B review", help="Review form title")
     args = parser.parse_args()
 
     input_path = Path(args.input)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    prefix = _safe_prefix(args.prefix)
 
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     review_items, answer_key = build_review_pack(payload, seed=args.seed)
 
-    write_json(_prefix_path(output_dir, args.prefix, "review_items.json"), review_items)
-    write_json(_prefix_path(output_dir, args.prefix, "answer_key.json"), answer_key)
-    write_form(_prefix_path(output_dir, args.prefix, "review_form.md"), review_items, title=args.title)
-    write_scoring_csv(_prefix_path(output_dir, args.prefix, "scoring_template.csv"), review_items)
+    review_items_path = _prefix_path(output_dir, prefix, "review_items.json")
+    answer_key_path = _prefix_path(output_dir, prefix, "answer_key.json")
+    review_form_path = _prefix_path(output_dir, prefix, "review_form.md")
+    scoring_template_path = _prefix_path(output_dir, prefix, "scoring_template.csv")
+    summary_path = _prefix_path(output_dir, prefix, "summary.json")
+
+    write_json(review_items_path, review_items)
+    write_json(answer_key_path, answer_key)
+    write_form(review_form_path, review_items, title=args.title)
+    write_scoring_csv(scoring_template_path, review_items)
     write_summary(
-        _prefix_path(output_dir, args.prefix, "summary.json"),
+        summary_path,
         payload,
         review_items,
         answer_key,
         input_path=input_path,
+        review_items_path=review_items_path,
+        answer_key_path=answer_key_path,
         seed=args.seed,
-        prefix=args.prefix,
+        prefix=prefix,
     )
 
-    print(f"Generated {len(review_items)} blind A/B review items in {output_dir} with prefix {args.prefix!r}")
+    print(f"Generated {len(review_items)} blind A/B review items in {output_dir} with prefix {prefix!r}")
 
 
 if __name__ == "__main__":
