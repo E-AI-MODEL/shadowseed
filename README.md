@@ -6,16 +6,16 @@
 
 Shadow Seed Learning (SSL) is een research-harness voor een simpele maar strenge vraag:
 
-> kan een model beter antwoorden als het niet alleen kijkt naar wat er staat, maar ook naar wat structureel ontbreekt?
+> kan een model beter verder werken als het niet alleen kijkt naar wat er staat, maar ook naar wat structureel ontbreekt?
 
 SSL noemt zo'n ontbrekend punt een shadow seed.
-Een seed begint gewichtloos. Pas na validatie via de Validation Gate mag die invloed krijgen op vervolgvragen, retrieval of falsificatie.
+Een seed begint gewichtloos. Pas na validatie via de Validation Gate mag die invloed krijgen op vervolgvragen, retrieval, falsificatie of latere antwoordruimte.
 
 ## In 30 seconden
 
-- **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* in een antwoord, bewaart dat als een gewichtloze "shadow seed", en laat alleen gevalideerde seeds meesturen in vervolgvraag, retrieval of falsificatie.
-- **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt vanzelf) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
-- **Status:** werkende research-harness met een sterke regressielaag; de brede claim wordt bewust klein gehouden (zie de laagstatus hieronder).
+- **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* of onderbelicht blijft, bewaart dat als een gewichtloze shadow seed, en laat alleen gevalideerde seeds meesturen in vervolgactie of antwoordruimte.
+- **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt via TTL en leeft op via TrTL) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
+- **Status:** werkende research-harness met sterke lifecycle- en regressielaag. W9f is geaccepteerd als technische baseline voor cross-turn context-discovery en memory-surfacing; de brede claim blijft bewust begrensd.
 
 > Kernregel: één seed = één klein, toetsbaar ontbrekend punt.
 
@@ -23,8 +23,8 @@ Een seed begint gewichtloos. Pas na validatie via de Validation Gate mag die inv
 
 Gebruik deze regel voor documentatie:
 
-- `docs/00_shadow_seed_learning_4_6.md` is de huidige canonieke bron voor theorie, evaluatiekoers en repo-alignment
-- `docs/legacy/00_shadow_seed_learning_4_5.md` blijft beschikbaar als historische technische referentie voor de eerdere 4.5-specificatie
+- `docs/00_shadow_seed_learning_4_6.md` is de huidige canonieke bron voor theorie, evaluatiekoers en repo-alignment.
+- `docs/legacy/00_shadow_seed_learning_4_5.md` blijft beschikbaar als historische technische referentie voor de eerdere 4.5-specificatie.
 
 Dat betekent:
 
@@ -38,32 +38,45 @@ SSL hanteert één laag-taal voor bewijs, gelijk aan `docs/00_shadow_seed_learni
 | Laag | Vraag | Status vandaag |
 |---|---|---|
 | **A** Regressie | Blijft de kernmechaniek werken? | **Sterk** — snelle CI-ruggengraat |
-| **B** Kleine benchmark | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** (bewust smal) |
-| **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Eerste echte evidence — kwaliteitswaarschuwing** (round 005 offset-12: acceptance 0.29) |
-| **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** (nog klein) |
-| **E** Probe utility | Leveren promoted seeds betere vervolgstappen op? | **Eerste echte evidence** |
-| **F** Domeintransfer | Werkt SSL buiten de bekende domeinen? | **Nog leeg** |
-| **G** Modelintern | Steun in interne activaties (H-Neurons)? | **Onderzoekslaag**, niet operationeel |
+| **B** Kleine benchmark | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** — bewust smal |
+| **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Eerste evidence, gemengd** — relevantie hoog, trivialiteit/testability blijft risico |
+| **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** — kleine maar duidelijke stresstest |
+| **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f positief voor cross-turn discovery; productmatige seed-use discipline blijft open** |
+| **F** Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende domeinen? | **Volgende stap: W10 doctrine-transfer** |
+| **G** Modelintern | Steun in interne activaties? | **Onderzoekslaag**, niet operationeel |
 
-De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie- en kleine-benchmarklagen plus de aanvullende evidencelagen D (adversarial Gate) en E (probe utility). Die aanvullende lagen zijn echt bewijs, maar nog geen volledige eindvalidatie.
+De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie- en kleine-benchmarklagen plus aanvullende evidencelagen. Manual OpenAI-runs via `Research · SSL Benefit (OpenAI)` kunnen zwaardere payoff- en `ssl-session` artifacts maken, inclusief blind A/B-reviewpack voor cross-turn sessies.
 
-De eerste mensgereviewde open-set batch (Laag C, round 005 offset-12, 41 seeds, twee reviewers) is eerlijk gezegd een waarschuwing: relevance 0.98, maar acceptance 0.29 omdat de gevonden afwezigheden overwegend triviaal of niet-toetsbaar zijn. De vorm is gefixt, de substantie nog niet — zie `benchmarks/open_review/rounds/round_005/reviewed_offset12/`.
+## W9f-status
+
+W9f is de huidige technische baseline voor cross-turn SSL.
+
+De kernclaim is niet dat SSL elk antwoord beter maakt of GPT-4.1 algemeen verslaat. De claim is smaller:
+
+> SSL kan latente sessiecontext gewichtloos vasthouden, later valideren of surfacen, en daardoor bruikbare aanvullende antwoordruimte openen.
+
+De blind A/B-review wordt daarom gelezen als kwaliteitscontrole op door SSL geopende antwoordruimte, niet als klassieke model-vs-model benchmark. Zonder SSL zouden de SSL-gestuurde antwoordvarianten niet als optie hebben bestaan.
+
+Zie `docs/research/w9f-evaluatieconclusie.md`.
 
 ## Wat de resultaten wel en niet betekenen
 
 Wat je voorzichtig wel mag zeggen:
 
 - SSL heeft een reproduceerbare mechanische kern.
+- De repo bewaakt `trace`, `weight`, TTL, TrTL, status lifecycle en Gate-gedrag.
 - De repo kan meten of bekende gaps gevonden worden.
-- De repo kan meten of het systeem geen evidente promoted false positives doorlaat.
-- De repo kan laten zien of aanvullende evidencelagen iets extra's zichtbaar maken.
+- De Gate heeft eerste echte adversarial evidence.
+- Probe-feedback heeft eerste behavioral evidence.
+- W9f toont dat cross-turn surfaced seeds bruikbare extra antwoordruimte kunnen openen.
 
 Wat je nog niet breed moet zeggen:
 
 - dat SSL algemeen bewezen beter presteert op open-ended modeltaken;
+- dat SSL elk antwoord verbetert;
+- dat elke promoted seed waardevol is;
 - dat fixture-smokes gelijk staan aan echte modelvalidatie;
-- dat open-set, adversarial en probe utility al volledige eindvalidatie vormen;
-- dat de repo nu al het hele SSL-onderzoeksprogramma heeft afgedekt.
+- dat open-set, adversarial, probe utility en W9f samen al volledige scenario-onafhankelijke eindvalidatie vormen.
 
 ## Snelstart
 
@@ -107,9 +120,11 @@ Huidige bron- en researchstack:
 
 - `docs/00_shadow_seed_learning_4_6.md`
 - `docs/research/current-status.md`
+- `docs/research/w9f-evaluatieconclusie.md`
+- `docs/research/scenario-independence-roadmap.md`
+- `docs/research/evaluation-matrix.md`
 - `docs/research/work-categories.md`
 - `docs/research/roadmap-shadowseed-stabilization.md`
-- `docs/research/evaluation-matrix.md`
 - `docs/research/artifact-contracts.md`
 - `docs/research/workflow-map.md`
 
