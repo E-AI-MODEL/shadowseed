@@ -63,3 +63,30 @@ consensus-item `CONV_STARTUP-t05`), is een modelrun-vraag:
 3. Pas daarna mag de payoff-claim van "kandidaat" opschuiven.
 
 Dit is spoor 1 van de twee na round 022; spoor 2 is W10 doctrine-transfer.
+
+## Eerste validatie-run (binnen) — 2026-06-30
+
+Stap 1 hierboven is uitgevoerd. Provenance: run **28442142918**, job 84282442326,
+`Research · SSL Benefit (OpenAI)`, `gpt-4.1`, `recurrence_mode=cluster`, OpenAI
+embeddings, de nieuwe round-023 defaults (`surface_top_k=2` + potentieel-prompt),
+branch-sha `692c889`, artifact `ssl-openai-ssl-session-gpt-4.1` (id 7979699416).
+Run geslaagd; alle `ssl-session`-stappen success.
+
+Wat de run laat zien (mechanisme):
+
+- **Cross-turn payoff events = 10** (answer key: `CONV_STARTUP` t4–t8 en
+  `CONV_CITY` t4–t8; `CONV_IR_SHORT` 0). De cap (`top_k=2`) + potentieel-prompt
+  hebben het mechanisme dus **niet gesmoord** — surfacing vuurt nog breed
+  (vergelijkbaar met round 020/022's ~8–10; de exacte telling is run-to-run ruizig
+  op een LLM-detector, dus lees dit als "intact", niet als "meer = beter").
+- **Cap aantoonbaar actief**: het ene leesbare item in de joblog (`CONV_CITY-t8`)
+  surfacet **exact 1** seed ("historische gelaagdheid…") en weeft die als een
+  nette *"Aanscherping"* binnen de draagvlak-/identiteitspunten — leest coherent,
+  niet als het round-022 "te-seed-gedreven/diffuus"-patroon. Eén-item-leesindruk.
+- Blind A/B-pack gegenereerd (`w9f_blind_ab_*`); SSL-toewijzing A=4 / B=6.
+
+**Eerlijke grens — dit is signaal, geen verdict.** Of de ruis/vernauwing t.o.v.
+round 022 echt daalt en of `CONV_STARTUP-t05` een win blijft, vereist stap 2: een
+**verse blinde review** (≥2 reviewers, mét answer key). De per-seed promoted-count
+en coverage staan in het artifact `ssl_session_suite.json` (niet hier overgenomen).
+De payoff-claim blijft "kandidaat" tot die review binnen is.
