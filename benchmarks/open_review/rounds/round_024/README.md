@@ -70,6 +70,15 @@ Volledige lezing van de joblog door de sessie-agent. **Kanttekening: de agent
 kende de answer key, dus dit is een niet-blinde, secundaire lezing** — het
 vervangt de blinde human-review niet.
 
+> **Protocolregel (n.a.v. review op deze PR):** key-bewuste diagnostiek zoals
+> hieronder (die per item de SSL/baseline-kant benoemt) hoort NIET in
+> reviewer-zichtbare documenten zolang de blinde scoring loopt — het kan het
+> pack de-blinderen. In deze ronde is dat risico niet gematerialiseerd: de
+> scoring was al afgerond vóór en onafhankelijk van deze sectie (zie
+> `human_review/RESULTS.md`), en het genoemde item was bovendien door afkap
+> uitgesloten. Vanaf round 025: key-bewuste notities pas publiceren ná
+> afronding van de scoring, of in een apart niet-reviewer-artifact.
+
 Per domein:
 
 - **CONV_EDU** (seed: digitale geletterdheid als sociaal-cultureel construct):
