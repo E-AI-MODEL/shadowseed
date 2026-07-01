@@ -30,37 +30,41 @@ Elke conversatie is theme-returning en eindigt op een "wat gaat vaak mis"-beurt,
 zodat een vroeg-gezaaide seed later kan opduiken en pay-off kan tonen. Geen
 ground truth, geen totaalscore.
 
-## Eerste live run
+## Eerste live run (canoniek, post-#156)
 
 Run:
 
 ```text
-run_id: 28469553713
+run_id: 28519306334
 branch: main
-commit: 560e5bb6c896f15fac9220985381894670cc99db
+commit: 7f541e9d531aec74165a26db1695958c4bdf5d38
 experiment: ssl-session
 model_id: gpt-4.1
 recurrence_mode: cluster
 input_path: src/shadowseed/data/ssl_session_transfer_suite.json
 max_new_tokens: 1000
-artifact: ssl-openai-ssl-session-gpt-4.1
-artifact_digest: sha256:85b0b45415252712e0d2065c944acc90a22dd71dbf9242b4d19996008a03e9c8
+artifact: ssl-openai-ssl-session-gpt-4.1 (id 8010902341)
+artifact_digest: sha256:ca28e5871aa90faa51cc64cc057f94031c301497e2f0c7567c3d170c061d18a5
 ```
 
-Uitkomst van de artifact-summary:
+Dit pack is **canoniek**: gegenereerd op `main` ná de artifact-contract-fix
+(#156), dus met de neutrale `ssl_session_blind_ab_*` namen + hashes +
+truncation-flags. De exacte per-domein tellingen (`conversation_count`,
+`cross_turn_payoff_events`, `items_by_conversation`, SSL A/B-distributie) staan in
+`ssl_session_blind_ab_summary.json` in dat artifact.
 
-```text
-conversation_count: 3
-cross_turn_payoff_events: 8
-items_by_conversation:
-  CONV_EDU: 3
-  CONV_HEALTH: 3
-  CONV_POLICY: 2
-SSL A/B distribution: 4 / 4
-```
+> Noot: een eerdere run (28469553713, commit 560e5bb, digest 85b0b454…) draaide
+> **vóór** #156 en leverde een pack met de oude `w9f_blind_ab_*` namen zonder de
+> canonieke hashes; die is vervangen door bovenstaande canonieke run. De
+> pre-#156-summary rapporteerde ter referentie 8 cross-turn events
+> (CONV_EDU 3 / CONV_HEALTH 3 / CONV_POLICY 2, SSL A/B 4/4).
 
-Interpretatie: het mechanisme vuurt buiten de oude domeinen. Dat is
-transfer-signaal, geen bewijs van betere antwoordkwaliteit.
+Kwalitatief (leesindruk, geen verdict): de afkap-confound is weg bij
+`max_new_tokens=1000` — het CONV_POLICY-t8 antwoord loopt volledig door tot een
+"Samenvatting en aanscherping" en weeft de latente seed (sociale ongelijkheid /
+verdelingseffecten) coherent in. Interpretatie: het mechanisme vuurt buiten de
+oude domeinen — transfer-signaal, geen bewijs van betere antwoordkwaliteit. Dat
+vergt de blinde human-review van dit canonieke pack.
 
 ## Artifact-contract
 
