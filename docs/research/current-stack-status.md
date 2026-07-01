@@ -108,11 +108,11 @@ Supported experiments:
 
 For `ssl-session`, the workflow now also generates a blind A/B review pack from `results/ssl_session_suite.json`:
 
-- `results/blind_ab_review/w9f_blind_ab_review_items.json`
-- `results/blind_ab_review/w9f_blind_ab_answer_key.json`
-- `results/blind_ab_review/w9f_blind_ab_review_form.md`
-- `results/blind_ab_review/w9f_blind_ab_scoring_template.csv`
-- `results/blind_ab_review/w9f_blind_ab_summary.json`
+- `results/blind_ab_review/ssl_session_blind_ab_review_items.json`
+- `results/blind_ab_review/ssl_session_blind_ab_answer_key.json`
+- `results/blind_ab_review/ssl_session_blind_ab_review_form.md`
+- `results/blind_ab_review/ssl_session_blind_ab_scoring_template.csv`
+- `results/blind_ab_review/ssl_session_blind_ab_summary.json`
 
 These files are uploaded in the same `ssl-openai-ssl-session-<model>` artifact. The answer key is for post-review unblinding only.
 
