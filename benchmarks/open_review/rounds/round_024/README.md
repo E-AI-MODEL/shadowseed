@@ -59,12 +59,65 @@ truncation-flags. De exacte per-domein tellingen (`conversation_count`,
 > pre-#156-summary rapporteerde ter referentie 8 cross-turn events
 > (CONV_EDU 3 / CONV_HEALTH 3 / CONV_POLICY 2, SSL A/B 4/4).
 
-Kwalitatief (leesindruk, geen verdict): de afkap-confound is weg bij
-`max_new_tokens=1000` — het CONV_POLICY-t8 antwoord loopt volledig door tot een
-"Samenvatting en aanscherping" en weeft de latente seed (sociale ongelijkheid /
-verdelingseffecten) coherent in. Interpretatie: het mechanisme vuurt buiten de
-oude domeinen — transfer-signaal, geen bewijs van betere antwoordkwaliteit. Dat
-vergt de blinde human-review van dit canonieke pack.
+De canonieke run telt **9 cross-turn events, 3 per domein** (EDU/HEALTH/POLICY
+elk t4–t6), **5 promoties totaal** (representative-promotie houdt het volume
+laag; `max_occurrence_count` 24 → cluster-recurrence werkt), en de use-time cap
+houdt (max 2 surfaced seeds per beurt).
+
+### AI-leesindruk van alle 9 paren (niet blind, geen verdict)
+
+Volledige lezing van de joblog door de sessie-agent. **Kanttekening: de agent
+kende de answer key, dus dit is een niet-blinde, secundaire lezing** — het
+vervangt de blinde human-review niet.
+
+> **Protocolregel (n.a.v. review op deze PR):** key-bewuste diagnostiek zoals
+> hieronder (die per item de SSL/baseline-kant benoemt) hoort NIET in
+> reviewer-zichtbare documenten zolang de blinde scoring loopt — het kan het
+> pack de-blinderen. In deze ronde is dat risico niet gematerialiseerd: de
+> scoring was al afgerond vóór en onafhankelijk van deze sectie (zie
+> `human_review/RESULTS.md`), en het genoemde item was bovendien door afkap
+> uitgesloten. Vanaf round 025: key-bewuste notities pas publiceren ná
+> afronding van de scoring, of in een apart niet-reviewer-artifact.
+
+Per domein:
+
+- **CONV_EDU** (seed: digitale geletterdheid als sociaal-cultureel construct):
+  coherent ingeweven. t4 buigt de vraag over thuisondersteuning om naar peer
+  learning + "de klas als sociaal-culturele leeromgeving" (echte aanscherping;
+  milde kanttekening: laat baseline's externe-partnerspunt vallen). t6 voegt twee
+  onderscheidende faalwijzen toe (reductie tot techniek; geen verbinding met de
+  leefwereld) — het CONV_CITY-t8-patroon. Geen ruis.
+- **CONV_HEALTH** (seeds: commerciële beïnvloeding; sociale normvorming): apt.
+  t4 dekt de baseline-grond plus een "tegenkrachten"-sectie met concreet
+  voorbeeld ("waarom zit energiedrank zo vaak in games?"); t6 maakt sociale
+  normvorming een eigen faalwijze. Geen ruis; baseline t4 is óók sterk
+  (voorbeeldaanpak) — close calls.
+- **CONV_POLICY** (seeds: sociale-ongelijkheidslens; participatiepsychologie):
+  de sterkste weave van de set. t4 (lasten/baten) krijgt een expliciete
+  "sociale ongelijkheid als lens"-analyse met het regressiviteitsrisico van
+  vrijwillige maatregelen + oplossingen; t5 koppelt eerlijkheid slim aan
+  politieke houdbaarheid. Geen ruis.
+
+**Drie eerlijke warts:**
+
+1. **Afkap is verminderd maar NIET weg** bij `max_new_tokens=1000`: **7 van 18
+   antwoorden eindigen midden in een zin/woord**, en **asymmetrisch** — 5×
+   baseline vs 2× SSL. Dat kan de win-rate richting SSL biassen bij
+   volledigheids-gevoelige reviewers (round-023-les). De contract-summary
+   (`truncation.items_with_likely_truncated_answer`) flagt dit; reviewers moeten
+   afgekapte items markeren en zo nodig uit de win-rate laten.
+2. **Eén meta-lek**: CONV_POLICY-t5 (SSL) bevat de tussenzin *"(Deze invalshoek
+   versterkt het antwoord, omdat …)"* — het antwoord verantwoordt z'n eigen
+   toegevoegde invalshoek. Dat is een prompt-lek dat het item voor een oplettende
+   reviewer kan de-blinderen; toekomstige weave-prompt-iteratie moet dit
+   verbieden.
+3. De vergelijkingen zijn **close**: baselines zijn op gpt-4.1 zelf sterk; de
+   seed-meerwaarde is verdieping/onderscheidend kader, geen nacht-en-dag.
+
+Interpretatie: het mechanisme vuurt buiten de oude domeinen en de weave leest
+overal coherent (geen round-022-ruispatroon) — **transfer-signaal, geen bewijs
+van betere antwoordkwaliteit**. Dat vergt de blinde human-review van dit
+canonieke pack, met de afkap-markering hierboven.
 
 ## Artifact-contract
 
