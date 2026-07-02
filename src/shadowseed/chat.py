@@ -158,26 +158,48 @@ class ShadowChatSession:
     def _load_probe_corpus(self, path: str) -> InMemoryVectorStore:
         """Load a corpus into an in-memory store, embedded like the seeds.
 
-        Accepts a JSON list of ``{"id": ..., "text": ...}`` chunks (id optional)
-        or plain text split on blank lines.
+        Accepts the repo retrieval-corpus schema (``documents[].chunks`` with
+        ``chunk_id``, as indexed by ``index_retrieval_corpus``), a flat JSON
+        list of ``{"id"|"chunk_id": ..., "text": ...}`` chunks (also under a
+        top-level ``"chunks"`` key), or plain text split on blank lines.
+        Raises when nothing indexes: an empty store must fail loudly, not probe
+        silently against nothing.
         """
         raw = Path(path).read_text(encoding="utf-8")
-        chunks: list[tuple[str, str]] = []
+        chunks: list[tuple[str, str, str | None]] = []  # (chunk_id, text, doc_id)
         if path.endswith(".json"):
             data = json.loads(raw)
-            if isinstance(data, dict):
-                data = data.get("chunks", [])
-            for i, item in enumerate(data):
+            if isinstance(data, dict) and "documents" in data:
+                items = [
+                    {**chunk, "doc_id": doc.get("doc_id")}
+                    for doc in data["documents"]
+                    for chunk in doc.get("chunks", [])
+                ]
+            elif isinstance(data, dict):
+                items = data.get("chunks", [])
+            else:
+                items = data
+            for i, item in enumerate(items):
                 text = str(item.get("text", "")).strip()
                 if text:
-                    chunks.append((str(item.get("id", f"chunk_{i:03d}")), text))
+                    chunk_id = str(item.get("chunk_id") or item.get("id") or f"chunk_{i:03d}")
+                    chunks.append((chunk_id, text, item.get("doc_id")))
         else:
             for i, block in enumerate(p.strip() for p in raw.split("\n\n")):
                 if block:
-                    chunks.append((f"chunk_{i:03d}", block))
+                    chunks.append((f"chunk_{i:03d}", block, None))
+        if not chunks:
+            raise ValueError(
+                f"Probe-corpus '{path}' bevat geen indexeerbare chunks "
+                "(verwacht: documents[].chunks, een JSON-lijst met 'text', of platte tekst)."
+            )
         store = InMemoryVectorStore()
-        for chunk_id, text in chunks:
-            store.add(chunk_id, self.manager.get_embedding(text), {"text": text})
+        for chunk_id, text, doc_id in chunks:
+            store.add(
+                chunk_id,
+                self.manager.get_embedding(text),
+                {"text": text, "chunk_id": chunk_id, "doc_id": doc_id},
+            )
         return store
 
     def _run_retrieval_probe(self, question: str) -> dict[str, Any] | None:

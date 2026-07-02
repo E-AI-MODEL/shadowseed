@@ -196,6 +196,45 @@ def test_retrieval_probe_reports_presence_without_steering(tmp_path, monkeypatch
     session.audit()  # and the probe added no influence
 
 
+def test_probe_corpus_accepts_repo_retrieval_schema(tmp_path, monkeypatch):
+    # the repo's retrieval corpora are shaped documents[].chunks with chunk_id
+    # (index_retrieval_corpus); the loader must index those, not silently skip
+    corpus = tmp_path / "corpus.json"
+    corpus.write_text(
+        json.dumps(
+            {
+                "documents": [
+                    {
+                        "doc_id": "doc_a",
+                        "chunks": [
+                            {"chunk_id": "doc_a::c1", "text": "Privacy in het archief."},
+                            {"chunk_id": "doc_a::c2", "text": "Alles over data."},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    session = _make_session(monkeypatch, probe_corpus=str(corpus), probe_top_k=1)
+    assert sorted(session.probe_store.get_all_ids()) == ["doc_a::c1", "doc_a::c2"]
+    assert session.probe_store.get_metadata("doc_a::c1")["doc_id"] == "doc_a"
+
+    reports = _drive(session, 7)
+    hit = next(
+        p for p in (r["retrieval_probe"] for r in reports) if p and p["seed_only_chunk_ids"]
+    )
+    assert hit["seed_only_chunk_ids"] == ["doc_a::c1"]
+    assert hit["seed_only_hits"][0]["doc_id"] == "doc_a"
+
+
+def test_probe_corpus_without_chunks_fails_loudly(tmp_path, monkeypatch):
+    corpus = tmp_path / "leeg.json"
+    corpus.write_text(json.dumps({"iets": "anders"}), encoding="utf-8")
+    with pytest.raises(ValueError, match="geen indexeerbare chunks"):
+        _make_session(monkeypatch, probe_corpus=str(corpus))
+
+
 def test_falsify_unknown_seed_raises(session):
     with pytest.raises(KeyError):
         session.falsify("bestaat-niet")
