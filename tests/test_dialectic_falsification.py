@@ -55,6 +55,11 @@ def test_prompt_contains_source_and_seed():
         ("VERDICT: ONBESLIST\nREDEN: te weinig bron.", VERDICT_ONBESLIST),
         ("blabla zonder format", VERDICT_ONBESLIST),  # fail-safe
         ("", VERDICT_ONBESLIST),
+        # echoed format line / hedging: never a contradiction that was not asserted
+        ("VERDICT: WEERLEGD | HOUDT_STAND | ONBESLIST\nREDEN: echo.", VERDICT_ONBESLIST),
+        ("VERDICT: WEERLEGD of HOUDT_STAND\nREDEN: twijfel.", VERDICT_ONBESLIST),
+        # a verdict word in the REDEN line must not make the verdict ambiguous
+        ("VERDICT: WEERLEGD\nREDEN: de stelling houdt geen stand.", VERDICT_WEERLEGD),
     ],
 )
 def test_parse_verdict(raw, verdict):

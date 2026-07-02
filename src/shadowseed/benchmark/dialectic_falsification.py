@@ -35,9 +35,8 @@ VERDICT_HOUDT_STAND = "HOUDT_STAND"
 VERDICT_ONBESLIST = "ONBESLIST"
 _VERDICTS = (VERDICT_WEERLEGD, VERDICT_HOUDT_STAND, VERDICT_ONBESLIST)
 
-_VERDICT_RE = re.compile(
-    r"VERDICT\s*:\s*(WEERLEGD|HOUDT[_ ]STAND|ONBESLIST)", re.IGNORECASE
-)
+_VERDICT_LINE_RE = re.compile(r"VERDICT\s*:\s*(.+)", re.IGNORECASE)
+_VERDICT_TOKEN_RE = re.compile(r"WEERLEGD|HOUDT[_ ]STAND|ONBESLIST", re.IGNORECASE)
 _REASON_RE = re.compile(r"REDEN\s*:\s*(.+)", re.IGNORECASE)
 
 
@@ -60,14 +59,27 @@ def build_dialectic_prompt(seed_text: str, source_text: str) -> str:
 
 
 def parse_dialectic_verdict(raw: str) -> dict[str, str]:
-    """Parse the model output; unparseable output fails safe to ONBESLIST."""
-    match = _VERDICT_RE.search(raw or "")
-    if not match:
+    """Parse the model output; anything but one unambiguous verdict fails safe.
+
+    The verdict line must contain exactly one allowed option. A backend that
+    echoes the format line ("VERDICT: WEERLEGD | HOUDT_STAND | ONBESLIST"), or
+    hedges with multiple options, must land on ONBESLIST — never on a
+    contradiction it did not actually assert.
+    """
+    line_match = _VERDICT_LINE_RE.search(raw or "")
+    if not line_match:
         return {"verdict": VERDICT_ONBESLIST, "reason": "onparseerbare modeloutput"}
-    verdict = match.group(1).upper().replace(" ", "_")
+    tokens = {
+        t.upper().replace(" ", "_") for t in _VERDICT_TOKEN_RE.findall(line_match.group(1))
+    }
+    if len(tokens) != 1:
+        return {
+            "verdict": VERDICT_ONBESLIST,
+            "reason": "ambigu verdict (geen of meerdere opties op de VERDICT-regel)",
+        }
     reason_match = _REASON_RE.search(raw)
     reason = reason_match.group(1).strip() if reason_match else ""
-    return {"verdict": verdict, "reason": reason}
+    return {"verdict": tokens.pop(), "reason": reason}
 
 
 class FixtureDialecticBackend:
