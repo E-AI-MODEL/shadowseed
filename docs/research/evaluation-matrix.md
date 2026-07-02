@@ -26,7 +26,7 @@ De matrix is geen scorekaart die alles samenvouwt tot één getal. Ze bewaakt ju
 | C — Open-set seedkwaliteit | Kan SSL goede seeds maken zonder vaste ground truth? | **Eerste evidence, gemengd** | Sterker en breder meten |
 | D — Adversarial ruiscontrole | Weert de Gate echte misleidende gaps? | **Eerste echte evidence** | Grotere stresssets |
 | E — Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; use-time discipline blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel weg, win-rate ≤0.5)** | Verdere blinde toetsing per domein |
-| F — Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende scenario's? | **Eerste positief transfer-verdict** | Round 025 blind (3 reviewers): SSL-kant 6/7 per meerderheid, valkuilvragen unaniem, ruis 0; n=7, één model |
+| F — Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende scenario's? | **Eerste voorzichtig positief transfer-verdict** | Round 025 blind (2 conforme reviewers): consensus-SSL 4/7 (alle valkuilvragen), consensus-baseline 1/7, 2 gespleten, ruis 0; n=7, één model |
 | G — Modelinterne validatie | Is er steun in interne activaties? | **Instap-sonde gebouwd** | Dialectische falsificatie (spoor 1); activatie-sonde is de vervolgstap |
 
 ## 1. Laag A — Regressie
@@ -244,7 +244,7 @@ Volgende stap.
 
 W10: doctrine-transfer. De vraag is niet meer of W9f in de huidige setting werkt, maar of dezelfde levenscyclus overdraagt naar andere domeinen, taken en modellen.
 
-Stand 2026-07-02 (avond): het blinde verdict is binnen en positief, met grenzen — SSL-kant per meerderheid 6/7 over 3 nieuwe domeinen, alle t6-valkuilvragen unaniem SSL, ruis 0, overeenstemming ~0.71 (zie `benchmarks/open_review/rounds/round_025/human_review/RESULTS.md`).
+Stand 2026-07-02 (avond): het blinde verdict is binnen en voorzichtig positief, met grenzen — blinde consensus (2 conforme reviewers) voor SSL op 4/7, waaronder álle t6-valkuilvragen; consensus-baseline 1/7; 2 gespleten; ruis 0; overeenstemming ~0.71 (zie `benchmarks/open_review/rounds/round_025/human_review/RESULTS.md`).
 
 ## 7. Laag G — Modelinterne validatie
 
@@ -280,7 +280,7 @@ Deze matrix moet voor repo-beslissingen als volgt worden gelezen:
 - regressie en kleine benchmarkvalidatie houden de repo stabiel;
 - open-set, adversarial en probe utility blijven gescheiden evidence-lagen;
 - het W9f cross-turn mechanisme is bevestigd op veilige drempels; de payoff-kwaliteit is reviewer-afhankelijk gebleken (round 022) en blijft open;
-- de use-time seed-discipline is gebouwd en blind getoetst (round 023); W10 heeft een eerste positief blind transfer-verdict (round 025: 6/7 per meerderheid, ruis 0, n=7);
+- de use-time seed-discipline is gebouwd en blind getoetst (round 023); W10 heeft een eerste voorzichtig positief blind transfer-verdict (round 025: consensus-SSL 4/7 incl. alle valkuilvragen, ruis 0, n=7);
 - modelinterne validatie heeft een instap-sonde (dialectische falsificatie, `docs/research/laag-g-scoping.md`); het interne activatiesignaal blijft later onderzoek.
 
 ## Wat niet moet gebeuren
@@ -298,6 +298,6 @@ Vermijd:
 1. behoud regressie- en lifecyclelaag;
 2. houd W9f vast als baseline;
 3. documenteer blind A/B als kwaliteitscontrole, niet als absolute benchmark;
-4. W10 afgerond met een eerste positief verdict (round 025); replicatie op een tweede model/run is de volgende transfer-stap;
+4. W10 afgerond met een eerste voorzichtig positief verdict (round 025); replicatie op een tweede model/run is de volgende transfer-stap;
 5. meet seed-ruis en seed-vernauwing expliciet;
 6. behandel modelinterne validatie als aparte onderzoekslijn.

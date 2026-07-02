@@ -1,13 +1,15 @@
 # Round 025 — blinde review van de afkap-vrije W10 transfer-run (3 reviewers)
 
-> **Status: het W10 doctrine-transfer-verdict is binnen en is positief, met
-> grenzen.** Drie onafhankelijke reviewers scoorden het canonieke blinde
+> **Status: het W10 doctrine-transfer-verdict is binnen en is voorzichtig
+> positief, met grenzen.** Drie onafhankelijke reviewers scoorden het canonieke blinde
 > A/B-pack (7 cross-turn items, 3 nieuwe domeinen, gpt-4.1, run 28573062737,
 > artifact 8031850899, digest `c6867a23…`; 0/14 afgekapt, 0 meta-lekken).
-> De SSL-kant wint per meerderheid **6/7**; alle t6-valkuilvragen zijn
-> **unaniem** voor de SSL-kant; ruis- en vernauwingsnotities: **nul** bij alle
-> drie reviewers. Eén reviewer (R3) week af van het blinde protocol
-> (seed-bewust beoordeeld) en telt als aparte kwaliteitslezing.
+> Het blinde verdict (R1+R2, protocol-conform) is: **consensus voor de
+> SSL-kant op 4/7 items — waaronder álle t6-valkuilvragen —, consensus voor
+> de baseline op 1/7, en 2/7 gespleten**; beide blinde reviewers kozen elk
+> 5/7 de SSL-kant. Ruis- en vernauwingsnotities: **nul**. Eén reviewer (R3)
+> week af van het blinde protocol (seed-bewust beoordeeld, 7/7 SSL) en telt
+> níet mee in het blinde verdict; zijn lezing is convergent maar apart.
 
 ## Unblinding
 
@@ -36,24 +38,27 @@ SSL-voorkeur (winnaar == SSL-kant), per reviewer:
 | r2 (compacte CSV) | **5/7** | 1/3 | 2/2 | 2/2 | blind, conform |
 | r3 (proza) | 7/7 | 3/3 | 2/2 | 2/2 | **seed-bewust — apart tellen** |
 
-- **Meerderheidswinnaar: SSL op 6/7** (alleen CONV_EDU-t04 gaat per
-  meerderheid naar de baseline).
-- **Unaniem (3/3): 4 items, alle vier SSL-kant** — EDU-t06, HEALTH-t05,
-  HEALTH-t06, POLICY-t06.
-- Overeenstemming: pairwise 5/7 bij alle drie paren (**~0.71**; round 022 was
-  0.125, round 023 ~0.67).
+- **Blind verdict (alleen R1+R2, protocol-conform):** consensus-SSL op **4/7**
+  (EDU-t06, HEALTH-t05, HEALTH-t06, POLICY-t06), consensus-baseline op **1/7**
+  (EDU-t04), **2/7 gespleten** (EDU-t05: R1 SSL / R2 baseline; POLICY-t05:
+  R2 SSL / R1 baseline). R3 telt hier níet in mee (seed-bewust).
+- Ter context, mét R3 zou de meerderheid op 6/7 SSL uitkomen — dat cijfer is
+  géén blind resultaat en wordt nergens als zodanig gerapporteerd.
+- Overeenstemming R1–R2 (blind): **5/7 (~0.71**; round 022 was 0.125, round
+  023 ~0.67); pairwise met R3 eveneens 5/7.
 - Uitgesloten items: **0**; afkap: **0/14** (round 024: 6/9 uitgesloten door
   afkap — de compactheidsfix deed zijn werk).
 
 ## Het scherpste patroon: vraagtype, niet domein
 
-- **Valkuil-/reflectievragen (t6, alle drie domeinen): 9/9 reviewer-stemmen
-  voor de SSL-kant.** De seeds (instrumenteel-vs-vormingsproces; commerciële
+- **Valkuil-/reflectievragen (t6, alle drie domeinen): blind 6/6
+  reviewer-stemmen voor de SSL-kant (mét R3: 9/9).** De seeds (instrumenteel-vs-vormingsproces; commerciële
   tegenkracht; korte-vs-lange termijn + sociale ongelijkheid) structureren
   daar aantoonbaar de probleemanalyse — reviewers benoemen precies die punten
   als doorslaggevend ("raakt de kern", "adresseert de olifant in de kamer",
   "twee essentiële valkuilen die in B volledig ontbreken").
-- **Praktische adviesvragen (t4/t5): 8/12 stemmen voor SSL** — gemengd. Waar
+- **Praktische adviesvragen (t4/t5): blind 4/8 stemmen voor SSL** — gemengd.
+  Waar
   de vraag om direct uitvoerbare stappen vraagt (EDU-t04), verkiezen blinde
   reviewers de concretere baseline; de seed-kant wint waar het bredere kader
   de overtuigingskracht verhoogt (EDU-t05 bij 2/3, POLICY-t05 bij 2/3).
@@ -73,17 +78,17 @@ domeinen: **de use-time discipline draagt over**.
 
 ## Transfer-verdict (W10)
 
-**Positief, met grenzen.** In drie domeinen die de suite nooit eerder zag
-(onderwijs, publieke gezondheid, gemeentelijk klimaatbeleid):
+**Voorzichtig positief, met grenzen.** In drie domeinen die de suite nooit
+eerder zag (onderwijs, publieke gezondheid, gemeentelijk klimaatbeleid):
 
 1. het mechanisme vuurde (7 cross-turn events, 7 promoties, Gate op veilige
    drempels);
-2. de gepromoveerde seeds openden antwoordruimte die blinde reviewers per
-   meerderheid verkiezen (6/7), met **unanimiteit precies waar de doctrine
-   het voorspelt** (reflectie/aanscherping) en eerlijke splitsing waar
-   concreetheid wint;
+2. de gepromoveerde seeds openden antwoordruimte waar de blinde reviewers
+   **consensus over hebben op 4/7 items — precies waar de doctrine het
+   voorspelt** (alle valkuil-/aanscherpingsvragen), met één consensus-baseline
+   op de meest praktische vraag en eerlijke splitsing op de overige twee;
 3. ruis — de round-022-foutklasse — bleef op nul;
-4. de overeenstemming (~0.71) is het hoogste tot nu toe.
+4. de blinde overeenstemming (~0.71) is het hoogste tot nu toe.
 
 **Grenzen, onverminderd:** n=7 items, één model (gpt-4.1), één run,
 auteur-gekozen gespreksthema's, beide armen LLM-gegenereerd, r3
@@ -94,12 +99,14 @@ maakt".
 ## Doorwerking
 
 - De herzieningstrigger uit `docs/research/positioning-synthese.md` is
-  gevallen: het positieve verdict **verstevigt de tweede positioneringszin**
-  (cross-turn kan SSL antwoordruimte openen die reviewers verkiezen, nu ook
-  buiten de oorspronkelijke domeinen); het besluit zelf (discipline voorop,
-  4.6-lijn, geen versiesprong) verandert niet.
+  gevallen: het voorzichtig positieve blinde verdict **verstevigt de tweede
+  positioneringszin**
+  (cross-turn kan SSL antwoordruimte openen waar blinde reviewers consensus
+  over hebben, nu ook buiten de oorspronkelijke domeinen); het besluit zelf
+  (discipline voorop, 4.6-lijn, geen versiesprong) verandert niet.
 - Laag F (evaluatiematrix/README) gaat van "verdict pending" naar "eerste
-  positieve transfer-verdict (round 025), met bovenstaande grenzen".
+  voorzichtig positieve transfer-verdict (round 025), met bovenstaande
+  grenzen".
 
 ## Bestanden
 

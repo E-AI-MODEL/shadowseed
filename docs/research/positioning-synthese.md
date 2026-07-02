@@ -28,7 +28,7 @@ niet?**
 | C — Open-set seedkwaliteit | echt maar gemengd (relevant, vaak triviaal/weinig toetsbaar) | géén kwaliteitssuperioriteit |
 | D — Adversarial Gate | eerste echte evidence; Gate > zwakkere regels | de veiligheidslaag als kern, niet als formaliteit |
 | E — Payoff / use-time | round 022 gespleten (overeenstemming 1/8); round 023 na discipline: overeenstemming ~0.67, ruis ~3%, win-rate ~0.40 | "schaadt meestal niet, scherpt soms aan" — géén "maakt antwoorden beter" |
-| F — Domeintransfer | round 024 onbeslist (afkap); round 025 blind verdict positief (SSL 6/7 per meerderheid, ruis 0; n=7, één model) | eerste steun voor de tweede zin, binnen grenzen |
+| F — Domeintransfer | round 024 onbeslist (afkap); round 025 blind verdict voorzichtig positief (consensus-SSL 4/7 incl. alle valkuilvragen, baseline 1/7, 2 gespleten, ruis 0; n=7, één model) | eerste steun voor de tweede zin, binnen grenzen |
 | G — Modelintern | onderzoekslaag | niets |
 
 Daarnaast, buiten de bewijslagen maar wél repo-feit:
@@ -80,11 +80,13 @@ een antwoordverbeteraar.
 > README; de herzieningstrigger (round-025 transfer-verdict) blijft staan.
 >
 > **Herziening (2026-07-02, avond):** de trigger is gevallen — het round-025
-> transfer-verdict is binnen en positief (SSL-kant 6/7 per meerderheid, 3
-> reviewers, ruis 0; zie `benchmarks/open_review/rounds/round_025/human_review/`).
-> Conform de aanbeveling verandert het besluit niet en wordt de tweede
-> positioneringszin verstevigd: cross-turn kan SSL antwoordruimte openen die
-> blinde reviewers verkiezen, nu ook buiten de oorspronkelijke domeinen —
+> transfer-verdict is binnen en voorzichtig positief (blinde consensus van de 2
+> conforme reviewers voor SSL op 4/7, waaronder álle valkuilvragen;
+> consensus-baseline 1/7; 2 gespleten; ruis 0; zie
+> `benchmarks/open_review/rounds/round_025/human_review/`). Conform de
+> aanbeveling verandert het besluit niet en wordt de tweede positioneringszin
+> voorzichtig verstevigd: cross-turn kan SSL antwoordruimte openen waar blinde
+> reviewers consensus over hebben, nu ook buiten de oorspronkelijke domeinen —
 > binnen de genoemde grenzen (n=7, één model).
 
 ## Besluit (aanbeveling)
