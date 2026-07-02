@@ -14,6 +14,7 @@ from shadowseed.benchmark.adversarial_payoff_suite import run_adversarial_payoff
 from shadowseed.benchmark.wild_payoff_suite import run_wild_payoff_suite
 from shadowseed.benchmark.generative_payoff_suite import run_generative_payoff_suite
 from shadowseed.benchmark.ssl_session_suite import run_ssl_session
+from shadowseed.chat import run_chat
 from shadowseed.benchmark.blind.runner import run_blind_benchmark
 from shadowseed.benchmark.open_set_review_summary import summarize_open_set_seed_review
 from shadowseed.benchmark.open_set_seed_review import run_open_set_seed_review
@@ -173,6 +174,23 @@ def _run_generative_payoff_suite(args: argparse.Namespace) -> str:
     )
 
 
+def _run_chat(args: argparse.Namespace) -> str:
+    out = run_chat(
+        backend=args.backend,
+        model_id=args.model_id,
+        max_new_tokens=args.max_new_tokens,
+        embedding_backend=getattr(args, "embedding_backend", "lexical"),
+        embedding_model=getattr(args, "embedding_model", None),
+        surface_threshold=getattr(args, "surface_threshold", 0.30),
+        surface_top_k=getattr(args, "surface_top_k", 2),
+        recurrence_mode=getattr(args, "recurrence_mode", "cluster"),
+        script_path=getattr(args, "script", None),
+        transcript_path=getattr(args, "transcript", None),
+        show_shadow=getattr(args, "show_shadow", False),
+    )
+    return str(out) if out else "chat session ended (audit OK)"
+
+
 def _run_ssl_session(args: argparse.Namespace) -> str:
     return str(
         run_ssl_session(
@@ -291,6 +309,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "run-adversarial-payoff": _run_adversarial_payoff_suite,
     "run-wild-payoff": _run_wild_payoff_suite,
     "run-generative-payoff": _run_generative_payoff_suite,
+    "chat": _run_chat,
     "run-ssl-session": _run_ssl_session,
     "summarize-open-set-seed-review": _summarize_open_set_seed_review,
     "run-adversarial-gate-benchmark": _run_adversarial_gate_benchmark,

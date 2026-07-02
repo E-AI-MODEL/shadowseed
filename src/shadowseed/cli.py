@@ -436,6 +436,26 @@ def build_parser() -> argparse.ArgumentParser:
     )
     gen_payoff.add_argument("--embedding-model", default=None)
 
+    chat = subparsers.add_parser(
+        "chat",
+        help="[demo] levende schaduwlaag: interactieve SSL-chat (manager, Gate, TTL/TrTL, agent-contract)",
+    )
+    chat.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    chat.add_argument("--model-id", default=None)
+    chat.add_argument("--max-new-tokens", type=int, default=700)
+    chat.add_argument("--embedding-backend", choices=["lexical", "openai"], default="lexical")
+    chat.add_argument("--embedding-model", default=None)
+    chat.add_argument("--surface-threshold", type=float, default=0.30)
+    chat.add_argument("--surface-top-k", type=int, default=2,
+        help="Use-time discipline: max. gevalideerde seeds per beurt (potentieel, geen must).")
+    chat.add_argument("--recurrence-mode", choices=["pairwise", "cluster"], default="cluster")
+    chat.add_argument("--script", default=None,
+        help="Bestand met vragen (1 per regel) voor een niet-interactieve sessie.")
+    chat.add_argument("--transcript", default=None,
+        help="Schrijf het sessietranscript incl. audit-trail naar dit JSON-pad.")
+    chat.add_argument("--show-shadow", action="store_true",
+        help="Toon per beurt de schaduwlaag-diagnostiek.")
+
     ssl_session = subparsers.add_parser(
         "run-ssl-session",
         help="[manual/research] W9: multi-turn SSL door de ECHTE pijplijn (manager, Gate, TTL/TrTL)",

@@ -3,12 +3,13 @@
 Deze pagina legt vast hoe de `shadowseed` CLI gelezen moet worden.
 
 Niet elke command heeft dezelfde status.
-De CLI heeft daarom vier commandolagen:
+De CLI heeft daarom vijf commandolagen:
 
 1. standaard regressie- en smoke-routes
 2. standaard aanvullende evidenceroutes
 3. handmatige research-routes
 4. retrieval-, backend- en AbsenceBench-routes
+5. applicatie- en demoroutes
 
 ## 1. Standaard regressie- en smoke-routes
 
@@ -67,6 +68,16 @@ Deze commands zijn nuttig voor diagnose, infrastructuur of optionele verdiepende
 
 Legacy aliases blijven voorlopig ondersteund voor compatibiliteit.
 
+## 5. Applicatie- en demoroutes
+
+Deze commands demonstreren de gevalideerde mechaniek in gebruik, maar voeden geen bewijslaag.
+
+| Command | Rol | Status |
+|---|---|---|
+| `chat` | levende schaduwlaag in een echt gesprek, met agent-contract en audit-trail | demo, geen bewijslaag |
+
+Zie `docs/research/shadow-chat-demo.md` voor de claimgrens.
+
 ## Waarom deze indeling belangrijk is
 
 Zonder deze indeling lijkt het alsof alle commands dezelfde bewijslast hebben.
@@ -77,7 +88,8 @@ De repo wil juist zichtbaar maken:
 - wat de basis bewaakt;
 - wat als aanvullende evidencelaag meegepubliceerd wordt;
 - wat nog handmatige research is;
-- wat vooral infrastructuur of utility is.
+- wat vooral infrastructuur of utility is;
+- wat demonstratie is en dus geen bewijslast draagt.
 
 ## Korte beleidszin
 

@@ -92,6 +92,21 @@ shadowseed run-probe-utility-benchmark
 shadowseed analyze-results
 ```
 
+## Live schaduwlaag: `shadowseed chat`
+
+De levende schaduw-geheugenlaag (visie-item 5) heeft nu een operationele demo:
+
+```bash
+shadowseed chat --backend fixture
+```
+
+Een seed wordt gewichtloos geboren, reist mee in de schaduw, promoveert via de
+Validation Gate en mag pas daarna een later antwoord sturen — met het
+`shadowseed_agent`-contract live op de invloedgrens en een replaybare
+audit-trail (`/shadow`, `/audit`, `/falsify <id>`). Dit is een applicatiedemo
+op de gevalideerde mechaniek, geen nieuwe bewijslaag; zie
+`docs/research/shadow-chat-demo.md`.
+
 ## Hugging Face token
 
 Voor publieke HF dataset-intake is niet altijd een token nodig.
