@@ -436,6 +436,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     gen_payoff.add_argument("--embedding-model", default=None)
 
+    dialectic = subparsers.add_parser(
+        "run-dialectic-falsification",
+        help="[manual/research] Laag G instap: probeer promoted seeds weg te argumenteren tegen de bron "
+        "(WEERLEGD -> Gate-contradictie; HOUDT_STAND -> bounded feedback, promoveert nooit)",
+    )
+    dialectic.add_argument("--input", default="src/shadowseed/data/dialectic_falsification_fixture.json")
+    dialectic.add_argument("--output", default="results/dialectic_falsification.json")
+    dialectic.add_argument("--backend", choices=MODEL_BACKENDS, default="fixture")
+    dialectic.add_argument("--model-id", default=None)
+    dialectic.add_argument("--max-new-tokens", type=int, default=200)
+
     chat = subparsers.add_parser(
         "chat",
         help="[demo] levende schaduwlaag: interactieve SSL-chat (manager, Gate, TTL/TrTL, agent-contract)",

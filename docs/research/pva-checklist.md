@@ -163,13 +163,19 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
 
 ## P3 — Visie-gaten (gap 4 & 5) en Laag G
 
-- [ ] **V1. Gap 5 — levende cross-turn shadow-laag**: de seed die echt meereist
+- [x] **V1. Gap 5 — levende cross-turn shadow-laag**: de seed die echt meereist
   over beurten (nu lifecycle-mechaniek aanwezig, maar geen multi-turn demo).
   *Klaar wanneer:* een demo waarin een seed over meerdere beurten leeft, decayt
-  of via TrTL herleeft in een echt gesprek.
-- [ ] **V2. Gap 4 / Laag G — modelinterne (H-neuron) verkenning**: blijft
+  of via TrTL herleeft in een echt gesprek. *Gedaan (2026-07-02):*
+  `shadowseed chat` (PR #164) — applicatiedemo, geen bewijslaag; plus de
+  SSL→RAG-brug live via `--probe-corpus` (PR #166).
+- [x] **V2. Gap 4 / Laag G — modelinterne (H-neuron) verkenning**: blijft
   research; alleen oppakken als P0–P2 staan. *Klaar wanneer:* een scoping-notitie
-  of eerste sonde.
+  of eerste sonde. *Gedaan (2026-07-02):* scoping-notitie
+  (`docs/research/laag-g-scoping.md`) én eerste sonde
+  (`run-dialectic-falsification`, spoor 1: WEERLEGD → Gate-contradictie,
+  HOUDT_STAND → bounded feedback, promoveert nooit). Spoor 2
+  (activatie-sonde op een klein HF-model) is de vervolgstap.
 
 ## Doorlopend
 
@@ -189,3 +195,8 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   representant per cluster i.p.v. alle leden; deterministische test + volledige
   suite groen. Live her-draai + verse human-review op veilige drempels is de
   pending vervolgstap.
+- 2026-07-02 — Pivot van bewijsrondes naar bouwen: `shadowseed chat` (V1, PR
+  #164), SSL→RAG-brug live (PR #166), positioneringsbesluit doorgevoerd (issue
+  #46, PR #165/#167) en Laag G geopend met scoping-notitie + dialectische
+  falsificatie-sonde (V2). Round-025 blinde review blijft de pending
+  bewijsstap.
