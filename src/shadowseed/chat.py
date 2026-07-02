@@ -123,6 +123,28 @@ class ShadowChatSession:
         assert_no_weightless_influence(self.influence_records)
         return len(self.influence_records)
 
+    def _refresh_cluster_representative(self, rep_seed: Any, source_seed: Any) -> None:
+        """Keep the representative live when its cluster recurs through a member.
+
+        Mirrors ``ssl_session_suite``: only the representative is fed to the
+        Gate, so without this a sparse-but-recurring theme grows cluster
+        recurrence while the representative's trace decays below the Gate bar.
+        """
+        if rep_seed.status == SeedStatus.EXPIRED:
+            return
+        rep_seed.trace = min(
+            self.manager.max_trace,
+            max(
+                rep_seed.trace,
+                source_seed.trace,
+                self.manager.config.min_trace_for_gate + 1e-9,
+            ),
+        )
+        rep_seed.turns_dormant = 0
+        if rep_seed.status != SeedStatus.PROMOTED:
+            rep_seed.status = SeedStatus.ACTIVE
+        self.manager._touch_seed(rep_seed)
+
     # -- one live turn ---------------------------------------------------------
 
     def turn(self, question: str) -> dict[str, Any]:
@@ -147,9 +169,18 @@ class ShadowChatSession:
         # ...and the safety contract re-checks each one at the influence boundary.
         surfaced = self._contract_filter(selected)
 
+        # FixtureBackend echoes scenario["baseline_answer"] (real backends ignore
+        # the scenario dict); a chat turn has no authored baseline, so give the
+        # fixture a deterministic echo of the question. Without it the fixture
+        # answers blank, the detector sees empty text and the demo never births
+        # a seed.
         answer = self.model.generate(
             build_chat_prompt(self.history, question, surfaced),
-            {"question": question, "turn": t},
+            {
+                "question": question,
+                "turn": t,
+                "baseline_answer": f"Antwoord (fixture-echo) op: {question}",
+            },
             "chat",
             surfaced,
         )
@@ -171,10 +202,20 @@ class ShadowChatSession:
                     continue
                 if sid not in self.seed_to_cluster:
                     cid = self.clusterer.add(seed.text, seed.embedding)
+                    had_rep = cid in self.cluster_rep
                     self.seed_to_cluster[sid] = cid
                     self.cluster_rep.setdefault(cid, sid)
+                    rep_sid = self.cluster_rep.get(cid)
+                    if had_rep and rep_sid is not None and rep_sid != sid:
+                        rep_seed = self.manager.seeds.get(rep_sid)
+                        if rep_seed is not None:
+                            self._refresh_cluster_representative(rep_seed, seed)
                 else:
-                    self.clusterer.bump(self.seed_to_cluster[sid])
+                    cid = self.seed_to_cluster[sid]
+                    self.clusterer.bump(cid)
+                    rep_seed = self.manager.seeds.get(self.cluster_rep.get(cid, ""))
+                    if rep_seed is not None and rep_seed is not seed:
+                        self._refresh_cluster_representative(rep_seed, seed)
             for cid, rep_sid in self.cluster_rep.items():
                 if rep_sid in self.manager.seeds:
                     self.manager.seeds[rep_sid].occurrence_count = max(

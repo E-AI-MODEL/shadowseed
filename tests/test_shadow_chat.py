@@ -139,6 +139,23 @@ def test_falsification_blocks_future_influence(session):
     session.audit()  # still clean
 
 
+def test_cluster_recurrence_refreshes_stale_representative(session):
+    # birth the representative and one clustered member
+    _drive(session, 2)
+    rep_ids = [sid for sid, born in session.born_turn.items() if born == 0]
+    assert rep_ids
+    rep = session.manager.seeds[rep_ids[0]]
+
+    # age the representative below the Gate's trace bar while its theme recurs
+    min_trace = session.manager.config.min_trace_for_gate
+    rep.trace = min_trace / 2
+
+    session.turn("Wat betekent dit voor de omgang met data? (refresh)")
+    # a member joining/recurring in the cluster must keep the representative
+    # gate-eligible (mirror of _refresh_cluster_representative in the suite)
+    assert rep.trace > min_trace
+
+
 def test_falsify_unknown_seed_raises(session):
     with pytest.raises(KeyError):
         session.falsify("bestaat-niet")
@@ -174,6 +191,11 @@ def test_run_chat_script_mode_writes_audited_transcript(tmp_path: Path):
     assert payload["artifact"] == "shadow_chat_transcript"
     assert len(payload["turn_reports"]) == 2  # comment line skipped
     assert "doctrine" in payload
+    # the fixture path must actually exercise the shadow layer: non-blank
+    # answers and at least one weightless birth (regression: chat scenarios
+    # have no authored baseline_answer, which used to blank the fixture)
+    assert all(r["answer"].strip() for r in payload["turn_reports"])
+    assert any(r["seeds_born_weightless"] for r in payload["turn_reports"])
     # transcript is only written after a hard audit pass
     for rec in payload["shadow"]["influence_records"]:
         if rec["allowed"]:
