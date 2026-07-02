@@ -1,0 +1,81 @@
+"""Tests for the Laag G activation probe (spoor 2, harness mechanics).
+
+Doctrine pinned: the probe touches no seed state (signal != verdict), the
+analysis core is deterministic, and a fake backend proves mechanics only.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import numpy as np
+
+from shadowseed.benchmark.activation_probe import (
+    FakeActivationModel,
+    class_separation,
+    probe_report,
+    run_activation_probe,
+)
+
+FIXTURE = Path("src/shadowseed/data/dialectic_falsification_fixture.json")
+
+
+def test_class_separation_detects_separated_means():
+    a = [np.array([1.0, 0.0, 0.0]) for _ in range(3)]
+    b = [np.array([0.0, 1.0, 0.0]) for _ in range(3)]
+    rep = class_separation({"WEERLEGD": a, "HOUDT_STAND": b})
+    assert rep["separable"] is True
+    assert rep["cosine_distance"] > 0.9
+    dims = {d["dim"] for d in rep["candidate_dimensions"][:2]}
+    assert dims == {0, 1}
+
+
+def test_class_separation_requires_two_nonempty_classes():
+    rep = class_separation({"WEERLEGD": [np.ones(3)]})
+    assert rep["separable"] is False
+    rep = class_separation({"WEERLEGD": [np.ones(3)], "HOUDT_STAND": []})
+    assert rep["separable"] is False
+
+
+def test_probe_report_picks_strongest_layer():
+    sep = {"A": [np.array([1.0, 0.0])], "B": [np.array([0.0, 1.0])]}
+    close = {"A": [np.array([1.0, 0.1])], "B": [np.array([1.0, 0.0])]}
+    rep = probe_report({"mlp.far": sep, "mlp.close": close})
+    assert rep["strongest_layer"] == "mlp.far"
+
+
+def test_fake_model_is_deterministic_and_class_blind():
+    model = FakeActivationModel()
+    a1 = model.activations_for("prompt X")
+    a2 = model.activations_for("prompt X")
+    for layer in model.layer_names:
+        assert np.allclose(a1[layer], a2[layer])
+    # different text -> different vector (hash-driven), no class info involved
+    b = model.activations_for("prompt Y")
+    assert not np.allclose(a1["mlp.0"], b["mlp.0"])
+
+
+def test_probe_run_end_to_end_writes_signal_artifact(tmp_path: Path):
+    out = tmp_path / "probe.json"
+    result = run_activation_probe(str(FIXTURE), output_path=str(out))
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    assert payload["artifact"] == "activation_probe"
+    assert payload["evidence_layer"] == "G"
+    assert "Signaal != verdict" in payload["doctrine"]
+    # both verdict classes present in the fixture set (2 houdt_stand, 1 weerlegd)
+    verdicts = {c["verdict"] for c in result["cases"]}
+    assert verdicts == {"WEERLEGD", "HOUDT_STAND"}
+    for layer_report in result["report"]["layers"].values():
+        assert layer_report["separable"] is True
+    assert result["report"]["strongest_layer"] in FakeActivationModel.layer_names
+
+
+def test_probe_touches_no_seed_state():
+    # doctrine guard: the probe module must not import or construct a manager
+    import shadowseed.benchmark.activation_probe as mod
+
+    src = Path(mod.__file__).read_text(encoding="utf-8")
+    assert "SSLManager" not in src
+    assert "run_validation_gate" not in src
+    assert "apply_probe_feedback" not in src

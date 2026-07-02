@@ -35,17 +35,28 @@ falsificatie precies op de seeds die zouden mogen sturen. Deterministisch
 getest via een fixture-backend; echte runs volgen dezelfde backend-vlaggen als
 de andere routes.
 
-**Spoor 2 — H-neuron-achtige interne sonde (volgende stap, opt-in).**
+**Spoor 2 — H-neuron-achtige interne sonde (harnas gebouwd, echte run open).**
 Gao et al. 2025 (arXiv 2512.01797, code thunlp/H-Neurons, MIT) identificeren
 hallucinatie-geassocieerde neuronen in LLM's. De Laag G-vraag voor SSL: is er
 *interne* steun voor wat extern als ontbrekend/onhoudbaar wordt gemeten?
-Eerste sonde-ontwerp:
 
-1. opt-in route (torch/transformers, `models`-extra), klein open HF-model;
-2. forward-hooks op MLP-activaties tijdens het dialectische verdict;
-3. correleer activatiepatronen met de verdict-klassen (WEERLEGD vs
-   HOUDT_STAND) over de fixture- en transfer-sets;
-4. rapporteer als Laag G-signaal — signaal ≠ verdict, per de evidence-taal.
+Gebouwd (`activation_probe.py` + `run-activation-probe`):
+
+1. model-vrije, deterministische analysekern: per laag de cosine-afstand
+   tussen de klasse-centroïden (WEERLEGD vs HOUDT_STAND) plus de
+   kandidaat-dimensies met het grootste verschil — kandidaten, geen bewezen
+   neuronen;
+2. `HFActivationModel` (opt-in, `models`-extra): forward-hooks op de
+   MLP-lagen van een klein HF-model tijdens het dialectische verdict;
+3. `FakeActivationModel` voor CI: hash-gedreven activaties zonder
+   klasse-informatie — bewijst uitsluitend de harnas-mechaniek;
+4. artifact `activation_probe.json`, `evidence_layer: "G"`, doctrine-regel in
+   het artifact zelf.
+
+**Nog te doen (de echte sonde):** een run op een klein open model
+(`--backend hf --model-id ...`) met een échte dialectische verdictbron in
+plaats van de fixture-labels, over de fixture- én transfer-sets; pas daarná
+is een uitspraak over interne steun aan de orde.
 
 ## Doctrine-regels (gelden voor beide sporen)
 
