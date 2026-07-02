@@ -75,6 +75,10 @@ werd het seed-effect "sturen bij aanscherping, stil bij irrelevantie, geen
 schade" — het beloofde gedrag van een gedisciplineerde geheugenlaag, niet van
 een antwoordverbeteraar.
 
+> **Besluit (2026-07-02):** de maintainer heeft ingestemd met de aanbeveling
+> hieronder (issue #46). De taalverschuiving is dezelfde dag doorgevoerd in de
+> README; de herzieningstrigger (round-025 transfer-verdict) blijft staan.
+
 ## Besluit (aanbeveling)
 
 1. **Canon: blijf op de 4.6-lijn.** Geen versiesprong of rebrand. Het bewijs
