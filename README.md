@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Status](https://img.shields.io/badge/status-research%20prototype-orange)
 
-Shadow Seed Learning (SSL) is in de kern een **afdwingbare, auditeerbare geheugendiscipline**: een waargenomen ontbrekend punt (een *shadow seed*) begint gewichtloos, en invloed moet **verdiend en verantwoord** worden — via de Validation Gate, op het gebruiksmoment herbevestigd door het agent-contract, met een replaybare audit-trail en falsificatie als eersteklas operatie. Gevonden is nooit automatisch waar of sturend.
+Shadow Seed Learning (SSL) is in de kern een **afdwingbare, auditeerbare geheugendiscipline**: een waargenomen ontbrekend punt (een *shadow seed*) begint gewichtloos, en invloed moet **verdiend en verantwoord** worden — via de Validation Gate, en in de agent-laag (`shadowseed chat`, `shadowseed_agent`) op het gebruiksmoment herbevestigd door het contract, met een replaybare audit-trail en falsificatie als eersteklas operatie. Gevonden is nooit automatisch waar of sturend. De benchmark-routes toetsen de Gate-discipline; de contract-check op het gebruiksmoment is de agent-laag.
 
 Daarbovenop stelt de research-harness een simpele maar strenge vraag:
 
@@ -14,7 +14,7 @@ Zie `docs/research/positioning-synthese.md` voor waarom de discipline — en nie
 
 ## In 30 seconden
 
-- **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* of onderbelicht blijft (gevonden seeds zijn relevant, maar kunnen triviaal of weinig toetsbaar zijn — laag C), bewaart dat als een gewichtloze shadow seed, en laat alleen gevalideerde, contract-gecheckte seeds meesturen in vervolgactie of antwoordruimte.
+- **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* of onderbelicht blijft (gevonden seeds zijn relevant, maar kunnen triviaal of weinig toetsbaar zijn — laag C), bewaart dat als een gewichtloze shadow seed, en laat alleen Gate-gevalideerde seeds meesturen in vervolgactie of antwoordruimte — in de agent-laag bovendien contract-gecheckt op het gebruiksmoment.
 - **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt via TTL en leeft op via TrTL) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
 - **Status:** werkende research-harness met sterke lifecycle- en regressielaag. Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* bleek in de blinde review reviewer-afhankelijk (round 022, 1/8 overeenstemming), dus W9f is een baseline-kandidaat, geen afgesloten bewijs. De brede claim blijft bewust begrensd.
 
