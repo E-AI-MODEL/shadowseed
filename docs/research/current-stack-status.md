@@ -49,6 +49,33 @@ Current state:
 - No type checker is configured yet.
 - No pre-commit config is present.
 
+### Coverage assessment (2026-07-02, maintainer-supplied)
+
+Reading rule: judge the test layer only on the paths it actually touches; label
+untested paper/prompt paths separately instead of counting them as failures of
+this layer. Under that rule the maintainer scored the coverage zip **7.6/10** as
+test-layer evidence: SSL core strong (94.32% line / 83.33% branch), tested
+benchmark parts good (85.21% / 73.58%), **vectorstore weak (48.31% / 23.33%)** —
+with the doctrine note that gap retrieval must never silently become truth or
+steering.
+
+Action taken the same day (`tests/test_vectorstore_hardening.py`):
+
+- FAISS/Chroma adapters now run in CI behind lightweight fakes (no optional
+  deps needed): chroma_store 22.7% → 98.3%, faiss_store 21.0% → 95.1%; the
+  numpy-payload hydration regression is pinned by a test.
+- memory/factory/vector_constellation/vectorstore_smoke → 100%.
+- Explicit doctrine guard: retrieval (manager route and store route) mutates no
+  seed weight/status/trace/occurrence — "gevonden" is never "waar" of "sturend".
+- Found and fixed en passant: the vectorstore smoke had silently degraded to
+  `passed: false` (its query/falsification strings shared zero lexical tokens
+  with the seed, and the Gate's min-evidence rule needs 4 feedback rounds, not
+  3). Fixture repaired; the smoke now runs as a pytest test so CI guards it.
+
+Known documented behavior: a failed backend delete in the Chroma adapter lets
+an entry resurrect from the backing collection on the next full read — the
+store is an index, not the source of truth; SSLManager stays leading.
+
 ## Standard CI baseline
 
 The main CI workflow is `.github/workflows/tests.yml`.
