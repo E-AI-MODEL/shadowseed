@@ -137,6 +137,7 @@ Huidige bron- en researchstack:
 - `docs/research/current-status.md`
 - `docs/research/w9f-evaluatieconclusie.md`
 - `docs/research/w9f-review-artifacts.md`
+- `docs/research/positioning-synthese.md`
 - `docs/research/scenario-independence-roadmap.md`
 - `docs/research/evaluation-matrix.md`
 - `docs/research/work-categories.md`
