@@ -37,7 +37,11 @@ KEYWORDS = [
 class _Model:
     name = "fake"
 
+    def __init__(self):
+        self.prompts = []
+
     def generate(self, prompt, scenario, mode, seeds):
+        self.prompts.append(prompt)
         return "Antwoord met invalshoek." if seeds else "Gewoon antwoord."
 
 
@@ -77,12 +81,16 @@ def _emb_factory(backend, model_id=None, **kw):
     return embed, dim
 
 
-@pytest.fixture
-def session(monkeypatch) -> ShadowChatSession:
+def _make_session(monkeypatch, **kw) -> ShadowChatSession:
     monkeypatch.setattr(chatmod, "make_backend", lambda **k: _Model())
     monkeypatch.setattr(chatmod, "make_detector_backend", lambda *a, **k: _Detector())
     monkeypatch.setattr(chatmod, "make_embedding_fn", _emb_factory)
-    return ShadowChatSession(backend="openai", recurrence_mode="cluster")
+    return ShadowChatSession(backend="openai", recurrence_mode="cluster", **kw)
+
+
+@pytest.fixture
+def session(monkeypatch) -> ShadowChatSession:
+    return _make_session(monkeypatch)
 
 
 def _drive(session: ShadowChatSession, turns: int) -> list[dict]:
@@ -154,6 +162,77 @@ def test_cluster_recurrence_refreshes_stale_representative(session):
     # a member joining/recurring in the cluster must keep the representative
     # gate-eligible (mirror of _refresh_cluster_representative in the suite)
     assert rep.trace > min_trace
+
+
+def test_retrieval_probe_reports_presence_without_steering(tmp_path, monkeypatch):
+    # SSL->RAG bridge live (vision item 2): the promoted seed probes the corpus
+    # and finds what the question does not — reported as presence only.
+    corpus = tmp_path / "corpus.json"
+    corpus.write_text(
+        json.dumps(
+            [
+                {"id": "doc_privacy", "text": "Privacy in het archief."},
+                {"id": "doc_data", "text": "Alles over data."},
+            ]
+        ),
+        encoding="utf-8",
+    )
+    session = _make_session(monkeypatch, probe_corpus=str(corpus), probe_top_k=1)
+    reports = _drive(session, 7)
+
+    # before any promotion the probe stays silent
+    assert reports[0]["retrieval_probe"] is None
+
+    probes = [r["retrieval_probe"] for r in reports if r["retrieval_probe"]]
+    assert probes, "once a seed is promoted the probe should run"
+    hit = next(p for p in probes if p["seed_only_chunk_ids"])
+    # the question arm retrieves the question-aligned chunk; the seed arm
+    # surfaces the theme chunk the question alone would never pull in
+    assert "doc_privacy" in hit["seed_only_chunk_ids"]
+    assert hit["seed_only_hits"][0]["chunk_id"] == "doc_privacy"
+
+    # doctrine: gevonden != waar/sturend — retrieved text never enters a prompt
+    assert all("archief" not in p for p in session.model.prompts)
+    session.audit()  # and the probe added no influence
+
+
+def test_probe_corpus_accepts_repo_retrieval_schema(tmp_path, monkeypatch):
+    # the repo's retrieval corpora are shaped documents[].chunks with chunk_id
+    # (index_retrieval_corpus); the loader must index those, not silently skip
+    corpus = tmp_path / "corpus.json"
+    corpus.write_text(
+        json.dumps(
+            {
+                "documents": [
+                    {
+                        "doc_id": "doc_a",
+                        "chunks": [
+                            {"chunk_id": "doc_a::c1", "text": "Privacy in het archief."},
+                            {"chunk_id": "doc_a::c2", "text": "Alles over data."},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    session = _make_session(monkeypatch, probe_corpus=str(corpus), probe_top_k=1)
+    assert sorted(session.probe_store.get_all_ids()) == ["doc_a::c1", "doc_a::c2"]
+    assert session.probe_store.get_metadata("doc_a::c1")["doc_id"] == "doc_a"
+
+    reports = _drive(session, 7)
+    hit = next(
+        p for p in (r["retrieval_probe"] for r in reports) if p and p["seed_only_chunk_ids"]
+    )
+    assert hit["seed_only_chunk_ids"] == ["doc_a::c1"]
+    assert hit["seed_only_hits"][0]["doc_id"] == "doc_a"
+
+
+def test_probe_corpus_without_chunks_fails_loudly(tmp_path, monkeypatch):
+    corpus = tmp_path / "leeg.json"
+    corpus.write_text(json.dumps({"iets": "anders"}), encoding="utf-8")
+    with pytest.raises(ValueError, match="geen indexeerbare chunks"):
+        _make_session(monkeypatch, probe_corpus=str(corpus))
 
 
 def test_falsify_unknown_seed_raises(session):

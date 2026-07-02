@@ -455,6 +455,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Schrijf het sessietranscript incl. audit-trail naar dit JSON-pad.")
     chat.add_argument("--show-shadow", action="store_true",
         help="Toon per beurt de schaduwlaag-diagnostiek.")
+    chat.add_argument("--probe-corpus", default=None,
+        help="Corpus (JSON chunks of platte tekst) waar promoted seeds live in zoeken; "
+        "resultaten zijn aanwezigheid, geen sturing (gevonden != waar).")
+    chat.add_argument("--probe-top-k", type=int, default=3,
+        help="Aantal hits per retrieval-probe-arm (default 3).")
 
     ssl_session = subparsers.add_parser(
         "run-ssl-session",

@@ -42,9 +42,11 @@ from shadowseed.benchmark.recurrence_clustering import (
     DEFAULT_CLUSTER_THRESHOLD,
     RecurrenceClusterer,
 )
+from shadowseed.benchmark.seed_retrieval_probe import retrieval_probe_vs_question
 from shadowseed.benchmark.ssl45_model_benefit_suite import make_backend
 from shadowseed.benchmark.ssl_session_suite import build_chat_prompt, select_cross_turn_seeds
 from shadowseed.manager import SSLManager, SeedStatus
+from shadowseed.vectorstore.memory import InMemoryVectorStore
 from shadowseed_agent import (
     AgentInfluenceRecord,
     AgentSafetyContract,
@@ -70,6 +72,8 @@ class ShadowChatSession:
         recurrence_mode: str = "cluster",
         cluster_threshold: float | None = None,
         contract: AgentSafetyContract | None = None,
+        probe_corpus: str | None = None,
+        probe_top_k: int = 3,
     ) -> None:
         embed_fn, _dim = make_embedding_fn(embedding_backend, embedding_model)
         self.model = make_backend(backend=backend, model_id=model_id, max_new_tokens=max_new_tokens)
@@ -93,6 +97,10 @@ class ShadowChatSession:
         self.influence_records: list[AgentInfluenceRecord] = []
         self.turn_reports: list[dict[str, Any]] = []
         self._turn = 0
+        # SSL->RAG bridge (vision item 2): promoted seeds probe this corpus so
+        # the report can show what the seed finds that the question does not.
+        self.probe_top_k = probe_top_k
+        self.probe_store = self._load_probe_corpus(probe_corpus) if probe_corpus else None
 
     # -- doctrine boundary ---------------------------------------------------
 
@@ -144,6 +152,106 @@ class ShadowChatSession:
         if rep_seed.status != SeedStatus.PROMOTED:
             rep_seed.status = SeedStatus.ACTIVE
         self.manager._touch_seed(rep_seed)
+
+    # -- SSL->RAG bridge (retrieval = presence, never steering) ----------------
+
+    def _load_probe_corpus(self, path: str) -> InMemoryVectorStore:
+        """Load a corpus into an in-memory store, embedded like the seeds.
+
+        Accepts the repo retrieval-corpus schema (``documents[].chunks`` with
+        ``chunk_id``, as indexed by ``index_retrieval_corpus``), a flat JSON
+        list of ``{"id"|"chunk_id": ..., "text": ...}`` chunks (also under a
+        top-level ``"chunks"`` key), or plain text split on blank lines.
+        Raises when nothing indexes: an empty store must fail loudly, not probe
+        silently against nothing.
+        """
+        raw = Path(path).read_text(encoding="utf-8")
+        chunks: list[tuple[str, str, str | None]] = []  # (chunk_id, text, doc_id)
+        if path.endswith(".json"):
+            data = json.loads(raw)
+            if isinstance(data, dict) and "documents" in data:
+                items = [
+                    {**chunk, "doc_id": doc.get("doc_id")}
+                    for doc in data["documents"]
+                    for chunk in doc.get("chunks", [])
+                ]
+            elif isinstance(data, dict):
+                items = data.get("chunks", [])
+            else:
+                items = data
+            for i, item in enumerate(items):
+                text = str(item.get("text", "")).strip()
+                if text:
+                    chunk_id = str(item.get("chunk_id") or item.get("id") or f"chunk_{i:03d}")
+                    chunks.append((chunk_id, text, item.get("doc_id")))
+        else:
+            for i, block in enumerate(p.strip() for p in raw.split("\n\n")):
+                if block:
+                    chunks.append((f"chunk_{i:03d}", block, None))
+        if not chunks:
+            raise ValueError(
+                f"Probe-corpus '{path}' bevat geen indexeerbare chunks "
+                "(verwacht: documents[].chunks, een JSON-lijst met 'text', of platte tekst)."
+            )
+        store = InMemoryVectorStore()
+        for chunk_id, text, doc_id in chunks:
+            store.add(
+                chunk_id,
+                self.manager.get_embedding(text),
+                {"text": text, "chunk_id": chunk_id, "doc_id": doc_id},
+            )
+        return store
+
+    def _run_retrieval_probe(self, question: str) -> dict[str, Any] | None:
+        """Probe the corpus with promoted seeds; report presence, change nothing.
+
+        Doctrine: what a seed *finds* is never *true* or *steering* — the hits go
+        into the report only, never into the answer prompt, and probing mutates
+        no seed state. When the manager sees a retrieval-grade constellation,
+        its centroid is the query (the manager-centroid finally consumed);
+        otherwise each promoted seed (representative only, in cluster mode)
+        probes on its own.
+        """
+        if self.probe_store is None:
+            return None
+        seed_texts: list[str] = []
+        for sid, seed in self.manager.seeds.items():
+            if seed.status != SeedStatus.PROMOTED:
+                continue
+            if self.clusterer is not None:
+                cid = self.seed_to_cluster.get(sid)
+                if cid is not None and self.cluster_rep.get(cid) != sid:
+                    continue
+            seed_texts.append(seed.text)
+        if not seed_texts:
+            return None
+        retrieval_consts = [
+            c for c in self.manager.find_constellations() if c.probe_type == "retrieval"
+        ]
+        use_centroid = bool(retrieval_consts)
+        if use_centroid:
+            members = set(retrieval_consts[0].members)
+            seed_texts = [
+                self.manager.seeds[sid].text for sid in members if sid in self.manager.seeds
+            ] or seed_texts
+        res = retrieval_probe_vs_question(
+            self.probe_store,
+            question,
+            seed_texts,
+            top_k=self.probe_top_k,
+            use_centroid=use_centroid,
+            embed_fn=self.manager.get_embedding,
+        )
+        seed_only = set(res["seed_only_chunk_ids"])
+        return {
+            "use_centroid": res["use_centroid"],
+            "probe_seed_texts": res["seed_texts"],
+            "question_chunk_ids": res["question_chunk_ids"],
+            "probe_chunk_ids": res["probe_chunk_ids"],
+            "shared_chunk_ids": res["shared_chunk_ids"],
+            "seed_only_chunk_ids": res["seed_only_chunk_ids"],
+            "seed_only_hits": [h for h in res["probe_hits"] if h["chunk_id"] in seed_only],
+        }
 
     # -- one live turn ---------------------------------------------------------
 
@@ -251,6 +359,7 @@ class ShadowChatSession:
             "promoted_this_turn": promoted_now,
             "reactivated_trtl": reactivated,
             "shadow_size": len(self.manager.seeds),
+            "retrieval_probe": self._run_retrieval_probe(question),
         }
         self.turn_reports.append(report)
         return report
@@ -321,6 +430,8 @@ def run_chat(
     script_path: str | None = None,
     transcript_path: str | None = None,
     show_shadow: bool = False,
+    probe_corpus: str | None = None,
+    probe_top_k: int = 3,
 ) -> Path | None:
     """CLI entrypoint: interactive REPL, or scripted turns via --script."""
     session = ShadowChatSession(
@@ -332,6 +443,8 @@ def run_chat(
         surface_threshold=surface_threshold,
         surface_top_k=surface_top_k,
         recurrence_mode=recurrence_mode,
+        probe_corpus=probe_corpus,
+        probe_top_k=probe_top_k,
     )
 
     def _emit(report: dict[str, Any]) -> None:
@@ -346,6 +459,12 @@ def run_chat(
                 f"{len(report['seeds_born_weightless'])} | promoties: "
                 f"{len(report['promoted_this_turn'])} | TrTL-reactivaties: "
                 f"{len(report['reactivated_trtl'])}"
+            )
+        probe = report.get("retrieval_probe")
+        if probe and probe["seed_only_chunk_ids"]:
+            print(
+                "[probe] seed vindt wat de vraag niet vindt (aanwezigheid, geen sturing): "
+                + ", ".join(probe["seed_only_chunk_ids"])
             )
 
     if script_path:

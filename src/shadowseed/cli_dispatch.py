@@ -187,6 +187,8 @@ def _run_chat(args: argparse.Namespace) -> str:
         script_path=getattr(args, "script", None),
         transcript_path=getattr(args, "transcript", None),
         show_shadow=getattr(args, "show_shadow", False),
+        probe_corpus=getattr(args, "probe_corpus", None),
+        probe_top_k=getattr(args, "probe_top_k", 3),
     )
     return str(out) if out else "chat session ended (audit OK)"
 

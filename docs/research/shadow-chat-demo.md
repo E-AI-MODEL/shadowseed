@@ -62,6 +62,20 @@ transcript wordt alleen geschreven nadat de audit is geslaagd.
 Echte backends (`openai`, `hf`) volgen dezelfde vlaggen als de
 benchmarkroutes.
 
+## SSL→RAG-brug live (`--probe-corpus`)
+
+Met `--probe-corpus <pad>` (JSON-chunks of platte tekst) zoeken promoted seeds
+per beurt echt in een corpus — de live consumer van visie-item 2. Wanneer de
+manager een retrieval-grade constellatie ziet (`probe_type="retrieval"`) is de
+constellatie-centroid de query; anders probet elke promoted seed
+(representative-only in clustermodus) zelf. Het beurtsrapport toont
+`seed_only_chunk_ids`: wat de seed vindt en de vraag niet.
+
+Doctrine-grens, in code afgedwongen en getest: de hits zijn **aanwezigheid,
+geen sturing** — ze gaan nooit de antwoordprompt in en muteren geen seed-state.
+Of/hoe seed-gevonden context een antwoord mag verrijken is een later
+ontwerpbesluit op de contractlaag, geen retrievalfeature.
+
 ## Claimgrens
 
 Dit is een **applicatiedemo op de gevalideerde mechaniek, geen nieuwe
