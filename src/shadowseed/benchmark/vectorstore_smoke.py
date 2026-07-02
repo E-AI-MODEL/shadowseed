@@ -28,8 +28,12 @@ def run_vectorstore_smoke(output_path: str, backend: str = "memory") -> Path:
     )
     seed_after_creation = manager.get_seed(seed_id).to_dict()
 
+    # The query must share lexical tokens with the seed: the lexical embedding is
+    # token-based, so a paraphrase with zero shared tokens scores 0.0 against the
+    # seed and the smoke silently reports passed=false (the old query did exactly
+    # that). The smoke is a mechanical chain check, not a paraphrase benchmark.
     uncertainty_matches = manager.find_uncertain_region(
-        "Nederlandse consument koopt bij Amerikaanse webwinkel en wil garantie afdwingen.",
+        "Welk recht is van toepassing op dit grensoverschrijdend consumentencontract?",
         threshold=0.20 if backend != "chroma" else 0.05,
     )
 
@@ -37,9 +41,12 @@ def run_vectorstore_smoke(output_path: str, backend: str = "memory") -> Path:
     manager.add_or_update_seed(seed_text)
     manager.add_or_update_seed(seed_text)
 
+    # Four rounds, not three: the Gate requires min_evidence_for_gate=2, so the
+    # first positive round only banks evidence (blocked, no weight gain). Rounds
+    # 2-4 then validate at +0.2 each -> 0.6 >= promotion_threshold 0.5.
     feedback_threshold = 0.20 if backend != "chroma" else 0.05
     feedback_rounds = []
-    for _ in range(3):
+    for _ in range(4):
         feedback_rounds.append(
             manager.apply_external_feedback(
                 "De casus mist toepasselijk recht voor een grensoverschrijdend consumentencontract.",
@@ -51,8 +58,9 @@ def run_vectorstore_smoke(output_path: str, backend: str = "memory") -> Path:
 
     promoted_seed = manager.get_seed(seed_id).to_dict()
 
+    # Same lexical-overlap requirement for the falsification arm.
     contradiction_updates = manager.apply_external_feedback(
-        "Deze juridische gap is niet relevant voor deze casus.",
+        "Het toepasselijk recht bij dit grensoverschrijdend consumentencontract is hier niet relevant.",
         context="Nederlandse consument koopt defecte laptop bij Amerikaanse webwinkel.",
         positive=False,
         threshold=feedback_threshold,
