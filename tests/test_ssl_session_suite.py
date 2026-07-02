@@ -29,6 +29,19 @@ def test_chat_prompt_is_potential_not_must():
     # potential-not-must: may include only if it sharpens, may be dropped if it narrows
     assert "aanscherpen" in p and "vernauwen" in p
     assert "Betrek daarbij expliciet" not in p  # the old hard must-instruction is gone
+    # round 025: no self-justifying meta sentences in the answer (round-024 leak)
+    assert "rechtvaardig" in p and "versterkt het antwoord" in p
+
+
+def test_chat_prompt_compactness_applies_to_both_arms():
+    # round 025: the rounded-off/compact instruction must be in BOTH arms so it
+    # cannot bias the A/B comparison (round 024: 7/18 answers truncated mid-word).
+    baseline = build_chat_prompt([("Q1", "A1")], "Q2", [])
+    ssl = build_chat_prompt([("Q1", "A1")], "Q2", ["Invalshoek."])
+    for p in (baseline, ssl):
+        assert "compact" in p and "slotalinea" in p
+    # and the baseline arm carries no weave block at all
+    assert "invalshoek(en) betrekken" not in baseline
 
 
 def test_transfer_suite_runs_through_pipeline(tmp_path: Path):

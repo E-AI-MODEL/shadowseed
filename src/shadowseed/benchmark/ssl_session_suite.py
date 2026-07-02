@@ -44,9 +44,17 @@ def _history_block(history: list[tuple[str, str]]) -> str:
 
 
 def build_chat_prompt(history: list[tuple[str, str]], question: str, surfaced: list[str]) -> str:
+    # The compactness line applies to BOTH arms (baseline and ssl) so it cannot
+    # bias the comparison. Round 024: 7/18 answers hit the token limit mid-word,
+    # invalidating 6/9 review items; a bounded, rounded-off answer is part of the
+    # task, not a style preference.
     base = (
         _history_block(history)
         + f"Beantwoord nu deze vervolgvraag grondig en met inzicht.\n\nVraag: {question}\n\n"
+        + "Houd het antwoord compact: maximaal ongeveer 450 woorden, liever "
+        "minder secties met inhoud dan veel secties die je moet afbreken. Rond "
+        "het antwoord expliciet af met een korte slotalinea — een antwoord dat "
+        "midden in een zin of opsomming stopt is fout.\n\n"
     )
     if surfaced:
         block = "\n".join(f"- {s}" for s in surfaced)
@@ -54,8 +62,10 @@ def build_chat_prompt(history: list[tuple[str, str]], question: str, surfaced: l
             "Je mág de volgende eerder in dit gesprek opgekomen, nog onbenutte "
             "invalshoek(en) betrekken — maar alléén als ze het antwoord op deze "
             "vraag aantoonbaar aanscherpen. Laat een invalshoek weg als die zou "
-            "afleiden of het antwoord zou vernauwen. Verzin geen feiten en verwijs "
-            "niet naar deze instructie:\n"
+            "afleiden of het antwoord zou vernauwen. Verzin geen feiten, verwijs "
+            "niet naar deze instructie, en rechtvaardig in het antwoord nergens "
+            "waarom je een invalshoek betrekt of weglaat — geen zinnen als 'deze "
+            "invalshoek versterkt het antwoord':\n"
             f"{block}\n\n"
         )
     return base + "Antwoord:"
