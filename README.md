@@ -16,7 +16,7 @@ Zie `docs/research/positioning-synthese.md` voor waarom de discipline — en nie
 
 - **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* of onderbelicht blijft (gevonden seeds zijn relevant, maar kunnen triviaal of weinig toetsbaar zijn — laag C), bewaart dat als een gewichtloze shadow seed, en laat alleen Gate-gevalideerde seeds meesturen in vervolgactie of antwoordruimte — in de agent-laag bovendien contract-gecheckt op het gebruiksmoment.
 - **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt via TTL en leeft op via TrTL) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
-- **Status:** werkende research-harness met sterke lifecycle- en regressielaag. Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* bleek in de blinde review reviewer-afhankelijk (round 022, 1/8 overeenstemming), dus W9f is een baseline-kandidaat, geen afgesloten bewijs. De brede claim blijft bewust begrensd.
+- **Status:** werkende research-harness met sterke lifecycle- en regressielaag. Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de eerste blinde review was reviewer-afhankelijk (round 022, 1/8 overeenstemming), met use-time discipline steeg de overeenstemming naar ~0.67 en verdween de ruis vrijwel (round 023) — maar de win-rate blijft ≤0.5, dus W9f is een baseline-kandidaat, geen afgesloten bewijs. De brede claim blijft bewust begrensd.
 
 > Kernregel: één seed = één klein, toetsbaar ontbrekend punt.
 
@@ -42,9 +42,9 @@ SSL hanteert één laag-taal voor bewijs, gelijk aan `docs/00_shadow_seed_learni
 | **B** Kleine benchmark | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** — bewust smal |
 | **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Eerste evidence, gemengd** — relevantie hoog, trivialiteit/testability blijft risico |
 | **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** — kleine maar duidelijke stresstest |
-| **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; payoff-kwaliteit reviewer-afhankelijk (round 022, 1/8); use-time seed-discipline open** |
-| **F** Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende domeinen? | **Volgende stap: W10 doctrine-transfer** |
-| **G** Modelintern | Steun in interne activaties? | **Onderzoekslaag**, niet operationeel |
+| **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; use-time discipline gedraaid en blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel weg, win-rate ≤0.5)** |
+| **F** Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende domeinen? | **W10 afkap-vrij gedraaid (round 025); verdict wacht op blinde review** |
+| **G** Modelintern | Steun in interne activaties? | **Instap-sonde aanwezig (dialectische falsificatie); modelintern nog niet operationeel** |
 
 De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie- en kleine-benchmarklagen plus aanvullende evidencelagen. Manual OpenAI-runs via `Research · SSL Benefit (OpenAI)` kunnen zwaardere payoff- en `ssl-session` artifacts maken, inclusief blind A/B-reviewpack voor cross-turn sessies.
 

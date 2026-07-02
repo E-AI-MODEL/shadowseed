@@ -1,7 +1,7 @@
 # SSL Evaluatiematrix
 
 > Status: current
-> Date: 2026-06-30
+> Date: 2026-07-02
 > Evidence layer: Evidence-layer matrix
 > Current source: yes
 
@@ -25,9 +25,9 @@ De matrix is geen scorekaart die alles samenvouwt tot één getal. Ze bewaakt ju
 | B — Kleine benchmarkvalidatie | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** | Behouden als beperkte benchmarklaag |
 | C — Open-set seedkwaliteit | Kan SSL goede seeds maken zonder vaste ground truth? | **Eerste evidence, gemengd** | Sterker en breder meten |
 | D — Adversarial ruiscontrole | Weert de Gate echte misleidende gaps? | **Eerste echte evidence** | Grotere stresssets |
-| E — Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; payoff-kwaliteit reviewer-afhankelijk (round 022, 1/8)** | Use-time seed-discipline + transfer |
-| F — Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende scenario's? | **Volgende stap** | W10: doctrine-transfer |
-| G — Modelinterne validatie | Is er steun in interne activaties? | **Afwezig / later onderzoek** | Aparte onderzoekslijn |
+| E — Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; use-time discipline blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel weg, win-rate ≤0.5)** | Verdere blinde toetsing per domein |
+| F — Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende scenario's? | **Gedraaid; verdict pending** | W10 afkap-vrij gedraaid (round 025); blinde review is de openstaande stap |
+| G — Modelinterne validatie | Is er steun in interne activaties? | **Instap-sonde gebouwd** | Dialectische falsificatie (spoor 1); activatie-sonde is de vervolgstap |
 
 ## 1. Laag A — Regressie
 
@@ -244,6 +244,8 @@ Volgende stap.
 
 W10: doctrine-transfer. De vraag is niet meer of W9f in de huidige setting werkt, maar of dezelfde levenscyclus overdraagt naar andere domeinen, taken en modellen.
 
+Stand 2026-07-02: de transfer-run is afkap-vrij gedraaid (round 025, 7 items, 3 domeinen); het verdict wacht op de blinde review van het canonieke pack.
+
 ## 7. Laag G — Modelinterne validatie
 
 ### Vraag
@@ -278,8 +280,8 @@ Deze matrix moet voor repo-beslissingen als volgt worden gelezen:
 - regressie en kleine benchmarkvalidatie houden de repo stabiel;
 - open-set, adversarial en probe utility blijven gescheiden evidence-lagen;
 - het W9f cross-turn mechanisme is bevestigd op veilige drempels; de payoff-kwaliteit is reviewer-afhankelijk gebleken (round 022) en blijft open;
-- de volgende stap is use-time seed-discipline (potentieel-vs-must) plus W10 doctrine-transfer;
-- modelinterne validatie blijft later onderzoek.
+- de use-time seed-discipline is gebouwd en blind getoetst (round 023); W10 is afkap-vrij gedraaid (round 025) en wacht op het blinde verdict;
+- modelinterne validatie heeft een instap-sonde (dialectische falsificatie, `docs/research/laag-g-scoping.md`); het interne activatiesignaal blijft later onderzoek.
 
 ## Wat niet moet gebeuren
 
@@ -296,6 +298,6 @@ Vermijd:
 1. behoud regressie- en lifecyclelaag;
 2. houd W9f vast als baseline;
 3. documenteer blind A/B als kwaliteitscontrole, niet als absolute benchmark;
-4. bouw W10 doctrine-transfer;
+4. rond W10 af: blinde review van de round-025 transfer-run;
 5. meet seed-ruis en seed-vernauwing expliciet;
 6. behandel modelinterne validatie als aparte onderzoekslijn.

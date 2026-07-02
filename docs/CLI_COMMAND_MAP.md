@@ -49,6 +49,7 @@ Deze commands verdiepen het bewijs verder, maar draaien niet automatisch mee in 
 | `fetch-open-set-hf-batch` | open-set intake | handmatig |
 | `run-open-set-seed-review` | open-set seedkwaliteit | handmatig |
 | `summarize-open-set-seed-review` | open-set samenvatting | handmatig |
+| `run-dialectic-falsification` | Laag G instap: dialectische falsificatie van promoted seeds | handmatig |
 
 Voor deze laag is het doel niet alleen output maken, maar vooral reviewerbare en stabiele artefacts opbouwen.
 
