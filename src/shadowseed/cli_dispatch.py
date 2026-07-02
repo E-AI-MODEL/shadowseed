@@ -187,6 +187,18 @@ def _run_dialectic_falsification(args: argparse.Namespace) -> str:
     return args.output
 
 
+def _run_activation_probe(args: argparse.Namespace) -> str:
+    from shadowseed.benchmark.activation_probe import run_activation_probe
+
+    run_activation_probe(
+        args.input,
+        output_path=args.output,
+        backend=args.backend,
+        model_id=args.model_id,
+    )
+    return args.output
+
+
 def _run_chat(args: argparse.Namespace) -> str:
     out = run_chat(
         backend=args.backend,
@@ -326,6 +338,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "run-generative-payoff": _run_generative_payoff_suite,
     "chat": _run_chat,
     "run-dialectic-falsification": _run_dialectic_falsification,
+    "run-activation-probe": _run_activation_probe,
     "run-ssl-session": _run_ssl_session,
     "summarize-open-set-seed-review": _summarize_open_set_seed_review,
     "run-adversarial-gate-benchmark": _run_adversarial_gate_benchmark,

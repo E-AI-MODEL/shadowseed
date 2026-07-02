@@ -447,6 +447,17 @@ def build_parser() -> argparse.ArgumentParser:
     dialectic.add_argument("--model-id", default=None)
     dialectic.add_argument("--max-new-tokens", type=int, default=200)
 
+    act_probe = subparsers.add_parser(
+        "run-activation-probe",
+        help="[manual/research] Laag G spoor 2: MLP-activatiescheiding tussen dialectische "
+        "verdict-klassen (signaal != verdict; raakt geen seed-state)",
+    )
+    act_probe.add_argument("--input", default="src/shadowseed/data/dialectic_falsification_fixture.json")
+    act_probe.add_argument("--output", default="results/activation_probe.json")
+    act_probe.add_argument("--backend", choices=["fake", "hf"], default="fake",
+        help="'fake' bewijst alleen de harnas-mechaniek; 'hf' (opt-in, models-extra) sondeert een echt model.")
+    act_probe.add_argument("--model-id", default=None)
+
     chat = subparsers.add_parser(
         "chat",
         help="[demo] levende schaduwlaag: interactieve SSL-chat (manager, Gate, TTL/TrTL, agent-contract)",
