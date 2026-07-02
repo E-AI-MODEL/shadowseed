@@ -199,11 +199,7 @@ voorbij-RAG* maken ontbreken nog, geprioriteerd:
    doen:** een echte model-dispatch + blinde review (round 009) die toetst of
    "kunnen staan"-seeds inhoudelijk rijker zijn dan de omissie-seeds — gebouwd
    is niet hetzelfde als bewezen.
-2. **Retrieval Probe operationeel (de brug SSL→RAG).** ✅ *Bridge gebouwd (2026-06-15):* `seed_retrieval_probe.py` — de query komt uit de seed/centroid i.p.v. de vraag; `retrieval_probe_vs_question` levert `seed_only_chunk_ids` (wat de seed vindt en de vraag niet), de meethandle voor gat 3. Deterministisch getest. **Nog te doen:** koppelen aan de manager-centroid in een live run, en de head-to-head (gat 3). De manager berekent een
-   constellation-centroid en zet `probe_type="retrieval"`, maar niets consumeert
-   die centroid om echt te zoeken en het antwoord te verrijken. De twee helften
-   (seeds, retrieval) staan los; juist de verbinding laat een seed vinden wat RAG
-   niet vindt.
+2. **Retrieval Probe operationeel (de brug SSL→RAG).** ✅ *Bridge gebouwd (2026-06-15):* `seed_retrieval_probe.py` — de query komt uit de seed/centroid i.p.v. de vraag; `retrieval_probe_vs_question` levert `seed_only_chunk_ids` (wat de seed vindt en de vraag niet), de meethandle voor gat 3. Deterministisch getest. ✅ *Live consumer gebouwd (2026-07-02):* `shadowseed chat --probe-corpus` — promoted seeds (of de manager-constellatie-centroid, wanneer `probe_type="retrieval"` vuurt) zoeken per beurt echt in een corpus; `seed_only_chunk_ids` staat in het beurtsrapport als *aanwezigheid, geen sturing* (hits gaan nooit de antwoordprompt in). **Nog te doen:** de head-to-head met echte embeddings (gat 3), en het ontwerpbesluit of/hoe seed-gevonden context het antwoord mag verrijken — dat is een contractvraag, geen retrievalvraag.
 3. **SSL-seed vs RAG head-to-head.** ✅ *Harness gebouwd (2026-06-15):* `ssl_vs_rag_benchmark.py` + `run-ssl-vs-rag` — zelfde model/prompt, alleen de retrieval-query verschilt (vraag vs gap); blinde paren + `answer_pair_winrate`. Fixture-getest. **Nog te doen:** een echte run met een hf-embeddingmodel (de `lexical_embedding`-hash is te grof voor betekenisvolle retrieval) + blinde review — dat levert het eerste 'voorbij RAG'-getal. Er is geen test van de claim "beter dan een
    LLM met RAG ooit zelf zou vinden". Nodig: dezelfde vraag/corpus, waarbij de
    seed een richting opent die gewone RAG mist. Dit *bewijst* de unieke waarde.
@@ -211,10 +207,14 @@ voorbij-RAG* maken ontbreken nog, geprioriteerd:
    (§5). Nu is de contradiction-check lexicaal/numeriek; generatieve "kunnen"-
    seeds vragen een echte dialectische "valt dit weg te argumenteren?"-toets,
    met op termijn een H-neuron-achtig intern signaal als fundament (Laag G).
-5. **Levende schaduw-geheugenlaag over beurten** (§4). De levenscyclus is
-   unit-getest maar nooit end-to-end getoond: seed geboren in beurt 1 → dormant
-   in de schaduw → gereactiveerd/gevalideerd in beurt 3 → stuurt dán pas. De
-   "shadow" in shadow seed heeft nog geen operationele demonstratie.
+5. **Levende schaduw-geheugenlaag over beurten** (§4). ✅ *Operationeel
+   gedemonstreerd (2026-07-02):* `shadowseed chat` (PR #164) — een seed wordt
+   gewichtloos geboren in een echt gesprek, reist mee in de schaduw, promoveert
+   via de Gate en stuurt pas daarna een láter antwoord; het
+   `shadowseed_agent`-contract staat live op de invloedgrens, de audit-trail is
+   replaybaar en `/falsify` maakt falsificatie gebruikersgedreven. Expliciet een
+   applicatiedemo op de gevalideerde mechaniek, geen bewijslaag
+   (`docs/research/shadow-chat-demo.md`).
 
 ## 7. Wat de payoff-test (round 008) hieraan toevoegde
 
