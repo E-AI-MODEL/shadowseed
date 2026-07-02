@@ -40,6 +40,35 @@ Zelfde transfer-set, zelfde veilige drempels, zelfde use-time discipline
 summary dat `truncation.items_with_likely_truncated_answer` (vrijwel) leeg is
 vóór de review start — anders eerst opnieuw draaien.
 
+## Live run (binnen) — 2026-07-02
+
+```text
+run_id: 28573062737
+branch: main
+commit: 8a7230c94e9693c64c389fec05f98ad54045337c   # incl. #161 compacte prompt
+artifact: ssl-openai-ssl-session-gpt-4.1 (id 8031850899)
+artifact_digest: sha256:c6867a23a056b2bba7b07a51e74141ecdfb212abe67bee67ea9496dd15da4e68
+```
+
+Verificatie van de round-025 fixes (log-analyse van alle antwoorden):
+
+- **Afkap: 0 van 14 antwoorden** — elk antwoord eindigt op een volwaardige
+  slotzin/slotalinea (round 024: 7/18 afgekapt). Het done-criterium "≤1
+  afkap-item" is ruim gehaald; de compactheidsinstructie werkt.
+- **Meta-lek: 0 treffers** op de verboden zelfrechtvaardiging ("versterkt het
+  antwoord") in de hele log.
+- Runcijfers: 3 conversaties, **7 cross-turn events** (EDU t4–t6; HEALTH t5–t6;
+  POLICY t5–t6 — twee t4-events uit round 024 vuurden dit keer niet:
+  run-to-run-variantie van de LLM-detector), 7 promoties,
+  `max_occurrence_count` 28; pack is compact (62 KB vs 119 KB in round 024).
+
+Key-bewuste per-item diagnostiek is conform de quarantaine-regel (round 024)
+**niet** opgenomen; die volgt pas na afronding van de blinde scoring.
+
+**Dit pack is review-klaar.** Reviewers: gebruik
+`ssl_session_blind_ab_review_form.md` + `ssl_session_blind_ab_scoring_template.csv`
+uit het artifact; answer key pas ná scoren openen.
+
 ## Klaar wanneer
 
 - een run waarvan ≤1 review-item afkap-gemarkeerd is;
