@@ -1,7 +1,9 @@
 # Round 025 — W10 transfer, afkap-vrije her-draai (opzet)
 
-> **Status: prompt-hygiëne geland; live run + verse blinde review is de pending
-> stap.** Round 024 leverde een onbeslist transfer-verdict op omdat afkap 6/9
+> **Status: AFGEROND — de blinde review is binnen en het transfer-verdict is
+> positief, met grenzen (zie `human_review/RESULTS.md`): SSL-kant wint per
+> meerderheid 6/7, alle t6-valkuilvragen unaniem SSL, ruis 0, overeenstemming
+> ~0.71.** Round 024 leverde een onbeslist transfer-verdict op omdat afkap 6/9
 > review-items ongeldig maakte (bij `max_new_tokens=1000`); alleen EDU was
 > meetbaar (baseline 2 / SSL 1, n=3). Deze ronde herhaalt de transfer-meting
 > zonder dat de afkap de meting domineert.

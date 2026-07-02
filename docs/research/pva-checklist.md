@@ -200,3 +200,8 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   #46, PR #165/#167) en Laag G geopend met scoping-notitie + dialectische
   falsificatie-sonde (V2). Round-025 blinde review blijft de pending
   bewijsstap.
+- 2026-07-02 (avond) — W10 doctrine-transfer AFGEROND met een eerste positief
+  blind verdict (round 025, 3 reviewers): SSL-kant 6/7 per meerderheid over 3
+  nieuwe domeinen, alle t6-valkuilvragen unaniem, ruis 0, overeenstemming
+  ~0.71; grenzen: n=7, één model, r3 seed-bewust (apart geteld). Het
+  round-023-patroon (sturen bij aanscherping) repliceert cross-domein.
