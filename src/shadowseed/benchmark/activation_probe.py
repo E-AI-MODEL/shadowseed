@@ -38,6 +38,27 @@ from shadowseed.benchmark.dialectic_falsification import (
 # -- analysekern (model-vrij, deterministisch) --------------------------------
 
 
+def find_focus_span(prompt: str, focus: str) -> tuple[int, int] | None:
+    """Char-span van het focus-fragment, verankerd ná de STELLING-marker.
+
+    Een gedekte/geciteerde stelling kan ook letterlijk in de BRONTEKST staan;
+    ongeankerd zoeken zou dan de bron-kopie poolen in plaats van de stelling
+    zelf. Fallback: ongeankerd zoeken als de marker of het geankerde span
+    ontbreekt.
+    """
+    if not focus:
+        return None
+    anchor = prompt.find("STELLING:")
+    if anchor >= 0:
+        start = prompt.find(focus, anchor)
+        if start >= 0:
+            return start, start + len(focus)
+    start = prompt.find(focus)
+    if start >= 0:
+        return start, start + len(focus)
+    return None
+
+
 def select_focus_positions(
     offsets: list[tuple[int, int]], span_start: int, span_end: int
 ) -> list[int]:
@@ -147,18 +168,17 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
         import torch
 
         positions: list[int] | None = None
-        if focus:
-            span_start = prompt.find(focus)
-            if span_start >= 0:
-                encoded = self.tokenizer(
-                    prompt,
-                    return_offsets_mapping=True,
-                    truncation=True,
-                    max_length=512,
-                )
-                positions = select_focus_positions(
-                    encoded["offset_mapping"], span_start, span_start + len(focus)
-                ) or None
+        span = find_focus_span(prompt, focus) if focus else None
+        if span is not None:
+            encoded = self.tokenizer(
+                prompt,
+                return_offsets_mapping=True,
+                truncation=True,
+                max_length=512,
+            )
+            positions = select_focus_positions(
+                encoded["offset_mapping"], span[0], span[1]
+            ) or None
 
         captured: dict[str, np.ndarray] = {}
         handles = []
