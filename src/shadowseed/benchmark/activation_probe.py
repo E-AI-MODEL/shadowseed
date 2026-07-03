@@ -100,11 +100,82 @@ def class_separation(
     }
 
 
+def _class_mean_distance(vectors: list[np.ndarray], labels: list[str]) -> float:
+    classes = sorted(set(labels))
+    a = np.mean([v for v, l in zip(vectors, labels) if l == classes[0]], axis=0)
+    b = np.mean([v for v, l in zip(vectors, labels) if l == classes[1]], axis=0)
+    denom = float(np.linalg.norm(a) * np.linalg.norm(b))
+    return 1.0 - (float(np.dot(a, b) / denom) if denom else 1.0)
+
+
+def permutation_control(
+    vectors: list[np.ndarray],
+    labels: list[str],
+    n_permutations: int = 500,
+    rng_seed: int = 45,
+) -> dict[str, Any]:
+    """Label-shuffle-controle: is de scheiding aan de labels toe te schrijven?
+
+    Husselt de klasse-labels over de vectoren en meet hoe vaak een toevallige
+    toewijzing een minstens zo grote scheiding geeft. Bij klein n worden álle
+    mogelijke toewijzingen exact opgesomd (dan is de kleinst mogelijke p
+    1/n_toewijzingen — de controle kwantificeert zo zélf waarom een kleine n
+    geen claim kan dragen); anders Monte Carlo met vaste seed.
+    """
+    from itertools import combinations
+    from math import comb
+
+    classes = sorted(set(labels))
+    if len(classes) != 2:
+        return {"valid": False, "reason": "twee klassen vereist"}
+    observed = _class_mean_distance(vectors, labels)
+    n = len(labels)
+    k = labels.count(classes[0])
+    total = comb(n, k)
+    null: list[float] = []
+    if total <= 2000:
+        for combo in combinations(range(n), k):
+            perm = [classes[0] if i in combo else classes[1] for i in range(n)]
+            null.append(_class_mean_distance(vectors, perm))
+        exact = True
+        p = sum(1 for d in null if d >= observed - 1e-12) / total
+        # label-swap-symmetrie: bij gebalanceerde klassen is de complementaire
+        # toewijzing altijd een exacte tie met de waargenomen, dus de haalbare
+        # vloer is 2/total; ongebalanceerd blijft 1/total haalbaar.
+        floor = (2 if 2 * k == n else 1) / total
+    else:
+        rng = np.random.default_rng(rng_seed)
+        shuffled = list(labels)
+        for _ in range(n_permutations):
+            rng.shuffle(shuffled)
+            null.append(_class_mean_distance(vectors, shuffled))
+        exact = False
+        p = (1 + sum(1 for d in null if d >= observed - 1e-12)) / (1 + n_permutations)
+        floor = 1.0 / (1 + n_permutations)
+    return {
+        "valid": True,
+        "exact": exact,
+        "observed_cosine_distance": observed,
+        "p_value": float(p),
+        "n_assignments": total if exact else n_permutations,
+        "min_possible_p": float(floor),
+        "null_mean": float(np.mean(null)),
+        "null_max": float(np.max(null)),
+    }
+
+
 def probe_report(
     per_layer: dict[str, dict[str, list[np.ndarray]]],
 ) -> dict[str, Any]:
-    """Per-laag scheiding + de laag met het sterkste signaal."""
-    layers = {name: class_separation(acts) for name, acts in per_layer.items()}
+    """Per-laag scheiding + permutatie-controle + de sterkste laag."""
+    layers: dict[str, dict[str, Any]] = {}
+    for name, acts in per_layer.items():
+        rep = class_separation(acts)
+        if rep.get("separable"):
+            vectors = [v for label in sorted(acts) for v in acts[label]]
+            labels = [label for label in sorted(acts) for _ in acts[label]]
+            rep["permutation"] = permutation_control(vectors, labels)
+        layers[name] = rep
     scored = {
         name: rep["cosine_distance"]
         for name, rep in layers.items()
@@ -115,6 +186,9 @@ def probe_report(
         "layers": layers,
         "strongest_layer": best,
         "strongest_cosine_distance": scored.get(best) if best else None,
+        "strongest_permutation_p": (
+            layers[best]["permutation"]["p_value"] if best else None
+        ),
     }
 
 
