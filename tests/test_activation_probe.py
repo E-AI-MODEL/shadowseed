@@ -15,8 +15,11 @@ from shadowseed.benchmark.activation_probe import (
     FakeActivationModel,
     class_separation,
     probe_report,
+    find_focus_span,
     run_activation_probe,
+    select_focus_positions,
 )
+from shadowseed.benchmark.dialectic_falsification import build_dialectic_prompt
 
 FIXTURE = Path("src/shadowseed/data/dialectic_falsification_fixture.json")
 
@@ -69,6 +72,56 @@ def test_probe_run_end_to_end_writes_signal_artifact(tmp_path: Path):
     for layer_report in result["report"]["layers"].values():
         assert layer_report["separable"] is True
     assert result["report"]["strongest_layer"] in FakeActivationModel.layer_names
+
+
+def test_select_focus_positions_overlap_semantics():
+    offsets = [(0, 5), (5, 10), (10, 15), (15, 20), (0, 0)]  # (0,0) = special token
+    # span [7, 12) overlapt token 1 en 2; special tokens nooit
+    assert select_focus_positions(offsets, 7, 12) == [1, 2]
+    assert select_focus_positions(offsets, 0, 20) == [0, 1, 2, 3]
+    assert select_focus_positions(offsets, 90, 99) == []
+
+
+def test_stelling_pooling_isolates_the_focus_span(tmp_path: Path):
+    # same stelling in a different source: under stelling-pooling the fake
+    # vector depends only on the focus span; under full pooling it does not
+    model = FakeActivationModel()
+    p1 = "BRON A ...\nSTELLING:\nHet ontbrekende punt.\nREST"
+    p2 = "BRON B (anders) ...\nSTELLING:\nHet ontbrekende punt.\nEINDE"
+    focus = "Het ontbrekende punt."
+    a = model.activations_for(p1, focus=focus)
+    b = model.activations_for(p2, focus=focus)
+    assert np.allclose(a["mlp.0"], b["mlp.0"])  # focus-scoped: identiek
+    a_full = model.activations_for(p1)
+    b_full = model.activations_for(p2)
+    assert not np.allclose(a_full["mlp.0"], b_full["mlp.0"])  # full: niet
+
+
+def test_focus_span_anchors_after_stelling_marker():
+    # a covered/quoted seed appears verbatim in the BRONTEKST: the span must
+    # point at the STELLING copy, not the earlier source copy
+    seed = "De uitstootcijfers worden jaarlijks gepubliceerd."
+    source = f"Inleiding. {seed} Verder beschrijft het rapport de voortgang."
+    prompt = build_dialectic_prompt(seed, source)
+    span = find_focus_span(prompt, seed)
+    assert span is not None
+    start, end = span
+    assert prompt[start:end] == seed
+    assert start > prompt.find("STELLING:")
+    assert start > prompt.find(seed)  # niet de bron-kopie
+
+    # fallback: geen marker -> ongeankerd; geen hit -> None
+    assert find_focus_span(f"x {seed} y", seed) == (2, 2 + len(seed))
+    assert find_focus_span("niets hier", seed) is None
+    assert find_focus_span(prompt, "") is None
+
+
+def test_probe_records_pooling_mode(tmp_path: Path):
+    out = tmp_path / "probe.json"
+    result = run_activation_probe(str(FIXTURE), output_path=str(out), pooling="full")
+    assert result["pooling"] == "full"
+    result = run_activation_probe(str(FIXTURE), output_path=str(out))
+    assert result["pooling"] == "stelling"
 
 
 def test_probe_touches_no_seed_state():

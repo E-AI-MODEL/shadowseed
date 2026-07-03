@@ -38,6 +38,38 @@ from shadowseed.benchmark.dialectic_falsification import (
 # -- analysekern (model-vrij, deterministisch) --------------------------------
 
 
+def find_focus_span(prompt: str, focus: str) -> tuple[int, int] | None:
+    """Char-span van het focus-fragment, verankerd ná de STELLING-marker.
+
+    Een gedekte/geciteerde stelling kan ook letterlijk in de BRONTEKST staan;
+    ongeankerd zoeken zou dan de bron-kopie poolen in plaats van de stelling
+    zelf. Fallback: ongeankerd zoeken als de marker of het geankerde span
+    ontbreekt.
+    """
+    if not focus:
+        return None
+    anchor = prompt.find("STELLING:")
+    if anchor >= 0:
+        start = prompt.find(focus, anchor)
+        if start >= 0:
+            return start, start + len(focus)
+    start = prompt.find(focus)
+    if start >= 0:
+        return start, start + len(focus)
+    return None
+
+
+def select_focus_positions(
+    offsets: list[tuple[int, int]], span_start: int, span_end: int
+) -> list[int]:
+    """Token-posities waarvan de char-offsets het focus-span overlappen."""
+    return [
+        i
+        for i, (s, e) in enumerate(offsets)
+        if e > span_start and s < span_end and e > s
+    ]
+
+
 def class_separation(
     activations: dict[str, list[np.ndarray]],
 ) -> dict[str, Any]:
@@ -103,10 +135,12 @@ class FakeActivationModel:
     def __init__(self, dim: int = 16) -> None:
         self.dim = dim
 
-    def activations_for(self, prompt: str) -> dict[str, np.ndarray]:
+    def activations_for(self, prompt: str, focus: str | None = None) -> dict[str, np.ndarray]:
+        # bij token-scoped pooling hangt de vector alleen van het focus-span af
+        basis = focus if focus and focus in prompt else prompt
         out: dict[str, np.ndarray] = {}
         for layer in self.layer_names:
-            digest = hashlib.sha256(f"{layer}::{prompt}".encode()).digest()
+            digest = hashlib.sha256(f"{layer}::{basis}".encode()).digest()
             rng = np.random.default_rng(int.from_bytes(digest[:8], "big"))
             out[layer] = rng.normal(size=self.dim)
         return out
@@ -126,8 +160,25 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
         self.device = device
         self.model.to(device)
 
-    def activations_for(self, prompt: str) -> dict[str, np.ndarray]:
+    def activations_for(self, prompt: str, focus: str | None = None) -> dict[str, np.ndarray]:
+        """Activaties per MLP-laag; met ``focus`` alleen gepoold over de
+        tokens van dat tekstspan (round-026-les: full-sequence mean-pooling
+        verdunt het stellingsverschil weg omdat de rest van de prompt
+        identiek is)."""
         import torch
+
+        positions: list[int] | None = None
+        span = find_focus_span(prompt, focus) if focus else None
+        if span is not None:
+            encoded = self.tokenizer(
+                prompt,
+                return_offsets_mapping=True,
+                truncation=True,
+                max_length=512,
+            )
+            positions = select_focus_positions(
+                encoded["offset_mapping"], span[0], span[1]
+            ) or None
 
         captured: dict[str, np.ndarray] = {}
         handles = []
@@ -136,9 +187,10 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
             if name.endswith(".mlp") or name.endswith(".mlp.c_proj"):
                 def _hook(mod, inputs, output, _name=name):
                     tensor = output[0] if isinstance(output, tuple) else output
-                    captured[_name] = (
-                        tensor.detach().float().mean(dim=(0, 1)).cpu().numpy()
-                    )
+                    tensor = tensor.detach().float()
+                    if positions is not None and tensor.dim() == 3:
+                        tensor = tensor[:, positions, :]
+                    captured[_name] = tensor.mean(dim=(0, 1)).cpu().numpy()
                 handles.append(module.register_forward_hook(_hook))
         try:
             tokens = self.tokenizer(
@@ -160,6 +212,7 @@ def run_activation_probe(
     output_path: str = "results/activation_probe.json",
     backend: str = "fake",
     model_id: str | None = None,
+    pooling: str = "stelling",
 ) -> dict[str, Any]:
     """Sondeer de dialectische cases: activaties per verdict-klasse, per laag.
 
@@ -192,7 +245,8 @@ def run_activation_probe(
         verdict = parse_dialectic_verdict(raw)["verdict"]
         if verdict not in (VERDICT_WEERLEGD, VERDICT_HOUDT_STAND):
             continue  # ONBESLIST draagt geen klasse-signaal
-        acts = model.activations_for(prompt)
+        focus = seed_text if pooling == "stelling" else None
+        acts = model.activations_for(prompt, focus=focus)
         for layer, vec in acts.items():
             per_layer.setdefault(layer, {}).setdefault(verdict, []).append(vec)
         cases_out.append({"seed_text": seed_text, "verdict": verdict, "layers": sorted(acts)})
@@ -201,6 +255,7 @@ def run_activation_probe(
         "artifact": "activation_probe",
         "evidence_layer": "G",
         "backend": getattr(model, "name", backend),
+        "pooling": pooling,
         "doctrine": (
             "Laag G-signaal: activatie-scheiding tussen dialectische "
             "verdict-klassen. Signaal != verdict; raakt geen seed-state; "

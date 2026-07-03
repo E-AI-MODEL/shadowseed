@@ -457,6 +457,8 @@ def build_parser() -> argparse.ArgumentParser:
     act_probe.add_argument("--backend", choices=["fake", "hf"], default="fake",
         help="'fake' bewijst alleen de harnas-mechaniek; 'hf' (opt-in, models-extra) sondeert een echt model.")
     act_probe.add_argument("--model-id", default=None)
+    act_probe.add_argument("--pooling", choices=["stelling", "full"], default="stelling",
+        help="'stelling' poolt alleen de stelling-tokens (round-026-les); 'full' de hele prompt.")
 
     chat = subparsers.add_parser(
         "chat",

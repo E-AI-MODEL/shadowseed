@@ -70,11 +70,18 @@ sequentie verdunt het stellingsverschil weg. Bovendien n=3 (2 vs 1) en beide
 modellen zijn Engels-getraind op Nederlandse prompts. Dit zegt dus níets over
 interne steun, positief noch negatief.
 
+**Iteratie 2 (2026-07-03): token-scoped pooling gebouwd en gemeten.**
+`--pooling stelling` (nu default) poolt alleen de stelling-tokens via
+char-offset-mapping. Op pythia-14m met dezelfde cases: sterkste laag van
+0.0013 → **0.2097** (×160), consistent laagprofiel (vroeg/midden draagt het
+verschil). Dit is een instrument-validatie, geen signaalvondst — bij n=3
+produceert élk lexicaal verschil scheiding. Zie round 026.
+
 **Nog te doen (de echte meting):**
 
-1. token-scoped pooling: alleen de stelling-tokens (of de laatste token)
-   poolen in plaats van de hele prompt;
-2. meer cases (de transfer-set erbij) en een NL-capabel klein model;
+1. meer cases (de transfer-set erbij) en een NL-capabel klein model;
+2. permutatie-/shuffle-controle: labels husselen hoort de scheiding te
+   laten instorten — pas dan is scheiding aan het verdict toe te schrijven;
 3. een échte dialectische verdictbron in plaats van de fixture-labels.
 
 Pas daarná is een uitspraak over interne steun aan de orde.
