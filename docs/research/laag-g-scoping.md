@@ -53,10 +53,31 @@ Gebouwd (`activation_probe.py` + `run-activation-probe`):
 4. artifact `activation_probe.json`, `evidence_layer: "G"`, doctrine-regel in
    het artifact zelf.
 
-**Nog te doen (de echte sonde):** een run op een klein open model
-(`--backend hf --model-id ...`) met een échte dialectische verdictbron in
-plaats van de fixture-labels, over de fixture- én transfer-sets; pas daarná
-is een uitspraak over interne steun aan de orde.
+**Eerste echte runs (2026-07-03, twee modellen, twee routes):**
+
+- Actions-route: `distilgpt2` (run 28639320528, artifact `activation-probe`
+  id 8058091841) — sterkste laag `transformer.h.2.mlp.c_proj`,
+  cosine-afstand **0.0054**;
+- sandbox-route via de git-model-mirror: `EleutherAI/pythia-14m` (branch
+  `model-mirror/EleutherAI-pythia-14m`) — alle 6 GPTNeoX-MLP-lagen gevangen,
+  sterkste `gpt_neox.layers.1.mlp`, cosine-afstand **0.0013**.
+
+Lezing, eerlijk: de mechaniek werkt end-to-end op echte gewichten in twee
+architecturen, maar de gemeten scheiding is verwaarloosbaar — en dat is
+grotendeels **per constructie**: de prompts zijn ~95% identiek (zelfde bron +
+instructie, alleen de stelling verschilt) en mean-pooling over de hele
+sequentie verdunt het stellingsverschil weg. Bovendien n=3 (2 vs 1) en beide
+modellen zijn Engels-getraind op Nederlandse prompts. Dit zegt dus níets over
+interne steun, positief noch negatief.
+
+**Nog te doen (de echte meting):**
+
+1. token-scoped pooling: alleen de stelling-tokens (of de laatste token)
+   poolen in plaats van de hele prompt;
+2. meer cases (de transfer-set erbij) en een NL-capabel klein model;
+3. een échte dialectische verdictbron in plaats van de fixture-labels.
+
+Pas daarná is een uitspraak over interne steun aan de orde.
 
 ## Doctrine-regels (gelden voor beide sporen)
 
