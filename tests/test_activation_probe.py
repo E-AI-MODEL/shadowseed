@@ -10,12 +10,14 @@ import json
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from shadowseed.benchmark.activation_probe import (
     FakeActivationModel,
     class_separation,
     probe_report,
     find_focus_span,
+    permutation_control,
     run_activation_probe,
     select_focus_positions,
 )
@@ -122,6 +124,46 @@ def test_probe_records_pooling_mode(tmp_path: Path):
     assert result["pooling"] == "full"
     result = run_activation_probe(str(FIXTURE), output_path=str(out))
     assert result["pooling"] == "stelling"
+
+
+def test_permutation_control_exact_on_separable_data():
+    rng = np.random.default_rng(7)
+    a = [np.array([1.0, 0.0, 0.0]) + rng.normal(0, 0.01, 3) for _ in range(4)]
+    b = [np.array([0.0, 1.0, 0.0]) + rng.normal(0, 0.01, 3) for _ in range(4)]
+    rep = permutation_control(a + b, ["W"] * 4 + ["H"] * 4)
+    assert rep["exact"] is True
+    assert rep["n_assignments"] == 70  # C(8,4)
+    # perfect scheiding: alleen de echte toewijzing (en zijn spiegel) haalt het maximum
+    assert rep["p_value"] <= 2 / 70 + 1e-9
+    assert rep["min_possible_p"] == 1 / 70
+
+
+def test_permutation_control_on_random_data_is_not_significant():
+    rng = np.random.default_rng(11)
+    vecs = [rng.normal(size=6) for _ in range(8)]
+    rep = permutation_control(vecs, ["W"] * 4 + ["H"] * 4)
+    assert rep["valid"] is True
+    assert rep["p_value"] > 0.05  # ruis hoort niet significant te scheiden
+
+
+def test_permutation_control_quantifies_tiny_n():
+    # n=3 (2 vs 1): slechts 3 toewijzingen mogelijk -> p kan nooit onder 1/3
+    vecs = [np.array([1.0, 0.0]), np.array([0.9, 0.1]), np.array([0.0, 1.0])]
+    rep = permutation_control(vecs, ["H", "H", "W"])
+    assert rep["exact"] is True and rep["n_assignments"] == 3
+    assert rep["min_possible_p"] == pytest.approx(1 / 3)
+    assert rep["p_value"] >= 1 / 3
+
+
+def test_probe_report_includes_permutation(tmp_path: Path):
+    out = tmp_path / "probe.json"
+    result = run_activation_probe(str(FIXTURE), output_path=str(out))
+    strongest = result["report"]["strongest_layer"]
+    perm = result["report"]["layers"][strongest]["permutation"]
+    assert perm["valid"] is True and perm["exact"] is True
+    assert result["report"]["strongest_permutation_p"] == perm["p_value"]
+    # n=3 in de fixture: de controle laat zien dat p nooit onder 1/3 kan
+    assert perm["min_possible_p"] == pytest.approx(1 / 3)
 
 
 def test_probe_touches_no_seed_state():

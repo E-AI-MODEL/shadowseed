@@ -77,12 +77,18 @@ char-offset-mapping. Op pythia-14m met dezelfde cases: sterkste laag van
 verschil). Dit is een instrument-validatie, geen signaalvondst — bij n=3
 produceert élk lexicaal verschil scheiding. Zie round 026.
 
+**Iteratie 3 (2026-07-03): permutatie-controle + transfer-cases — schoon
+nulresultaat.** `permutation_control` (exact bij klein n, anders Monte Carlo)
+zit nu in elk probe-rapport; op 10 transfer-cases (7 echte round-025 seeds +
+distractors, mechaniek-labels) scheidt op pythia-14m **geen enkele laag boven
+toeval** (p 0.24–0.81, exact over 210 toewijzingen). De ×160-"scheiding" uit
+iteratie 2 (n=3) stort onder de shuffle in — lexicaal toeval, geen signaal.
+Het instrument rapporteert dus correct néé waar néé hoort. Zie round 027.
+
 **Nog te doen (de echte meting):**
 
-1. meer cases (de transfer-set erbij) en een NL-capabel klein model;
-2. permutatie-/shuffle-controle: labels husselen hoort de scheiding te
-   laten instorten — pas dan is scheiding aan het verdict toe te schrijven;
-3. een échte dialectische verdictbron in plaats van de fixture-labels.
+1. een NL-capabel/groter model (mirror of Actions-run);
+2. een échte dialectische verdictbron in plaats van de fixture-labels.
 
 Pas daarná is een uitspraak over interne steun aan de orde.
 
