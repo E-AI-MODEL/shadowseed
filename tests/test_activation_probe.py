@@ -133,9 +133,11 @@ def test_permutation_control_exact_on_separable_data():
     rep = permutation_control(a + b, ["W"] * 4 + ["H"] * 4)
     assert rep["exact"] is True
     assert rep["n_assignments"] == 70  # C(8,4)
-    # perfect scheiding: alleen de echte toewijzing (en zijn spiegel) haalt het maximum
-    assert rep["p_value"] <= 2 / 70 + 1e-9
-    assert rep["min_possible_p"] == 1 / 70
+    # perfect scheiding: alleen de echte toewijzing en zijn spiegel halen het
+    # maximum; bij gebalanceerde klassen is de haalbare vloer dus 2/70
+    assert rep["p_value"] == pytest.approx(2 / 70)
+    assert rep["min_possible_p"] == pytest.approx(2 / 70)
+    assert rep["p_value"] >= rep["min_possible_p"] - 1e-12
 
 
 def test_permutation_control_on_random_data_is_not_significant():

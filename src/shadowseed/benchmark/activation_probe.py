@@ -139,6 +139,10 @@ def permutation_control(
             null.append(_class_mean_distance(vectors, perm))
         exact = True
         p = sum(1 for d in null if d >= observed - 1e-12) / total
+        # label-swap-symmetrie: bij gebalanceerde klassen is de complementaire
+        # toewijzing altijd een exacte tie met de waargenomen, dus de haalbare
+        # vloer is 2/total; ongebalanceerd blijft 1/total haalbaar.
+        floor = (2 if 2 * k == n else 1) / total
     else:
         rng = np.random.default_rng(rng_seed)
         shuffled = list(labels)
@@ -147,13 +151,14 @@ def permutation_control(
             null.append(_class_mean_distance(vectors, shuffled))
         exact = False
         p = (1 + sum(1 for d in null if d >= observed - 1e-12)) / (1 + n_permutations)
+        floor = 1.0 / (1 + n_permutations)
     return {
         "valid": True,
         "exact": exact,
         "observed_cosine_distance": observed,
         "p_value": float(p),
         "n_assignments": total if exact else n_permutations,
-        "min_possible_p": (1.0 / total) if exact else 1.0 / (1 + n_permutations),
+        "min_possible_p": float(floor),
         "null_mean": float(np.mean(null)),
         "null_max": float(np.max(null)),
     }
