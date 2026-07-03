@@ -459,6 +459,9 @@ def build_parser() -> argparse.ArgumentParser:
     act_probe.add_argument("--model-id", default=None)
     act_probe.add_argument("--pooling", choices=["stelling", "full"], default="stelling",
         help="'stelling' poolt alleen de stelling-tokens (round-026-les); 'full' de hele prompt.")
+    act_probe.add_argument("--verdicts", default=None,
+        help="Pad naar een dialectic_falsification-artifact: gebruik díe verdict-labels "
+        "(bv. gpt-4.1 oordeelt) i.p.v. de fixture-mechaniek. De echte Laag G-vraag.")
 
     chat = subparsers.add_parser(
         "chat",
