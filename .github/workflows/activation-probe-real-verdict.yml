@@ -1,0 +1,98 @@
+name: "Research · Laag G sonde met echte verdictbron"
+
+# De echte Laag G-vraag: encodeert een klein model intern het houdbaarheids-
+# oordeel dat een STERK model (gpt-4.1) velt? De keten:
+#   1. run-dialectic-falsification --backend openai  -> echte verdict-labels
+#   2. run-activation-probe --backend hf --verdicts    -> internals van klein model,
+#      gelabeld door gpt-4.1, met permutatie-controle.
+# Verdictbron en gesondeerd model zijn bewust ontkoppeld.
+
+on:
+  workflow_dispatch:
+    inputs:
+      probe_model_id:
+        description: "Klein HF-model om te sonderen (internals)"
+        required: true
+        default: "distilgpt2"
+      dialectic_model_id:
+        description: "Sterk model dat de houdbaarheid oordeelt (OpenAI)"
+        required: true
+        default: "gpt-4.1"
+      input_path:
+        description: "Dialectische case-file (source_text + cases)"
+        required: true
+        default: "src/shadowseed/data/dialectic_falsification_transfer.json"
+
+permissions:
+  contents: read
+
+jobs:
+  real-verdict-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PROBE_MODEL_ID: ${{ inputs.probe_model_id }}
+      DIALECTIC_MODEL_ID: ${{ inputs.dialectic_model_id }}
+      INPUT_PATH: ${{ inputs.input_path }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installeer package + torch (CPU) + transformers + openai
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers openai
+
+      - name: Stap 1 — echte dialectische verdicten (gpt-4.1 oordeelt)
+        run: |
+          args=(run-dialectic-falsification
+            --backend openai
+            --model-id "$DIALECTIC_MODEL_ID"
+            --input "$INPUT_PATH"
+            --output results/dialectic_verdicts.json)
+          python -m shadowseed.cli "${args[@]}"
+
+      - name: Stap 2 — sondeer klein model, gelabeld door gpt-4.1
+        run: |
+          args=(run-activation-probe
+            --backend hf
+            --model-id "$PROBE_MODEL_ID"
+            --input "$INPUT_PATH"
+            --verdicts results/dialectic_verdicts.json
+            --pooling stelling
+            --output results/activation_probe_real_verdict.json)
+          python -m shadowseed.cli "${args[@]}"
+
+      - name: Samenvatting naar de job-log
+        run: |
+          python - <<'EOF'
+          import json
+          r = json.load(open("results/activation_probe_real_verdict.json"))
+          rep = r["report"]
+          print("gesondeerd model:", r["backend"], "| verdict-bron:", r["verdict_source"])
+          print("cases:", [(c["seed_text"][:40], c["verdict"]) for c in r["cases"]])
+          best = rep["strongest_layer"]
+          if best:
+              perm = rep["layers"][best]["permutation"]
+              print("sterkste laag:", best,
+                    "| cosine-afstand:", round(rep["strongest_cosine_distance"], 4),
+                    "| permutatie-p:", round(perm["p_value"], 4),
+                    "| haalbare vloer:", round(perm["min_possible_p"], 4))
+          else:
+              print("geen separabele laag (te weinig van een klasse)")
+          EOF
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: activation-probe-real-verdict
+          path: |
+            results/activation_probe_real_verdict.json
+            results/dialectic_verdicts.json
+          if-no-files-found: error

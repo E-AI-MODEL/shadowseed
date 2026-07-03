@@ -281,20 +281,42 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
 # -- de sonde-run ---------------------------------------------------------------
 
 
+def load_verdict_labels(verdicts_path: str) -> dict[str, str]:
+    """Lees echte verdict-labels uit een ``dialectic_falsification`` artifact.
+
+    Zo kan een sterke dialecticus (bv. gpt-4.1) de houdbaarheid oordelen,
+    terwijl de sonde de internals van een ánder (klein) model leest — de
+    zuivere Laag G-vraag: encodeert dit model het oordeel dat een ander velt?
+    Mapt stelling-tekst -> verdict; ONBESLIST/skipped worden overgeslagen.
+    """
+    payload = json.loads(Path(verdicts_path).read_text(encoding="utf-8"))
+    records = payload.get("records", payload if isinstance(payload, list) else [])
+    labels: dict[str, str] = {}
+    for rec in records:
+        verdict = rec.get("verdict")
+        text = rec.get("seed_text")
+        if text and verdict in (VERDICT_WEERLEGD, VERDICT_HOUDT_STAND):
+            labels[text] = verdict
+    return labels
+
+
 def run_activation_probe(
     input_path: str,
     output_path: str = "results/activation_probe.json",
     backend: str = "fake",
     model_id: str | None = None,
     pooling: str = "stelling",
+    verdicts_path: str | None = None,
 ) -> dict[str, Any]:
     """Sondeer de dialectische cases: activaties per verdict-klasse, per laag.
 
     Gebruikt dezelfde case-file als ``run-dialectic-falsification``
-    (``source_text`` + ``cases``). Het verdict komt in deze eerste sonde uit
-    de deterministische fixture-dialectiek (mechaniek-label); een echte
-    modelrun combineert later een echt dialectisch verdict met echte
-    activaties. Er wordt géén manager en géén seed-state aangeraakt.
+    (``source_text`` + ``cases``). Het verdict komt standaard uit de
+    deterministische fixture-dialectiek (lexicale mechaniek-label); met
+    ``verdicts_path`` worden echte verdict-labels uit een
+    ``dialectic_falsification`` artifact geladen — dan leest de sonde de
+    internals van één model terwijl een ánder (sterker) model oordeelt. Er
+    wordt géén manager en géén seed-state aangeraakt.
     """
     data = json.loads(Path(input_path).read_text(encoding="utf-8"))
     source_text = data["source_text"]
@@ -307,16 +329,23 @@ def run_activation_probe(
     else:
         raise ValueError(f"Onbekende activation-probe backend: {backend!r}")
 
-    verdict_backend = FixtureDialecticBackend()
+    external_labels = load_verdict_labels(verdicts_path) if verdicts_path else None
+    verdict_source = "extern" if external_labels is not None else "fixture"
+    verdict_backend = FixtureDialecticBackend() if external_labels is None else None
     per_layer: dict[str, dict[str, list[np.ndarray]]] = {}
     cases_out: list[dict[str, Any]] = []
     for case in data["cases"]:
         seed_text = case["seed_text"]
         prompt = build_dialectic_prompt(seed_text, source_text)
-        raw = verdict_backend.generate(
-            prompt, {"seed_text": seed_text, "source_text": source_text}, "dialectic", []
-        )
-        verdict = parse_dialectic_verdict(raw)["verdict"]
+        if external_labels is not None:
+            verdict = external_labels.get(seed_text)
+            if verdict is None:
+                continue  # geen extern oordeel voor deze stelling
+        else:
+            raw = verdict_backend.generate(
+                prompt, {"seed_text": seed_text, "source_text": source_text}, "dialectic", []
+            )
+            verdict = parse_dialectic_verdict(raw)["verdict"]
         if verdict not in (VERDICT_WEERLEGD, VERDICT_HOUDT_STAND):
             continue  # ONBESLIST draagt geen klasse-signaal
         focus = seed_text if pooling == "stelling" else None
@@ -330,6 +359,7 @@ def run_activation_probe(
         "evidence_layer": "G",
         "backend": getattr(model, "name", backend),
         "pooling": pooling,
+        "verdict_source": verdict_source,
         "doctrine": (
             "Laag G-signaal: activatie-scheiding tussen dialectische "
             "verdict-klassen. Signaal != verdict; raakt geen seed-state; "

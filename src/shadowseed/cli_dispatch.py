@@ -196,6 +196,7 @@ def _run_activation_probe(args: argparse.Namespace) -> str:
         backend=args.backend,
         model_id=args.model_id,
         pooling=getattr(args, "pooling", "stelling"),
+        verdicts_path=getattr(args, "verdicts", None),
     )
     return args.output
 

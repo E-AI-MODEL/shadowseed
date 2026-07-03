@@ -17,6 +17,7 @@ from shadowseed.benchmark.activation_probe import (
     class_separation,
     probe_report,
     find_focus_span,
+    load_verdict_labels,
     permutation_control,
     run_activation_probe,
     select_focus_positions,
@@ -166,6 +167,51 @@ def test_probe_report_includes_permutation(tmp_path: Path):
     assert result["report"]["strongest_permutation_p"] == perm["p_value"]
     # n=3 in de fixture: de controle laat zien dat p nooit onder 1/3 kan
     assert perm["min_possible_p"] == pytest.approx(1 / 3)
+
+
+def test_load_verdict_labels_filters_and_maps(tmp_path: Path):
+    payload = {
+        "records": [
+            {"seed_text": "A", "verdict": "WEERLEGD"},
+            {"seed_text": "B", "verdict": "HOUDT_STAND"},
+            {"seed_text": "C", "verdict": "ONBESLIST"},  # geen klasse
+            {"seed_text": "D", "skipped": "niet geaccepteerd"},  # geen verdict
+        ]
+    }
+    p = tmp_path / "vd.json"
+    p.write_text(json.dumps(payload), encoding="utf-8")
+    labels = load_verdict_labels(str(p))
+    assert labels == {"A": "WEERLEGD", "B": "HOUDT_STAND"}
+
+
+def test_probe_uses_external_verdicts(tmp_path: Path):
+    # decoupling: de sonde leest de internals (fake), maar de labels komen uit
+    # een extern dialectiek-artifact — hier bewust omgekeerd t.o.v. de fixture
+    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    seeds = [c["seed_text"] for c in fixture["cases"]]
+    external = tmp_path / "verdicts.json"
+    external.write_text(
+        json.dumps(
+            {"records": [
+                {"seed_text": seeds[0], "verdict": "WEERLEGD"},
+                {"seed_text": seeds[1], "verdict": "WEERLEGD"},
+                {"seed_text": seeds[2], "verdict": "HOUDT_STAND"},
+            ]}
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "probe.json"
+    result = run_activation_probe(
+        str(FIXTURE), output_path=str(out), verdicts_path=str(external)
+    )
+    assert result["verdict_source"] == "extern"
+    got = {c["seed_text"]: c["verdict"] for c in result["cases"]}
+    assert got[seeds[0]] == "WEERLEGD" and got[seeds[2]] == "HOUDT_STAND"
+
+
+def test_probe_default_verdict_source_is_fixture(tmp_path: Path):
+    result = run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "p.json"))
+    assert result["verdict_source"] == "fixture"
 
 
 def test_probe_touches_no_seed_state():

@@ -85,10 +85,22 @@ toeval** (p 0.24–0.81, exact over 210 toewijzingen). De ×160-"scheiding" uit
 iteratie 2 (n=3) stort onder de shuffle in — lexicaal toeval, geen signaal.
 Het instrument rapporteert dus correct néé waar néé hoort. Zie round 027.
 
-**Nog te doen (de echte meting):**
+**Iteratie 4 (2026-07-03): verdictbron ontkoppeld van gesondeerd model.**
+`run-activation-probe --verdicts <dialectic-artifact>` leest echte
+verdict-labels uit een `dialectic_falsification`-run in plaats van de
+fixture-mechaniek. Daarmee is de zuivere Laag G-vraag stelbaar: **encodeert
+een klein model intern het houdbaarheidsoordeel dat een sterk model velt?**
+De workflow `activation-probe-real-verdict.yml` ketent het: stap 1 laat
+gpt-4.1 oordelen (`--backend openai`), stap 2 sondeert een klein model met
+díe labels. Verdictbron en gesondeerd model zijn bewust ontkoppeld; het
+artifact draagt `verdict_source: "extern"`.
 
-1. een NL-capabel/groter model (mirror of Actions-run);
-2. een échte dialectische verdictbron in plaats van de fixture-labels.
+**Nog te doen (de echte meting, nu volledig triggerbaar):**
+
+1. een NL-capabel/groter model als gesondeerd model (mirror of Actions-run);
+2. de `activation-probe-real-verdict`-workflow draaien zodat gpt-4.1 de
+   labels levert; dan is de permutatie-p over die echte labels de eerste
+   inhoudelijke Laag G-meting.
 
 Pas daarná is een uitspraak over interne steun aan de orde.
 
