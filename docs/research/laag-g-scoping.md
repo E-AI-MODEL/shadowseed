@@ -95,14 +95,24 @@ gpt-4.1 oordelen (`--backend openai`), stap 2 sondeert een klein model met
 díe labels. Verdictbron en gesondeerd model zijn bewust ontkoppeld; het
 artifact draagt `verdict_source: "extern"`.
 
-**Nog te doen (de echte meting, nu volledig triggerbaar):**
+**Iteratie 5 (2026-07-04): eerste inhoudelijke meting — schoon nulresultaat.**
+De `activation-probe-real-verdict`-workflow liep end-to-end: gpt-4.1 oordeelde
+de houdbaarheid (7 WEERLEGD / 2 HOUDT_STAND / 1 ONBESLIST over de 10
+transfer-stellingen), distilgpt2 werd met díe labels gesondeerd. Sterkste laag
+`transformer.h.0.mlp.c_proj` cosine 0.102 maar **permutatie-p 0.833** (vloer
+0.028) — geen scheiding boven toeval. distilgpt2 codeert gpt-4.1's oordeel niet
+lineair. Een null is hier het correcte antwoord (82M Engels model, NL-oordeel);
+signaal ≠ verdict, de null raakt lagen A–F niet. Zie round 028.
 
-1. een NL-capabel/groter model als gesondeerd model (mirror of Actions-run);
-2. de `activation-probe-real-verdict`-workflow draaien zodat gpt-4.1 de
-   labels levert; dan is de permutatie-p over die echte labels de eerste
-   inhoudelijke Laag G-meting.
+**Nog te doen (open, geen must):**
 
-Pas daarná is een uitspraak over interne steun aan de orde.
+1. een NL-capabel, groter gesondeerd model dat het oordeel plausibel kán
+   encoderen (fp16-downcast in de mirror voor >31m, of directe HF-load in de
+   Actions-route);
+2. meer cases zodat de permutatie-vloer lager wordt (nu 1/36 bij 9 items).
+
+Pas bij zo'n plausibel model is een positieve uitspraak over interne steun
+realistisch — en blijft ook dan een null een eerlijk, geldig antwoord.
 
 ## Doctrine-regels (gelden voor beide sporen)
 
