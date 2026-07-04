@@ -46,3 +46,31 @@ of onder het null-gemiddelde.
 
 Doctrine: signaal ≠ verdict; deze route raakt geen seed-state; niets hierin
 wijzigt de claimgrenzen van lagen A–F.
+
+## Controle op modelgrootte (pythia-31m, zelfde opzet)
+
+Om uit te sluiten dat het nulresultaat aan "te klein model" ligt, dezelfde
+gecontroleerde meting op pythia-31m (bredere hidden dim; via de
+model-mirror, fp16 60 MB). Uitkomst
+(`activation_probe_pythia31m_transfer_permutation.json`):
+
+| Laag (pythia-31m) | afstand | p (exact, 210) |
+|---|---|---|
+| gpt_neox.layers.0.mlp | 0.058 | 0.286 |
+| gpt_neox.layers.1.mlp | 0.034 | 0.581 |
+| gpt_neox.layers.2.mlp | 0.031 | 0.329 |
+| gpt_neox.layers.3.mlp | 0.019 | 0.281 |
+| gpt_neox.layers.4.mlp | 0.018 | 0.600 |
+| gpt_neox.layers.5.mlp | 0.003 | 0.843 |
+
+Opnieuw **geen enkele laag boven toeval** (haalbare vloer 1/210 ≈ 0.005;
+laagste p 0.286). Het nulresultaat is dus **robuust tegen modelgrootte** —
+14m en 31m geven hetzelfde beeld. Dat lokaliseert het ontbrekende signaal
+bij de **labelbron** (fixture-mechaniek = lexicale overlap), niet bij de
+modelcapaciteit. Precies daarom is de échte verdictbron (gpt-4.1 via
+`activation-probe-real-verdict.yml`, PR #175) de juiste volgende hefboom —
+niet een nóg groter model.
+
+Kanttekening bij de mirror: pythia-70m (fp32, 158 MB) werd door de 95 MB-guard
+correct geweigerd; 31m (fp16, 60 MB) past. Voor >31m is een fp16-downcast in
+de mirror nodig.
