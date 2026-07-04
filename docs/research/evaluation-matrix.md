@@ -1,7 +1,7 @@
 # SSL Evaluatiematrix
 
 > Status: current
-> Date: 2026-07-02
+> Date: 2026-07-04
 > Evidence layer: Evidence-layer matrix
 > Current source: yes
 
@@ -27,7 +27,7 @@ De matrix is geen scorekaart die alles samenvouwt tot één getal. Ze bewaakt ju
 | D — Adversarial ruiscontrole | Weert de Gate echte misleidende gaps? | **Eerste echte evidence** | Grotere stresssets |
 | E — Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; use-time discipline blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel weg, win-rate ≤0.5)** | Verdere blinde toetsing per domein |
 | F — Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende scenario's? | **Eerste voorzichtig positief transfer-verdict** | Round 025 blind (2 conforme reviewers): consensus-SSL 4/7 (alle valkuilvragen), consensus-baseline 1/7, 2 gespleten, ruis 0; n=7, één model |
-| G — Modelinterne validatie | Is er steun in interne activaties? | **Instap-sonde gebouwd** | Dialectische falsificatie (spoor 1); activatie-sonde is de vervolgstap |
+| G — Modelinterne validatie | Is er steun in interne activaties? | **Eerste iteratie doorlopen — nul** | Dialectische falsificatie + activatie-sonde met gpt-4.1-oordeel: schoon nulresultaat (rounds 026–028), geen interne steun aangetoond op kleine modellen |
 
 ## 1. Laag A — Regressie
 
@@ -281,7 +281,7 @@ Deze matrix moet voor repo-beslissingen als volgt worden gelezen:
 - open-set, adversarial en probe utility blijven gescheiden evidence-lagen;
 - het W9f cross-turn mechanisme is bevestigd op veilige drempels; de payoff-kwaliteit is reviewer-afhankelijk gebleken (round 022) en blijft open;
 - de use-time seed-discipline is gebouwd en blind getoetst (round 023); W10 heeft een eerste voorzichtig positief blind transfer-verdict (round 025: consensus-SSL 4/7 incl. alle valkuilvragen, ruis 0, n=7);
-- modelinterne validatie heeft een instap-sonde (dialectische falsificatie, `docs/research/laag-g-scoping.md`); het interne activatiesignaal blijft later onderzoek.
+- modelinterne validatie is als eerste iteratie doorlopen (dialectische falsificatie + activatie-sonde met gpt-4.1-oordeel, `docs/research/laag-g-scoping.md`): een schoon nulresultaat op kleine modellen; een positieve uitspraak vraagt een NL-capabel/groter model en blijft later onderzoek.
 
 ## Wat niet moet gebeuren
 

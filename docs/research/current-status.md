@@ -5,14 +5,17 @@
 > Evidence layer: status snapshot across layers A-G
 > Source: 4.6 evidence model in `docs/00_shadow_seed_learning_4_6.md`
 >
-> **Update 2026-07-02 (sindsdien gelanceerd, zie de gelinkte docs):** use-time
+> **Update 2026-07-04 (sindsdien gelanceerd, zie de gelinkte docs):** use-time
 > discipline blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel
-> weg, win-rate ≤0.5); W10-transfer afkap-vrij gedraaid, verdict wacht op
-> blinde review (round 025); positioneringsbesluit doorgevoerd
-> (`positioning-synthese.md`, issue #46); levende schaduwlaag + SSL→RAG-brug
-> operationeel (`shadow-chat-demo.md`); Laag G geopend met de dialectische
-> falsificatie-sonde (`laag-g-scoping.md`). De snapshot hieronder beschrijft de
-> stand per 2026-06-30.
+> weg, win-rate ≤0.5); **W10 doctrine-transfer heeft een eerste voorzichtig
+> positief blind verdict** (round 025: consensus-SSL 4/7 incl. alle
+> valkuilvragen, ruis 0; n=7, één model); positioneringsbesluit doorgevoerd
+> (`positioning-synthese.md`, issue #46 gesloten); levende schaduwlaag +
+> SSL→RAG-brug operationeel (`shadow-chat-demo.md`); **Laag G doorlopen tot een
+> eerste inhoudelijke meting** (dialectische falsificatie + activatie-sonde;
+> gpt-4.1 als oordeelbron gaf een schoon nulresultaat, rounds 026–028,
+> `laag-g-scoping.md`). De snapshot hieronder beschrijft de stand per
+> 2026-06-30.
 
 ## Doel van dit document
 

@@ -207,3 +207,12 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   ~0.71. R3 was seed-bewust en telt apart (convergent, 7/7). Grenzen: n=7,
   één model. Het round-023-patroon (sturen bij aanscherping) repliceert
   cross-domein.
+- 2026-07-04 — Laag G eerste iteratie doorlopen (rounds 026–028): dialectische
+  falsificatie (spoor 1) + activatie-sonde met token-scoped pooling en
+  permutatie-controle (spoor 2), gemeten op distilgpt2/pythia-14m/-31m en met
+  gpt-4.1 als echte oordeelbron. Schoon nulresultaat — geen interne steun
+  aangetoond op kleine Engelse modellen (het correcte antwoord); een positieve
+  uitspraak vraagt een NL-capabel/groter model. Coherentie-pass: README,
+  current-status, evaluation-matrix, laag-g-scoping en visiedoc gelijkgetrokken
+  met deze stand. Volgende bewijsstap indien gewenst: W10-replicatie op een
+  tweede model (round 025 was voorzichtig positief, n=7).

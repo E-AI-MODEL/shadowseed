@@ -1,8 +1,8 @@
 # Laag G scoping: van dialectische falsificatie naar modelintern signaal
 
 > Status: current
-> Date: 2026-07-02
-> Evidence layer: scoping-notitie voor Laag G (geen meting)
+> Date: 2026-07-04
+> Evidence layer: Laag G — scoping + eerste iteratieve metingen (rounds 026–028)
 > Current source: yes
 > Refs: PvA V2 ("scoping-notitie of eerste sonde"), visie-item 4
 
@@ -127,12 +127,15 @@ realistisch — en blijft ook dan een null een eerlijk, geldig antwoord.
 
 ## Klaar-criteria
 
-- Spoor 1 is klaar als instap zodra de harness in CI staat (deze PR) en één
-  echte modelrun een leesbaar verdict-artifact oplevert.
-- Spoor 2 begint met een reproduceerbare activatie-sonde op één klein model;
-  pas daarna is een uitspraak over "interne steun" aan de orde.
-- Dit document is de PvA-V2 scoping-notitie; de PvA kan V2 afvinken zodra
-  spoor 1 gemerged is.
+- Spoor 1 (dialectische falsificatie) is geland en in CI; echte modelruns
+  leveren leesbare verdict-artifacts. **Klaar als instap.**
+- Spoor 2 (activatie-sonde) is als eerste iteratie doorlopen: harnas +
+  token-scoped pooling + permutatie-controle, gemeten op twee modellen en met
+  gpt-4.1 als echte oordeelbron. **Resultaat: schoon nulresultaat** (rounds
+  026–028) — geen bewijs van interne steun, wat het correcte antwoord is voor
+  kleine Engelse modellen. Een positieve uitspraak vraagt een NL-capabel,
+  groter model + meer cases; dat is open richting, geen must.
+- PvA-V2 is afgevinkt (deze scoping + de gelande sonde).
 
 ## Claimgrens
 
