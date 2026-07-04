@@ -209,10 +209,13 @@ auteur-ontworpen; dit koppelt "vinden" aan "gebruiken".*
   cross-domein.
 - 2026-07-04 — Laag G eerste iteratie doorlopen (rounds 026–028): dialectische
   falsificatie (spoor 1) + activatie-sonde met token-scoped pooling en
-  permutatie-controle (spoor 2), gemeten op distilgpt2/pythia-14m/-31m en met
-  gpt-4.1 als echte oordeelbron. Schoon nulresultaat — geen interne steun
-  aangetoond op kleine Engelse modellen (het correcte antwoord); een positieve
-  uitspraak vraagt een NL-capabel/groter model. Coherentie-pass: README,
+  permutatie-controle (spoor 2). Met **fixture-labels** gemeten op
+  distilgpt2/pythia-14m/-31m (rounds 026–027); met **gpt-4.1 als echte
+  oordeelbron** op distilgpt2 + de pythia-14m-reproductie (round 028;
+  pythia-31m draaide níet met gpt-4.1-labels). Schoon nulresultaat — geen
+  interne steun aangetoond op kleine Engelse modellen (het correcte antwoord);
+  een positieve uitspraak vraagt een NL-capabel/groter model. Coherentie-pass:
+  README,
   current-status, evaluation-matrix, laag-g-scoping en visiedoc gelijkgetrokken
   met deze stand. Volgende bewijsstap indien gewenst: W10-replicatie op een
   tweede model (round 025 was voorzichtig positief, n=7).
