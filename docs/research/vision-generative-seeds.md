@@ -184,10 +184,13 @@ zelf-herkenning de misser opvangt. De falsificatie-Gate hoort dus uiteindelijk
 
 ## 6. Wat hiervoor nog niet in de repo staat (het pad)
 
-Geverifieerd tegen de code op 2026-06-14. De repo bouwt de *toevoer en
-boekhouding* van seeds goed (detectie, gewichtloze opslag, Gate, levenscyclus,
-constellations) plus een losse, gewone RAG-pijplijn. De stukken die SSL *uniek en
-voorbij-RAG* maken ontbreken nog, geprioriteerd:
+Oorspronkelijk geverifieerd tegen de code op 2026-06-14; **bijgewerkt
+2026-07-04**. De repo bouwt de *toevoer en boekhouding* van seeds goed
+(detectie, gewichtloze opslag, Gate, levenscyclus, constellations) plus een
+losse, gewone RAG-pijplijn. De stukken die SSL *uniek en voorbij-RAG* maken zijn
+inmiddels grotendeels gebouwd (zie de ✅-markeringen): items 1, 2, 4 en 5 staan
+er; wat resteert is de echte SSL-vs-RAG head-to-head-run (item 3, gat 3) en een
+plausibel model voor de Laag G-meting (item 4). Geprioriteerd:
 
 1. **Generatieve seed-modus ("kunnen staan").** ✅ *Capability gebouwd
    (2026-06-15).* Naast de omissie-prompt is er nu een `generative`-variant in
@@ -204,9 +207,15 @@ voorbij-RAG* maken ontbreken nog, geprioriteerd:
    LLM met RAG ooit zelf zou vinden". Nodig: dezelfde vraag/corpus, waarbij de
    seed een richting opent die gewone RAG mist. Dit *bewijst* de unieke waarde.
 4. **Echte falsificatie voor speculatieve seeds** — uiteindelijk modelintern
-   (§5). Nu is de contradiction-check lexicaal/numeriek; generatieve "kunnen"-
-   seeds vragen een echte dialectische "valt dit weg te argumenteren?"-toets,
-   met op termijn een H-neuron-achtig intern signaal als fundament (Laag G).
+   (§5). ✅ *Eerste iteratie doorlopen (2026-07-03/04):* een echte dialectische
+   "valt dit weg te argumenteren?"-toets (`run-dialectic-falsification`,
+   WEERLEGD → Gate-contradictie, HOUDT_STAND → bounded, nooit promotie) plus de
+   activatie-sonde met permutatie-controle (`run-activation-probe`). Met gpt-4.1
+   als echte oordeelbron en distilgpt2/pythia als gesondeerd model: een schoon
+   **nulresultaat** (rounds 026–028) — geen aantoonbare interne steun op kleine
+   Engelse modellen, wat het correcte antwoord is. **Nog te doen:** een
+   NL-capabel/groter model dat het oordeel plausibel kán encoderen (Laag G blijft
+   open richting, geen must). Zie `docs/research/laag-g-scoping.md`.
 5. **Levende schaduw-geheugenlaag over beurten** (§4). ✅ *Operationeel
    gedemonstreerd (2026-07-02):* `shadowseed chat` (PR #164) — een seed wordt
    gewichtloos geboren in een echt gesprek, reist mee in de schaduw, promoveert

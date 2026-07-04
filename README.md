@@ -44,7 +44,7 @@ SSL hanteert één laag-taal voor bewijs, gelijk aan `docs/00_shadow_seed_learni
 | **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** — kleine maar duidelijke stresstest |
 | **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; use-time discipline gedraaid en blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel weg, win-rate ≤0.5)** |
 | **F** Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende domeinen? | **Eerste voorzichtig positieve transfer-verdict (round 025, 2 blinde reviewers): consensus-SSL 4/7 (alle valkuilvragen), consensus-baseline 1/7, 2 gespleten, ruis 0 — n=7, één model** |
-| **G** Modelintern | Steun in interne activaties? | **Instap-sonde aanwezig (dialectische falsificatie); modelintern nog niet operationeel** |
+| **G** Modelintern | Steun in interne activaties? | **Eerste iteratie doorlopen (rounds 026–028): dialectische falsificatie + activatie-sonde met gpt-4.1-oordeel → schoon nulresultaat; geen interne steun aangetoond op kleine modellen** |
 
 De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie- en kleine-benchmarklagen plus aanvullende evidencelagen. Manual OpenAI-runs via `Research · SSL Benefit (OpenAI)` kunnen zwaardere payoff- en `ssl-session` artifacts maken, inclusief blind A/B-reviewpack voor cross-turn sessies.
 
