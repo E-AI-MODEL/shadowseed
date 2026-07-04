@@ -71,3 +71,46 @@ MLP-gemiddelden encoderen gpt-4.1's houdbaarheidsoordeel niet lineair.
 
 Doctrine ongewijzigd: deze route voedt geen promotie en geen claim; ze meet
 of interne steun zichtbaar is, en rapporteert eerlijk als dat (nog) niet zo is.
+
+## Gecommitte artefacts (auditeerbaar vanuit een checkout)
+
+De cijfers hierboven staan niet alleen in het Actions-artifact (id 8080328870,
+retention-gevoelig), maar ook in de repo:
+
+- `dialectic_verdicts_gpt41.json` — gpt-4.1's werkelijke verdicten, verbatim
+  getranscribeerd uit de run-log (het onherhaalbare API-deel);
+- `activation_probe_pythia14m_gpt41verdict.json` — de sonde lokaal
+  gereproduceerd met **exact díe gpt-4.1-labels**, op het gemirrorde pythia-14m
+  (herrekenbaar met `run-activation-probe --verdicts`).
+
+### Cross-check bevestigt: geen robuust signaal (tiny-class-artefact)
+
+De pythia-14m-reproductie met dezelfde gpt-4.1-labels is leerzaam als
+waarschuwing, niet als vondst:
+
+| Laag (pythia-14m) | afstand | p |
+|---|---|---|
+| gpt_neox.layers.0.mlp | 0.078 | 0.028 |
+| gpt_neox.layers.1.mlp | 0.142 | 0.028 |
+| gpt_neox.layers.2.mlp | 0.029 | 0.361 |
+| gpt_neox.layers.3.mlp | 0.053 | 0.444 |
+| gpt_neox.layers.4.mlp | 0.021 | 0.028 |
+| gpt_neox.layers.5.mlp | 0.011 | 0.167 |
+
+Drie lagen raken de **vloer** (1/36 = 0.028), drie niet — en distilgpt2 gaf op
+**dezelfde labels** overal null (sterkste p 0.833). Dat is precies hoe ruis
+eruitziet, niet hoe een echt intern signaal eruitziet:
+
+1. de minderheidsklasse is **n=2** (2 HOUDT_STAND / 7 WEERLEGD), dus de
+   permutatie-vloer is 1/36 — makkelijk toevallig te raken zodra dat ene paar
+   het meest gescheiden ligt;
+2. **6 lagen getest zonder multiple-comparison-correctie**: enkele vloer-hits
+   zijn te verwachten;
+3. de twee modellen **spreken elkaar tegen** (distilgpt2 null, pythia-14m
+   deels-vloer), en de "significante" is het kléinere model — het omgekeerde
+   van een capaciteitsgedreven signaal.
+
+Netto blijft de round-028-conclusie staan: **geen robuust bewijs van interne
+steun.** De cross-check maakt de eerdere kanttekening concreet: eerst meer
+cases (grotere minderheidsklasse → lagere vloer) én een plausibel model, vóór
+enige positieve uitspraak. Een vloer-hit bij n=2 is geen vondst.
