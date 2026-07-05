@@ -136,6 +136,7 @@ Huidige bron- en researchstack:
 
 - `docs/00_shadow_seed_learning_4_6.md`
 - `docs/research/current-status.md`
+- `docs/research/ssl-integrale-evaluatie.md`
 - `docs/research/w9f-evaluatieconclusie.md`
 - `docs/research/w9f-review-artifacts.md`
 - `docs/research/positioning-synthese.md`
