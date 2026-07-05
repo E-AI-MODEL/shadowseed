@@ -30,20 +30,27 @@ de kant die de key als SSL aanwijst.
 - **SSL 4 / baseline 4 / 1 tie → win-rate 4/8 = 0.50.**
 - Per domein: **HEALTH 3/3 SSL** (schone winst), **EDU 0/2** (+1 tie),
   **POLICY 1/2**.
-- **Ruis: 2 flags, béide op de SSL-kant, béide op t04-items.**
+- **Seed-effect "veroorzaakt ruis" op 2 items** (EDU-t04, POLICY-t04), béide op
+  de SSL-kant. **Let op de bron:** dit is het `seed_effect_after_choice`-label,
+  níet de strikte noise-kolommen — die bleven schoon (`no_noise_A/B` = 5/5,
+  `noise_or_hallucinated_relevance` leeg). Het gaat dus om **seed-gedreven
+  off-topic-sturing/vernauwing**, niet om verzonnen ruis of hallucinatie.
 
 ## Wat dit betekent (eerlijk)
 
 1. **Zwakker dan round 025.** Op gpt-4.1 kozen de twee blinde reviewers elk
-   ~5/7 (≈0.71) de SSL-kant met **0** ruisnotities. Op gpt-4o: win-rate 0.50 en
-   de ruis-foutklasse is **terug**. De round-025-uitkomst was dus deels
-   **gpt-4.1-specifiek** — transfer is modelafhankelijk.
-2. **De ruis zit op de t04-beurten.** Round 023/025 dempten de ruis op de
-   latere (t05/t06) beurten met use-time discipline; deze run bevat óók t04
-   (vroege advies-beurten), en juist dáár trok de seed het antwoord off-topic
-   (ethiek bij EDU-t04, financieringsmodellen bij POLICY-t04). De discipline
-   die t05/t06 ruisvrij houdt, dekt de vroegste beurt blijkbaar niet — of
-   gpt-4o weeft seeds minder schoon dan gpt-4.1.
+   ~5/7 (≈0.71) de SSL-kant. Op gpt-4o: win-rate 0.50, en 2 seed-effect-labels
+   "veroorzaakt ruis" (waar round 025 er 0 had). De round-025-uitkomst was dus
+   deels **gpt-4.1-specifiek** — transfer is modelafhankelijk.
+2. **De off-topic-sturing zit op de t04-beurten.** Round 023/025 dempten
+   seed-ruis op de latere (t05/t06) beurten met use-time discipline; deze run
+   bevat óók t04 (vroege advies-beurten), en juist dáár stuurde de seed het
+   antwoord naar een minder relevante invalshoek (ethiek bij EDU-t04,
+   financieringsmodellen bij POLICY-t04) — door de reviewer als
+   *seed-effect* "veroorzaakt ruis" gelabeld, niet als hallucinatie (de strikte
+   noise-kolommen bleven 5/5). De discipline die t05/t06 schoon houdt, dekt de
+   vroegste beurt blijkbaar niet — of gpt-4o weeft seeds minder scherp dan
+   gpt-4.1.
 3. **HEALTH transfereert wél schoon** (3/3, "helpt duidelijk" ×3): de
    psychologische-drijfveren-seed scherpt daar consistent aan. Transfer is dus
    niet alleen model- maar ook domeinafhankelijk.
