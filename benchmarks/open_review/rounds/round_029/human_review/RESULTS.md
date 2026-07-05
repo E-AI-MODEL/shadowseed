@@ -1,0 +1,68 @@
+# Round 029 — W10 transfer-replicatie op gpt-4o: eerste reviewer (n=1)
+
+> **Status: de replicatie op gpt-4o reproduceert het round-025-verdict NIET
+> schoon — hij komt zwakker en ruisiger terug. Dit tempert de transfer-claim
+> in plaats van hem te versterken.** Let op: dit is **één** reviewer; een
+> verdict vraagt ≥2 (round-025-protocol). Signaal, geen verdict.
+
+## Unblinding (geverifieerd)
+
+Answer key gereproduceerd uit code (`scripts/make_blind_ab_review.py`,
+`_balanced_ssl_a_assignments`, seed 45, **count 9**) en **onafhankelijk
+bevestigd**: elke reviewer-motivatie noemt de extra invalshoek (ethiek,
+psychologische factoren, sociale rechtvaardigheid, financiering) aan precies
+de kant die de key als SSL aanwijst.
+
+| Item | SSL-kant | winnaar (r1) | uitkomst | seed-effect |
+|---|---|---|---|---|
+| CONV_EDU-t04 | A | B | baseline | **veroorzaakt ruis** |
+| CONV_EDU-t05 | A | gelijk | tie | geen verschil |
+| CONV_EDU-t06 | B | A | baseline | helpt een beetje |
+| CONV_HEALTH-t04 | A | A | **SSL** | helpt duidelijk |
+| CONV_HEALTH-t05 | B | B | **SSL** | helpt duidelijk |
+| CONV_HEALTH-t06 | A | A | **SSL** | helpt duidelijk |
+| CONV_POLICY-t04 | A | B | baseline | **veroorzaakt ruis** |
+| CONV_POLICY-t05 | B | B | **SSL** | helpt duidelijk |
+| CONV_POLICY-t06 | B | A | baseline | helpt een beetje |
+
+## Cijfers (reviewer 1)
+
+- **SSL 4 / baseline 4 / 1 tie → win-rate 4/8 = 0.50.**
+- Per domein: **HEALTH 3/3 SSL** (schone winst), **EDU 0/2** (+1 tie),
+  **POLICY 1/2**.
+- **Ruis: 2 flags, béide op de SSL-kant, béide op t04-items.**
+
+## Wat dit betekent (eerlijk)
+
+1. **Zwakker dan round 025.** Op gpt-4.1 kozen de twee blinde reviewers elk
+   ~5/7 (≈0.71) de SSL-kant met **0** ruisnotities. Op gpt-4o: win-rate 0.50 en
+   de ruis-foutklasse is **terug**. De round-025-uitkomst was dus deels
+   **gpt-4.1-specifiek** — transfer is modelafhankelijk.
+2. **De ruis zit op de t04-beurten.** Round 023/025 dempten de ruis op de
+   latere (t05/t06) beurten met use-time discipline; deze run bevat óók t04
+   (vroege advies-beurten), en juist dáár trok de seed het antwoord off-topic
+   (ethiek bij EDU-t04, financieringsmodellen bij POLICY-t04). De discipline
+   die t05/t06 ruisvrij houdt, dekt de vroegste beurt blijkbaar niet — of
+   gpt-4o weeft seeds minder schoon dan gpt-4.1.
+3. **HEALTH transfereert wél schoon** (3/3, "helpt duidelijk" ×3): de
+   psychologische-drijfveren-seed scherpt daar consistent aan. Transfer is dus
+   niet alleen model- maar ook domeinafhankelijk.
+
+## Verdict-status
+
+**Laag F blijft "voorzichtig positief" — en wordt door deze ronde begrensd, niet
+versterkt.** De replicatie laat zien dat de round-025-winst niet zonder meer
+overdraagt naar een tweede model: op gpt-4o is de kwaliteit reviewer-, model- én
+beurttype-afhankelijk, met terugkerende ruis op de vroege beurten.
+
+**Nodig voor een echt round-029-verdict:** ≥1 extra reviewer (bij voorkeur 2)
+op ditzelfde blinde pack, zodat consensus (niet één oordeel) de basis is —
+exact zoals round 025. Tot dan is dit één eerlijk, temperend datapunt.
+
+## Bestanden
+
+- `r1_scores.csv` — reviewer 1 (blind).
+- Answer key: reproduceerbaar uit code (seed 45, count 9); geverifieerd tegen
+  de seed-content in de motivaties. Canonieke key in het run-artifact
+  (`ssl_session_blind_ab_answer_key.json`, run 28710838639, artifact 8082998649,
+  digest `756e672e…`) — te openen ná de scoring.

@@ -1,7 +1,9 @@
 # Round 029 — W10 transfer-replicatie op een tweede model (gpt-4o)
 
-> **Status: run geslaagd, pack gegenereerd; verse blinde review is de pending
-> stap.** Doel: het round-025 transfer-verdict (voorzichtig positief, gpt-4.1)
+> **Status: run geslaagd; eerste reviewer (n=1) binnen — replicatie komt
+> ZWAKKER/RUISIGER terug dan round 025 (win-rate 0.50, ruis terug op t04),
+> zie `human_review/RESULTS.md`. Tempert de transfer-claim; ≥2 reviewers nodig
+> voor een verdict.** Doel: het round-025 transfer-verdict (voorzichtig positief, gpt-4.1)
 > onafhankelijk repliceren op een ander modelgeslacht (gpt-4o), zodat laag F
 > steviger wordt dan "één model, n=7".
 

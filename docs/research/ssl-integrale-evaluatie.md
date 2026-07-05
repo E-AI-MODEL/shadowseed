@@ -72,9 +72,12 @@ consensus (2 protocol-conforme reviewers) voor de SSL-kant op **4/7** items —
 waaronder **álle t6-valkuilvragen** —, consensus-baseline 1/7, 2 gespleten;
 **ruis 0**; overeenstemming ~0.71 (hoogste tot nu toe). Het round-023-patroon
 ("sturen bij aanscherping") **repliceert cross-domein**. Grenzen: n=7, één
-model, auteur-gekozen thema's. **Replicatie op een tweede model (gpt-4o) loopt**
-— pas met een tweede onafhankelijke run/reviewronde wordt dit steviger dan
-"voorzichtig positief".
+model, auteur-gekozen thema's. **Replicatie op gpt-4o (round 029) tempert dit:**
+eerste reviewer (n=1) gaf win-rate 0.50 en **ruis keerde terug op de vroege
+(t04) beurten** — de round-025-winst is dus deels gpt-4.1-specifiek en
+model-/beurttype-afhankelijk (HEALTH transfereert wél schoon, EDU/POLICY niet).
+Een echt round-029-verdict vraagt ≥2 reviewers; tot dan blijft F "voorzichtig
+positief", nu expliciet begrensd.
 
 ### Laag G — Modelinterne research (H-neuron-spoor) · **Eerste iteratie doorlopen — schoon nul**
 Twee sporen (`laag-g-scoping.md`):
@@ -122,7 +125,9 @@ Buiten de bewijslagen, maar wél repo-feit en de **verdedigbare kern** van SSL
 
 - dat SSL **elk antwoord beter** maakt — win-rate ≤0.5 (E);
 - dat elke promoted seed waardevol is — laag C blijft gemengd;
-- brede domein-onafhankelijkheid — W10 is n=7, één model, replicatie loopt (F);
+- brede domein-onafhankelijkheid — W10 is n=7 op gpt-4.1; de gpt-4o-replicatie
+  (round 029, n=1 reviewer) kwam zwakker/ruisiger terug → transfer is
+  modelafhankelijk (F);
 - **modelinterne steun** — op kleine modellen niet aangetoond (G, correcte null);
 - volledige productmatige betrouwbaarheid van automatisch seed-gebruik.
 
