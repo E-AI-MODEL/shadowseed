@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Shadow Seed Learning: het verhaal, de wetenschap en het bewijs — interactief.">
+<title>Shadow Seed Learning — het verhaal</title>
+</head>
+<body>
+<style>
+:root{
+  --bg:#f6f5f0; --bg2:#eeede4; --card:#fbfaf5; --ink:#20261f; --ink2:#565c50;
+  --muted:#878c7f; --line:#d9d7ca; --accent:#2f6b4f; --accent-ink:#f6f5f0;
+  --gold:#9a7420; --rust:#b2542a;
+  --c1:#1f7a4d; --c2:#96982a; --c3:#4e7fc0; --c4:#c05a2e;
+  --chart-surface:#f6f5f0; --shadow:0 1px 2px rgba(32,38,31,.06),0 8px 28px rgba(32,38,31,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#131714; --bg2:#191e1a; --card:#1b211c; --ink:#e6e4d8; --ink2:#aab0a2;
+    --muted:#787d71; --line:#2c332d; --accent:#6fbd93; --accent-ink:#131714;
+    --gold:#d0a04a; --rust:#d0805c;
+    --c1:#3f9a6c; --c2:#93962f; --c3:#5f87d9; --c4:#cc6e38;
+    --chart-surface:#171c19; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 32px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131714; --bg2:#191e1a; --card:#1b211c; --ink:#e6e4d8; --ink2:#aab0a2;
+  --muted:#787d71; --line:#2c332d; --accent:#6fbd93; --accent-ink:#131714;
+  --gold:#d0a04a; --rust:#d0805c;
+  --c1:#3f9a6c; --c2:#93962f; --c3:#5f87d9; --c4:#cc6e38;
+  --chart-surface:#171c19; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 32px rgba(0,0,0,.35);
+}
+:root[data-theme="light"]{
+  --bg:#f6f5f0; --bg2:#eeede4; --card:#fbfaf5; --ink:#20261f; --ink2:#565c50;
+  --muted:#878c7f; --line:#d9d7ca; --accent:#2f6b4f; --accent-ink:#f6f5f0;
+  --gold:#9a7420; --rust:#b2542a;
+  --c1:#1f7a4d; --c2:#96982a; --c3:#4e7fc0; --c4:#c05a2e;
+  --chart-surface:#f6f5f0; --shadow:0 1px 2px rgba(32,38,31,.06),0 8px 28px rgba(32,38,31,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+  font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.mono{font-family:ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace}
+.sans{font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+a{color:var(--accent)}
+main{max-width:960px;margin:0 auto;padding:0 20px 90px}
+section{scroll-margin-top:24px}
+h1,h2,h3{text-wrap:balance;line-height:1.15}
+h2{font-size:clamp(26px,4vw,34px);margin:80px 0 6px}
+h3{font-size:20px;margin:36px 0 8px}
+p,li{max-width:66ch}
+.eyebrow{font-family:ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.lead{font-size:20px;color:var(--ink2)}
+.doctrine{font-size:clamp(22px,3.4vw,30px);border:none;margin:34px 0;padding:18px 26px;
+  border-left:3px solid var(--gold);background:var(--bg2);border-radius:0 10px 10px 0;font-style:italic}
+blockquote{margin:26px 0;padding:4px 22px;border-left:3px solid var(--accent);color:var(--ink2);font-style:italic}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:14px}
+@media(min-width:720px){.grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:1fr 1fr 1fr}}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:system-ui,sans-serif;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+td:first-child{white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-family:system-ui,sans-serif;font-size:12px;font-weight:600;
+  padding:2px 10px;border-radius:99px;border:1px solid var(--line);background:var(--bg2);white-space:nowrap}
+.pill.groen{background:color-mix(in srgb,var(--c1) 16%,var(--bg));border-color:color-mix(in srgb,var(--c1) 45%,var(--line));color:var(--ink)}
+.pill.goud{background:color-mix(in srgb,var(--gold) 18%,var(--bg));border-color:color-mix(in srgb,var(--gold) 50%,var(--line));color:var(--ink)}
+.pill.grijs{color:var(--ink2)}
+button{font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;
+  border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 14px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+/* hero */
+header.hero{padding:64px 0 8px}
+.hero h1{font-size:clamp(34px,6vw,56px);margin:6px 0 10px}
+.hero .sub{font-size:19px;color:var(--ink2);max-width:62ch}
+/* seed-sim */
+.sim{margin-top:34px}
+.sim .top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.seedline{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.seeddot{width:46px;height:46px;border-radius:50%;flex:0 0 auto;position:relative;
+  background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--accent) 65%,var(--bg)),color-mix(in srgb,var(--ink) 30%,var(--bg)));
+  box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 60%,transparent);transition:box-shadow .5s}
+.seeddot.promoted{box-shadow:0 0 0 6px color-mix(in srgb,var(--gold) 35%,transparent)}
+.seeddot.expired{filter:grayscale(1);opacity:.4}
+.meter{margin:10px 0 2px}
+.meter label{font-family:system-ui,sans-serif;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);display:flex;justify-content:space-between}
+.bar{height:10px;border-radius:6px;background:var(--bg2);border:1px solid var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:6px;transition:width .3s}
+.bar.trace i{background:var(--accent)}
+.bar.weight i{background:var(--gold)}
+.simbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.audit{margin-top:14px;background:var(--bg2);border:1px solid var(--line);border-radius:9px;
+  padding:10px 14px;max-height:132px;overflow-y:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.7;color:var(--ink2)}
+.audit b{color:var(--ink)}
+/* nav dots */
+nav.dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:5}
+nav.dots a{width:9px;height:9px;border-radius:50%;background:var(--line);display:block;transition:transform .2s,background .2s}
+nav.dots a.on{background:var(--accent);transform:scale(1.5)}
+@media(max-width:900px){nav.dots{display:none}}
+/* stat tiles */
+.tiles{display:grid;gap:14px;margin:26px 0}
+@media(min-width:720px){.tiles{grid-template-columns:repeat(3,1fr)}}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow)}
+.tile .big{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:34px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1}
+.tile .big.goud{color:var(--gold)}
+.tile small{color:var(--ink2);display:block;margin-top:4px;font-family:system-ui,sans-serif;font-size:13px;line-height:1.45}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 14px}
+.stepper button{border-radius:99px;font-size:13px;padding:7px 13px}
+.stepper button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.steppane{min-height:140px}
+.pathviz{display:flex;align-items:center;gap:0;margin:8px 0 18px;flex-wrap:wrap}
+.pathviz .node{font-family:system-ui,sans-serif;font-size:12px;font-weight:600;padding:6px 11px;border-radius:99px;
+  border:1.5px solid var(--line);color:var(--ink2);background:var(--bg2)}
+.pathviz .node.on{border-color:var(--gold);color:var(--ink);background:color-mix(in srgb,var(--gold) 16%,var(--bg))}
+.pathviz .arrow{color:var(--muted);padding:0 6px;font-family:system-ui,sans-serif}
+/* charts */
+.chartcard{padding:18px 20px 14px}
+.chartcard h4{margin:0 0 2px;font-size:16.5px}
+.chartcard .chartsub{color:var(--ink2);font-size:13.5px;font-family:system-ui,sans-serif;margin:0 0 12px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink2);margin:10px 0 2px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block;vertical-align:-1px;margin-right:6px}
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:2px 0 16px}
+.toggle button{border:none;border-radius:0;background:transparent;padding:8px 16px}
+.toggle button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+svg text{font-family:system-ui,sans-serif;fill:var(--ink2);font-size:12px}
+svg .tickline{stroke:var(--line);stroke-width:1}
+svg .axis{stroke:var(--muted);stroke-width:1}
+.tt{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-family:system-ui,sans-serif;
+  font-size:12.5px;padding:7px 11px;border-radius:8px;opacity:0;transition:opacity .12s;z-index:50;max-width:260px}
+/* ladder accordion */
+.ladder .rij{border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--card);overflow:hidden}
+.ladder .rij>button{width:100%;display:flex;gap:12px;align-items:center;border:none;background:transparent;
+  padding:13px 16px;text-align:left;font-size:15px}
+.ladder .rij .lt{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:var(--accent);width:20px}
+.ladder .rij .vraag{flex:1;min-width:120px}
+.ladder .rij .body{display:none;padding:0 16px 14px 48px;color:var(--ink2);font-size:15px}
+.ladder .rij.open .body{display:block}
+details{border:1px solid var(--line);border-radius:11px;background:var(--card);padding:12px 18px;margin:10px 0}
+summary{cursor:pointer;font-weight:600;font-family:system-ui,sans-serif;font-size:15px}
+footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:var(--ink2);font-size:14px}
+.klein{font-size:13.5px;color:var(--muted);font-family:system-ui,sans-serif}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<nav class="dots sans" aria-label="hoofdstukken"></nav>
+<div class="tt" id="tt" role="status"></div>
+
+<main>
+<header class="hero" id="top">
+  <p class="eyebrow">Shadow Seed Learning · Nederlandse onderzoekslijn · stand 2026-07-07</p>
+  <h1>Wat er níet staat, is de volgende grens</h1>
+  <p class="sub">Taalmodellen zijn briljant in wat er staat — en blind voor wat er ontbreekt.
+  Shadow Seed Learning vangt dat gemis, houdt het <em>gewichtloos</em> vast, en laat het pas
+  meesturen als het zijn invloed heeft verdiend. Dit is het verhaal, de wetenschap en het bewijs.</p>
+
+  <div class="card sim" id="sim">
+    <div class="top">
+      <div class="seedline">
+        <div class="seeddot" id="seeddot" aria-hidden="true"></div>
+        <div>
+          <b>Probeer het zelf: één seed, live</b><br>
+          <span class="klein">"Psychologische drijfveren van de doelgroep ontbreken" · <span class="mono" id="status">NEW</span></span>
+        </div>
+      </div>
+      <span class="pill grijs sans" id="simhint">trace vervalt vanzelf (TTL)…</span>
+    </div>
+    <div class="meter"><label class="sans">trace — aanwezigheid <span class="mono num" id="tval">2.00</span></label>
+      <div class="bar trace"><i id="tbar"></i></div></div>
+    <div class="meter"><label class="sans">weight — invloed (start 0.0, alleen via de Gate) <span class="mono num" id="wval">0.00</span></label>
+      <div class="bar weight"><i id="wbar"></i></div></div>
+    <div class="simbtns">
+      <button id="b-trtl" title="context raakt het thema — trace leeft op">Herkenning (TrTL)</button>
+      <button id="b-gate" class="primary" title="vraagt herhaalde herkenning en geen contradictie">Validation Gate</button>
+      <button id="b-fals" title="probeer de seed weg te argumenteren">Falsificeer</button>
+      <button id="b-reset">Reset</button>
+    </div>
+    <div class="audit mono" id="audit" aria-live="polite"><div>· seed geboren — trace 2.0, <b>weight 0.0</b>: aanwezig, stuurt niets</div></div>
+  </div>
+</header>
+
+<section id="probleem">
+  <p class="eyebrow">1 · Het probleem</p>
+  <h2>De vraag die bijna niemand aan een AI stelt</h2>
+  <p>Vraag een taalmodel wat er in een tekst staat, en het antwoordt indrukwekkend goed.
+  Vraag het wat er <b>ontbreekt</b>, en het valt door de mand. Dat is geen mening — het is gemeten.</p>
+  <div class="tiles">
+    <div class="tile"><span class="big num">≈70%</span><small>F1 van frontier-modellen op het vinden van bewust
+      weggeknipte tekst — bij maar 5K tokens context (AbsenceBench, Fu et al. 2025)</small></div>
+    <div class="tile"><span class="big">0 tokens</span><small>een transformer heeft geen token voor een gat:
+      attention kan niet kijken naar wat er niet is</small></div>
+    <div class="tile"><span class="big goud">expert­blik</span><small>de arts, adviseur of docent die opmerkt wat níet
+      gezegd wordt — precies de vaardigheid die experts onderscheidt</small></div>
+  </div>
+  <p>SSL draait de aanname om die overal impliciet blijft: een gap is geen probleem dat weggewerkt
+  moet worden, maar een <b>signaal van het model over zichzelf</b>. Geen afval — brandstof:</p>
+  <blockquote>SSL gebruikt wat een model mist als startpunt voor gericht verder zoeken.</blockquote>
+</section>
+
+<section id="idee">
+  <p class="eyebrow">2 · Het idee</p>
+  <h2>Gewichtloos geboren, invloed verdiend</h2>
+  <p>Stel je een onderzoeksjournalist voor met een muur vol post-its — vermoedens.
+  Die muur is goud waard, maar geen vermoeden haalt de voorpagina vóór verificatie.
+  SSL bouwt die muur, én die discipline, in software.</p>
+  <div class="grid c3" style="margin:22px 0">
+    <div class="card"><b>Atomisch</b><p class="klein" style="margin:8px 0 0">Niet <i>"security, privacy en schaalbaarheid ontbreken"</i>
+      (een analyseplan). Wél: <i>"AVG-compliance bij verwerking van medische hartslagdata."</i>
+      Eén toetsbaar punt per seed.</p></div>
+    <div class="card"><b>Twee velden</b><p class="klein" style="margin:8px 0 0"><span class="mono">trace</span> = aanwezigheid: vervalt (TTL),
+      leeft op bij herkenning (TrTL). <span class="mono">weight</span> = invloed: start op 0.0
+      en stijgt alléén via de Validation Gate.</p></div>
+    <div class="card"><b>Drie probes</b><p class="klein" style="margin:8px 0 0">Een gevalideerde seed stuurt gerichte vervolgactie:
+      een betere vraag (Socratisch), een scherpere zoekactie (retrieval) of een aanval op
+      zichzelf (dialectisch).</p></div>
+  </div>
+  <p class="doctrine">Gevonden ≠ waar ≠ sturend.</p>
+  <p>Iets opmerken maakt het niet waar. En zelfs iets dat waar is, mag pas meesturen als het die rol
+  verdiend heeft — én op het moment van gebruik opnieuw gecheckt is.</p>
+</section>
+
+<section id="wetenschap">
+  <p class="eyebrow">3 · De wetenschap</p>
+  <h2>Voorzichtigheid is niet de rem — het is het product</h2>
+  <p>Geheugen dat ongecontroleerd meestuurt is het mechanisme achter de pijnlijkste AI-faalwijzen:
+  de aanname die blijft plakken, de hallucinatie die drie gesprekken later als feit terugkeert.
+  De meeste agent-geheugens kennen twee standen: niets onthouden, of alles laten meewegen.
+  SSL bouwt de derde stand — geheugen dat zijn invloed moet <b>verdienen</b> en op elk moment kan
+  <b>verliezen</b>: controleerbaar, replaybaar, falsifieerbaar.</p>
+  <div class="grid c3" style="margin:22px 0">
+    <div class="card"><b>Epistemische onzekerheid</b><p class="klein" style="margin:8px 0 0">Kendall &amp; Gal 2017 —
+      SSL richt zich op reduceerbare onzekerheid, met een draai: niet "ik twijfel", maar
+      <i>"hier had iets moeten staan."</i> Zelfrapportage over afwezigheid; geen hallucinatiefilter.</p></div>
+    <div class="card"><b>Computationele nieuwsgierigheid</b><p class="klein" style="margin:8px 0 0">Schmidhuber 2011 —
+      welke afwezigheid is het vaakst herkend, sterkst bevestigd en meest resistent tegen
+      falsificatie? Díe verdient de vervolgactie.</p></div>
+    <div class="card"><b>Active learning</b><p class="klein" style="margin:8px 0 0">Settles 2009 — seeds zijn de
+      onzekerheidsrepresentaties, probes de queries; SSL is de learner met een eigen
+      query-strategie, op interactieniveau.</p></div>
+  </div>
+  <p>De biologische spiegel is het engram-onderzoek (Josselyn &amp; Tonegawa 2020): een verse herinnering
+  is fragiel en overleeft alleen door reactivatie — de trace-dynamiek. En <b>reconsolidatie</b> — een
+  opgehaalde herinnering wordt even kwetsbaar en wordt bijgesteld als ze weersproken wordt — is exact
+  de contradictie-check van de Gate. De falsificatie-reflex is regelrecht Popperiaans.</p>
+  <h3>"Is dit niet gewoon RAG?"</h3>
+  <p>Nee — en het vervangt RAG ook niet. SSL voegt de laag toe die geen van deze systemen heeft:
+  bijhouden welke kleine afwezigheden over meerdere interacties relevant blijven, en daar pas
+  na validatie op navigeren.</p>
+  <div class="card scroll"><table>
+    <thead><tr><th>Systeem</th><th>Wat het doet</th><th>Wat SSL anders doet</th></tr></thead>
+    <tbody>
+      <tr><td><b>RAG</b> (2020)</td><td>vraag → zoeken → antwoord</td><td>detecteert wat de zoekactie <i>niet</i> activeerde</td></tr>
+      <tr><td><b>Self-RAG</b> (2023)</td><td>reflectie binnen één beurt</td><td>werkt tussen beurten, met levenscyclus</td></tr>
+      <tr><td><b>FLARE</b> (2023)</td><td>lage zekerheid → bijzoeken</td><td>structurele afwezigheid, geen lage confidence</td></tr>
+      <tr><td><b>CRAG</b> (2024)</td><td>zoekresultaten corrigeren</td><td>zoekt exploratief, niet correctief</td></tr>
+      <tr><td><b>S2G-RAG</b> (2026)</td><td>gap → direct vullen</td><td>laat gaps bewust gewichtloos bestaan, valideert over beurten</td></tr>
+      <tr><td><b>Reflexion</b> (2023)</td><td>reflecties sturen direct</td><td>observaties blijven gewichtloos tot de Gate promoveert</td></tr>
+    </tbody></table></div>
+  <p class="klein" style="margin-top:10px">Wat SSL níet is: geen foundation-model, geen permanent geheugen, geen
+  waarheidsmachine, geen prompt-trucje — een architecturale laag óp bestaande modelcapaciteit.</p>
+</section>
+
+<section id="pad">
+  <p class="eyebrow">4 · Het golden path</p>
+  <h2>Het leven van één seed</h2>
+  <p>Geen whiteboard-diagram — dit draait vandaag, in <span class="mono">shadowseed chat</span>.
+  Klik door de zes stappen:</p>
+  <div class="pathviz sans" id="pathviz" aria-hidden="true"></div>
+  <div class="stepper sans" role="tablist" id="stepper"></div>
+  <div class="card steppane" id="steppane" role="tabpanel"></div>
+  <p style="margin-top:18px">Dat is het golden path: <b>van waarneming naar verdiende, verantwoorde,
+  herroepbare invloed</b> — elke stap in code, bewaakt door 354 tests in CI.</p>
+</section>
+
+<section id="toetsing">
+  <p class="eyebrow">5 · De toetsing</p>
+  <h2>Wij vallen ons eigen werk harder aan dan wie ook</h2>
+  <p>Zeven bewijslagen, elk met een eigen vraag — bewust <b>zonder totaalscore</b>: een sterke laag
+  compenseert een zwakke nooit. En de ladder toetst de hypotheses die het programma in de
+  4.5-specificatie <i>vooraf</i> formuleerde (H1–H12). Klik een laag voor de stand:</p>
+  <div class="ladder sans" id="ladder"></div>
+  <div class="card chartcard" style="margin-top:26px">
+    <h4>Leren van elke meting: reviewer-overeenstemming per ronde</h4>
+    <p class="chartsub">Blinde reviews; na round 022 werd de gebruiksdiscipline ingevoerd (max. 2 seeds, potentieel — geen must)</p>
+    <div class="scroll"><svg id="agree" viewBox="0 0 640 240" width="100%" role="img" aria-label="Overeenstemming steeg van 0.125 in round 022 naar 0.67 in round 023 en 0.71 in round 025"></svg></div>
+  </div>
+</section>
+
+<section id="cijfers">
+  <p class="eyebrow">6 · De cijfers</p>
+  <h2>Twee assen — en waarom dat eerlijker én sterker is</h2>
+  <p>Een blinde A/B-review dwingt een winnaar af, ook als beide antwoorden goed zijn — en de
+  "tegenstander" is hier <b>hetzelfde frontier-model op z'n best</b>. De echte vraag van de repo is
+  daarom niet "wint SSL het gevecht?" maar <b>"helpt SSL naar een beter antwoord?"</b> — en dat
+  labelen reviewers per item apart. Wissel zelf van as:</p>
+  <div class="toggle sans" role="group" aria-label="kies as">
+    <button id="as-seed" aria-pressed="true">Seed-effect-as</button>
+    <button id="as-win" aria-pressed="false">Winnaar-as</button>
+  </div>
+  <div class="card chartcard" id="assenkaart">
+    <h4 id="askop">Helpt de seed naar een beter antwoord? — alle 69 blinde oordelen</h4>
+    <p class="chartsub" id="assub">Per ronde, uit de gecommitteerde reviewer-CSV's (rounds 022–029)</p>
+    <div class="scroll"><svg id="aschart" viewBox="0 0 640 260" width="100%" role="img" aria-label="Gestapelde staven per ronde met seed-effect-labels"></svg></div>
+    <div class="legend" id="aslegend"></div>
+    <details style="margin-top:12px"><summary>Tabelweergave (zelfde data)</summary>
+      <div class="scroll"><table class="num" id="astabel"></table></div></details>
+  </div>
+  <div class="tiles">
+    <div class="tile"><span class="big num">52/69</span><small>~75% van alle blinde oordelen: "de seed helpt"
+      (waarvan 31× "helpt duidelijk"); ruis 5/69, verklaard en adresseerbaar</small></div>
+    <div class="tile"><span class="big num">14/14</span><small>round 025 (drie nieuwe domeinen, gpt-4.1): béide blinde
+      reviewers labelden élk item "helpt" — alle valkuilvragen naar de SSL-kant</small></div>
+    <div class="tile"><span class="big num">0</span><small>hallucinaties door seeds, in álle rondes — de strikte
+      noise-kolommen bleven overal schoon</small></div>
+  </div>
+  <blockquote><b>De seed helpt vaker dan hij de wedstrijd wint:</b> in ~75% van alle blinde beoordelingen
+  maakte hij het antwoord beter, hij verzon nooit iets, en op vraagtypes die om diepgang vragen was
+  hij unaniem de betere.</blockquote>
+</section>
+
+<section id="laagg">
+  <p class="eyebrow">7 · In het model kijken</p>
+  <h2>Drie keer eerlijk néé — en waarom dat vertrouwen verdient</h2>
+  <p>Bestaat er, zoals bij hallucinatie-neuronen (Gao et al. 2025), een intern signaal voor de
+  <i>houdbaarheid van het afwezige</i>? Zes instrument-iteraties in vijf dagen bouwden een keten:
+  gpt-4.1 velt houdbaarheidsoordelen, een klein model wordt op die labels gesondeerd — met
+  token-gerichte pooling en een <b>permutatietoets</b> die elk "signaal" tegen gehusselde labels houdt.</p>
+  <div class="card chartcard">
+    <h4>Permutatie-p per run met echte oordeelbron (● = gemeten, − = haalbare vloer)</h4>
+    <p class="chartsub">Een p nabij de vloer zou signaal zijn; beide metingen zitten er ver boven — geen scheiding.
+    Een pythia-14m-kruischeck in round 028 raakte wél de vloer (p ≈ 0.028), maar is in het dossier als
+    tiny-class-artefact gelezen (minderheidsklasse n=2, 6 lagen getest) — die plotten we bewust niet als schone null.</p>
+    <div class="scroll"><svg id="gchart" viewBox="0 0 640 230" width="100%" role="img" aria-label="Permutatie-p-waarden ver boven de haalbare vloer in beide runs met echte oordeelbron"></svg></div>
+  </div>
+  <p>Round 028 kon nog worden weggelegd als "Engels model, scheve klassen". Round 030 sloot die
+  uitvluchten: een <b>Nederlands getraind model</b>, 24 cases, vloer 0.002 — en nóg geen lineair
+  leesbaar spoor. Kleine modellen (≤124M) dragen dit signaal niet; de vraag gaat scherp door naar
+  grotere modellen. <b>Een team dat zijn eigen aantrekkelijkste hypothese drie keer durft af te
+  wijzen, is een team waarvan je de positieve resultaten kunt geloven.</b></p>
+</section>
+
+<section id="vooruit">
+  <p class="eyebrow">8 · Vooruit</p>
+  <h2>Het pad vooruit</h2>
+  <div class="grid c3" style="margin:20px 0">
+    <div class="card"><span class="pill groen sans">nu · weken</span>
+      <p class="klein" style="margin:10px 0 0"><b>Vroege-beurt-discipline</b> — de laatste bekende ruisbron dichten en
+      blind hertesten. <b>Derde model, meer items</b> voor de transferlaag: van "voorzichtig positief"
+      naar "gerepliceerd, robuust".</p></div>
+    <div class="card"><span class="pill goud sans">daarna · maanden</span>
+      <p class="klein" style="margin:10px 0 0"><b>Generatieve seeds</b> — van "dit ontbreekt" naar "dit zou er kunnen
+      staan", per constructie éérst door dialectische falsificatie. <b>H-neuron-spoor</b> op modellen
+      van de orde waar het precedent is gevonden. <b>Zwaardere teksten.</b></p></div>
+    <div class="card"><span class="pill grijs sans">horizon</span>
+      <p class="klein" style="margin:10px 0 0"><b>De schaduwlaag als standaardcomponent</b> in agent-stacks: onderzoek,
+      juridisch werk, journalistiek, beleid, code-review, diagnostiek — en onderwijs als geboortegrond:
+      opmerken wat een leerling structureel overslaat, en dat pas laten meewegen na validatie.</p></div>
+  </div>
+  <p>De AI-wereld lost agent-geheugen nu op met vertrouwen: onthoud alles en hoop dat het goed gaat.
+  Dat schaalt niet — technisch, maatschappelijk noch juridisch. Systemen die beslissingen meesturen
+  zullen moeten laten zien <b>waarom</b> iets invloed had, <b>wanneer</b> dat gerechtvaardigd werd en
+  <b>hoe</b> het herroepen kan worden. SSL is daarvoor een werkend, gemeten antwoord uit Nederland.</p>
+  <p class="doctrine" style="border-left-color:var(--accent)">Wat er stáát is indrukwekkend, bij elk modern model.<br>Wat er <b>ontbreekt</b> is de volgende grens. Daar bouwen wij.</p>
+</section>
+
+<footer class="sans">
+  <p><b>Verder lezen</b> — het volledige verhaal: <span class="mono">docs/ssl-het-verhaal.md</span> ·
+  canon: <span class="mono">docs/00_shadow_seed_learning_4_6.md</span> ·
+  bewijsweging: <span class="mono">docs/research/ssl-integrale-evaluatie.md</span> ·
+  alle blinde rondes met ruwe data: <span class="mono">benchmarks/open_review/rounds/</span> —
+  <a href="https://github.com/E-AI-MODEL/shadowseed">github.com/E-AI-MODEL/shadowseed</a></p>
+  <p class="klein"><b>Claimgrens.</b> Dit is een verhalend overzicht, geen meetrapport. Alle cijfers komen uit de
+  gecommitteerde rondes; waar het vooruitkijkt is dat richting, geen belofte. De doctrine geldt ook hier:
+  gevonden ≠ waar ≠ sturend — en enthousiasme ≠ bewijs. Referenties: AbsenceBench (Fu et al. 2025,
+  arXiv:2506.11440) · H-Neurons (Gao et al. 2025, arXiv:2512.01797) · Kendall &amp; Gal 2017 · Schmidhuber 2011 ·
+  Settles 2009 · Lewis et al. 2020 · Josselyn &amp; Tonegawa 2020.</p>
+</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var css=function(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim()};
+
+/* ---------- seed-sim ---------- */
+var sim={trace:2.0,weight:0,status:"NEW",recog:0,expired:false,promoted:false,contradicted:false};
+var lastT=null, reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function log(msg){var d=document.createElement("div");d.innerHTML="· "+msg;var a=$("audit");a.appendChild(d);a.scrollTop=a.scrollHeight;}
+function render(){
+  $("tval").textContent=sim.trace.toFixed(2);
+  $("wval").textContent=sim.weight.toFixed(2);
+  $("tbar").style.width=Math.min(100,sim.trace/2*100)+"%";
+  $("wbar").style.width=(sim.weight*100)+"%";
+  $("status").textContent=sim.status;
+  var dot=$("seeddot");dot.classList.toggle("promoted",sim.promoted);dot.classList.toggle("expired",sim.expired);
+  $("b-trtl").disabled=sim.expired;
+  $("b-gate").disabled=sim.expired||sim.promoted;
+  $("b-fals").disabled=sim.expired||!sim.promoted;
+  $("simhint").textContent=sim.expired?"EXPIRED is terminaal — reset voor een nieuwe seed":
+    sim.promoted?"gepromoveerd: mag nu een later antwoord meesturen":
+    "trace vervalt vanzelf (TTL)…";
+}
+function tick(t){
+  if(lastT===null)lastT=t;
+  var dt=(t-lastT)/1000;lastT=t;
+  if(!sim.expired && !sim.promoted){
+    sim.trace*=Math.pow(0.93,dt*(reduced?0.4:1));
+    if(sim.trace<0.12){sim.expired=true;sim.status="EXPIRED";sim.trace=0;
+      log("<b>EXPIRED</b> — terminaal: geen reactivatie, geen Gate, geen terugkeer");}
+    else if(sim.trace<0.5&&sim.status!=="DORMANT"){sim.status="DORMANT";log("trace onder drempel → DORMANT");}
+    else if(sim.trace<1.2&&sim.status==="ACTIVE"){sim.status="DECAYING";}
+    render();
+  }
+  requestAnimationFrame(tick);
+}
+$("b-trtl").addEventListener("click",function(){
+  sim.trace=Math.min(2.4,sim.trace+0.7);sim.recog++;sim.status=sim.promoted?"PROMOTED":"ACTIVE";
+  log("TrTL: context raakt het thema → trace +0.7 (herkenning "+sim.recog+"×) — weight blijft "+sim.weight.toFixed(1));
+  render();});
+$("b-gate").addEventListener("click",function(){
+  if(sim.recog<2){log("Gate <b>weigert</b>: interne herhaalde herkenning ontbreekt (nu "+sim.recog+"×, nodig ≥2)");return;}
+  sim.promoted=true;sim.weight=0.8;sim.status="PROMOTED";
+  log("Gate: herhaalde herkenning ✓ · steun ✓ · geen contradictie ✓ → <b>PROMOTED, weight 0.8</b> (gelogd)");
+  render();});
+$("b-fals").addEventListener("click",function(){
+  sim.promoted=false;sim.weight=0;sim.contradicted=true;sim.status="DECAYING";sim.trace=Math.min(sim.trace,0.9);
+  log("dialectische toets: <b>WEERLEGD</b> → weight 0.0, contract blokkeert; trace zakt mee");
+  render();});
+$("b-reset").addEventListener("click",function(){
+  sim={trace:2.0,weight:0,status:"NEW",recog:0,expired:false,promoted:false,contradicted:false};
+  $("audit").innerHTML="<div>· seed geboren — trace 2.0, <b>weight 0.0</b>: aanwezig, stuurt niets</div>";render();});
+render();requestAnimationFrame(tick);
+
+/* ---------- golden path stepper ---------- */
+var steps=[
+ ["Geboorte","Gewichtloos.","In beurt vier merkt de detectielaag op dat niemand de psychologische drijfveren van de doelgroep noemt. Er ontstaat een seed: klein, toetsbaar, weight = 0.0. Het antwoord van dát moment verandert er niet door."],
+ ["De schaduw","NEW → … → DORMANT.","De seed reist mee door de statusketen, gedreven door twee spiegelmechanismen: herkenning houdt hem in leven (TrTL), uitblijvende herkenning laat hem verdwijnen (TTL). EXPIRED is terminaal. Aanwezigheid kost niets en stuurt niets."],
+ ["De poort","De enige route naar invloed.","Het gesprek raakt het thema opnieuw. De Validation Gate toetst: herhaalde herkenning, externe steun, geen contradictie. Alleen dán stijgt het gewicht."],
+ ["De tweede sleutel","Contract op het gebruiksmoment.","Gevalideerd zijn is niet genoeg: bij elke poging tot invloed checkt het agent-contract opnieuw (weight > 0, PROMOTED, promotie gelogd, geen contradictie). Alles staat in een replaybare audit-trail die hard faalt op gewichtloze invloed."],
+ ["De bijdrage","Nu pas stuurt hij mee.","Het latere antwoord noemt de psychologische drijfveren die anders buiten beeld bleven. In de blinde review van precies dit domein (round 029) kozen reviewers deze kant 3 van de 3 keer — “helpt duidelijk”."],
+ ["De aanval achteraf","Falsificatie als eersteklas operatie.","Op elk moment kan /falsify de seed opnieuw voor het gerecht slepen. Weerlegd? Gewicht daalt via de Gate, het contract blokkeert — zichtbaar in de audit."]];
+var nodes=["seed","schaduw","Gate","contract","antwoord","falsify"];
+var pv=$("pathviz");
+nodes.forEach(function(n,i){
+  var s=document.createElement("span");s.className="node";s.textContent=n;s.id="pv"+i;pv.appendChild(s);
+  if(i<nodes.length-1){var a=document.createElement("span");a.className="arrow";a.textContent="→";pv.appendChild(a);}});
+var st=$("stepper");
+steps.forEach(function(s,i){
+  var b=document.createElement("button");b.role="tab";b.textContent=(i+1)+" · "+s[0];
+  b.addEventListener("click",function(){setStep(i)});st.appendChild(b);});
+function setStep(i){
+  [].forEach.call(st.children,function(b,j){b.setAttribute("aria-selected",j===i)});
+  nodes.forEach(function(_,j){$("pv"+j).classList.toggle("on",j<=i)});
+  $("steppane").innerHTML="<p class='eyebrow' style='margin-top:0'>stap "+(i+1)+" — "+steps[i][1]+"</p><p style='margin:6px 0 0'>"+steps[i][2]+"</p>";
+}
+setStep(0);
+
+/* ---------- ladder ---------- */
+var lagen=[
+ ["A","Regressie — blijft de kern mechanisch correct?","Sterk","Snelle CI-ruggengraat: 354 tests bewaken trace/weight, TTL, TrTL, statusketen en Gate-gedrag."],
+ ["B","Kleine benchmark — werkt het op vaste casussen?","Bruikbaar","Bewust smal: regressie en beperkte benchmark, geen eindclaim."],
+ ["C","Open-set — goede seeds op ónbekende tekst?","Gemengd","Mens- en AI-reviews (κ≈0.63): seeds zijn relevant, maar soms triviaal of weinig toetsbaar. Gevonden ≠ waardevol."],
+ ["D","Adversarial — weert de Gate misleidend lokaas?","Eerste echte evidence","De Gate verslaat zwakkere promotie-baselines — dit is letterlijk hypothese H11, vooraf geformuleerd en daarna gemeten."],
+ ["E","Payoff — maken seeds vervolgwerk beter?","Twee assen","Mechanisme bevestigd; met gebruiksdiscipline vrijwel ruisvrij. Seed-effect-as: ~75% “helpt”. Winnaar-as ≤0.5 — tegen hetzelfde frontier-model."],
+ ["F","Transfer — werkt het buiten de bekende domeinen?","Voorzichtig positief","Round 025: consensus op alle valkuilvragen, 14/14 “helpt”, ruis 0. Replicatie op gpt-4o (round 029): seed-effect 6/9, HEALTH 3/3 — begrensd op de winnaar-as."],
+ ["G","Modelintern — steun in de activaties?","Drie eerlijke nulls","Instrument met permutatiecontrole; drie schone nulls t/m een NL-getraind model (round 030). De vraag gaat door naar grotere modellen."]];
+var ld=$("ladder");
+lagen.forEach(function(l){
+  var d=document.createElement("div");d.className="rij";
+  d.innerHTML="<button aria-expanded='false'><span class='lt'>"+l[0]+"</span><span class='vraag'>"+l[1]+
+    "</span><span class='pill "+(l[2]==="Sterk"||l[2]==="Voorzichtig positief"?"groen":l[2]==="Twee assen"?"goud":"grijs")+"'>"+l[2]+
+    "</span></button><div class='body'>"+l[3]+"</div>";
+  d.querySelector("button").addEventListener("click",function(){
+    var open=d.classList.toggle("open");this.setAttribute("aria-expanded",open)});
+  ld.appendChild(d);});
+
+/* ---------- tooltip helper ---------- */
+var tt=$("tt");
+function showTT(evt,html){tt.innerHTML=html;tt.style.opacity=1;
+  tt.style.left=Math.min(innerWidth-280,evt.clientX+14)+"px";tt.style.top=(evt.clientY+14)+"px";}
+function hideTT(){tt.style.opacity=0;}
+
+/* ---------- agreement chart ---------- */
+function drawAgree(){
+  var svg=$("agree");svg.innerHTML="";
+  var W=640,H=240,L=52,R=20,T=18,B=42;
+  var pts=[["022",0.125,"gespleten: oneens op 7/8 items"],["023",0.67,"na gebruiksdiscipline: ruis vrijwel weg"],["025",0.71,"transferronde: hoogste tot nu toe"]];
+  var x=function(i){return L+i*(W-L-R)/(pts.length-1)};
+  var y=function(v){return T+(1-v)*(H-T-B)};
+  var g="";
+  [0,0.25,0.5,0.75,1].forEach(function(v){
+    g+="<line class='tickline' x1='"+L+"' y1='"+y(v)+"' x2='"+(W-R)+"' y2='"+y(v)+"'/>"+
+       "<text x='"+(L-8)+"' y='"+(y(v)+4)+"' text-anchor='end'>"+v+"</text>";});
+  var path=pts.map(function(p,i){return (i?"L":"M")+x(i)+","+y(p[1])}).join(" ");
+  g+="<path d='"+path+"' fill='none' stroke='"+css('--accent')+"' stroke-width='2.5' stroke-linecap='round'/>";
+  pts.forEach(function(p,i){
+    g+="<circle cx='"+x(i)+"' cy='"+y(p[1])+"' r='"+(i===pts.length-1?7:5.5)+"' fill='"+css('--accent')+"' stroke='"+css('--chart-surface')+"' stroke-width='2' data-i='"+i+"' style='cursor:pointer'/>";
+    g+="<text x='"+x(i)+"' y='"+(H-14)+"' text-anchor='middle'>round "+p[0]+"</text>";
+    g+="<text x='"+x(i)+"' y='"+(y(p[1])-14)+"' text-anchor='middle' style='font-weight:700;fill:"+css('--ink')+"'>"+p[1]+"</text>";});
+  svg.innerHTML=g;
+  svg.querySelectorAll("circle").forEach(function(c){
+    var p=pts[+c.dataset.i];
+    c.addEventListener("mousemove",function(e){showTT(e,"<b>round "+p[0]+"</b> · overeenstemming "+p[1]+"<br>"+p[2])});
+    c.addEventListener("mouseleave",hideTT);});
+}
+
+/* ---------- two-axes chart ---------- */
+var seedData=[ /* [ronde, duidelijk, beetje, geen, ruis, note] */
+ ["022",6,6,1,3,"vóór gebruiksdiscipline (2 reviewers × 8)"],
+ ["023",12,8,10,0,"met discipline (3 reviewers × 10)"],
+ ["025",9,5,0,0,"transfer gpt-4.1 (2 reviewers × 7) — 14/14 helpt"],
+ ["029",4,2,1,2,"replicatie gpt-4o (9; ruis op vroege beurten)"]];
+var seedCats=["helpt duidelijk","helpt een beetje","maakt geen verschil","veroorzaakt ruis"];
+var winData=[
+ ["022","gespleten","overeenstemming 1/8 — geen verdict mogelijk",null],
+ ["023","≈0.40","win-rate ≤0.5 tegen hetzelfde model",0.40],
+ ["025","4/7","consensus-SSL 4/7, baseline 1/7, 2 gespleten",0.57],
+ ["029","0.50","SSL 4 / baseline 4 / 1 tie",0.50]];
+var curAs="seed";
+function seriesColors(){return [css('--c1'),css('--c2'),css('--c3'),css('--c4')]}
+function drawAs(){
+  var svg=$("aschart");svg.innerHTML="";var W=640,H=260,L=52,R=20,T=16,B=56;
+  var cols=seriesColors(), leg=$("aslegend"), tb=$("astabel");
+  if(curAs==="seed"){
+    $("askop").textContent="Helpt de seed naar een beter antwoord? — alle 69 blinde oordelen";
+    $("assub").textContent="Per ronde, uit de gecommitteerde reviewer-CSV's (rounds 022–029)";
+    var maxN=30, bw=64, x=function(i){return L+30+i*(W-L-R-60)/(seedData.length-1)-bw/2};
+    var y=function(v){return T+(1-v/maxN)*(H-T-B)};
+    var g="";
+    [0,10,20,30].forEach(function(v){g+="<line class='tickline' x1='"+L+"' y1='"+y(v)+"' x2='"+(W-R)+"' y2='"+y(v)+"'/>"+
+      "<text x='"+(L-8)+"' y='"+(y(v)+4)+"' text-anchor='end'>"+v+"</text>";});
+    seedData.forEach(function(r,i){
+      var acc=0, helpt=r[1]+r[2];
+      for(var s=0;s<4;s++){
+        var v=r[1+s];if(!v)continue;
+        var y1=y(acc+v), h=y(acc)-y(acc+v);
+        g+="<rect x='"+x(i)+"' y='"+y1+"' width='"+bw+"' height='"+Math.max(0,h-2)+"' rx='3' fill='"+cols[s]+
+           "' data-r='"+i+"' data-s='"+s+"' style='cursor:pointer'/>";
+        acc+=v;}
+      g+="<text x='"+(x(i)+bw/2)+"' y='"+(y(acc)-8)+"' text-anchor='middle' style='font-weight:700;fill:"+css('--ink')+"'>"+helpt+"/"+acc+" helpt</text>";
+      g+="<text x='"+(x(i)+bw/2)+"' y='"+(H-30)+"' text-anchor='middle'>round "+r[0]+"</text>";});
+    svg.innerHTML=g;
+    svg.querySelectorAll("rect").forEach(function(rc){
+      var r=seedData[+rc.dataset.r], s=+rc.dataset.s;
+      rc.addEventListener("mousemove",function(e){showTT(e,"<b>round "+r[0]+"</b><br>"+seedCats[s]+": <b>"+r[1+s]+"×</b><br>"+r[5])});
+      rc.addEventListener("mouseleave",hideTT);});
+    leg.innerHTML=seedCats.map(function(c,i){return "<span><i style='background:"+cols[i]+"'></i>"+c+"</span>"}).join("");
+    tb.innerHTML="<thead><tr><th>Ronde</th>"+seedCats.map(function(c){return "<th>"+c+"</th>"}).join("")+"<th>Totaal</th></tr></thead><tbody>"+
+      seedData.map(function(r){return "<tr><td>"+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+r[4]+"</td><td>"+(r[1]+r[2]+r[3]+r[4])+"</td></tr>"}).join("")+
+      "<tr><td><b>Totaal</b></td><td><b>31</b></td><td><b>21</b></td><td><b>12</b></td><td><b>5</b></td><td><b>69</b></td></tr></tbody>";
+  }else{
+    $("askop").textContent="De winnaar-as: head-to-head tegen hetzelfde frontier-model";
+    $("assub").textContent="Het A/B-formaat dwingt een keuze af — 50/50 betekent hier “even goed”, niet “werkt niet”";
+    var x2=function(i){return L+30+i*(W-L-R-60)/(winData.length-1)};
+    var y2=function(v){return T+(1-v)*(H-T-B)};
+    var g2="";
+    [0,0.25,0.5,0.75,1].forEach(function(v){g2+="<line class='tickline' x1='"+L+"' y1='"+y2(v)+"' x2='"+(W-R)+"' y2='"+y2(v)+"'/>"+
+      "<text x='"+(L-8)+"' y='"+(y2(v)+4)+"' text-anchor='end'>"+v+"</text>";});
+    g2+="<line x1='"+L+"' y1='"+y2(0.5)+"' x2='"+(W-R)+"' y2='"+y2(0.5)+"' stroke='"+css('--gold')+"' stroke-width='1.5' stroke-dasharray='5 4'/>";
+    g2+="<line x1='"+(L+6)+"' y1='"+(y2(0.93))+"' x2='"+(L+26)+"' y2='"+(y2(0.93))+"' stroke='"+css('--gold')+"' stroke-width='1.5' stroke-dasharray='5 4'/>";
+    g2+="<text x='"+(L+32)+"' y='"+(y2(0.93)+4)+"' text-anchor='start' style='fill:"+css('--gold')+"'>0.5 = even goed als hetzelfde model op z'n best</text>";
+    winData.forEach(function(r,i){
+      if(r[3]!==null){
+        g2+="<circle cx='"+x2(i)+"' cy='"+y2(r[3])+"' r='7' fill='"+css('--c3')+"' stroke='"+css('--chart-surface')+"' stroke-width='2' data-i='"+i+"' style='cursor:pointer'/>";
+        g2+="<text x='"+x2(i)+"' y='"+(y2(r[3])+(r[3]<0.48?26:-13))+"' text-anchor='middle' style='font-weight:700;fill:"+css('--ink')+"'>"+r[1]+"</text>";
+      }else{
+        g2+="<text x='"+x2(i)+"' y='"+(y2(0.5)-12)+"' text-anchor='middle' style='font-style:italic' data-i='"+i+"'>"+r[1]+"</text>";}
+      g2+="<text x='"+x2(i)+"' y='"+(H-30)+"' text-anchor='middle'>round "+r[0]+"</text>";});
+    svg.innerHTML=g2;
+    svg.querySelectorAll("[data-i]").forEach(function(el){
+      var r=winData[+el.dataset.i];
+      el.addEventListener("mousemove",function(e){showTT(e,"<b>round "+r[0]+"</b> · "+r[1]+"<br>"+r[2])});
+      el.addEventListener("mouseleave",hideTT);});
+    leg.innerHTML="<span><i style='background:"+css('--c3')+"'></i>aandeel SSL-kant gekozen</span>";
+    tb.innerHTML="<thead><tr><th>Ronde</th><th>Uitslag</th><th>Toelichting</th></tr></thead><tbody>"+
+      winData.map(function(r){return "<tr><td>"+r[0]+"</td><td>"+r[1]+"</td><td class='sans' style='font-size:13px'>"+r[2]+"</td></tr>"}).join("")+"</tbody>";
+  }
+}
+$("as-seed").addEventListener("click",function(){curAs="seed";this.setAttribute("aria-pressed",true);$("as-win").setAttribute("aria-pressed",false);drawAs();});
+$("as-win").addEventListener("click",function(){curAs="win";this.setAttribute("aria-pressed",true);$("as-seed").setAttribute("aria-pressed",false);drawAs();});
+
+/* ---------- laag G chart ---------- */
+function drawG(){
+  var svg=$("gchart");svg.innerHTML="";var W=640,H=230,L=52,R=20,T=16,B=52;
+  var runs=[["028 · distilgpt2 (EN, gpt-4.1-labels)",0.833,0.028],["030 · gpt2-small-dutch (NL, gpt-4.1-labels)",0.206,0.002]];
+  var y=function(v){return T+(1-v)*(H-T-B)};
+  var x=function(i){return L+110+i*(W-L-R-220)/(runs.length-1)};
+  var g="";
+  [0,0.25,0.5,0.75,1].forEach(function(v){g+="<line class='tickline' x1='"+L+"' y1='"+y(v)+"' x2='"+(W-R)+"' y2='"+y(v)+"'/>"+
+    "<text x='"+(L-8)+"' y='"+(y(v)+4)+"' text-anchor='end'>"+v+"</text>";});
+  runs.forEach(function(r,i){
+    g+="<line x1='"+(x(i)-22)+"' y1='"+y(r[2])+"' x2='"+(x(i)+22)+"' y2='"+y(r[2])+"' stroke='"+css('--gold')+"' stroke-width='2.5' data-i='"+i+"' data-k='f'/>";
+    g+="<line x1='"+x(i)+"' y1='"+y(r[1])+"' x2='"+x(i)+"' y2='"+y(r[2])+"' stroke='"+css('--line')+"' stroke-width='1' stroke-dasharray='3 3'/>";
+    g+="<circle cx='"+x(i)+"' cy='"+y(r[1])+"' r='7' fill='"+css('--c4')+"' stroke='"+css('--chart-surface')+"' stroke-width='2' data-i='"+i+"' data-k='p' style='cursor:pointer'/>";
+    g+="<text x='"+x(i)+"' y='"+(y(r[1])-12)+"' text-anchor='middle' style='font-weight:700;fill:"+css('--ink')+"'>p "+r[1]+"</text>";
+    g+="<text x='"+x(i)+"' y='"+(H-28)+"' text-anchor='middle'>"+r[0]+"</text>";});
+  svg.innerHTML=g;
+  svg.querySelectorAll("[data-i]").forEach(function(el){
+    var r=runs[+el.dataset.i];
+    el.addEventListener("mousemove",function(e){showTT(e,"<b>"+r[0]+"</b><br>gemeten p: <b>"+r[1]+"</b> · haalbare vloer: "+r[2]+"<br>ver boven de vloer → geen signaal")});
+    el.addEventListener("mouseleave",hideTT);});
+}
+
+/* ---------- chapter dots ---------- */
+var secs=["top","probleem","idee","wetenschap","pad","toetsing","cijfers","laagg","vooruit"];
+var dots=document.querySelector("nav.dots");
+secs.forEach(function(s){var a=document.createElement("a");a.href="#"+s;a.title=s;dots.appendChild(a);});
+var obs=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(e.isIntersecting){var i=secs.indexOf(e.target.id);
+    [].forEach.call(dots.children,function(d,j){d.classList.toggle("on",j===i)});}});},{rootMargin:"-40% 0px -55% 0px"});
+secs.forEach(function(s){var el=document.getElementById(s);if(el)obs.observe(el);});
+
+/* redraw charts on theme flips */
+function drawAll(){drawAgree();drawAs();drawG();}
+drawAll();
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",drawAll);
+})();
+</script>
+
+</body>
+</html>

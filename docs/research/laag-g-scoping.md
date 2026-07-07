@@ -104,7 +104,8 @@ transfer-stellingen), distilgpt2 werd met díe labels gesondeerd. Sterkste laag
 lineair. Een null is hier het correcte antwoord (82M Engels model, NL-oordeel);
 signaal ≠ verdict, de null raakt lagen A–F niet. Zie round 028.
 
-**Iteratie 6 (2026-07-07, gebouwd — run open): NL-capabel model + 24 cases.**
+**Iteratie 6 (2026-07-07, gedraaid — derde schone null): NL-capabel model +
+24 cases.**
 Beide open punten uit iteratie 5 zijn nu bebouwd
 (`dialectic_falsification_transfer_v2.json`, round 030):
 
@@ -121,12 +122,18 @@ Beide open punten uit iteratie 5 zijn nu bebouwd
 
 De ontwerp-intenties in de notes zijn géén labels: labels komen op runtime
 van gpt-4.1, en de sonde meet vervolgens of het NL-model dat oordeel intern
-lineair codeert. Ook hier blijft een null een geldig antwoord — maar nu op
-een model dat het oordeel plausibel kán encoderen, met een vloer die laag
-genoeg is om een echt signaal te kunnen zien.
+lineair codeert.
 
-Pas bij zo'n plausibel model is een positieve uitspraak over interne steun
-realistisch — en blijft ook dan een null een eerlijk, geldig antwoord.
+**Uitkomst (run 28879610931, round 030):** gpt-4.1 gaf 6× HOUDT_STAND /
+17× WEERLEGD (23/24 cases; klassenbalans veel beter dan round 028); de
+sonde op `GroNLP/gpt2-small-dutch` vond **geen scheiding boven toeval**
+(sterkste laag `transformer.h.5.mlp.c_proj`, cosine 0.1355, permutatie-p
+0.2056, vloer 0.002). Dit is de sterkste null tot nu toe: NL-model, betere
+balans, lage vloer — en nog steeds geen lineair leesbaar spoor van het
+externe houdbaarheidsoordeel in de MLP-activaties. Niet uitgesloten blijven:
+niet-lineaire codering, andere leeslocaties (attention/residual), of grotere
+modellen (het H-Neurons-precedent zit op een andere orde van grootte). Zie
+`benchmarks/open_review/rounds/round_030/RESULTS.md`.
 
 ## Doctrine-regels (gelden voor beide sporen)
 

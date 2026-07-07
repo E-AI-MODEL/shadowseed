@@ -29,8 +29,8 @@ welk belang niet aan tafel zit. De docent die hoort welk begrip een leerling
 overslaat. De waardevolste informatie in professioneel werk is vaak de
 afwezige.
 
-Shadow Seed Learning (SSL) is een Nederlandse onderzoekslijn die uit deze
-observatie is geboren, met één kernvraag:
+Shadow Seed Learning (SSL) is een Nederlandse onderzoekslijn (H. Visser,
+EAI) die uit deze observatie is geboren, met één kernvraag:
 
 > Kan een AI-systeem beter verder werken als het niet alleen kijkt naar wat
 > er staat, maar ook systematisch vastlegt wat er structureel ontbreekt —
@@ -38,6 +38,35 @@ observatie is geboren, met één kernvraag:
 
 De tweede helft van die zin is net zo belangrijk als de eerste. Daarover gaat
 dit hele verhaal.
+
+En SSL draait daarbij een aanname om die in de meeste literatuur impliciet
+blijft. Vrijwel overal wordt een gap behandeld als een *probleem* — iets dat
+weggewerkt moet worden. SSL leest hem als een **signaal van het model over
+zichzelf**: hier had, op basis van alles wat dit model over de wereld weet,
+iets moeten staan. Dat signaal is geen afval. Het is brandstof — de kortste
+formulering van het hele programma:
+
+> SSL gebruikt wat een model mist als startpunt voor gericht verder zoeken.
+
+### Van 4.5 naar 4.6: hoe dit programma volwassen werd
+
+Het verhaal heeft ook een eigen geschiedenis, en die is tekenend. De
+4.5-specificatie legde de volledige mechaniek vast — twee-veld-architectuur,
+levenscyclus, Validation Gate, probes — én formuleerde vooraf **twaalf
+falsifieerbare hypotheses** (H1–H12): van "gewichtloze seeds verstoren de
+basisprestatie niet" tot "de Gate halveert minstens de valse promoties
+tegenover puur herhalingsgestuurde promotie". Geen visiedocument dat naar
+succes toe schrijft, maar een programma dat vooraf opschreef waarop het
+afgerekend wil worden.
+
+De 4.6-canon veranderde vervolgens niets aan die mechaniek — hij verscherpte
+de *epistemische positie*: vaste testscenario's tellen voortaan alleen als
+regressielaag, en de hoofdclaim moet gedragen worden door open-set-kwaliteit,
+adversariële controle, gemeten nut en domeintransfer. In de eigen woorden van
+de canon: *4.5 beschreef vooral de mechaniek; 4.6 beschrijft dezelfde
+mechaniek plus de evaluatiekoers die nodig is om geloofwaardig te worden.*
+De secties hierna laten zien hoe die koers is uitgevoerd — meting voor
+meting, inclusief de uitkomsten die tegenvielen.
 
 ## 2. Het idee in één beeld
 
@@ -51,16 +80,23 @@ de discipline tussen muur en voorpagina.
 SSL bouwt die muur — en die discipline — in software:
 
 - Een **shadow seed** is één klein, toetsbaar ontbrekend punt, opgemerkt
-  tijdens het werk. Niet "meer context", maar een specifiek gemis:
-  *"de neurobiologische kant van cafeïnegebruik bij jongeren ontbreekt in
-  deze campagne-opzet."*
+  tijdens het werk. De atomiciteitseis is hard, en het verschil is meteen
+  voelbaar. Niet goed: *"security, privacy en schaalbaarheid ontbreken"* —
+  dat is een analyseplan, geen seed. Wél goed: *"AVG-compliance bij de
+  verwerking van medische hartslagdata."* Klein, specifiek, controleerbaar —
+  een beoordelaar kan zeggen: klopt, klopt deels, of klopt niet. Brede
+  detecties worden gesplitst of geweigerd vóór ze de schaduw in mogen.
 - Elke seed heeft twee strikt gescheiden velden. **Trace** is aanwezigheid:
   hij vervalt met de tijd (TTL) en leeft op wanneer het gesprek het thema
   weer raakt (TrTL) — zoals een menselijke herinnering. **Weight** is
   invloed: die start op exact **0.0** en kan maar op één manier stijgen —
   door een expliciete validatietoets, de **Validation Gate**, te doorstaan.
-- Een seed die de Gate passeert mag een later antwoord **meesturen** — als
-  potentieel, nooit als verplichting. Een seed die faalt, stuurt nooit iets.
+- Een seed die de Gate passeert mag **gerichte vervolgactie** sturen — als
+  potentieel, nooit als verplichting. De theorie kent daar drie vormen voor:
+  de **Socratische probe** (een betere vraag stellen), de **retrieval-probe**
+  (een smallere, scherpere zoekactie) en de **dialectische probe** (de eigen
+  aanname proberen te weerleggen). Alle drie bestaan in de repo. Een seed
+  die de Gate niet haalt, stuurt nooit iets.
 
 Drie woorden vatten de doctrine samen, en ze zijn de harde kern van alles wat
 volgt:
@@ -93,17 +129,68 @@ is de stand die schaalbaar vertrouwen mogelijk maakt:
 > **Geheugen dat zijn invloed moet verdienen, en die invloed op elk moment
 > kan verliezen — controleerbaar, replaybaar, falsifieerbaar.**
 
-Wetenschappelijk staat dit idee niet alleen. De scheiding tussen aanwezigheid
-en invloed spiegelt hoe de neurowetenschap geheugensporen beschrijft
-(engram-onderzoek: een spoor kán bestaan zonder gedrag te sturen; Josselyn &
-Tonegawa, 2020). De Gate-gedachte sluit aan op actief leren en epistemische
-onzekerheid (Settles, 2009; Kendall & Gal, 2017): een systeem dat weet wat
-het níet zeker weet, en dat onderscheid operationeel maakt. De
-falsificatie-reflex is regelrecht Popperiaans: een claim telt pas als hij een
-serieuze poging tot weerlegging heeft overleefd. En de detectiekant bouwt
-voort op de gap-literatuur rond retrieval en multi-hop-redeneren (Khot et
-al., 2019; Lewis et al., 2020) — met AbsenceBench als het bewijs dat dit
-voor moderne LLM's een écht, onopgelost probleem is.
+Wetenschappelijk rust dit op drie expliciete pijlers, plus een biologische
+spiegel:
+
+1. **Epistemische onzekerheid** (Kendall & Gal, 2017). De Bayesiaanse
+   literatuur onderscheidt ruis die je niet kunt wegnemen (aleatorisch) van
+   onzekerheid door gebrek aan kennis (epistemisch) — en alleen die tweede
+   is reduceerbaar. SSL richt zich uitsluitend daarop, met een precieze
+   draai: niet *"ik weet niet zeker of dit klopt"*, maar *"ik merk dat hier
+   iets zou moeten staan dat er niet staat."* SSL is dan ook géén
+   kalibratiesysteem en geen hallucinatiefilter — het is **epistemische
+   zelfrapportage over structurele afwezigheid**.
+2. **Computationele nieuwsgierigheid** (Schmidhuber, 2011). Nieuwsgierigheid
+   is formeel de drang om de onzekerheid in de eigen kennisrepresentatie te
+   verlagen. SSL implementeert daar een gedisciplineerde variant van: welke
+   afwezigheid is het vaakst herkend, het sterkst bevestigd én het meest
+   resistent tegen falsificatie? Díe verdient de vervolgactie.
+3. **Active learning** (Settles, 2009). Een lerend systeem dat zelf bepaalt
+   welke informatie het meest waard is om op te halen. In die taal: de seeds
+   zijn de onzekerheidsrepresentaties, de probes zijn de queries, en SSL is
+   de learner met een eigen query-strategie — op interactieniveau in plaats
+   van trainingsniveau.
+
+De biologische spiegel is het engram-onderzoek naar geheugenconsolidatie
+(Josselyn & Tonegawa, 2020). Een verse herinnering is een fragiel spoor dat
+alleen overleeft door reactivatie — precies de trace/TTL/TrTL-dynamiek. En de
+neurowetenschap kent **reconsolidatie**: elke keer dat een herinnering wordt
+opgehaald, wordt ze even kwetsbaar en moet ze opnieuw gestabiliseerd — wordt
+ze weersproken, dan wordt ze bijgesteld. Dat is exact wat de contradictie-
+check van de Gate doet. De claim is nadrukkelijk geen neurologische
+gelijkwaardigheid; de claim is dat *fragiele kandidaat-representaties die via
+validatie consolideren en daarna actief nieuw begrip sturen* een biologisch
+beproefd ontwerp is.
+
+De falsificatie-reflex is tot slot regelrecht Popperiaans: een claim telt pas
+als hij een serieuze poging tot weerlegging heeft overleefd. En de
+detectiekant bouwt voort op de gap-literatuur rond retrieval en
+multi-hop-redeneren (Khot et al., 2019; Lewis et al., 2020) — met
+AbsenceBench als het bewijs dat dit voor moderne LLM's een écht, onopgelost
+probleem is.
+
+### Hoe SSL zich verhoudt tot RAG, Reflexion en verwanten
+
+De eerste vraag van elke technische lezer: *"is dit niet gewoon RAG?"* Nee —
+en het vervangt RAG ook niet. SSL voegt een laag toe die geen van de
+bekende systemen heeft: bijhouden welke kleine afwezigheden over meerdere
+interacties relevant blijven, en daar pas na validatie op navigeren.
+
+| Systeem | Wat het doet | Wat SSL anders doet |
+|---|---|---|
+| **RAG** (Lewis, 2020) | vraag → zoeken → antwoord | SSL detecteert wat de zoekactie *niet* activeerde |
+| **Self-RAG** (Asai, 2023) | reflectie binnen één beurt | SSL werkt tussen beurten, met een levenscyclus |
+| **FLARE** (Jiang, 2023) | lage zekerheid → bijzoeken | SSL detecteert structurele afwezigheid, geen lage confidence |
+| **CRAG** (Yan, 2024) | zoekresultaten corrigeren | SSL zoekt exploratief, niet correctief |
+| **S2G-RAG** (Li, 2026) | gap → direct vullen | SSL laat gaps bewust bestaan als gewichtloze plekhouders en valideert over beurten |
+| **Reflexion** (Shinn, 2023) | reflecties sturen direct | SSL houdt observaties gewichtloos tot de Gate ze promoveert |
+| **GapQA** (Khot, 2019) | ontbrekende kennis per vraag | SSL werkt niet vraag-specifiek maar over interacties heen |
+
+Even belangrijk is wat SSL **niet** is: geen nieuw foundation-model, geen
+permanent geheugen (alles is consolidatie, verval of falsificatie), geen
+waarheidsmachine (seeds zijn hypotheses, promotie is omkeerbaar) en geen
+prompt-trucje — het is een architecturale laag óp de bestaande
+modelcapaciteit.
 
 ## 4. Het leven van één seed — het golden path
 
@@ -115,10 +202,13 @@ Dit is geen diagram op een whiteboard; het draait vandaag, in
    psychologische drijfveren van de doelgroep heeft. Er ontstaat een seed:
    klein, toetsbaar, `weight = 0.0`. Het antwoord van dat moment verandert
    er **niet** door.
-2. **De schaduw.** De seed reist mee. Zijn trace vervalt langzaam; raakt het
-   gesprek het thema opnieuw, dan leeft hij op. Wordt hij nooit meer
-   relevant, dan verloopt hij stil (EXPIRED — terminaal). Aanwezigheid kost
-   niets en stuurt niets.
+2. **De schaduw.** De seed reist mee door een expliciete statusketen
+   (`NEW → ACTIVE → DECAYING → DORMANT → PROMOTED of EXPIRED`), gedreven
+   door twee spiegelbeeldige mechanismen: herkenning houdt hem in leven
+   (TrTL), uitblijvende herkenning laat hem verdwijnen (TTL). Wordt hij
+   nooit meer relevant, dan verloopt hij stil — en EXPIRED is terminaal:
+   een afgeschreven seed komt niet terug. Aanwezigheid kost niets en stuurt
+   niets.
 3. **De poort.** Het gesprek komt terug op de doelgroep. De seed wordt
    aangeboden aan de Validation Gate: is dit punt houdbaar, relevant, niet
    strijdig met wat bekend is? Alleen bij een positief oordeel stijgt het
@@ -160,7 +250,15 @@ bewust géén totaalscore. De lat per laag:
 | **D** Adversarial | Weert de Gate misleidende seeds? | Eerste echte evidence — de Gate verslaat zwakkere baselines |
 | **E** Payoff | Maken gevalideerde seeds vervolgwerk beter? | Mechanisme bevestigd; twee-assen-lezing hieronder |
 | **F** Transfer | Werkt het buiten de bekende domeinen? | Voorzichtig positief over twee modellen |
-| **G** Modelintern | Is er steun in de interne activaties? | Instrument gebouwd; eerlijke nulls; NL-model geladen |
+| **G** Modelintern | Is er steun in de interne activaties? | Instrument gebouwd; drie eerlijke nulls t/m een NL-model (round 030) — vraag door naar grotere modellen |
+
+Die ladder is bovendien geen achteraf bedachte ordening: hij toetst de
+hypotheses die het programma vooraf formuleerde. Laag D meet letterlijk H11
+("de Gate vermindert valse promoties tegenover puur herhalingsgestuurde
+promotie") — bevestigd. Het "do no harm"-ontwerp van de payoff-metingen is
+H2 ("gewichtloze seeds verstoren de basisprestatie niet"). En de hele
+payoff-lijn toetst H6: iets meer werk in de vroege beurten, rijkere
+antwoorden daarna. Vooraf opgeschreven, daarna gemeten.
 
 De toetsmethode is zo streng als we hem konden maken:
 
@@ -244,48 +342,61 @@ Eén zin, gedekt door alle data:
 - **De payoff is gemeten, blind, over twee modellen en vier rondes** — de
   cijfers hierboven.
 - **De modelinterne verkenning is een instrument geworden.** Zes iteraties
-  in drie dagen: van naïeve meting, via token-gerichte pooling en
+  in vijf dagen: van naïeve meting, via token-gerichte pooling en
   permutatiecontrole, naar een keten waarin gpt-4.1 houdbaarheidsoordelen
-  velt en een klein model op die labels wordt gesondeerd. De eerlijke
-  uitkomst tot nu toe: kleine Engelstalige modellen coderen dat Nederlandse
-  oordeel niet lineair — een correct nulresultaat dat het instrument
-  valideert. De volgende run staat geladen: een **Nederlands getraind
-  model** op een **24-case set** met een statistische vloer die veertien
-  keer lager ligt.
+  velt en een klein model op die labels wordt gesondeerd — inmiddels ook
+  gedraaid op een **Nederlands getraind model** met een 24-case set en een
+  statistische vloer van 0.002 (round 030). De eerlijke uitkomst, drie
+  runs op rij: kleine modellen (≤124M) coderen dat oordeel niet lineair —
+  drie correcte nulresultaten die het instrument valideren en de vraag
+  scherp doorgeven aan grotere modellen. Een team dat zijn eigen
+  aantrekkelijkste hypothese drie keer durft af te wijzen, is een team
+  waarvan je de positieve resultaten kunt geloven.
 
 ## 8. Het pad vooruit
 
 **Nu direct (weken):**
 
-1. **Round 030 — de Nederlandse sonde.** Voor het eerst een gesondeerd model
-   dat het oordeel plausibel kán encoderen. Signaal of null: beide zijn
-   publicabel.
-2. **De vroege-beurt-discipline.** De laatste bekende ruisbron (seed-sturing
+1. **De vroege-beurt-discipline.** De laatste bekende ruisbron (seed-sturing
    op de openingsbeurt) dichten en blind hertesten — de aanpak die eerder de
    overeenstemming vervijfvoudigde, toegepast op het laatste gat.
-3. **Derde model, meer items** voor de transferlaag, zodat "voorzichtig
+2. **Derde model, meer items** voor de transferlaag, zodat "voorzichtig
    positief" kan doorgroeien naar "gerepliceerd, robuust".
 
 **Daarna (maanden):**
 
-4. **Generatieve seeds.** Van "dit ontbreekt" naar "dit zou er kunnen
+3. **Generatieve seeds.** Van "dit ontbreekt" naar "dit zou er kunnen
    staan" — speculatieve seeds die per constructie door dialectische
    falsificatie moeten voordat ze ook maar in de schaduw mogen hangen.
-5. **Interne steun (het H-neuron-spoor).** Recent werk identificeerde
-   hallucinatie-geassocieerde neuronen in LLM's (Gao et al., 2025). De
-   spiegelvraag van SSL: bestaat er een intern signaal voor *houdbaarheid
-   van het afwezige*? Het instrument daarvoor ligt klaar.
-6. **Zwaardere teksten.** Payoff meten op dichte, moeilijke documenten waar
+4. **Interne steun (het H-neuron-spoor).** Recent werk identificeerde
+   hallucinatie-geassocieerde neuronen in LLM's (Gao et al., 2025), met
+   drie bevindingen die voor SSL direct relevant zijn: minder dan 0,1‰ van
+   de neuronen volstaat om zo'n epistemische toestand te coderen; dat
+   gedrag is bij te sturen door activaties te schalen zónder het model te
+   hertrainen; en die patronen ontstaan al in de pretraining — de capaciteit
+   zit dus in elk modern LLM. SSL stelt de spiegelvraag: waar H-Neurons
+   pathologische activiteit *onderdrukt*, registreert SSL lege posities en
+   vraagt of er een intern signaal bestaat voor de *houdbaarheid van het
+   afwezige*. In de verre uitbouw is `weight` daar zelfs als
+   activatie-schaling te interpreteren (het "niveau 2" uit de theorie).
+   Het meetinstrument is gebouwd en drievoudig gevalideerd; de vraag staat
+   klaar voor modellen van de orde waarop het precedent is gevonden.
+5. **Zwaardere teksten.** Payoff meten op dichte, moeilijke documenten waar
    het gemiste punt echt pijn doet.
 
 **De horizon:**
 
-7. **De schaduwlaag als standaardcomponent.** Elke serieuze agent-stack
+6. **De schaduwlaag als standaardcomponent.** Elke serieuze agent-stack
    heeft een geheugenlaag nodig die invloed laat verdienen in plaats van
    geeft. SSL is het bewijs dat zo'n laag bouwbaar, testbaar en auditeerbaar
-   is — met onderwijs als geboortegrond en eerste toepassingsdomein: een
-   systeem dat opmerkt wat een leerling of een les structureel overslaat,
-   en dat vermoeden pas laat meewegen als het gevalideerd is.
+   is. De theorie wijst zelf aan waar de waarde het grootst is: overal waar
+   interacties zich over meerdere beurten uitstrekken en kleine
+   afwezigheden herhaaldelijk relevant blijken — literatuurreview en
+   onderzoek, langlopende juridische analyses, journalistiek, beleidswerk,
+   code-review over sessies heen, diagnostische gesprekken. En onderwijs als
+   geboortegrond en eerste toepassingsdomein: een systeem dat opmerkt wat
+   een leerling of een les structureel overslaat, en dat vermoeden pas laat
+   meewegen als het gevalideerd is.
 
 ## 9. Waarom dit ertoe doet
 
@@ -327,10 +438,15 @@ de volgende grens. Daar bouwen wij.
   Hallucination-Associated Neurons in LLMs.* arXiv:2512.01797.
 - Kendall, A., & Gal, Y. (2017). *What Uncertainties Do We Need in Bayesian
   Deep Learning for Computer Vision?* NeurIPS.
+- Schmidhuber, J. (2011). *Formal Theory of Creativity, Curiosity and
+  Intelligence.* IEEE Trans. Autonomous Mental Development.
 - Settles, B. (2009). *Active Learning Literature Survey.* University of
   Wisconsin–Madison.
 - Lewis, P. et al. (2020). *Retrieval-Augmented Generation for
   Knowledge-Intensive NLP Tasks.* NeurIPS.
+- Asai, A. et al. (2023). *Self-RAG.* · Jiang, Z. et al. (2023). *FLARE.* ·
+  Yan, S.-Q. et al. (2024). *CRAG.* · Shinn, N. et al. (2023). *Reflexion.* ·
+  Li, M. et al. (2026). *S2G-RAG.*
 - Khot, T., Sabharwal, A., & Clark, P. (2019). *What's Missing: A Knowledge
   Gap Guided Approach for Multi-hop Question Answering.*
 - Josselyn, S. A., & Tonegawa, S. (2020). *Memory engrams: Recalling the

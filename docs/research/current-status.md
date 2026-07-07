@@ -28,7 +28,11 @@
 > beoordelingen (52/69, rounds 022–029); de zeldzame ruis zit vóór de
 > use-time discipline (022) en in vroege-beurt off-topic-sturing die de
 > huidige cap niet uitsluit (029, t04). Zie `ssl-integrale-evaluatie.md`,
-> sectie "Twee assen".
+> sectie "Twee assen". **Laag G iteratie 6 (round 030) is gedraaid:** de
+> activatie-sonde op het NL-getrainde GroNLP/gpt2-small-dutch met 24 cases
+> (gpt-4.1-oordeel: 6 HOUDT_STAND / 17 WEERLEGD; vloer 0.002) gaf de derde
+> schone null (sterkste laag p 0.2056) — geen lineair leesbaar
+> houdbaarheidsoordeel in kleine modellen, ook niet NL-getraind.
 
 ## Doel van dit document
 

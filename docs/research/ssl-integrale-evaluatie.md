@@ -100,12 +100,15 @@ Twee sporen (`laag-g-scoping.md`):
   contradictie, HOUDT_STAND → bounded feedback (nooit promotie), ONBESLIST →
   neutraal. Geland, getest.
 - **Spoor 2 — activatie-sonde** (`run-activation-probe`): token-scoped pooling +
-  permutatie-controle, gemeten op distilgpt2/pythia-14m/-31m (fixture-labels) en
-  op distilgpt2 + pythia-14m met **gpt-4.1 als echte oordeelbron** (round 028).
-  Resultaat: **geen scheiding boven toeval** — een klein Engels model codeert
-  gpt-4.1's Nederlandse houdbaarheidsoordeel niet lineair. Een null is hier het
-  **correcte** antwoord, geen falen; signaal ≠ verdict, raakt lagen A–F niet.
-  Een positieve uitspraak vraagt een NL-capabel/groter model — open richting.
+  permutatie-controle, gemeten op distilgpt2/pythia-14m/-31m (fixture-labels),
+  op distilgpt2 + pythia-14m met **gpt-4.1 als echte oordeelbron** (round 028)
+  én op het NL-getrainde **GroNLP/gpt2-small-dutch met 24 cases en vloer
+  0.002** (round 030, iteratie 6). Resultaat, drie keer: **geen scheiding
+  boven toeval** — ook een NL-capabel klein model codeert gpt-4.1's
+  houdbaarheidsoordeel niet lineair in zijn MLP-activaties (round 030:
+  sterkste laag p 0.2056). Een null is hier het **correcte** antwoord, geen
+  falen; signaal ≠ verdict, raakt lagen A–F niet. Open blijven: niet-lineaire
+  codering, andere leeslocaties, of wezenlijk grotere modellen.
 
 ## Twee assen: winnaar-as vs seed-effect-as
 
