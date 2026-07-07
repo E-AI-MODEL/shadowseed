@@ -676,7 +676,7 @@ $("themabtn").addEventListener("click",function(){
 /* ---------- hypotheses H1-H12 ---------- */
 var hypos=[
  ["H1","Detectie","Een LLM detecteert in een tweede pass systematisch atomische afwezigheden.","Detectie werkt op onbekende tekst; kwaliteit is de open vraag: relevant, soms triviaal (laag C).","deels"],
- ["H2","Gewichtloosheid","Seeds met weight 0.0 verstoren de basisprestatie niet.","Gemeten als do-no-harm-ontwerp door de hele payoff-lijn: gewichtloos = geen effect, per constructie én per meting.","gemeten"],
+ ["H2","Gewichtloosheid","Seeds met weight 0.0 verstoren de basisprestatie niet; seeds met weight > 0 dragen meetbaar bij aan retrieval-relevantie.","Eerste helft gemeten (do-no-harm door de hele payoff-lijn); de retrieval-relevantie-helft heeft een gebouwde harness (SSL→RAG) maar nog geen eigen echte meting.","deels"],
  ["H3","Reactivatie versterkt","Door herkenning bevestigde seeds zijn bij promotie nuttiger dan willekeurige.","Cluster-recurrence (W9e/f) bouwt hierop en vuurt op veilige drempels — eerste steun.","deels"],
  ["H4","Decay vermindert ruis","TTL/TrTL-verval verlaagt het aandeel valse positieven.","Mechanisch bewaakt in CI (lifecycle-tests); nog niet als aparte blinde vergelijking gemeten.","deels"],
  ["H5","Tussen-turn essentieel","De meerwaarde is niet bereikbaar binnen één beurt.","Het cross-turn mechanisme (W9f) is precies dit — bevestigd op veilige drempels.","gemeten"],
