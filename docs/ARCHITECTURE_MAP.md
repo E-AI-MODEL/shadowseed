@@ -16,7 +16,7 @@ Gebruik haar voor drie vragen:
 | Standaard meetketen | regressie, smoke en kleine benchmarks draaien | `src/shadowseed/benchmark/`, `tests/`, `.github/workflows/tests.yml` | standaard |
 | Aanvullende evidencelagen | open-set, adversarial, probe utility en later transfer zichtbaar maken | `src/shadowseed/evaluation/`, `benchmarks/open_review/`, `benchmarks/adversarial/`, `benchmarks/transfer/` | deels operationeel |
 | Rapportage | artifacts samenvatten tot een begrijpelijk rapport | `src/shadowseed/analysis/ssl45_result_analyzer.py` | automatisch |
-| Publicatie | laatste resultaten tonen aan repo- en wiki-bezoekers | `.github/workflows/publish-test-results.yml`, `docs/wiki/`, `site/` | automatisch |
+| Publicatie | verhaal en resultaten delen | `verhaal.html` (standalone), wiki-resultaten via `publish-test-results.yml` (zonder Pages) en `publish-wiki.yml` | automatisch |
 
 ## Evaluatielagen
 

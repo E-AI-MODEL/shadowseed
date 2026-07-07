@@ -2,6 +2,13 @@
 
 > Status: current
 > Date: 2026-05-22
+>
+> **Update 2026-07-07: GitHub Pages is als kanaal verwijderd.** De workflow
+> `pages-dashboard.yml` en de map `site/` bestaan niet meer;
+> `publish-test-results.yml` blijft bestaan maar publiceert alleen nog naar
+> de wiki (de Pages-stappen zijn eruit). Het publieke verhaal is één
+> standalone bestand (`verhaal.html` in de repo-root). Pages-vermeldingen
+> hieronder zijn historisch.
 > Evidence layer: Workflow map + publication routes
 > Current source: yes
 

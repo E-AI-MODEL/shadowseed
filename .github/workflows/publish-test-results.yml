@@ -13,8 +13,6 @@ env:
 permissions:
   actions: read
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   publish:
@@ -75,7 +73,7 @@ jobs:
             --source-workflow "Checks en benchmark-resultaten" \
             --source-run-id "$TEST_RUN_ID" \
             --repository "$GITHUB_REPOSITORY" \
-            --published-via wiki pages \
+            --published-via wiki \
             --path-key latest_path \
             --committed-back-to-main false \
             --require-files \
@@ -233,20 +231,3 @@ jobs:
             git commit -m "Publish latest test results (${SHA})"
             git push
           fi
-
-      - name: Bouw Pages-dashboard
-        run: |
-          set -euo pipefail
-          rm -rf _site
-          mkdir -p _site
-          cp -r site/. _site/
-          mkdir -p _site/results
-          cp -R results/. _site/results/
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-      - name: Zet dashboard live op GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
