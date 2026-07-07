@@ -129,9 +129,10 @@ De eerlijke lezing van beide assen samen:
   023 en 029; 4/7 consensus in 025). De baseline is hetzelfde frontier-model op
   z'n best — 50/50 betekent "even goed", niet "schaadt".
 - **Seed-effect-as:** in **~75% van alle beoordelingen** zegt de reviewer dat de
-  seed naar een beter antwoord helpt; ruis is zeldzaam (5/69) en geconcentreerd
-  waar de discipline (nog) niet dekt — round 022 vóór use-time discipline, en de
-  vroege t04-beurten in round 029.
+  seed naar een beter antwoord helpt; ruis is zeldzaam (5/69): 3× in round 022
+  (vóór de use-time discipline) en 2× op de vroege t04-beurten in round 029 —
+  dáár stond de discipline wel aan, maar de cap begrenst flooding, geen
+  off-topic-sturing (zie `round_029/human_review/RESULTS.md`).
 - **Conditioneel het sterkst:** aanscherpings- en valkuilvragen (round 025: alle
   t6-valkuilvragen consensus-SSL) en het HEALTH-domein (round 029: 3/3).
 
@@ -168,8 +169,9 @@ Buiten de bewijslagen, maar wél repo-feit en de **verdedigbare kern** van SSL
    positief.
 4. Op de **seed-effect-as**: reviewers oordelen in ~75% van alle gecommitte
    beoordelingen (52/69, rounds 022–029) dat de seed naar een beter antwoord
-   *helpt* — het sterkst op aanscherpings-/valkuilvragen en in HEALTH, met
-   ruis geconcentreerd waar de discipline (nog) niet dekt.
+   *helpt* — het sterkst op aanscherpings-/valkuilvragen en in HEALTH; de
+   zeldzame ruis zit vóór de use-time discipline (022) en in vroege-beurt
+   off-topic-sturing die de huidige cap niet uitsluit (029, t04).
 
 ## Wat SSL als geheel (nog) niet draagt
 

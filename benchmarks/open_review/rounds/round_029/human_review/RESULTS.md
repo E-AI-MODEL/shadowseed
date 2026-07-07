@@ -52,8 +52,9 @@ antwoordruimte. De vraag van de repo is niet "verslaat SSL de baseline?", maar
    50/50-uitkomst betekent "de seed-kant is even goed", niet "de seed schaadt".
 2. **Seed-effect-as (`seed_effect_after_choice`):** **6/9 "helpt"** (4×
    duidelijk, 2× een beetje), 1× geen verschil, 2× veroorzaakt ruis — beide
-   ruis-labels op de vroege t04-beurten, buiten het bereik van de bestaande
-   use-time discipline.
+   ruis-labels op de vroege t04-beurten. De use-time discipline stond dáár
+   gewoon aan (hij draait op elke beurt); de cap voorkomt flooding, maar
+   sluit off-topic-*sturing* door een gesurfacte seed niet uit.
 
 Op de tweede as — de as waar de kernclaim op leeft — helpt de seed dus in de
 meerderheid van de beoordelingen óók op gpt-4o, en is het probleem specifiek
@@ -65,15 +66,18 @@ en adresseerbaar (vroege-beurt-sturing), niet diffuus.
    ~5/7 (≈0.71) de SSL-kant. Op gpt-4o: win-rate 0.50, en 2 seed-effect-labels
    "veroorzaakt ruis" (waar round 025 er 0 had). De round-025-uitkomst was dus
    deels **gpt-4.1-specifiek** — transfer is modelafhankelijk.
-2. **De off-topic-sturing zit op de t04-beurten.** Round 023/025 dempten
-   seed-ruis op de latere (t05/t06) beurten met use-time discipline; deze run
-   bevat óók t04 (vroege advies-beurten), en juist dáár stuurde de seed het
+2. **De off-topic-sturing zit op de t04-beurten.** De use-time discipline
+   (round 023: `surface_top_k=2`, potentieel-geen-must) stond op élke beurt
+   aan, óók op t04 — de runner past hem vóór elk surfacen toe
+   (`ssl_session_suite.py`), en round 023/025 bevatten eveneens vroege
+   events onder dezelfde defaults. Toch stuurde de seed juist op t04 het
    antwoord naar een minder relevante invalshoek (ethiek bij EDU-t04,
    financieringsmodellen bij POLICY-t04) — door de reviewer als
    *seed-effect* "veroorzaakt ruis" gelabeld, niet als hallucinatie (de strikte
-   noise-kolommen bleven 5/5). De discipline die t05/t06 schoon houdt, dekt de
-   vroegste beurt blijkbaar niet — of gpt-4o weeft seeds minder scherp dan
-   gpt-4.1.
+   noise-kolommen bleven 5/5). De les is dus niet "t04 valt buiten de
+   discipline", maar: de huidige cap/potentieel-prompt voorkomt flooding, maar
+   sluit off-topic-*sturing* op vroege beurten niet uit — en gpt-4o weeft
+   seeds daar mogelijk minder scherp in dan gpt-4.1.
 3. **HEALTH transfereert wél schoon** (3/3, "helpt duidelijk" ×3): de
    psychologische-drijfveren-seed scherpt daar consistent aan. Transfer is dus
    niet alleen model- maar ook domeinafhankelijk.
@@ -83,8 +87,9 @@ en adresseerbaar (vroege-beurt-sturing), niet diffuus.
 **Laag F blijft "voorzichtig positief".** Op de winnaar-as begrenst deze ronde
 de claim (head-to-head-winst draagt niet zonder meer over naar gpt-4o); op de
 seed-effect-as bevestigt hij hem conditioneel (6/9 helpt, HEALTH 3/3 schoon).
-De open kwestie is specifiek: seed-sturing op de vroegste beurt (t04), waar de
-use-time discipline van round 023/025 nog niet dekt.
+De open kwestie is specifiek: de bestaande use-time discipline (die ook op t04
+actief was) begrenst *hoeveel* seeds meesturen, maar niet *of* een gesurfacte
+seed het antwoord off-topic stuurt op een vroege beurt.
 
 **Nodig voor een echt round-029-verdict:** ≥1 extra reviewer (bij voorkeur 2)
 op ditzelfde blinde pack, zodat consensus (niet één oordeel) de basis is —
