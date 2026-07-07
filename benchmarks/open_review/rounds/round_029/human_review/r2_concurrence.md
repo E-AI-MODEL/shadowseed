@@ -9,9 +9,12 @@ Reviewer 2 heeft **hetzelfde blinde pack** (run 28710838639, artifact
 of de answer key te zien**, en kwam per item op **dezelfde uitkomsten** als
 reviewer 1: dezelfde winnaarkeuzes én dezelfde seed-effect-richting.
 
-Daarmee voldoet round 029 aan het round-025-protocol (≥2 protocol-conforme,
-onafhankelijke blinde reviewers) en is de tabel in `RESULTS.md` een
-**consensus-tabel**, geen n=1-signaal meer.
+Daarmee is de tabel in `RESULTS.md` inhoudelijk een consensus-tabel — maar
+**níet audit-gelijkwaardig aan round 025**: daar zijn beide sheets
+(`r1_scores.csv` + `r2_scores.csv`) gecommit en narekenbaar, hier alleen r1's.
+Round 029 blijft daarom een **voorlopig consensus-verdict onder
+provenance-voorbehoud**; het wordt pas protocol-af zodra r2's eigen sheet als
+`r2_scores.csv` is gecommit.
 
 ## Provenance-kanttekening (eerlijk)
 

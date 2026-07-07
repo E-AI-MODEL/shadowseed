@@ -1,8 +1,10 @@
-# Round 029 — W10 transfer-replicatie op gpt-4o: consensus-verdict (2 reviewers)
+# Round 029 — W10 transfer-replicatie op gpt-4o: voorlopig consensus-verdict
 
-> **Status: VERDICT (consensus, 2 onafhankelijke blinde reviewers).** Reviewer
-> 2 scoorde hetzelfde pack zelfstandig blind en kwam per item op dezelfde
-> uitkomsten (`r2_concurrence.md`; provenance-kanttekening aldaar). Op de
+> **Status: VOORLOPIG VERDICT (consensus onder provenance-voorbehoud).**
+> Reviewer 2 scoorde hetzelfde pack zelfstandig blind en kwam per item op
+> dezelfde uitkomsten, maar diens sheet is niet als CSV gecommit — auditeerbaar
+> is alleen r1's sheet; definitief zodra `r2_scores.csv` er is
+> (`r2_concurrence.md`). Op de
 > winnaar-as reproduceert gpt-4o het round-025-verdict NIET schoon (win-rate
 > 0.50) — dat begrenst de head-to-head-transferclaim. Op de seed-effect-as
 > ("helpt de seed naar een beter antwoord?") is de consensus 6/9 "helpt", met
@@ -94,11 +96,13 @@ actief was) begrenst *hoeveel* seeds meesturen, maar niet *of* een gesurfacte
 seed het antwoord off-topic stuurt op een vroege beurt.
 
 **Verdict-basis:** 2 onafhankelijke blinde reviewers in consensus op alle 9
-items — hetzelfde protocol als round 025. Daarmee is dit een echt
-round-029-verdict: de head-to-head-winst van round 025 repliceert niet op
-gpt-4o (winnaar-as 0.50), het seed-effect ("helpt") repliceert wél in de
-meerderheid (6/9), met een specifiek, adresseerbaar zwak punt op de vroege
-beurten. Zie `r2_concurrence.md` voor de provenance-kanttekening bij r2.
+items — inhoudelijk hetzelfde protocol als round 025, maar **niet
+audit-gelijkwaardig**: round 025 heeft beide sheets gecommit, hier alleen
+r1's (`r2_concurrence.md`). Daarom een *voorlopig* verdict: de
+head-to-head-winst van round 025 repliceert niet op gpt-4o (winnaar-as 0.50),
+het seed-effect ("helpt") repliceert wél in de meerderheid (6/9), met een
+specifiek, adresseerbaar zwak punt op de vroege beurten. Definitief zodra
+r2's sheet als `r2_scores.csv` gecommit is.
 
 ## Bestanden
 

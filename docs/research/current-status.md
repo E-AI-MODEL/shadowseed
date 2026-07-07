@@ -18,10 +18,10 @@
 > 2026-06-30.
 >
 > **Update 2026-07-07:** W10-replicatie op gpt-4o gedraaid en blind gereviewd
-> — inmiddels een **consensus-verdict met 2 onafhankelijke reviewers** (round
-> 029, round-025-protocol; provenance-kanttekening in
-> `round_029/human_review/r2_concurrence.md`) — en alle payoff-conclusies
-> herwogen op **twee assen**: de
+> — inmiddels een **voorlopig consensus-verdict** (2 onafhankelijke blinde
+> reviewers; onder provenance-voorbehoud omdat alleen r1's sheet als CSV is
+> gecommit, zie `round_029/human_review/r2_concurrence.md`) — en alle
+> payoff-conclusies herwogen op **twee assen**: de
 > winnaar-as (A/B head-to-head, win-rate ≤0.5 — een artefact van het
 > reviewformaat, nooit hoofdmetriek) naast de **seed-effect-as** ("helpt de
 > seed naar een beter antwoord?"): ~75% "helpt" over alle gecommitte
