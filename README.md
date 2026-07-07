@@ -134,6 +134,7 @@ Belangrijk:
 
 Huidige bron- en researchstack:
 
+- `docs/ssl-het-verhaal.md` — het hele verhaal voor een breed publiek: herkomst, filosofie, bewijs en pad vooruit
 - `docs/00_shadow_seed_learning_4_6.md`
 - `docs/research/current-status.md`
 - `docs/research/ssl-integrale-evaluatie.md`

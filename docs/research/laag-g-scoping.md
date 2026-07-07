@@ -104,12 +104,26 @@ transfer-stellingen), distilgpt2 werd met díe labels gesondeerd. Sterkste laag
 lineair. Een null is hier het correcte antwoord (82M Engels model, NL-oordeel);
 signaal ≠ verdict, de null raakt lagen A–F niet. Zie round 028.
 
-**Nog te doen (open, geen must):**
+**Iteratie 6 (2026-07-07, gebouwd — run open): NL-capabel model + 24 cases.**
+Beide open punten uit iteratie 5 zijn nu bebouwd
+(`dialectic_falsification_transfer_v2.json`, round 030):
 
-1. een NL-capabel, groter gesondeerd model dat het oordeel plausibel kán
-   encoderen (fp16-downcast in de mirror voor >31m, of directe HF-load in de
-   Actions-route);
-2. meer cases zodat de permutatie-vloer lager wordt (nu 1/36 bij 9 items).
+1. **caseset 10 → 24** (zelfde brontekst voor vergelijkbaarheid): de 10
+   originele cases plus 14 nieuwe met bewuste ontwerp-intentie — 7 kandidaat
+   echt-ontbrekende punten, 5 bron-parafrases ("al gedekt"), 2 strijdige
+   stellingen — zodat beide klassen plausibel gevuld raken en de
+   permutatievloer daalt van 1/36 naar Monte-Carlo-niveau (~0.002, lokaal
+   geverifieerd met de fixture-keten);
+2. **NL-capabel gesondeerd model**: `GroNLP/gpt2-small-dutch` (GPT-2-
+   architectuur, dus de bestaande `.mlp.c_proj`-hooks passen ongewijzigd) via
+   de bestaande `activation-probe-real-verdict.yml` (geparametriseerd op
+   `probe_model_id` en `input_path`) — gpt-4.1 blijft de oordeelbron.
+
+De ontwerp-intenties in de notes zijn géén labels: labels komen op runtime
+van gpt-4.1, en de sonde meet vervolgens of het NL-model dat oordeel intern
+lineair codeert. Ook hier blijft een null een geldig antwoord — maar nu op
+een model dat het oordeel plausibel kán encoderen, met een vloer die laag
+genoeg is om een echt signaal te kunnen zien.
 
 Pas bij zo'n plausibel model is een positieve uitspraak over interne steun
 realistisch — en blijft ook dan een null een eerlijk, geldig antwoord.
