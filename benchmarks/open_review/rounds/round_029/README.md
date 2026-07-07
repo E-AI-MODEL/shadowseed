@@ -1,10 +1,11 @@
 # Round 029 — W10 transfer-replicatie op een tweede model (gpt-4o)
 
-> **Status: run geslaagd; eerste reviewer (n=1) binnen — replicatie komt
-> ZWAKKER terug dan round 025 (win-rate 0.50; 2 seed-effect-labels 'veroorzaakt
-> ruis' op t04, strikte noise-kolommen schoon),
-> zie `human_review/RESULTS.md`. Tempert de transfer-claim; ≥2 reviewers nodig
-> voor een verdict.** Doel: het round-025 transfer-verdict (voorzichtig positief, gpt-4.1)
+> **Status: run geslaagd; eerste reviewer (n=1) binnen. Op de winnaar-as komt
+> de replicatie zwakker terug dan round 025 (0.50; 2 seed-effect-labels
+> 'veroorzaakt ruis' op t04, strikte noise-kolommen schoon); op de
+> seed-effect-as helpt de seed óók hier in de meerderheid (6/9 "helpt",
+> HEALTH 3/3) — zie `human_review/RESULTS.md`. ≥2 reviewers nodig voor een
+> verdict.** Doel: het round-025 transfer-verdict (voorzichtig positief, gpt-4.1)
 > onafhankelijk repliceren op een ander modelgeslacht (gpt-4o), zodat laag F
 > steviger wordt dan "één model, n=7".
 

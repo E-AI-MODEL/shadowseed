@@ -31,6 +31,14 @@ niet?**
 | F — Domeintransfer | round 024 onbeslist (afkap); round 025 blind verdict voorzichtig positief (consensus-SSL 4/7 incl. alle valkuilvragen, baseline 1/7, 2 gespleten, ruis 0; n=7, één model) | eerste steun voor de tweede zin, binnen grenzen |
 | G — Modelintern | onderzoekslaag | niets |
 
+> **Update 2026-07-07:** de E/F-cellen hierboven zijn de stand van het besluit
+> (2026-07-02) en lezen alleen de winnaar-as. De conclusie-herweging op twee
+> assen — winnaar-as (artefact van het A/B-formaat) naast de
+> seed-effect-as ("helpt de seed naar een beter antwoord?": ~75% "helpt" over
+> rounds 022–029) — staat in `ssl-integrale-evaluatie.md`, sectie "Twee assen".
+> Dat is de uitwerking van het principe hieronder dat win-rates nooit
+> hoofdmetriek zijn; het besluit zelf (framing 3) verandert er niet door.
+
 Daarnaast, buiten de bewijslagen maar wél repo-feit:
 
 - het `shadowseed_agent`-contract dwingt de doctrine af op de invloedgrens

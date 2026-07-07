@@ -1,9 +1,11 @@
 # Round 029 — W10 transfer-replicatie op gpt-4o: eerste reviewer (n=1)
 
-> **Status: de replicatie op gpt-4o reproduceert het round-025-verdict NIET
-> schoon — hij komt zwakker en ruisiger terug. Dit tempert de transfer-claim
-> in plaats van hem te versterken.** Let op: dit is **één** reviewer; een
-> verdict vraagt ≥2 (round-025-protocol). Signaal, geen verdict.
+> **Status: op de winnaar-as reproduceert gpt-4o het round-025-verdict NIET
+> schoon (win-rate 0.50) — dat tempert de head-to-head-transferclaim. Op de
+> seed-effect-as ("helpt de seed naar een beter antwoord?") zegt dezelfde
+> reviewer 6/9 "helpt", met de 2 ruis-labels geconcentreerd op de vroege
+> t04-beurten.** Let op: dit is **één** reviewer; een verdict vraagt ≥2
+> (round-025-protocol). Signaal, geen verdict.
 
 ## Unblinding (geverifieerd)
 
@@ -36,6 +38,27 @@ de kant die de key als SSL aanwijst.
   `noise_or_hallucinated_relevance` leeg). Het gaat dus om **seed-gedreven
   off-topic-sturing/vernauwing**, niet om verzonnen ruis of hallucinatie.
 
+## Twee assen — waarom "win-rate 0.50" niet de hele conclusie is
+
+Het blinde A/B-formaat produceert *logischerwijs* een winnaar-metriek: de
+reviewer moet A of B kiezen, ook als beide antwoorden goed zijn. Maar de
+doctrine (`positioning-synthese.md`) stelt expliciet dat win-rate **nooit de
+hoofdmetriek** is — de review is een kwaliteitscontrole op door SSL geopende
+antwoordruimte. De vraag van de repo is niet "verslaat SSL de baseline?", maar
+"**helpt SSL naar een beter antwoord?**". Dat zijn twee assen:
+
+1. **Winnaar-as (A/B head-to-head):** SSL 4 / baseline 4 / 1 tie = 0.50.
+   Interpretatie-nuance: de baseline is hier óók gpt-4o op z'n best; een
+   50/50-uitkomst betekent "de seed-kant is even goed", niet "de seed schaadt".
+2. **Seed-effect-as (`seed_effect_after_choice`):** **6/9 "helpt"** (4×
+   duidelijk, 2× een beetje), 1× geen verschil, 2× veroorzaakt ruis — beide
+   ruis-labels op de vroege t04-beurten, buiten het bereik van de bestaande
+   use-time discipline.
+
+Op de tweede as — de as waar de kernclaim op leeft — helpt de seed dus in de
+meerderheid van de beoordelingen óók op gpt-4o, en is het probleem specifiek
+en adresseerbaar (vroege-beurt-sturing), niet diffuus.
+
 ## Wat dit betekent (eerlijk)
 
 1. **Zwakker dan round 025.** Op gpt-4.1 kozen de twee blinde reviewers elk
@@ -57,10 +80,11 @@ de kant die de key als SSL aanwijst.
 
 ## Verdict-status
 
-**Laag F blijft "voorzichtig positief" — en wordt door deze ronde begrensd, niet
-versterkt.** De replicatie laat zien dat de round-025-winst niet zonder meer
-overdraagt naar een tweede model: op gpt-4o is de kwaliteit reviewer-, model- én
-beurttype-afhankelijk, met terugkerende ruis op de vroege beurten.
+**Laag F blijft "voorzichtig positief".** Op de winnaar-as begrenst deze ronde
+de claim (head-to-head-winst draagt niet zonder meer over naar gpt-4o); op de
+seed-effect-as bevestigt hij hem conditioneel (6/9 helpt, HEALTH 3/3 schoon).
+De open kwestie is specifiek: seed-sturing op de vroegste beurt (t04), waar de
+use-time discipline van round 023/025 nog niet dekt.
 
 **Nodig voor een echt round-029-verdict:** ≥1 extra reviewer (bij voorkeur 2)
 op ditzelfde blinde pack, zodat consensus (niet één oordeel) de basis is —
