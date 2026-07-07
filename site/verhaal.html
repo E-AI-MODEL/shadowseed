@@ -333,9 +333,11 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
   gpt-4.1 velt houdbaarheidsoordelen, een klein model wordt op die labels gesondeerd — met
   token-gerichte pooling en een <b>permutatietoets</b> die elk "signaal" tegen gehusselde labels houdt.</p>
   <div class="card chartcard">
-    <h4>Permutatie-p per run (lager = echter signaal; ● = gemeten, − = haalbare vloer)</h4>
-    <p class="chartsub">Een p nabij de vloer zou signaal zijn. Alle runs: geen scheiding boven toeval — drie schone nulls.</p>
-    <div class="scroll"><svg id="gchart" viewBox="0 0 640 230" width="100%" role="img" aria-label="Permutatie-p-waarden ver boven de haalbare vloer in alle drie de runs"></svg></div>
+    <h4>Permutatie-p per run met echte oordeelbron (● = gemeten, − = haalbare vloer)</h4>
+    <p class="chartsub">Een p nabij de vloer zou signaal zijn; beide metingen zitten er ver boven — geen scheiding.
+    Een pythia-14m-kruischeck in round 028 raakte wél de vloer (p ≈ 0.028), maar is in het dossier als
+    tiny-class-artefact gelezen (minderheidsklasse n=2, 6 lagen getest) — die plotten we bewust niet als schone null.</p>
+    <div class="scroll"><svg id="gchart" viewBox="0 0 640 230" width="100%" role="img" aria-label="Permutatie-p-waarden ver boven de haalbare vloer in beide runs met echte oordeelbron"></svg></div>
   </div>
   <p>Round 028 kon nog worden weggelegd als "Engels model, scheve klassen". Round 030 sloot die
   uitvluchten: een <b>Nederlands getraind model</b>, 24 cases, vloer 0.002 — en nóg geen lineair
@@ -588,9 +590,9 @@ $("as-win").addEventListener("click",function(){curAs="win";this.setAttribute("a
 /* ---------- laag G chart ---------- */
 function drawG(){
   var svg=$("gchart");svg.innerHTML="";var W=640,H=230,L=52,R=20,T=16,B=52;
-  var runs=[["028 · distilgpt2 (EN)",0.833,0.028],["028 · pythia-14m (EN)",0.111,0.028],["030 · gpt2-small-dutch (NL)",0.206,0.002]];
+  var runs=[["028 · distilgpt2 (EN, gpt-4.1-labels)",0.833,0.028],["030 · gpt2-small-dutch (NL, gpt-4.1-labels)",0.206,0.002]];
   var y=function(v){return T+(1-v)*(H-T-B)};
-  var x=function(i){return L+40+i*(W-L-R-80)/(runs.length-1)};
+  var x=function(i){return L+110+i*(W-L-R-220)/(runs.length-1)};
   var g="";
   [0,0.25,0.5,0.75,1].forEach(function(v){g+="<line class='tickline' x1='"+L+"' y1='"+y(v)+"' x2='"+(W-R)+"' y2='"+y(v)+"'/>"+
     "<text x='"+(L-8)+"' y='"+(y(v)+4)+"' text-anchor='end'>"+v+"</text>";});
