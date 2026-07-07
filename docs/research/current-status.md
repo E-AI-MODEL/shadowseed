@@ -16,6 +16,16 @@
 > gpt-4.1 als oordeelbron gaf een schoon nulresultaat, rounds 026–028,
 > `laag-g-scoping.md`). De snapshot hieronder beschrijft de stand per
 > 2026-06-30.
+>
+> **Update 2026-07-07:** W10-replicatie op gpt-4o gedraaid en (n=1) gereviewd
+> (round 029), en alle payoff-conclusies herwogen op **twee assen**: de
+> winnaar-as (A/B head-to-head, win-rate ≤0.5 — een artefact van het
+> reviewformaat, nooit hoofdmetriek) naast de **seed-effect-as** ("helpt de
+> seed naar een beter antwoord?"): ~75% "helpt" over alle gecommitte
+> beoordelingen (52/69, rounds 022–029); de zeldzame ruis zit vóór de
+> use-time discipline (022) en in vroege-beurt off-topic-sturing die de
+> huidige cap niet uitsluit (029, t04). Zie `ssl-integrale-evaluatie.md`,
+> sectie "Twee assen".
 
 ## Doel van dit document
 
