@@ -80,16 +80,16 @@ waaronder **álle t6-valkuilvragen** —, consensus-baseline 1/7, 2 gespleten;
 ("sturen bij aanscherping") **repliceert cross-domein**. Grenzen: n=7, één
 model, auteur-gekozen thema's. Op de seed-effect-as was round 025
 unaniem: **14/14 labels "helpt"** (r1 7/7, r2 7/7), 0× ruis.
-**Replicatie op gpt-4o (round 029) tempert de winnaar-as:** eerste reviewer
-(n=1) gaf win-rate 0.50 en labelde het seed-effect op de vroege (t04) beurten
-als "veroorzaakt ruis" (seed-gedreven off-topic-sturing; de strikte
-noise-/hallucinatie-kolommen bleven schoon) — de head-to-head-winst van round
-025 is dus deels gpt-4.1-specifiek en model-/beurttype-afhankelijk. Maar op de
-seed-effect-as helpt de seed óók op gpt-4o in de meerderheid: **6/9 "helpt"**,
-en HEALTH transfereert schoon (3/3, "helpt duidelijk").
-Een echt round-029-verdict vraagt ≥2 reviewers; tot dan blijft F "voorzichtig
-positief": begrensd op de winnaar-as, conditioneel bevestigd op de
-seed-effect-as.
+**Replicatie op gpt-4o (round 029, verdict met 2 onafhankelijke blinde
+reviewers in consensus) begrenst de winnaar-as:** win-rate 0.50, met
+seed-effect "veroorzaakt ruis" op de vroege (t04) beurten (seed-gedreven
+off-topic-sturing; de strikte noise-/hallucinatie-kolommen bleven schoon) —
+de head-to-head-winst van round 025 is dus deels gpt-4.1-specifiek en
+model-/beurttype-afhankelijk. Maar op de seed-effect-as repliceert de kern
+wél: **6/9 "helpt"** consensus, en HEALTH transfereert schoon (3/3, "helpt
+duidelijk"). F blijft daarmee "voorzichtig positief": begrensd op de
+winnaar-as, over twee modellen bevestigd op de seed-effect-as
+(provenance-kanttekening bij r2: `round_029/human_review/r2_concurrence.md`).
 
 ### Laag G — Modelinterne research (H-neuron-spoor) · **Eerste iteratie doorlopen — schoon nul**
 Twee sporen (`laag-g-scoping.md`):
@@ -120,7 +120,7 @@ eerlijk gerapporteerd, maar hij is **niet de vraag van de repo**
 | 022 (vóór discipline) | 16 | 12 | 1 | **3** |
 | 023 (met discipline) | 30 | 20 | 10 | 0 |
 | 025 (transfer, gpt-4.1) | 14 | **14** | 0 | 0 |
-| 029 (transfer, gpt-4o, n=1) | 9 | 6 | 1 | 2 (beide t04) |
+| 029 (transfer, gpt-4o; consensus 2 reviewers, geteld als 9) | 9 | 6 | 1 | 2 (beide t04) |
 | **Totaal** | **69** | **52 (~75%)** | 12 | 5 |
 
 De eerlijke lezing van beide assen samen:
@@ -179,8 +179,8 @@ Buiten de bewijslagen, maar wél repo-feit en de **verdedigbare kern** van SSL
   ≤0.5 op de winnaar-as (E); de seed helpt vaker dan hij wint;
 - dat elke promoted seed waardevol is — laag C blijft gemengd;
 - brede domein-onafhankelijkheid — W10 is n=7 op gpt-4.1; de gpt-4o-replicatie
-  (round 029, n=1 reviewer) kwam op de winnaar-as zwakker terug (0.50,
-  seed-gedreven off-topic-sturing op t04) → head-to-head-transfer is
+  (round 029, 2 reviewers in consensus) kwam op de winnaar-as zwakker terug
+  (0.50, seed-gedreven off-topic-sturing op t04) → head-to-head-transfer is
   modelafhankelijk (F);
 - **modelinterne steun** — op kleine modellen niet aangetoond (G, correcte null);
 - volledige productmatige betrouwbaarheid van automatisch seed-gebruik.
@@ -201,8 +201,11 @@ Buiten de bewijslagen, maar wél repo-feit en de **verdedigbare kern** van SSL
 
 ## Waar het bewijs het dunst is (eerlijke prioriteit)
 
-1. **F — transfer:** round 029 heeft nog maar n=1 reviewer; ≥1 extra reviewer
-   op hetzelfde gpt-4o-pack is de meest waardevolle volgende bewijsstap.
+1. **E/F — vroege-beurt-sturing:** de use-time discipline begrenst flooding
+   maar niet off-topic-sturing op vroege beurten (round 029, t04) — een
+   gerichte disciplinestap + hertest is de meest waardevolle volgende
+   bewijsstap. Voor F verder: een derde model of meer items; en r2's eigen
+   round-029-sheet alsnog als CSV committen zou de provenance sluiten.
 2. **E — payoff-kwaliteit:** de seed-effect-as (helpt ~75%) leunt op
    reviewer-labels met beperkte n per ronde; een taaktype waar SSL ook de
    head-to-head structureel wint is nog niet geïsoleerd, en de vroege-beurt

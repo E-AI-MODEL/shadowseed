@@ -1,11 +1,11 @@
 # Round 029 — W10 transfer-replicatie op een tweede model (gpt-4o)
 
-> **Status: run geslaagd; eerste reviewer (n=1) binnen. Op de winnaar-as komt
-> de replicatie zwakker terug dan round 025 (0.50; 2 seed-effect-labels
+> **Status: VERDICT — 2 onafhankelijke blinde reviewers in consensus
+> (round-025-protocol; zie `human_review/r2_concurrence.md`). Op de winnaar-as
+> komt de replicatie zwakker terug dan round 025 (0.50; 2 seed-effect-labels
 > 'veroorzaakt ruis' op t04, strikte noise-kolommen schoon); op de
 > seed-effect-as helpt de seed óók hier in de meerderheid (6/9 "helpt",
-> HEALTH 3/3) — zie `human_review/RESULTS.md`. ≥2 reviewers nodig voor een
-> verdict.** Doel: het round-025 transfer-verdict (voorzichtig positief, gpt-4.1)
+> HEALTH 3/3) — zie `human_review/RESULTS.md`.** Doel: het round-025 transfer-verdict (voorzichtig positief, gpt-4.1)
 > onafhankelijk repliceren op een ander modelgeslacht (gpt-4o), zodat laag F
 > steviger wordt dan "één model, n=7".
 
@@ -41,7 +41,7 @@ artifact_digest: sha256:756e672efa827b528721422da80387789d53f68144cd895da20081f3
   mid-zin-afkap in de gelezen voorbeelden) — indicatie dat het 1600-budget de
   afkap laag houdt, zoals round 025.
 
-## Klaar wanneer (analoog aan round 025)
+## Klaar wanneer (analoog aan round 025) — ✅ afgerond 2026-07-07
 
 1. **Vóór de review**: download het artifact (id 8082998649), verifieer de
    digest, en controleer in de summary dat
@@ -58,7 +58,9 @@ artifact_digest: sha256:756e672efa827b528721422da80387789d53f68144cd895da20081f3
 
 ## Claimgrens
 
-Deze ronde levert een pack, geen verdict. Pas na de blinde review is een
-transfer-uitspraak op een tweede model aan de orde. Het mechanisme-vuren op
-gpt-4o is bevestigd; de *kwaliteit* van de geopende antwoordruimte blijft de
-reviewervraag.
+De blinde review is gedaan (2 reviewers, consensus) en het verdict staat in
+`human_review/RESULTS.md`: geen head-to-head-replicatie van round 025 op
+gpt-4o (winnaar-as 0.50), wél replicatie van het seed-effect in de meerderheid
+(6/9 "helpt", HEALTH 3/3), met vroege-beurt off-topic-sturing als specifiek
+zwak punt. Grenzen: n=9 items, auteur-gekozen thema's, en r2's eigen sheet is
+niet als CSV gecommit (`r2_concurrence.md`).
