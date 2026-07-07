@@ -342,34 +342,33 @@ Eén zin, gedekt door alle data:
 - **De payoff is gemeten, blind, over twee modellen en vier rondes** — de
   cijfers hierboven.
 - **De modelinterne verkenning is een instrument geworden.** Zes iteraties
-  in drie dagen: van naïeve meting, via token-gerichte pooling en
+  in vier dagen: van naïeve meting, via token-gerichte pooling en
   permutatiecontrole, naar een keten waarin gpt-4.1 houdbaarheidsoordelen
-  velt en een klein model op die labels wordt gesondeerd. De eerlijke
-  uitkomst tot nu toe: kleine Engelstalige modellen coderen dat Nederlandse
-  oordeel niet lineair — een correct nulresultaat dat het instrument
-  valideert. De volgende run staat geladen: een **Nederlands getraind
-  model** op een **24-case set** met een statistische vloer die veertien
-  keer lager ligt.
+  velt en een klein model op die labels wordt gesondeerd — inmiddels ook
+  gedraaid op een **Nederlands getraind model** met een 24-case set en een
+  statistische vloer van 0.002 (round 030). De eerlijke uitkomst, drie
+  runs op rij: kleine modellen (≤124M) coderen dat oordeel niet lineair —
+  drie correcte nulresultaten die het instrument valideren en de vraag
+  scherp doorgeven aan grotere modellen. Een team dat zijn eigen
+  aantrekkelijkste hypothese drie keer durft af te wijzen, is een team
+  waarvan je de positieve resultaten kunt geloven.
 
 ## 8. Het pad vooruit
 
 **Nu direct (weken):**
 
-1. **Round 030 — de Nederlandse sonde.** Voor het eerst een gesondeerd model
-   dat het oordeel plausibel kán encoderen. Signaal of null: beide zijn
-   publicabel.
-2. **De vroege-beurt-discipline.** De laatste bekende ruisbron (seed-sturing
+1. **De vroege-beurt-discipline.** De laatste bekende ruisbron (seed-sturing
    op de openingsbeurt) dichten en blind hertesten — de aanpak die eerder de
    overeenstemming vervijfvoudigde, toegepast op het laatste gat.
-3. **Derde model, meer items** voor de transferlaag, zodat "voorzichtig
+2. **Derde model, meer items** voor de transferlaag, zodat "voorzichtig
    positief" kan doorgroeien naar "gerepliceerd, robuust".
 
 **Daarna (maanden):**
 
-4. **Generatieve seeds.** Van "dit ontbreekt" naar "dit zou er kunnen
+3. **Generatieve seeds.** Van "dit ontbreekt" naar "dit zou er kunnen
    staan" — speculatieve seeds die per constructie door dialectische
    falsificatie moeten voordat ze ook maar in de schaduw mogen hangen.
-5. **Interne steun (het H-neuron-spoor).** Recent werk identificeerde
+4. **Interne steun (het H-neuron-spoor).** Recent werk identificeerde
    hallucinatie-geassocieerde neuronen in LLM's (Gao et al., 2025), met
    drie bevindingen die voor SSL direct relevant zijn: minder dan 0,1‰ van
    de neuronen volstaat om zo'n epistemische toestand te coderen; dat
@@ -380,13 +379,14 @@ Eén zin, gedekt door alle data:
    vraagt of er een intern signaal bestaat voor de *houdbaarheid van het
    afwezige*. In de verre uitbouw is `weight` daar zelfs als
    activatie-schaling te interpreteren (het "niveau 2" uit de theorie).
-   Het meetinstrument daarvoor ligt klaar.
-6. **Zwaardere teksten.** Payoff meten op dichte, moeilijke documenten waar
+   Het meetinstrument is gebouwd en drievoudig gevalideerd; de vraag staat
+   klaar voor modellen van de orde waarop het precedent is gevonden.
+5. **Zwaardere teksten.** Payoff meten op dichte, moeilijke documenten waar
    het gemiste punt echt pijn doet.
 
 **De horizon:**
 
-7. **De schaduwlaag als standaardcomponent.** Elke serieuze agent-stack
+6. **De schaduwlaag als standaardcomponent.** Elke serieuze agent-stack
    heeft een geheugenlaag nodig die invloed laat verdienen in plaats van
    geeft. SSL is het bewijs dat zo'n laag bouwbaar, testbaar en auditeerbaar
    is. De theorie wijst zelf aan waar de waarde het grootst is: overal waar

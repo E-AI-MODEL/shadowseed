@@ -1,9 +1,11 @@
 # Round 030 — Laag G iteratie 6: NL-capabel model + 24 cases
 
-> **Status: gebouwd, run open.** Doel: de twee open punten uit iteratie 5
-> (round 028) tegelijk sluiten — een gesondeerd model dat gpt-4.1's
-> Nederlandse houdbaarheidsoordeel plausibel kán encoderen, en genoeg cases
-> om de permutatievloer onder een betekenisvol niveau te krijgen.
+> **Status: gedraaid (2026-07-07) — schone null, zie `RESULTS.md`.** Doel
+> was: de twee open punten uit iteratie 5 (round 028) tegelijk sluiten — een
+> gesondeerd model dat gpt-4.1's Nederlandse houdbaarheidsoordeel plausibel
+> kán encoderen, en genoeg cases om de permutatievloer onder een
+> betekenisvol niveau te krijgen. Beide zijn gesloten; het antwoord op de
+> sonde-vraag blijft nul (sterkste laag p 0.2056, vloer 0.002).
 
 ## Wat er verandert t.o.v. round 028
 
