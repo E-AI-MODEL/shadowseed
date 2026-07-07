@@ -250,7 +250,7 @@ bewust géén totaalscore. De lat per laag:
 | **D** Adversarial | Weert de Gate misleidende seeds? | Eerste echte evidence — de Gate verslaat zwakkere baselines |
 | **E** Payoff | Maken gevalideerde seeds vervolgwerk beter? | Mechanisme bevestigd; twee-assen-lezing hieronder |
 | **F** Transfer | Werkt het buiten de bekende domeinen? | Voorzichtig positief over twee modellen |
-| **G** Modelintern | Is er steun in de interne activaties? | Instrument gebouwd; eerlijke nulls; NL-model geladen |
+| **G** Modelintern | Is er steun in de interne activaties? | Instrument gebouwd; drie eerlijke nulls t/m een NL-model (round 030) — vraag door naar grotere modellen |
 
 Die ladder is bovendien geen achteraf bedachte ordening: hij toetst de
 hypotheses die het programma vooraf formuleerde. Laag D meet letterlijk H11
@@ -342,7 +342,7 @@ Eén zin, gedekt door alle data:
 - **De payoff is gemeten, blind, over twee modellen en vier rondes** — de
   cijfers hierboven.
 - **De modelinterne verkenning is een instrument geworden.** Zes iteraties
-  in vier dagen: van naïeve meting, via token-gerichte pooling en
+  in vijf dagen: van naïeve meting, via token-gerichte pooling en
   permutatiecontrole, naar een keten waarin gpt-4.1 houdbaarheidsoordelen
   velt en een klein model op die labels wordt gesondeerd — inmiddels ook
   gedraaid op een **Nederlands getraind model** met een 24-case set en een

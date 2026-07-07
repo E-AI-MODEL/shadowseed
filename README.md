@@ -160,6 +160,8 @@ Historische referentie:
 
 ## Meer lezen
 
+- `docs/ssl-het-verhaal.md` — het hele verhaal: herkomst, filosofie, wetenschap, bewijs en pad vooruit
+- [Het verhaal — interactief](https://e-ai-model.github.io/shadowseed/verhaal.html) — dezelfde inhoud als visuele, interactieve pagina
 - [GitHub Wiki Home](https://github.com/E-AI-MODEL/shadowseed/wiki) — uitgebreide uitleg en achtergrond
 - [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/) — actuele resultaten per laag
 - [Latest Test Results](https://github.com/E-AI-MODEL/shadowseed/wiki/Latest-Test-Results)
