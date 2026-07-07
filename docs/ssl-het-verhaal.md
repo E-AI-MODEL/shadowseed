@@ -235,7 +235,7 @@ Dat is het golden path: **van waarneming naar verdiende, verantwoorde,
 herroepbare invloed.** Elke stap bestaat in code, is getest (354 tests in
 CI) en is na te spelen.
 
-## 5. De toetsing: wij vallen ons eigen werk harder aan dan wie ook
+## 5. De toetsing: zo streng als we hem konden maken
 
 Een mooi mechanisme is nog geen bewijs. SSL hanteert daarom een
 bewijsladder van zeven lagen (A t/m G), waarin elke laag een eigen vraag
