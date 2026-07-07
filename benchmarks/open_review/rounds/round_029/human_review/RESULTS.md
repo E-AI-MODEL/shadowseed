@@ -1,11 +1,15 @@
-# Round 029 — W10 transfer-replicatie op gpt-4o: eerste reviewer (n=1)
+# Round 029 — W10 transfer-replicatie op gpt-4o: voorlopig consensus-verdict
 
-> **Status: op de winnaar-as reproduceert gpt-4o het round-025-verdict NIET
-> schoon (win-rate 0.50) — dat tempert de head-to-head-transferclaim. Op de
-> seed-effect-as ("helpt de seed naar een beter antwoord?") zegt dezelfde
-> reviewer 6/9 "helpt", met de 2 ruis-labels geconcentreerd op de vroege
-> t04-beurten.** Let op: dit is **één** reviewer; een verdict vraagt ≥2
-> (round-025-protocol). Signaal, geen verdict.
+> **Status: VOORLOPIG VERDICT (consensus onder provenance-voorbehoud).**
+> Reviewer 2 scoorde hetzelfde pack zelfstandig blind en kwam per item op
+> dezelfde uitkomsten, maar diens sheet is niet als CSV gecommit — auditeerbaar
+> is alleen r1's sheet; definitief zodra `r2_scores.csv` er is
+> (`r2_concurrence.md`). Op de
+> winnaar-as reproduceert gpt-4o het round-025-verdict NIET schoon (win-rate
+> 0.50) — dat begrenst de head-to-head-transferclaim. Op de seed-effect-as
+> ("helpt de seed naar een beter antwoord?") is de consensus 6/9 "helpt", met
+> de 2 ruis-labels geconcentreerd op de vroege t04-beurten en HEALTH 3/3
+> schoon.
 
 ## Unblinding (geverifieerd)
 
@@ -15,7 +19,7 @@ bevestigd**: elke reviewer-motivatie noemt de extra invalshoek (ethiek,
 psychologische factoren, sociale rechtvaardigheid, financiering) aan precies
 de kant die de key als SSL aanwijst.
 
-| Item | SSL-kant | winnaar (r1) | uitkomst | seed-effect |
+| Item | SSL-kant | winnaar (consensus r1=r2) | uitkomst | seed-effect |
 |---|---|---|---|---|
 | CONV_EDU-t04 | A | B | baseline | **veroorzaakt ruis** |
 | CONV_EDU-t05 | A | gelijk | tie | geen verschil |
@@ -27,7 +31,7 @@ de kant die de key als SSL aanwijst.
 | CONV_POLICY-t05 | B | B | **SSL** | helpt duidelijk |
 | CONV_POLICY-t06 | B | A | baseline | helpt een beetje |
 
-## Cijfers (reviewer 1)
+## Cijfers (consensus; r2 bevestigde r1 per item, zie `r2_concurrence.md`)
 
 - **SSL 4 / baseline 4 / 1 tie → win-rate 4/8 = 0.50.**
 - Per domein: **HEALTH 3/3 SSL** (schone winst), **EDU 0/2** (+1 tie),
@@ -91,13 +95,20 @@ De open kwestie is specifiek: de bestaande use-time discipline (die ook op t04
 actief was) begrenst *hoeveel* seeds meesturen, maar niet *of* een gesurfacte
 seed het antwoord off-topic stuurt op een vroege beurt.
 
-**Nodig voor een echt round-029-verdict:** ≥1 extra reviewer (bij voorkeur 2)
-op ditzelfde blinde pack, zodat consensus (niet één oordeel) de basis is —
-exact zoals round 025. Tot dan is dit één eerlijk, temperend datapunt.
+**Verdict-basis:** 2 onafhankelijke blinde reviewers in consensus op alle 9
+items — inhoudelijk hetzelfde protocol als round 025, maar **niet
+audit-gelijkwaardig**: round 025 heeft beide sheets gecommit, hier alleen
+r1's (`r2_concurrence.md`). Daarom een *voorlopig* verdict: de
+head-to-head-winst van round 025 repliceert niet op gpt-4o (winnaar-as 0.50),
+het seed-effect ("helpt") repliceert wél in de meerderheid (6/9), met een
+specifiek, adresseerbaar zwak punt op de vroege beurten. Definitief zodra
+r2's sheet als `r2_scores.csv` gecommit is.
 
 ## Bestanden
 
 - `r1_scores.csv` — reviewer 1 (blind).
+- `r2_concurrence.md` — reviewer 2: onafhankelijke blinde scoring, per item
+  gelijk aan r1 (instemming; eigen sheet niet als CSV gecommit).
 - Answer key: reproduceerbaar uit code (seed 45, count 9); geverifieerd tegen
   de seed-content in de motivaties. Canonieke key in het run-artifact
   (`ssl_session_blind_ab_answer_key.json`, run 28710838639, artifact 8082998649,
