@@ -46,7 +46,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .sans{font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
 a{color:var(--accent)}
 main{max-width:960px;margin:0 auto;padding:0 20px 90px}
-section{scroll-margin-top:24px}
+section{scroll-margin-top:58px}
 h1,h2,h3{text-wrap:balance;line-height:1.15}
 h2{font-size:clamp(26px,4vw,34px);margin:80px 0 6px}
 h3{font-size:20px;margin:36px 0 8px}
@@ -76,8 +76,35 @@ button{font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:po
 button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 button:disabled{opacity:.45;cursor:not-allowed}
 button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+/* topbar */
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .in{max-width:960px;margin:0 auto;padding:8px 20px;display:flex;gap:4px;align-items:center;overflow-x:auto}
+.topbar a{font-family:system-ui,sans-serif;font-size:12.5px;font-weight:600;color:var(--ink2);
+  text-decoration:none;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.topbar a:hover{background:var(--bg2);color:var(--ink)}
+.topbar .spacer{flex:1}
+#themabtn{flex:0 0 auto;font-size:12.5px;padding:6px 12px;border-radius:99px}
+/* definitions */
+.def{border-bottom:1.5px dotted var(--accent);cursor:help}
+/* timeline */
+.tl{display:flex;gap:8px;overflow-x:auto;padding:14px 2px 10px;scroll-snap-type:x proximity}
+.tl button{flex:0 0 auto;scroll-snap-align:start;display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  min-width:118px;border-radius:11px;padding:10px 12px;text-align:left}
+.tl button b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.tl button small{font-family:system-ui,sans-serif;font-size:11.5px;color:var(--ink2);line-height:1.35}
+.tl button[aria-selected="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,var(--card))}
+.tlpane{min-height:96px}
+/* hypotheses */
+.hypo{display:grid;gap:8px;margin:16px 0}
+@media(min-width:720px){.hypo{grid-template-columns:1fr 1fr}}
+.hypo details{margin:0;padding:10px 14px}
+.hypo summary{display:flex;gap:10px;align-items:center;font-size:14px}
+.hypo summary .hnr{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:var(--accent)}
+.hypo summary .pill{margin-left:auto}
+.hypo p{font-size:13.5px;color:var(--ink2);font-family:system-ui,sans-serif;margin:8px 0 2px}
 /* hero */
-header.hero{padding:64px 0 8px}
+header.hero{padding:34px 0 8px}
 .hero h1{font-size:clamp(34px,6vw,56px);margin:6px 0 10px}
 .hero .sub{font-size:19px;color:var(--ink2);max-width:62ch}
 /* seed-sim */
@@ -150,6 +177,13 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 
+<div class="topbar sans"><div class="in">
+  <a href="#probleem">Probleem</a><a href="#idee">Idee</a><a href="#wetenschap">Wetenschap</a>
+  <a href="#pad">Golden path</a><a href="#toetsing">Toetsing</a><a href="#cijfers">Cijfers</a>
+  <a href="#laagg">In het model</a><a href="#vooruit">Vooruit</a>
+  <span class="spacer"></span>
+  <button id="themabtn" aria-label="wissel licht/donker">🌗 thema</button>
+</div></div>
 <nav class="dots sans" aria-label="hoofdstukken"></nav>
 <div class="tt" id="tt" role="status"></div>
 
@@ -214,9 +248,9 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
     <div class="card"><b>Atomisch</b><p class="klein" style="margin:8px 0 0">Niet <i>"security, privacy en schaalbaarheid ontbreken"</i>
       (een analyseplan). Wél: <i>"AVG-compliance bij verwerking van medische hartslagdata."</i>
       Eén toetsbaar punt per seed.</p></div>
-    <div class="card"><b>Twee velden</b><p class="klein" style="margin:8px 0 0"><span class="mono">trace</span> = aanwezigheid: vervalt (TTL),
-      leeft op bij herkenning (TrTL). <span class="mono">weight</span> = invloed: start op 0.0
-      en stijgt alléén via de Validation Gate.</p></div>
+    <div class="card"><b>Twee velden</b><p class="klein" style="margin:8px 0 0"><span class="mono def" data-def="trace">trace</span> = aanwezigheid: vervalt (<span class="def" data-def="TTL">TTL</span>),
+      leeft op bij herkenning (<span class="def" data-def="TrTL">TrTL</span>). <span class="mono def" data-def="weight">weight</span> = invloed: start op 0.0
+      en stijgt alléén via de <span class="def" data-def="Validation Gate">Validation Gate</span>.</p></div>
     <div class="card"><b>Drie probes</b><p class="klein" style="margin:8px 0 0">Een gevalideerde seed stuurt gerichte vervolgactie:
       een betere vraag (Socratisch), een scherpere zoekactie (retrieval) of een aanval op
       zichzelf (dialectisch).</p></div>
@@ -286,6 +320,16 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
   compenseert een zwakke nooit. En de ladder toetst de hypotheses die het programma in de
   4.5-specificatie <i>vooraf</i> formuleerde (H1–H12). Klik een laag voor de stand:</p>
   <div class="ladder sans" id="ladder"></div>
+  <h3>Twaalf hypotheses, vooraf opgeschreven — de eerlijke stand</h3>
+  <p>De 4.5-specificatie formuleerde H1–H12 vóórdat er één meting lag. Klap open voor
+  wat elke hypothese zegt en waar het bewijs vandaag staat:</p>
+  <div class="hypo sans" id="hypo"></div>
+  <h3>De reis, ronde voor ronde</h3>
+  <p>Van de eerste open-set reviews tot de Nederlandse sonde — klik een mijlpaal:</p>
+  <div class="card" style="padding:10px 16px 16px">
+    <div class="tl sans" id="tl" role="tablist"></div>
+    <div class="tlpane" id="tlpane" role="tabpanel"></div>
+  </div>
   <div class="card chartcard" style="margin-top:26px">
     <h4>Leren van elke meting: reviewer-overeenstemming per ronde</h4>
     <p class="chartsub">Blinde reviews; na round 022 werd de gebruiksdiscipline ingevoerd (max. 2 seeds, potentieel — geen must)</p>
@@ -331,7 +375,7 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
   <p>Bestaat er, zoals bij hallucinatie-neuronen (Gao et al. 2025), een intern signaal voor de
   <i>houdbaarheid van het afwezige</i>? Zes instrument-iteraties in vijf dagen bouwden een keten:
   gpt-4.1 velt houdbaarheidsoordelen, een klein model wordt op die labels gesondeerd — met
-  token-gerichte pooling en een <b>permutatietoets</b> die elk "signaal" tegen gehusselde labels houdt.</p>
+  token-gerichte pooling en een <b class="def" data-def="permutatietoets">permutatietoets</b> die elk "signaal" tegen gehusselde labels houdt.</p>
   <div class="card chartcard">
     <h4>Permutatie-p per run met echte oordeelbron (● = gemeten, − = haalbare vloer)</h4>
     <p class="chartsub">Een p nabij de vloer zou signaal zijn; beide metingen zitten er ver boven — geen scheiding.
@@ -617,6 +661,99 @@ var obs=new IntersectionObserver(function(es){es.forEach(function(e){
   if(e.isIntersecting){var i=secs.indexOf(e.target.id);
     [].forEach.call(dots.children,function(d,j){d.classList.toggle("on",j===i)});}});},{rootMargin:"-40% 0px -55% 0px"});
 secs.forEach(function(s){var el=document.getElementById(s);if(el)obs.observe(el);});
+
+/* ---------- theme toggle (standalone) ---------- */
+var root=document.documentElement;
+try{var saved=localStorage.getItem("ssl-thema");if(saved)root.setAttribute("data-theme",saved);}catch(e){}
+$("themabtn").addEventListener("click",function(){
+  var cur=root.getAttribute("data-theme")||
+    (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  var next=cur==="dark"?"light":"dark";
+  root.setAttribute("data-theme",next);
+  try{localStorage.setItem("ssl-thema",next)}catch(e){}
+});
+
+/* ---------- hypotheses H1-H12 ---------- */
+var hypos=[
+ ["H1","Detectie","Een LLM detecteert in een tweede pass systematisch atomische afwezigheden.","Detectie werkt op onbekende tekst; kwaliteit is de open vraag: relevant, soms triviaal (laag C).","deels"],
+ ["H2","Gewichtloosheid","Seeds met weight 0.0 verstoren de basisprestatie niet.","Gemeten als do-no-harm-ontwerp door de hele payoff-lijn: gewichtloos = geen effect, per constructie én per meting.","gemeten"],
+ ["H3","Reactivatie versterkt","Door herkenning bevestigde seeds zijn bij promotie nuttiger dan willekeurige.","Cluster-recurrence (W9e/f) bouwt hierop en vuurt op veilige drempels — eerste steun.","deels"],
+ ["H4","Decay vermindert ruis","TTL/TrTL-verval verlaagt het aandeel valse positieven.","Mechanisch bewaakt in CI (lifecycle-tests); nog niet als aparte blinde vergelijking gemeten.","deels"],
+ ["H5","Tussen-turn essentieel","De meerwaarde is niet bereikbaar binnen één beurt.","Het cross-turn mechanisme (W9f) is precies dit — bevestigd op veilige drempels.","gemeten"],
+ ["H6","Trager maar beter","Eerste beurt kost iets; latere beurten worden rijker.","Op de seed-effect-as bevestigd (~75% helpt); op de winnaar-as begrensd (≤0.5).","gemeten"],
+ ["H7","Niveau-equivalentie","Extern (niveau 1) en modelintern (niveau 2) tonen dezelfde dynamiek.","Open: niveau 2 is exploratief; drie schone nulls op kleine modellen (laag G).","open"],
+ ["H8","Emergente detectie superieur","Vrije detectie verslaat vaste gap-categorieën.","De repo werkt volledig emergent; de head-to-head met categorische detectie is niet apart gemeten.","open"],
+ ["H9","Navigatie-efficiëntie","Actieve probing geeft sneller vollediger begrip.","Probe-utility heeft eerste behavioral evidence (laag E-instap); efficiëntie-claim nog open.","deels"],
+ ["H10","Constellation-waarde","Clusters voorspellen relevantie beter dan losse seeds.","Cluster-recurrence gebruikt clusters operationeel; de voorspellende claim is niet apart getoetst.","open"],
+ ["H11","Echo-reductie","De Gate halveert minstens de valse promoties t.o.v. puur herhalings-promotie.","Gemeten in laag D: de Gate verslaat trace-only-baselines op de adversarial set.","gemeten"],
+ ["H12","Gebruikersperceptie","Gebruikers ervaren Socratische probes als intelligenter.","Nog niet gemeten — vraagt een gebruikersstudie.","open"]];
+var hy=$("hypo");
+hypos.forEach(function(h){
+  var pill=h[4]==="gemeten"?"<span class='pill groen'>gemeten ✓</span>":
+           h[4]==="deels"?"<span class='pill goud'>eerste evidence</span>":
+           "<span class='pill grijs'>open</span>";
+  var d=document.createElement("details");
+  d.innerHTML="<summary><span class='hnr'>"+h[0]+"</span> "+h[1]+" "+pill+"</summary>"+
+    "<p><i>"+h[2]+"</i></p><p>"+h[3]+"</p>";
+  hy.appendChild(d);});
+
+/* ---------- research timeline ---------- */
+var mijlpalen=[
+ ["005–007","Open-set opent","κ≈0.63","Eerste mens- en AI-reviews op onbekende tekst: SSL vindt relevante seeds — maar 'gevonden ≠ waardevol' wordt de les van laag C."],
+ ["019","Eerste payoff-positief","92–98%","W9c/d: cross-turn seeds maken latere antwoorden rijker; twee blinde reviewers zijn het 92% en 98% eens met de AI-jury (onder-doctrine drempels, n=10)."],
+ ["020–021","Veilige drempels","W9e/f","Cluster-recurrence + representative-only promotie laten het mechanisme op veilige doctrine-drempels vuren — veiligheid en payoff verzoend."],
+ ["022","De gespleten spiegel","0.125","Eerste blinde review op veilige drempels: reviewers oneens op 7/8. De ruis zit in gevalideerde seeds → gebruiksdiscipline wordt dé vraag."],
+ ["023","Discipline werkt","0.67","Max. 2 seeds, potentieel — geen must: overeenstemming ×5, ruis vrijwel weg, seed-effect 20/30 'helpt'."],
+ ["025","Transfer-verdict","14/14","Drie nieuwe domeinen, gpt-4.1, 2 blinde reviewers: consensus op álle valkuilvragen, 14/14 'helpt', ruis 0, overeenstemming ~0.71."],
+ ["026–028","Het instrument","3 iteraties","Laag G: dialectische falsificatie + activatie-sonde met stelling-pooling en permutatiecontrole; gpt-4.1 als echte oordeelbron geeft een schone null op distilgpt2."],
+ ["029","Twee assen","6/9","Replicatie op gpt-4o (2 reviewers, voorlopige consensus): winnaar-as 0.50, seed-effect-as 6/9 'helpt', HEALTH 3/3 — de twee-assen-lezing wordt canon."],
+ ["030","De Nederlandse sonde","p 0.206","NL-getraind model, 24 cases, vloer 0.002: derde schone null. Kleine modellen dragen het signaal niet; de vraag gaat door naar grotere."]];
+var tl=$("tl");
+mijlpalen.forEach(function(m,i){
+  var b=document.createElement("button");b.setAttribute("role","tab");
+  b.innerHTML="<b>round "+m[0]+"</b><small>"+m[1]+"</small><span class='pill goud'>"+m[2]+"</span>";
+  b.addEventListener("click",function(){setTL(i)});tl.appendChild(b);});
+function setTL(i){
+  [].forEach.call(tl.children,function(b,j){b.setAttribute("aria-selected",j===i)});
+  var m=mijlpalen[i];
+  $("tlpane").innerHTML="<p class='eyebrow' style='margin:10px 0 4px'>round "+m[0]+" — "+m[1]+"</p><p style='margin:0'>"+m[3]+"</p>";}
+setTL(8);
+
+/* ---------- definition popovers ---------- */
+var defs={
+ "shadow seed":"Eén klein, toetsbaar ontbrekend punt — gewichtloos geboren.",
+ "trace":"Aanwezigheid: start 2.0, vervalt exponentieel (TTL), leeft op bij herkenning (TrTL). Trace > 0 = de seed leeft; hij stuurt nog niets.",
+ "weight":"Invloed: start 0.0 en stijgt uitsluitend via de Validation Gate. Daalt bij contradictie of falsificatie.",
+ "TTL":"Time-to-Live: zonder herkenning vervalt de trace — te lang sluimerend betekent verdwijnen (EXPIRED, terminaal).",
+ "TrTL":"Trigger-to-Live: raakt nieuwe context het thema, dan leeft de trace op en reset de sluimer-klok.",
+ "Validation Gate":"De enige route naar invloed: herhaalde herkenning + externe steun + geen doorslaggevende contradictie.",
+ "agent-contract":"Tweede sleutel op het gebruiksmoment: weight > 0, PROMOTED, gelogde promotie, geen contradictie — anders geen invloed.",
+ "permutatietoets":"Houdt elk 'signaal' tegen gehusselde labels: haalt toeval hetzelfde, dan is het geen signaal."};
+document.querySelectorAll(".def").forEach(function(el){
+  var key=el.getAttribute("data-def")||el.textContent.trim();
+  var txt=defs[key];if(!txt)return;
+  el.setAttribute("tabindex","0");
+  el.addEventListener("mousemove",function(e){showTT(e,"<b>"+key+"</b><br>"+txt)});
+  el.addEventListener("mouseleave",hideTT);
+  el.addEventListener("focus",function(){var r=el.getBoundingClientRect();
+    showTT({clientX:r.left,clientY:r.bottom},"<b>"+key+"</b><br>"+txt)});
+  el.addEventListener("blur",hideTT);});
+
+/* ---------- count-up tiles ---------- */
+if(!reduced){
+  var seen=new WeakSet();
+  var cobs=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(!e.isIntersecting||seen.has(e.target))return;seen.add(e.target);
+    var el=e.target,fin=el.textContent,m=fin.match(/^([~≈]?)(\d+)([%]?)(\/(\d+))?$/);
+    if(!m)return;
+    var pre=m[1]||"",target=+m[2],suf=m[3]||"",den=m[5]?"/"+m[5]:"";
+    var t0=null;
+    function step(t){if(t0===null)t0=t;var k=Math.min(1,(t-t0)/900);
+      el.textContent=pre+Math.round(target*(0.3+0.7*k*k))+suf+den;
+      if(k<1)requestAnimationFrame(step);else el.textContent=fin;}
+    requestAnimationFrame(step);});},{threshold:0.6});
+  document.querySelectorAll(".tile .big").forEach(function(el){cobs.observe(el)});
+}
 
 /* redraw charts on theme flips */
 function drawAll(){drawAgree();drawAs();drawG();}
