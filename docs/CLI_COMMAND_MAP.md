@@ -70,6 +70,18 @@ Deze commands zijn nuttig voor diagnose, infrastructuur of optionele verdiepende
 
 Legacy aliases blijven voorlopig ondersteund voor compatibiliteit.
 
+### Aanvullende handmatige research-routes (voor volledigheid)
+
+| Command | Rol | Status |
+|---|---|---|
+| `run-ssl-session` | cross-turn sessiesuite (W9f/W10); bron van de blinde A/B-packs | handmatige research |
+| `run-wild-payoff` | payoff op wilde/onbekende teksten (W4) | handmatige research |
+| `run-adversarial-payoff` | payoff onder adversarial condities | handmatige research |
+| `run-generative-payoff` | payoff-verkenning voor generatieve seeds | handmatige research |
+| `run-probe-feedback-behavior-suite` | gedragssuite voor probe-feedback-lifecycle (laag E-instap) | handmatige research |
+| `run-ssl-vs-rag` | SSL-seed vs RAG head-to-head harness (fixture-getest) | handmatige research |
+| `list-open-set-models` | toon dispatchbare open-set modellen | utility |
+
 ## 5. Applicatie- en demoroutes
 
 Deze commands demonstreren de gevalideerde mechaniek in gebruik, maar voeden geen bewijslaag.

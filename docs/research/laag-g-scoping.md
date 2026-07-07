@@ -1,8 +1,8 @@
 # Laag G scoping: van dialectische falsificatie naar modelintern signaal
 
 > Status: current
-> Date: 2026-07-04
-> Evidence layer: Laag G — scoping + eerste iteratieve metingen (rounds 026–028)
+> Date: 2026-07-07
+> Evidence layer: Laag G — scoping + iteratieve metingen (rounds 026–030)
 > Current source: yes
 > Refs: PvA V2 ("scoping-notitie of eerste sonde"), visie-item 4
 
@@ -35,7 +35,7 @@ falsificatie precies op de seeds die zouden mogen sturen. Deterministisch
 getest via een fixture-backend; echte runs volgen dezelfde backend-vlaggen als
 de andere routes.
 
-**Spoor 2 — H-neuron-achtige interne sonde (harnas gebouwd, echte run open).**
+**Spoor 2 — H-neuron-achtige interne sonde (harnas gebouwd; echte runs gedraaid in rounds 026–030).**
 Gao et al. 2025 (arXiv 2512.01797, code thunlp/H-Neurons, MIT) identificeren
 hallucinatie-geassocieerde neuronen in LLM's. De Laag G-vraag voor SSL: is er
 *interne* steun voor wat extern als ontbrekend/onhoudbaar wordt gemeten?
