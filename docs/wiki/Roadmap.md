@@ -32,7 +32,7 @@ De actuele output staat daarna op:
 - [Latest Test Results](Latest-Test-Results)
 - [SSL 4.5 Analysis](SSL-45-Analysis)
 - [Dashboard](Dashboard)
-- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+- `verhaal.html` in de repo-root (standalone; het Pages-dashboard is opgeheven)
 
 ## Eerstvolgende stappen
 

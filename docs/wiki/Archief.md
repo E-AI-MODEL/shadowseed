@@ -24,4 +24,4 @@ bevindingen), maar ze staan bewust buiten de hoofd-leesvolgorde.
 - [Paper naar Seed Pipeline](Paper-naar-Seed-Pipeline)
 - [Conceptueel Overzicht](Conceptueel-Overzicht) en [Waarom SSL niet naïef is](Waarom-SSL-niet-naief-is) — opgegaan in [Wat is SSL](Wat-is-SSL)
 - [Visueel verhaal](Visueel-Verhaal)
-- [Dashboard](Dashboard) — zie nu het [Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+- [Dashboard](Dashboard) — het Pages-dashboard is opgeheven (2026-07-07); actuele resultaten staan in [Latest Test Results](Latest-Test-Results)
