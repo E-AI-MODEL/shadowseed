@@ -16,7 +16,7 @@ Zie `docs/research/positioning-synthese.md` voor waarom de discipline — en nie
 
 - **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* of onderbelicht blijft (gevonden seeds zijn relevant, maar kunnen triviaal of weinig toetsbaar zijn — laag C), bewaart dat als een gewichtloze shadow seed, en laat alleen Gate-gevalideerde seeds meesturen in vervolgactie of antwoordruimte — in de agent-laag bovendien contract-gecheckt op het gebruiksmoment.
 - **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt via TTL en leeft op via TrTL) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
-- **Status:** werkende research-harness met sterke lifecycle- en regressielaag. Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de eerste blinde review was reviewer-afhankelijk (round 022, 1/8 overeenstemming), met use-time discipline steeg de overeenstemming naar ~0.67 en verdween de ruis vrijwel (round 023). De uitkomst leest op twee assen: op de winnaar-as wint SSL de head-to-head niet (win-rate ≤0.5 tegen hetzelfde model), op de seed-effect-as oordelen reviewers in ~75% van alle gecommitte beoordelingen (rounds 022–029) dat de seed naar een beter antwoord *helpt* — zie `docs/research/ssl-integrale-evaluatie.md`. De brede claim blijft bewust begrensd.
+- **Status:** werkende research-harness. De kern (het cross-turn mechanisme: een gevalideerde seed verrijkt een later antwoord) is bevestigd op veilige instellingen en blind getoetst over vier rondes en twee modellen. De uitkomst leest op twee assen: head-to-head ongeveer gelijkspel tegen hetzelfde model op z'n best, maar in ~75% van alle blinde oordelen hielp de seed het antwoord vooruit (zie `docs/research/ssl-integrale-evaluatie.md`). De brede claim blijft bewust begrensd.
 
 > Kernregel: één seed = één klein, toetsbaar ontbrekend punt.
 
@@ -42,23 +42,23 @@ SSL hanteert één laag-taal voor bewijs, gelijk aan `docs/00_shadow_seed_learni
 | **B** Kleine benchmark | Werkt SSL op vaste, controleerbare casussen? | **Bruikbaar** — bewust smal |
 | **C** Open-set seedkwaliteit | Goede seeds op onbekende tekst, zonder ground truth? | **Eerste evidence, gemengd** — relevantie hoog, trivialiteit/testability blijft risico |
 | **D** Adversarial Gate | Weert de Gate misleidende gaps? | **Eerste echte evidence** — kleine maar duidelijke stresstest |
-| **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **W9f-mechanisme vuurt; use-time discipline gedraaid en blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel weg; seed-effect 20/30 "helpt", winnaar-as ≤0.5)** |
+| **E** Probe utility / payoff | Leveren promoted seeds betere vervolgstappen of antwoordruimte op? | **Cross-turn mechanisme vuurt; use-time discipline gedraaid en blind getoetst (round 023: overeenstemming ~0.67, ruis vrijwel weg; seed-effect 20/30 "helpt", winnaar-as ≤0.5)** |
 | **F** Domein- en taaktransfer | Werkt dezelfde doctrine buiten de bekende domeinen? | **Voorzichtig positief (round 025, 2 blinde reviewers): consensus-SSL 4/7 (alle valkuilvragen), seed-effect 14/14 "helpt", ruis 0. Replicatie op gpt-4o (round 029, voorlopige consensus van 2 reviewers; alleen r1-sheet gecommit): winnaar-as 0.50, seed-effect 6/9 "helpt" — begrensd op de winnaar-as, voorlopig over twee modellen bevestigd op de seed-effect-as** |
 | **G** Modelintern | Steun in interne activaties? | **Zes iteraties doorlopen (rounds 026–030): dialectische falsificatie + activatie-sonde met gpt-4.1-oordeel → drie schone nulls, incl. NL-getraind model met 24 cases en vloer 0.002 (round 030); geen interne steun aangetoond op kleine modellen (≤124M)** |
 
 De standaard workflow (`Checks en benchmark-resultaten`) publiceert de regressie- en kleine-benchmarklagen plus aanvullende evidencelagen. Manual OpenAI-runs via `Research · SSL Benefit (OpenAI)` kunnen zwaardere payoff- en `ssl-session` artifacts maken, inclusief blind A/B-reviewpack voor cross-turn sessies.
 
-## W9f-status
+## Het cross-turn mechanisme (de kern, in gewone taal)
 
-Het W9f cross-turn *mechanisme* is bevestigd op veilige drempels; de *payoff-kwaliteit* is een baseline-kandidaat, nog niet afgesloten.
+Het hart van SSL is dat een seed uit een eerdere gespreksbeurt een later antwoord mag verrijken — maar pas nadat hij door de Gate is gevalideerd en op het gebruiksmoment opnieuw is gecontroleerd. Dat mechanisme is bevestigd op veilige instellingen. (In oudere documenten heet dit werkpakket "W9f"; die code betekent verder niets.)
 
-Voorop staat de discipline: gewichtloos tot verdiend, contract-gecheckt op het gebruiksmoment, auditeerbaar en falsifieerbaar. De kernclaim is dus niet dat SSL elk antwoord beter maakt of GPT-4.1 algemeen verslaat. De claim is smaller:
+De kernclaim is bewust smal. Niet: SSL maakt elk antwoord beter of verslaat een frontier-model. Wel:
 
-> SSL kan latente sessiecontext gewichtloos vasthouden, later valideren of surfacen, en daardoor aanvullende antwoordruimte openen die er anders niet was.
+> SSL kan een opgemerkt gemis gewichtloos vasthouden, later valideren, en daardoor antwoordruimte openen die er anders niet was.
 
-De blind A/B-review wordt gelezen als kwaliteitscontrole op door SSL geopende antwoordruimte, niet als klassieke model-vs-model benchmark — zonder SSL zouden die antwoordvarianten niet als optie hebben bestaan. Dat is een geldige herkadering, maar het *verandert* de lat, het verwijdert hem niet: de eerste blinde review op veilige drempels kwam **gespleten** terug (twee reviewers oneens op 7/8; round 022). De ruis zat bovendien in *gevalideerde, promoted* seeds, dus het open punt is use-time discipline: wanneer mag een promoted seed het antwoord sturen?
+De blinde A/B-reviews zijn de kwaliteitscontrole daarop. De uitkomst leest op twee assen (zie de lagen-tabel hierboven en `docs/research/ssl-integrale-evaluatie.md`): head-to-head is het ongeveer gelijkspel tegen hetzelfde model op z'n best, maar in ~75% van alle blinde oordelen zeggen reviewers dat de seed het antwoord vooruit hielp — en de leercurve is zichtbaar: de eerste ronde kwam gespleten terug (round 022), één gebruiksregel later was de ruis vrijwel weg (round 023) en repliceerde het patroon cross-domein (round 025) en op een tweede model (round 029).
 
-Zie `docs/research/w9f-evaluatieconclusie.md` en `benchmarks/open_review/rounds/round_022/human_review/`.
+Verdieping: `docs/research/w9f-evaluatieconclusie.md` (historische naamgeving) en `benchmarks/open_review/rounds/`.
 
 ## Wat de resultaten wel en niet betekenen
 
@@ -69,7 +69,7 @@ Wat je voorzichtig wel mag zeggen:
 - De repo kan meten of bekende gaps gevonden worden.
 - De Gate heeft eerste echte adversarial evidence.
 - Probe-feedback heeft eerste behavioral evidence.
-- W9f toont dat cross-turn surfaced seeds bruikbare extra antwoordruimte kunnen openen.
+- Het cross-turn mechanisme toont dat eerder opgemerkte, gevalideerde seeds bruikbare extra antwoordruimte kunnen openen.
 
 Wat je nog niet breed moet zeggen:
 
@@ -77,7 +77,7 @@ Wat je nog niet breed moet zeggen:
 - dat SSL elk antwoord verbetert;
 - dat elke promoted seed waardevol is;
 - dat fixture-smokes gelijk staan aan echte modelvalidatie;
-- dat open-set, adversarial, probe utility en W9f samen al volledige scenario-onafhankelijke eindvalidatie vormen.
+- dat de huidige lagen samen al volledige scenario-onafhankelijke eindvalidatie vormen.
 
 ## Snelstart
 
