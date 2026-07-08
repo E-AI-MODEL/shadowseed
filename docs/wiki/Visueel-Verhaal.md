@@ -1,6 +1,6 @@
 # Visueel verhaal SSL 4.5
 
-> Status: achtergrondmateriaal. Deze pagina vertelt het conceptuele verhaal. Gebruik voor actuele status en resultaten eerst [Latest Test Results](Latest-Test-Results), [SSL 4.5 Analysis](SSL-45-Analysis), [Dashboard](Dashboard) en het [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/).
+> Status: achtergrondmateriaal. Deze pagina vertelt het conceptuele verhaal. Gebruik voor actuele status en resultaten eerst [Latest Test Results](Latest-Test-Results), [SSL 4.5 Analysis](SSL-45-Analysis), [Dashboard](Dashboard).
 
 Deze pagina brengt de bruikbare elementen uit de aangeleverde SSL-decks samen in één doorlopend verhaal. De dia's zijn niet als losse slide-dump geplaatst. Ze zijn verwerkt als narratieve bouwstenen met compacte diagrammen en captions.
 
@@ -224,7 +224,7 @@ Deze pagina is achtergrondmateriaal. De actuele route loopt via:
 - [Latest Test Results](Latest-Test-Results)
 - [SSL 4.5 Analysis](SSL-45-Analysis)
 - [Dashboard](Dashboard)
-- [GitHub Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+- `verhaal.html` in de repo-root (standalone interactief verhaal)
 
 Gerelateerde achtergrondpagina's:
 

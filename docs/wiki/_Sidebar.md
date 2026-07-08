@@ -11,7 +11,7 @@
 ## Live
 
 - [Latest Test Results](Latest-Test-Results)
-- [Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+- [Verhaal (interactieve download)](https://github.com/E-AI-MODEL/shadowseed/blob/main/verhaal.html)
 
 ## Achtergrond
 

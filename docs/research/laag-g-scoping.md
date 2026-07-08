@@ -58,8 +58,10 @@ Gebouwd (`activation_probe.py` + `run-activation-probe`):
 - Actions-route: `distilgpt2` (run 28639320528, artifact `activation-probe`
   id 8058091841) — sterkste laag `transformer.h.2.mlp.c_proj`,
   cosine-afstand **0.0054**;
-- sandbox-route via de git-model-mirror: `EleutherAI/pythia-14m` (branch
-  `model-mirror/EleutherAI-pythia-14m`) — alle 6 GPTNeoX-MLP-lagen gevangen,
+- sandbox-route via de git-model-mirror: `EleutherAI/pythia-14m` (destijds
+  branch `model-mirror/EleutherAI-pythia-14m`; de mirror-branches zijn na
+  afronding opgeruimd en met de `model-mirror`-workflow op elk moment opnieuw
+  te genereren) — alle 6 GPTNeoX-MLP-lagen gevangen,
   sterkste `gpt_neox.layers.1.mlp`, cosine-afstand **0.0013**.
 
 Lezing, eerlijk: de mechaniek werkt end-to-end op echte gewichten in twee

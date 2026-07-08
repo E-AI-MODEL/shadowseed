@@ -18,7 +18,7 @@ Pas na validatie via de Validation Gate mag hij invloed krijgen.
 4. **[Roadmap](Roadmap)** — waar het heen gaat
 
 Live snapshot van de laatste run: [Latest Test Results](Latest-Test-Results) ·
-[Pages dashboard](https://e-ai-model.github.io/shadowseed/)
+[Het verhaal — interactief](https://github.com/E-AI-MODEL/shadowseed/blob/main/verhaal.html) (download het bestand en open het lokaal)
 
 Historische en achtergrondpagina's staan in het **[Archief](Archief)**.
 
