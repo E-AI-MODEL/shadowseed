@@ -377,11 +377,11 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
   </div>
   <p style="margin-top:22px">Nu de cijfers. Bij elk beoordeeld antwoord noteerden de beoordelaars
   ook apart: hielp de extra aantekening hier, maakte hij niets uit, of zat hij in de weg?
-  Alle 69 blinde oordelen bij elkaar:</p>
+  Alle 83 blinde oordelen bij elkaar:</p>
   <div class="card chartcard" id="assenkaart">
-    <h4 id="askop">Hielp de seed het antwoord vooruit? Alle 69 blinde oordelen</h4>
+    <h4 id="askop">Hielp de seed het antwoord vooruit? Alle 83 blinde oordelen</h4>
     <p class="chartsub" id="assub">Per testronde, rechtstreeks uit de vastgelegde beoordelingsformulieren</p>
-    <div class="scroll"><svg id="aschart" viewBox="0 0 640 260" width="100%" role="img" aria-label="Gestapelde staven per ronde met de oordelen"></svg></div>
+    <div class="scroll"><svg id="aschart" viewBox="0 0 640 260" width="100%" role="img" aria-label="Gestapelde staven per ronde met de oordelen, rounds 022 tot en met 031"></svg></div>
     <div class="legend" id="aslegend"></div>
     <div class="toggle sans" role="group" aria-label="kies weergave" style="margin-top:10px">
       <button id="as-seed" aria-pressed="true">Hielp het?</button>
@@ -391,16 +391,16 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
       <div class="scroll"><table class="num" id="astabel"></table></div></details>
   </div>
   <div class="tiles">
-    <div class="tile"><span class="big num">52/69</span><small>van alle blinde oordelen: "de aantekening
-      hielp het antwoord vooruit". Dat is ongeveer 75 procent</small></div>
+    <div class="tile"><span class="big num">57/83</span><small>van alle blinde oordelen: "de aantekening
+      hielp het antwoord vooruit". Dat is ongeveer 69 procent</small></div>
     <div class="tile"><span class="big num">14/14</span><small>in de zwaarste testronde (drie nieuwe
       onderwerpen) zeiden béide beoordelaars bij élk antwoord: dit hielp</small></div>
-    <div class="tile"><span class="big num">0</span><small>keer verzon een seed iets. De strikte
-      controles op verzinsels bleven in alle rondes schoon</small></div>
+    <div class="tile"><span class="big num">0</span><small>keer verzon een seed feiten, in alle rondes.
+      Afleiding door een seed wordt apart gelabeld en eerlijk meegeteld (13 van 83)</small></div>
   </div>
   <p>Eerlijk erbij: als je alleen telt wie de vergelijking "wint", is het ongeveer gelijkspel.
   Logisch, want de tegenstander is hetzelfde topmodel op zijn best. Gelijkspel betekent daar:
-  even goed, en in driekwart van de gevallen kwam er iets waardevols bij dat er anders niet was.
+  even goed, en in ruim twee derde van de gevallen kwam er iets waardevols bij dat er anders niet was.
   Wissel hierboven maar van weergave.</p>
   <details class="tech"><summary>🔧 Voor wie de techniek in wil: hoe streng is de toets?</summary>
     <p>Blinde A/B-reviews met antwoordsleutel in quarantaine tot na de scoring; de ontsleuteling wordt
@@ -436,10 +436,13 @@ footer{margin-top:90px;border-top:1px solid var(--line);padding-top:22px;color:v
   <p class="eyebrow">Stap 7</p>
   <h2>Eerlijk over de grenzen</h2>
   <p>Wie overtuigen wil, moet ook laten zien wat er níet lukte. Twee dingen horen erbij.</p>
-  <p><b>Eén.</b> De hulp is niet gelijk verdeeld. Bij vragen die om verdieping vragen is de
-  schaduwlaag op zijn sterkst. Op de allereerste beurten van een gesprek kan een seed het
-  antwoord soms een zijpad op sturen. Dat gebeurde 2 keer in 69 oordelen, het is precies
-  gelokaliseerd, en het staat bovenaan de werklijst.</p>
+  <p><b>Eén.</b> De hulp is niet gelijk verdeeld. Bij sterke fit, vragen die om verdieping
+  vragen, is de schaduwlaag op zijn sterkst. Maar een matig passende aantekening kan hinderen:
+  eerst zagen we dat op vroege gespreksbeurten (2 oordelen in ronde 029), en na een gerichte
+  ingreep verdween dat daar, maar bleef zo'n aantekening in de hertest juist op latere beurten
+  terugduwen (8 van 14 oordelen in ronde 031). Dat is eerlijk gemeten, precies gelokaliseerd,
+  en het staat bovenaan de werklijst: een aantekening die al een antwoord stuurde, niet meteen
+  wéér laten meesturen.</p>
   <p><b>Twee.</b> We zochten ook ín het AI-model naar een spoor van dit alles, in de interne
   rekenlagen. Drie zorgvuldige metingen zeiden drie keer: niets gevonden. Dat is geen mislukking.
   Het meetinstrument bewees juist dat het "nee" durft te zeggen, ook toen "ja" aantrekkelijker was.
@@ -608,14 +611,14 @@ var lagen=[
  ["B","Werkt het op vaste casussen?","Bruikbaar","Bewust smal gehouden: regressie en kleine benchmark."],
  ["C","Zijn gevonden seeds goed op onbekende tekst?","Gemengd","Relevant, maar soms triviaal. Gevonden is niet automatisch waardevol."],
  ["D","Houdt de poort misleidend lokaas tegen?","Eerste echte evidence","De poort verslaat zwakkere promotie-regels op een adversarial set."],
- ["E","Maken goedgekeurde seeds antwoorden beter?","~75% helpt","52 van 69 blinde oordelen zeggen: dit hielp. Head-to-head is het gelijkspel tegen hetzelfde topmodel."],
+ ["E","Maken goedgekeurde seeds antwoorden beter?","~69% helpt","57 van 83 blinde oordelen zeggen: dit hielp. Head-to-head is het gelijkspel tegen hetzelfde topmodel; matig passende seeds die blijven terugduwen zijn de gemeten zwakte."],
  ["F","Werkt het ook buiten de bekende onderwerpen?","Voorzichtig positief","Gerepliceerd over twee AI-modellen; op het tweede model voorlopig (één beoordelingsformulier vastgelegd)."],
  ["G","Zit er een spoor in het model zelf?","Drie keer nee","Drie zorgvuldige nulmetingen tot en met een Nederlandstalig model. De vraag gaat door naar grotere modellen."]];
 var ld=$("ladder");
 lagen.forEach(function(l){
   var d=document.createElement("div");d.className="rij";
   d.innerHTML="<button aria-expanded='false'><span class='lt'>"+l[0]+"</span><span class='vraag'>"+l[1]+
-    "</span><span class='pill "+(l[2]==="Sterk"||l[2]==="Voorzichtig positief"?"groen":l[2]==="~75% helpt"?"goud":"grijs")+"'>"+l[2]+
+    "</span><span class='pill "+(l[2]==="Sterk"||l[2]==="Voorzichtig positief"?"groen":l[2]==="~69% helpt"?"goud":"grijs")+"'>"+l[2]+
     "</span></button><div class='body'>"+l[3]+"</div>";
   d.querySelector("button").addEventListener("click",function(){
     var open=d.classList.toggle("open");this.setAttribute("aria-expanded",open)});
@@ -631,7 +634,7 @@ function hideTT(){tt.style.opacity=0;}
 function drawAgree(){
   var svg=$("agree");if(!svg)return;svg.innerHTML="";
   var W=640,H=240,L=52,R=20,T=18,B=42;
-  var pts=[["022",0.125,"verdeeld: oneens op 7 van de 8"],["023",0.67,"na de gebruiksregel: ruis vrijwel weg"],["025",0.71,"zwaarste ronde: hoogste overeenstemming"]];
+  var pts=[["022",0.125,"verdeeld: oneens op 7 van de 8"],["023",0.67,"na de gebruiksregel: ruis vrijwel weg"],["025",0.71,"zwaarste ronde: hoogste overeenstemming"],["031",0.43,"hertest: reviewers weer verdeeld; de les staat in stap 7"]];
   var x=function(i){return L+i*(W-L-R)/(pts.length-1)};
   var y=function(v){return T+(1-v)*(H-T-B)};
   var g="";
@@ -662,13 +665,14 @@ var winData=[
  ["022","verdeeld","beoordelaars te zeer oneens voor een uitslag",null],
  ["023","≈0.40","iets vaker koos men het antwoord zonder schaduwlaag",0.40],
  ["025","4 van 7","consensus voor de schaduwlaag-kant, 1 voor de andere, 2 verdeeld",0.57],
- ["029","gelijkspel","4 tegen 4, met 1 onbeslist",0.50]];
+ ["029","gelijkspel","4 tegen 4, met 1 onbeslist",0.50],
+ ["031","verdeeld","r1 gelijkspel (3-3-1), r2 koos 6 van 7 keer de andere kant; overeenstemming 0.43",null]];
 var curAs="seed";
 function drawAs(){
   var svg=$("aschart");svg.innerHTML="";var W=640,H=260,L=52,R=20,T=16,B=56;
   var cols=[css('--c1'),css('--c2'),css('--c3'),css('--c4')], leg=$("aslegend"), tb=$("astabel");
   if(curAs==="seed"){
-    $("askop").textContent="Hielp de seed het antwoord vooruit? Alle 69 blinde oordelen";
+    $("askop").textContent="Hielp de seed het antwoord vooruit? Alle 83 blinde oordelen";
     $("assub").textContent="Per testronde, rechtstreeks uit de vastgelegde beoordelingsformulieren";
     var maxN=30, bw=64, x=function(i){return L+30+i*(W-L-R-60)/(seedData.length-1)-bw/2};
     var y=function(v){return T+(1-v/maxN)*(H-T-B)};
@@ -693,7 +697,7 @@ function drawAs(){
     leg.innerHTML=seedCats.map(function(c,i){return "<span><i style='background:"+cols[i]+"'></i>"+c+"</span>"}).join("");
     tb.innerHTML="<thead><tr><th>Ronde</th>"+seedCats.map(function(c){return "<th>"+c+"</th>"}).join("")+"<th>Totaal</th></tr></thead><tbody>"+
       seedData.map(function(r){return "<tr><td>"+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+r[4]+"</td><td>"+(r[1]+r[2]+r[3]+r[4])+"</td></tr>"}).join("")+
-      "<tr><td><b>Totaal</b></td><td><b>31</b></td><td><b>21</b></td><td><b>12</b></td><td><b>5</b></td><td><b>69</b></td></tr></tbody>";
+      "<tr><td><b>Totaal</b></td><td><b>33</b></td><td><b>24</b></td><td><b>13</b></td><td><b>13</b></td><td><b>83</b></td></tr></tbody>";
   }else{
     $("askop").textContent="Wie won de vergelijking? Head-to-head tegen hetzelfde topmodel";
     $("assub").textContent="Beoordelaars moesten kiezen, ook als beide antwoorden goed waren. 0.5 betekent hier: even goed";
@@ -756,7 +760,8 @@ var mijlpalen=[
  ["025","De zware test","14/14","Drie totaal nieuwe onderwerpen. Beide beoordelaars zeggen bij elk antwoord: dit hielp. Alle strikvragen gaan naar de schaduwlaag-kant."],
  ["026–028","In het model kijken","nul","Een meetinstrument voor sporen in de interne rekenlagen. Het rapporteert eerlijk: niets gevonden op kleine modellen."],
  ["029","Tweede AI-model","6/9","Herhaling op een ander topmodel. De hulp blijft (6 van 9, gezondheidsdomein 3 van 3). De zijpaden zitten op vroege beurten en zijn gelokaliseerd."],
- ["030","De Nederlandse meting","p 0.206","Nederlandstalig model, 24 testgevallen, veel scherpere meetlat. Opnieuw eerlijk: geen intern spoor. De vraag gaat door naar grotere modellen."]];
+ ["030","De Nederlandse meting","p 0.206","Nederlandstalig model, 24 testgevallen, veel scherpere meetlat. Opnieuw eerlijk: geen intern spoor. De vraag gaat door naar grotere modellen."],
+ ["031","De hertest","5/14","Gerichte ingreep tegen vroege zijpaden, blind hertest. Uitkomst eerlijk: vroege ruis weg, maar een matig passende aantekening bleef op latere beurten terugduwen. De volgende ingreep ligt klaar."]];
 var tl=$("tl");
 mijlpalen.forEach(function(m,i){
   var b=document.createElement("button");b.setAttribute("role","tab");
@@ -766,7 +771,7 @@ function setTL(i){
   [].forEach.call(tl.children,function(b,j){b.setAttribute("aria-selected",j===i)});
   var m=mijlpalen[i];
   $("tlpane").innerHTML="<p class='eyebrow' style='margin:10px 0 4px'>ronde "+m[0]+" — "+m[1]+"</p><p style='margin:0'>"+m[3]+"</p>";}
-setTL(3);
+setTL(8);
 
 /* ---------- hypotheses ---------- */
 var hypos=[
@@ -775,7 +780,7 @@ var hypos=[
  ["H3","Herkenning versterkt","Vaker herkende seeds zijn bij goedkeuring nuttiger dan willekeurige.","Het systeem bouwt hierop en werkt op veilige instellingen. Eerste steun.","deels"],
  ["H4","Vergeten vermindert ruis","Het vanzelf-verlopen van seeds verlaagt het aantal valse punten.","Technisch bewaakt in de tests; nog niet als aparte blinde vergelijking gemeten.","deels"],
  ["H5","Over beurten heen is essentieel","De meerwaarde ontstaat pas over meerdere gespreksbeurten.","Precies dit is bevestigd: het mechanisme werkt over beurten heen.","gemeten"],
- ["H6","Eerst investeren, dan oogsten","De eerste beurt kost iets, latere beurten worden rijker.","Bevestigd op de hielp-het-vraag (ongeveer 75%). Head-to-head blijft het gelijkspel.","gemeten"],
+ ["H6","Eerst investeren, dan oogsten","De eerste beurt kost iets, latere beurten worden rijker.","Bevestigd op de hielp-het-vraag (ongeveer 69%). Head-to-head blijft het gelijkspel.","gemeten"],
  ["H7","Binnen en buiten het model gelijk","De externe aanpak en de modelinterne tonen dezelfde dynamiek.","Open. Drie nulmetingen op kleine modellen.","open"],
  ["H8","Vrij zoeken verslaat vaste lijstjes","Vrije detectie verslaat vooraf bedachte categorieën.","Het systeem werkt volledig vrij; de directe vergelijking is niet apart gemeten.","open"],
  ["H9","Gerichte vervolgvragen werken","Actief doorvragen op een seed geeft sneller een vollediger beeld.","Eerste evidence; de efficiëntie-claim staat nog open.","deels"],

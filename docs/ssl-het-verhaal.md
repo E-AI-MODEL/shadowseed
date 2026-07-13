@@ -298,21 +298,23 @@ niet was". De vraag van de repo is dan ook nooit "wint SSL het gevecht?"
 maar "**helpt SSL naar een beter antwoord?**" — en dáárvoor labelen de
 reviewers elk item apart op seed-effect.
 
-Alle gecommitteerde blinde beoordelingen samen (rounds 022–029, 69 oordelen):
+Alle gecommitteerde blinde beoordelingen samen (rounds 022–031, 83 oordelen):
 
 | As | Uitslag |
 |---|---|
-| Seed-effect: "helpt de seed naar een beter antwoord?" | **52 van 69 (~75%) "helpt"** |
-| Waarvan expliciet "helpt duidelijk" | 31 van 69 |
-| "Maakt geen verschil" | 12 van 69 |
-| "Veroorzaakt ruis" | 5 van 69 — en die vijf zijn verklaard (zie onder) |
+| Seed-effect: "helpt de seed naar een beter antwoord?" | **57 van 83 (~69%) "helpt"** |
+| Waarvan expliciet "helpt duidelijk" | 33 van 83 |
+| "Maakt geen verschil" | 13 van 83 |
+| "Veroorzaakt ruis" of "vernauwt" | 13 van 83 — gelokaliseerd, zie onder |
 | Head-to-head win-rate | ≤ 0.5 — tegen hetzelfde model op z'n best |
 
-De vijf ruis-gevallen zitten precies waar je ze verwacht: drie in de ronde
-vóórdat de gebruiksdiscipline bestond, twee op de vroegste gespreksbeurten
-in de nieuwste ronde — een specifiek, adresseerbaar punt dat bovenaan de
-werklijst staat. Nergens verzon een seed feiten: de strikte
-hallucinatie-controles bleven in álle rondes schoon.
+De ruis is niet willekeurig maar gelokaliseerd: drie gevallen vóórdat de
+gebruiksdiscipline bestond (ronde 022), twee op vroege gespreksbeurten
+(ronde 029), en acht in de discipline-hertest (ronde 031) — daar verdween
+de vroege ruis, maar bleef één matig passende seed op latere beurten
+herhaald terugduwen. Dat is de huidige, precies omschreven werklijst-post.
+Nergens verzon een seed feiten: elke ruis-toelichting van reviewers
+beschrijft afleiding of vernauwing, nooit fabricage.
 
 De sterkste resultaten zijn bovendien geen toevalstreffers, maar een
 patroon:
@@ -328,9 +330,11 @@ patroon:
 
 Eén zin, gedekt door alle data:
 
-> **De seed helpt vaker dan hij de wedstrijd wint: in ~75% van alle blinde
-> beoordelingen maakte hij het antwoord beter, hij verzon nooit iets, en op
-> de vraagtypes die om diepgang vragen was hij unaniem de betere.**
+> **De seed helpt vaker dan hij de wedstrijd wint: in ~69% van alle blinde
+> beoordelingen maakte hij het antwoord beter, hij verzon nooit iets, en bij
+> sterke fit — de vraagtypes die om diepgang vragen — was hij unaniem de
+> betere. Matig passende seeds die blijven terugduwen zijn de gemeten,
+> gelokaliseerde zwakte waar nu aan gewerkt wordt.**
 
 ## 7. Waar we nu staan
 

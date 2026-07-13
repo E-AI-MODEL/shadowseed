@@ -16,7 +16,7 @@ Zie `docs/research/positioning-synthese.md` voor waarom de discipline — en nie
 
 - **Wat:** SSL laat een model opsporen wat structureel *ontbreekt* of onderbelicht blijft (gevonden seeds zijn relevant, maar kunnen triviaal of weinig toetsbaar zijn — laag C), bewaart dat als een gewichtloze shadow seed, en laat alleen Gate-gevalideerde seeds meesturen in vervolgactie of antwoordruimte — in de agent-laag bovendien contract-gecheckt op het gebruiksmoment.
 - **Hoe:** elke seed heeft twee velden — `trace` (aanwezigheid, vervalt via TTL en leeft op via TrTL) en `weight` (invloed, start op `0.0` en stijgt alléén via de Validation Gate). Gewichtloos tot bewezen.
-- **Status:** werkende research-harness. De kern (het cross-turn mechanisme: een gevalideerde seed verrijkt een later antwoord) is bevestigd op veilige instellingen en blind getoetst over vier rondes en twee modellen. De uitkomst leest op twee assen: head-to-head ongeveer gelijkspel tegen hetzelfde model op z'n best, maar in ~75% van alle blinde oordelen hielp de seed het antwoord vooruit (zie `docs/research/ssl-integrale-evaluatie.md`). De brede claim blijft bewust begrensd.
+- **Status:** werkende research-harness. De kern (het cross-turn mechanisme: een gevalideerde seed verrijkt een later antwoord) is bevestigd op veilige instellingen en blind getoetst over vier rondes en twee modellen. De uitkomst leest op twee assen: head-to-head ongeveer gelijkspel tegen hetzelfde model op z'n best, en in ~69% van alle blinde oordelen (57/83, rounds 022–031) hielp de seed het antwoord vooruit — het sterkst bij sterke fit; de discipline-hertest (round 031) legde herhaald duwen van matig passende seeds bloot als open vraag (zie `docs/research/ssl-integrale-evaluatie.md`). De brede claim blijft bewust begrensd.
 
 > Kernregel: één seed = één klein, toetsbaar ontbrekend punt.
 
@@ -56,7 +56,7 @@ De kernclaim is bewust smal. Niet: SSL maakt elk antwoord beter of verslaat een 
 
 > SSL kan een opgemerkt gemis gewichtloos vasthouden, later valideren, en daardoor antwoordruimte openen die er anders niet was.
 
-De blinde A/B-reviews zijn de kwaliteitscontrole daarop. De uitkomst leest op twee assen (zie de lagen-tabel hierboven en `docs/research/ssl-integrale-evaluatie.md`): head-to-head is het ongeveer gelijkspel tegen hetzelfde model op z'n best, maar in ~75% van alle blinde oordelen zeggen reviewers dat de seed het antwoord vooruit hielp — en de leercurve is zichtbaar: de eerste ronde kwam gespleten terug (round 022), één gebruiksregel later was de ruis vrijwel weg (round 023) en repliceerde het patroon cross-domein (round 025) en op een tweede model (round 029).
+De blinde A/B-reviews zijn de kwaliteitscontrole daarop. De uitkomst leest op twee assen (zie de lagen-tabel hierboven en `docs/research/ssl-integrale-evaluatie.md`): head-to-head is het ongeveer gelijkspel tegen hetzelfde model op z'n best, maar in ~69% van alle blinde oordelen (rounds 022–031) zeggen reviewers dat de seed het antwoord vooruit hielp. De leercurve is zichtbaar én eerlijk: gespleten start (022), discipline bracht overeenstemming en nul ruis (023, 025), replicatie op een tweede model (029), en de hertest (031) legde een nieuwe, gelokaliseerde zwakte bloot: een matig passende seed die op late beurten herhaald blijft duwen.
 
 Verdieping: `docs/research/w9f-evaluatieconclusie.md` (historische naamgeving) en `benchmarks/open_review/rounds/`.
 
