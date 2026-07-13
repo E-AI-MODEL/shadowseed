@@ -156,3 +156,80 @@ def test_recurring_seed_promotes_and_surfaces_cross_turn(tmp_path: Path, monkeyp
     # and on that turn the SSL answer differs from baseline (the seed was used)
     ct = next(tr for tr in turns if tr["is_cross_turn_payoff"])
     assert ct["ssl_answer"] != ct["baseline_answer"]
+
+
+def test_early_turn_margin_raises_bar_on_early_turns(tmp_path: Path, monkeypatch):
+    # Vroege-beurt-discipline (round 029): een matig-passende promoted seed
+    # (sim ~0.35) haalt de verhoogde lat (0.30 + 0.10) niet zolang een beurt
+    # als "vroeg" telt, en surfacet wel zodra de marge vervalt. Fit-selectie,
+    # geen beurt-blok: de basisdrempel blijft 0.30.
+    conv = {
+        "version": "t",
+        "conversations": [
+            {"id": "A", "domain": "d", "min_occurrences": 2,
+             "turns": [{"question": f"Vraag {i}?"} for i in range(8)]},
+        ],
+    }
+    inp = tmp_path / "in.json"
+    inp.write_text(json.dumps(conv), encoding="utf-8")
+
+    class _Model:
+        name = "fake"
+
+        def generate(self, prompt, scenario, mode, seeds):
+            return "SSL-antwoord." if mode == "ssl" else "Baseline-antwoord."
+
+    class _Detector:
+        name = "fake-det"
+
+        def detect_seeds(self, item, max_seeds=5):
+            return ["SEEDGAP terugkerend ontbrekend punt."]
+
+    v_seed = np.zeros(8)
+    v_seed[0] = 1.0
+    v_q = np.zeros(8)
+    v_q[0] = 0.35
+    v_q[1] = float(np.sqrt(1 - 0.35**2))
+
+    def _embedder(backend, model_id=None, **kw):
+        def embed(text: str) -> np.ndarray:
+            return v_seed.copy() if "SEEDGAP" in text else v_q.copy()
+
+        return embed, 8
+
+    monkeypatch.setattr(sess, "make_backend", lambda **kw: _Model())
+    monkeypatch.setattr(sess, "make_detector_backend", lambda *a, **kw: _Detector())
+    monkeypatch.setattr(sess, "make_embedding_fn", _embedder)
+
+    def _payoff_turns(margin, history):
+        out = tmp_path / f"s{margin}-{history}.json"
+        run_ssl_session(
+            str(inp), str(out), backend="openai",
+            early_turn_margin=margin, early_turn_history=history,
+        )
+        payload = json.loads(out.read_text(encoding="utf-8"))
+        turns = payload["conversations"][0]["turns"]
+        appl = payload["conversations"][0]["applied_thresholds"]
+        return [tr["turn"] for tr in turns if tr["is_cross_turn_payoff"]], appl
+
+    # zonder marge surfacet de sim-0.35-seed zodra hij promoted is
+    base_turns, _ = _payoff_turns(0.0, 3)
+    assert base_turns, "zonder marge moet de seed surfacen (sim 0.35 >= 0.30)"
+
+    # met marge en alle beurten "vroeg": de lat wordt 0.40 en niets surfacet
+    blocked, appl = _payoff_turns(0.10, 100)
+    assert blocked == []
+    assert appl["early_turn_margin"] == 0.10 and appl["early_turn_history"] == 100
+
+    # met marge maar een korte vroege zone die vóór de promotie eindigt,
+    # gedraagt de run zich als zonder marge (fit-selectie, geen beurt-blok)
+    late_ok, _ = _payoff_turns(0.10, 3)
+    assert late_ok == base_turns
+
+
+def test_chat_prompt_keeps_question_leading():
+    # Round 029: de gestelde vraag blijft leidend — de weave-instructie verbiedt
+    # onderwerp-/focusverschuiving expliciet (alleen in de SSL-arm aanwezig).
+    ssl = build_chat_prompt([("Q1", "A1")], "Q2", ["Invalshoek."])
+    assert "blijft leidend" in ssl and "verschuiven" in ssl
+    assert "blijft leidend" not in build_chat_prompt([("Q1", "A1")], "Q2", [])

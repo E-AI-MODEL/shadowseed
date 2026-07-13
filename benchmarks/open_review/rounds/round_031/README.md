@@ -1,0 +1,60 @@
+# Round 031 — vroege-beurt-discipline: bouwen en blind hertesten
+
+> **Status: discipline gebouwd en getest; blinde hertest-run open.** Doel:
+> de laatste bekende ruisbron dichten. In round 029 stuurde een matig
+> passende seed op de vroege t04-beurten het antwoord off-topic (EDU en
+> POLICY), terwijl een sterk passende seed op diezelfde beurt juist duidelijk
+> hielp (HEALTH). De bestaande use-time discipline begrenst *hoeveel* seeds
+> meesturen, niet *of* een matig passende seed vroeg het onderwerp verschuift.
+
+## De ingreep (fit-selectie, geen beurt-blok)
+
+1. **Vroege-beurt-marge** (`--early-turn-margin`, default 0.10): zolang de
+   beurtindex kleiner is dan `--early-turn-history` (default 3) geldt een
+   hogere relevantielat (`surface_threshold` + marge). Rationale: vroeg in
+   het gesprek is er nog weinig opgebouwd bewijs dat het thema centraal
+   staat, dus moet de fit met de gestelde vraag zelf sterker zijn. Een
+   HEALTH-t04-achtige sterk-passende seed blijft vuren; een EDU/POLICY-
+   t04-achtige matig-passende valt af. Beurten worden nooit geblokkeerd.
+2. **Prompt-aanscherping** (alleen SSL-arm, verandert de A/B-vergelijking
+   niet aan de baseline-kant): "De gestelde vraag blijft leidend: een
+   invalshoek mag het antwoord verdiepen, nooit het onderwerp of de focus
+   van de vraag verschuiven."
+
+Beide instellingen staan in het artifact (`applied_thresholds`), zijn per
+conversatie te overriden en met `--early-turn-margin 0` volledig uit te
+zetten. Deterministisch getest (marge blokkeert sim~0.35 op vroege lat,
+zelfde seed surfacet zonder marge of buiten de vroege zone).
+
+## Run-recept voor de blinde hertest
+
+```text
+workflow: Research · SSL Benefit (OpenAI)
+experiment: ssl-session
+model_id: gpt-4o                # zelfde model als round 029 = zuivere vergelijking
+recurrence_mode: cluster
+input_path: src/shadowseed/data/ssl_session_transfer_suite.json
+max_new_tokens: 1600
+review_prefix: ssl_session_blind_ab
+```
+
+De nieuwe discipline-defaults gelden automatisch. Vergelijkingsdoel is
+round 029: zelfde model, zelfde suite, zelfde protocol (≥2 blinde
+reviewers, seed-effect-labels, answer key in quarantaine).
+
+## Klaar wanneer
+
+1. Run gedraaid, pack gereviewd door ≥2 onafhankelijke blinde reviewers,
+   beide sheets als CSV gecommit (de round-029-les).
+2. Leesregel vooraf vastgelegd: de hertest slaagt als de
+   "veroorzaakt ruis"-labels op vroege beurten verdwijnen zónder dat de
+   "helpt duidelijk"-winst daar verdwijnt (HEALTH-t04-patroon blijft).
+   Win-rate blijft nevengeschikt (twee assen).
+3. Uitkomst eerlijk gedocumenteerd, ook als de marge te bot of te slap
+   blijkt (dan is dát de bevinding en volgt kalibratie).
+
+## Claimgrens
+
+Dit is een disciplinestap plus meetplan, geen resultaat. Tot de blinde
+hertest binnen is, blijft de round-029-lezing staan: vroege-beurt-sturing
+is gelokaliseerd maar nog niet aantoonbaar gedicht.

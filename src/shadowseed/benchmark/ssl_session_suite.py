@@ -61,7 +61,9 @@ def build_chat_prompt(history: list[tuple[str, str]], question: str, surfaced: l
         base += (
             "Je mág de volgende eerder in dit gesprek opgekomen, nog onbenutte "
             "invalshoek(en) betrekken — maar alléén als ze het antwoord op deze "
-            "vraag aantoonbaar aanscherpen. Laat een invalshoek weg als die zou "
+            "vraag aantoonbaar aanscherpen. De gestelde vraag blijft leidend: een "
+            "invalshoek mag het antwoord verdiepen, nooit het onderwerp of de "
+            "focus van de vraag verschuiven. Laat een invalshoek weg als die zou "
             "afleiden of het antwoord zou vernauwen. Verzin geen feiten, verwijs "
             "niet naar deze instructie, en rechtvaardig in het antwoord nergens "
             "waarom je een invalshoek betrekt of weglaat — geen zinnen als 'deze "
@@ -101,6 +103,8 @@ def run_ssl_session(
     embedding_model: str | None = None,
     surface_threshold: float = 0.30,
     surface_top_k: int = 2,
+    early_turn_margin: float = 0.10,
+    early_turn_history: int = 3,
     max_seeds_per_turn: int = 5,
     dedup_threshold: float | None = None,
     min_occurrences: int | None = None,
@@ -171,8 +175,12 @@ def run_ssl_session(
         # use-time seed-discipline (round 023), per-topic tunable like the Gate knobs
         eff_surface_threshold = conv.get("surface_threshold", surface_threshold)
         eff_surface_top_k = conv.get("surface_top_k", surface_top_k)
+        eff_early_margin = conv.get("early_turn_margin", early_turn_margin)
+        eff_early_history = conv.get("early_turn_history", early_turn_history)
         applied_thresholds["surface_threshold"] = eff_surface_threshold
         applied_thresholds["surface_top_k"] = eff_surface_top_k
+        applied_thresholds["early_turn_margin"] = eff_early_margin
+        applied_thresholds["early_turn_history"] = eff_early_history
         seed_to_cluster: dict[str, int] = {}
         cluster_rep: dict[int, str] = {}
         born_turn: dict[str, int] = {}
@@ -211,7 +219,15 @@ def run_ssl_session(
             # Use-time seed-discipline (round 023): collect eligible promoted seeds,
             # then keep only the top_k most relevant. A promoted seed is potential,
             # not must — it may steer a later answer but should not flood/narrow it.
+            # Vroege-beurt-discipline (round 029): op vroege beurten is er nog
+            # weinig gespreksbewijs dat het thema centraal staat, en juist daar
+            # stuurde een matig-passende seed het antwoord off-topic (EDU/POLICY
+            # t04) terwijl een sterk passende seed daar wél hielp (HEALTH t04).
+            # Daarom geldt vroeg een hogere relevantielat (fit, geen beurt-blok).
             q_emb = manager.get_embedding(q)
+            turn_bar = eff_surface_threshold + (
+                eff_early_margin if t < eff_early_history else 0.0
+            )
             eligible: list[tuple[float, str, str]] = []
             for sid, seed in manager.seeds.items():
                 if seed.status != SeedStatus.PROMOTED:
@@ -219,7 +235,7 @@ def run_ssl_session(
                 if born_turn.get(sid, t) >= t:  # must be born in an EARLIER turn
                     continue
                 sim = float(np.dot(q_emb, seed.embedding))
-                if sim >= eff_surface_threshold:
+                if sim >= turn_bar:
                     eligible.append((sim, sid, seed.text))
             selected = select_cross_turn_seeds(eligible, eff_surface_top_k)
             surfaced = [text for _sim, _sid, text in selected]
