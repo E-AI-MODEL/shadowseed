@@ -52,8 +52,15 @@ reviewers, seed-effect-labels, answer key in quarantaine).
 run_id: 29238820927            # main @ 722f700 (mét discipline), conclusion: success
 artifact: ssl-openai-ssl-session-gpt-4o (id 8274672968)
 artifact_digest: sha256:2c90b4ef2fc8a353b135a326de82681d927d076ba37889c8401dd57cd0966505
-download: https://github.com/E-AI-MODEL/shadowseed/actions/runs/29238820927/artifacts/8274672968
 ```
+
+**Distributieprotocol (blindering!):** alléén de maintainer downloadt het
+artifact. Reviewers krijgen uitsluitend `review_form.md` (of
+`review_items.json`) plus `scoring_template.csv` uit de map
+`blind_ab_review/`. De bestanden `answer_key.json`, `summary.json` en het
+ruwe `ssl_session_suite.json` blijven dicht tot ná de scoring — ze
+onthullen de SSL-kant (artifact-contract). Stuur reviewers dus nooit de
+artifact-zip of de download-URL zelf.
 
 Kwalitatief uit de job-log (geen claim, wel sanity): het cross-turn
 mechanisme vuurt (o.a. psychologische-motivaties-seed in HEALTH,
