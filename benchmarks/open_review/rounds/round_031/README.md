@@ -1,8 +1,10 @@
 # Round 031 — vroege-beurt-discipline: bouwen en blind hertesten
 
 > **Status: VERDICT — hertest gedraaid én blind gereviewd (2 reviewers,
-> beide sheets gecommit). De leesregel wordt NIET gehaald: vroege ruis weg,
-> maar de ruis verschoof naar late beurten en de vroege winst verdween mee.
+> beide sheets gecommit). Op de drie standen van de doctrine (winnend /
+> ondersteunend / niks; alleen hinderen is fout): vroege beurten nu
+> doctrine-conform (geen hinder), maar 8/14 hinder op late beurten — dáár
+> zit het falen, niet in het uitblijven van een vroege winner.
 > Zie `human_review/RESULTS.md`.** Doel:
 > de laatste bekende ruisbron dichten. In round 029 stuurde een matig
 > passende seed op de vroege t04-beurten het antwoord off-topic (EDU en

@@ -1,10 +1,12 @@
 # Round 031 — hertest-verdict: vroege ruis weg, maar verschoven — niet geslaagd
 
 > **Status: VERDICT (2 onafhankelijke blinde reviewers, beide sheets als CSV
-> gecommit — protocol volledig).** De vooraf vastgelegde leesregel wordt
-> **niet** gehaald: de ruis op vroege beurten is weg (deel 1 ✓), maar de
-> vroege-beurt-winst is óók weg en de ruis is verschoven naar late beurten
-> (deel 2 ✗). Dit tempert; het verplaatst de disciplinevraag.
+> gecommit — protocol volledig).** Gelezen op de drie standen van de
+> doctrine (winnend / ondersteunend / niks — alleen *hinderen* is fout):
+> de vroege beurten zijn nu doctrine-conform (geen hinder; niks of een
+> beetje hulp, en dat is prima), maar op late beurten hinderde een matig
+> passende seed 8 van de 14 keer. Dát is het falen van deze ronde; het
+> uitblijven van een vroege "winner" is dat niet.
 
 ## Unblinding (geverifieerd)
 
@@ -41,10 +43,15 @@ aan precies de key-kant; EDU-t04 is in beide motivaties neutraal.
 > "Geslaagd als de ruis-labels op vroege beurten verdwijnen zónder dat de
 > helpt-duidelijk-winst daar verdwijnt."
 
-**Deel 1 ✓** — geen ruis op vroege beurten. **Deel 2 ✗** — er wás geen
-vroege winst meer (geen HEALTH/POLICY-t04-events), en de ruis verdween
-niet maar verscheen op t05/t06, waar rounds 023/025 juist schoon waren.
-**Verdict: niet geslaagd.**
+**Deel 1 ✓** — geen ruis op vroege beurten. **Deel 2 ✗ zoals geformuleerd**
+— er waren geen vroege events meer die konden winnen. Maar hier past een
+zelfkritische noot op de leesregel zelf: "de winst moet blijven" was
+winnaar-denken, en dat is niet de doctrine. SSL hoeft niet te winnen; soms
+is het niks, soms ondersteunend, soms winnend — alleen hinderen is de
+faalstand. Op díe lat zijn de vroege beurten geslaagd (van hinder naar
+niks/beetje hulp). **Het verdict blijft "niet geslaagd", maar om de juiste
+reden: 8/14 hinder op t05/t06**, waar rounds 023/025 juist hindervrij
+waren.
 
 ## Eerlijke analyse
 
@@ -81,9 +88,11 @@ niet maar verscheen op t05/t06, waar rounds 023/025 juist schoon waren.
 ## Doorwerking op de teltabel (twee assen)
 
 Round 031 voegt 14 labels toe: totaal 83, waarvan **57 "helpt" (~69%)**,
-13 geen verschil, 13 ruis-of-vernauwt. De kernzin blijft waar — de seed
-helpt vaker dan hij de head-to-head wint — maar deze ronde drukt het
-percentage en dat rapporteren we overal mee.
+13 geen verschil, 13 hinder (ruis of vernauwing). Op de drie standen van
+de doctrine: winnen hoeft niet, niks is prima; **hinder is de enige
+faalstand en dus de te minimaliseren metriek — nu 13/83 (~16%)**, waarvan
+8 in deze ronde. De kernzin blijft waar (de seed helpt vaker dan hij de
+head-to-head wint), en dat rapporteren we overal mee.
 
 ## Bestanden
 

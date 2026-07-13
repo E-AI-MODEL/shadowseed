@@ -133,6 +133,13 @@ eerlijk gerapporteerd, maar hij is **niet de vraag van de repo**
 | 031 (discipline-hertest, gpt-4o; 2 reviewers, beide sheets gecommit) | 14 | 5 | 1 | 8 (alle op t05/t06) |
 | **Totaal** | **83** | **57 (~69%)** | 13 | 13 |
 
+Belangrijk bij het lezen: de doctrine kent op de seed-effect-as **drie
+goede standen en één faalstand** — soms wint de seed, soms ondersteunt hij,
+soms doet hij niks (en dat is prima: do-no-harm is de ontwerpbedoeling).
+Alleen *hinderen* (ruis of vernauwing) is fout. De te minimaliseren metriek
+is dus de **hinder-rate: nu 13/83 (~16%)** — niet de win-rate en ook niet
+het "niks"-aandeel.
+
 De eerlijke lezing van beide assen samen:
 
 - **Winnaar-as:** SSL wint de head-to-head niet structureel (win-rate ≤0.5 in

@@ -296,7 +296,9 @@ frontier-model op z'n best**. Een 50/50-uitslag betekent daar niet "het
 werkt niet"; het betekent "even goed, en soms opent het iets dat er anders
 niet was". De vraag van de repo is dan ook nooit "wint SSL het gevecht?"
 maar "**helpt SSL naar een beter antwoord?**" — en dáárvoor labelen de
-reviewers elk item apart op seed-effect.
+reviewers elk item apart op seed-effect. Daarbij geldt: de seed hoeft niet
+te winnen. Soms is het niks, soms ondersteunend, soms winnend — drie goede
+standen. Alleen *hinderen* is fout, en dát is de metriek die omlaag moet.
 
 Alle gecommitteerde blinde beoordelingen samen (rounds 022–031, 83 oordelen):
 
