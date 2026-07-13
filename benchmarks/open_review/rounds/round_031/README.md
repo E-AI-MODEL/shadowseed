@@ -1,6 +1,7 @@
 # Round 031 — vroege-beurt-discipline: bouwen en blind hertesten
 
-> **Status: discipline gebouwd en getest; blinde hertest-run open.** Doel:
+> **Status: discipline gebouwd en getest; hertest-run GEDRAAID (2026-07-13),
+> pack klaar voor blinde review.** Doel:
 > de laatste bekende ruisbron dichten. In round 029 stuurde een matig
 > passende seed op de vroege t04-beurten het antwoord off-topic (EDU en
 > POLICY), terwijl een sterk passende seed op diezelfde beurt juist duidelijk
@@ -44,6 +45,28 @@ review_prefix: ssl_session_blind_ab
 De nieuwe discipline-defaults gelden automatisch. Vergelijkingsdoel is
 round 029: zelfde model, zelfde suite, zelfde protocol (≥2 blinde
 reviewers, seed-effect-labels, answer key in quarantaine).
+
+## Runverwijzing
+
+```text
+run_id: 29238820927            # main @ 722f700 (mét discipline), conclusion: success
+artifact: ssl-openai-ssl-session-gpt-4o (id 8274672968)
+artifact_digest: sha256:2c90b4ef2fc8a353b135a326de82681d927d076ba37889c8401dd57cd0966505
+```
+
+**Distributieprotocol (blindering!):** alléén de maintainer downloadt het
+artifact. Reviewers krijgen uitsluitend `review_form.md` (of
+`review_items.json`) plus `scoring_template.csv` uit de map
+`blind_ab_review/`. De bestanden `answer_key.json`, `summary.json` en het
+ruwe `ssl_session_suite.json` blijven dicht tot ná de scoring — ze
+onthullen de SSL-kant (artifact-contract). Stuur reviewers dus nooit de
+artifact-zip of de download-URL zelf.
+
+Kwalitatief uit de job-log (geen claim, wel sanity): het cross-turn
+mechanisme vuurt (o.a. psychologische-motivaties-seed in HEALTH,
+lokale-kennis-seed in POLICY t5 en t6), antwoorden eindigen op volledige
+slotalinea's, en de zichtbare events bevatten geen zwakke-fit-surfacing op
+vroege beurten. De cijfers komen uit de blinde review, niet uit deze log.
 
 ## Klaar wanneer
 
