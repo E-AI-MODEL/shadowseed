@@ -32,7 +32,10 @@
 > activatie-sonde op het NL-getrainde GroNLP/gpt2-small-dutch met 24 cases
 > (gpt-4.1-oordeel: 6 HOUDT_STAND / 17 WEERLEGD; vloer 0.002) gaf de derde
 > schone null (sterkste laag p 0.2056) — geen lineair leesbaar
-> houdbaarheidsoordeel in kleine modellen, ook niet NL-getraind.
+> houdbaarheidsoordeel in kleine modellen, ook niet NL-getraind. **De
+> vroege-beurt-discipline is gebouwd** (round 031: relevantiemarge op vroege
+> beurten + "vraag blijft leidend"-promptregel, deterministisch getest); de
+> blinde hertest op gpt-4o staat open als volgende bewijsstap.
 
 ## Doel van dit document
 

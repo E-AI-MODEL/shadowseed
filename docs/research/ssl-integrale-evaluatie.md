@@ -207,10 +207,12 @@ Buiten de bewijslagen, maar wél repo-feit en de **verdedigbare kern** van SSL
 ## Waar het bewijs het dunst is (eerlijke prioriteit)
 
 1. **E/F — vroege-beurt-sturing:** de use-time discipline begrenst flooding
-   maar niet off-topic-sturing op vroege beurten (round 029, t04) — een
-   gerichte disciplinestap + hertest is de meest waardevolle volgende
-   bewijsstap. Voor F verder: r2's round-029-sheet als `r2_scores.csv`
-   committen (maakt het voorlopige verdict definitief en auditeerbaar),
+   maar niet off-topic-sturing op vroege beurten (round 029, t04). **De
+   disciplinestap is gebouwd** (round 031: vroege-beurt-marge op de
+   relevantielat + "vraag blijft leidend"-promptregel; fit-selectie, geen
+   beurt-blok) — de blinde hertest op gpt-4o is nu de meest waardevolle
+   volgende bewijsstap. Voor F verder: r2's round-029-sheet als
+   `r2_scores.csv` committen (maakt het voorlopige verdict definitief),
    daarna een derde model of meer items.
 2. **E — payoff-kwaliteit:** de seed-effect-as (helpt ~75%) leunt op
    reviewer-labels met beperkte n per ronde; een taaktype waar SSL ook de

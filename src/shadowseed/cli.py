@@ -514,6 +514,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Use-time discipline (round 023): max. aantal meest-relevante promoted seeds dat een beurt mag sturen. Promoted = potentieel, geen must; voorkomt diffuse/vernauwde antwoorden. -1 = geen limiet.",
     )
     ssl_session.add_argument(
+        "--early-turn-margin",
+        type=float,
+        default=0.10,
+        help="Vroege-beurt-discipline (round 029): extra relevantiemarge bovenop --surface-threshold zolang de beurtindex kleiner is dan --early-turn-history. Selecteert op fit, blokkeert geen beurten. 0 = uit.",
+    )
+    ssl_session.add_argument(
+        "--early-turn-history",
+        type=int,
+        default=5,
+        help="Aantal eerste beurten (0-geïndexeerd: t < N) waarop de vroege-beurt-marge geldt.",
+    )
+    ssl_session.add_argument(
         "--dedup-threshold",
         type=float,
         default=None,
