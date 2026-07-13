@@ -1,11 +1,11 @@
 # SSL integrale evaluatie — de hele stack, eerlijk gewogen (lagen A–G)
 
 > Status: current
-> Date: 2026-07-07
+> Date: 2026-07-13
 > Evidence layer: integrale synthese over lagen A–G (geen nieuwe meting)
 > Current source: yes
 > Refs: `docs/00_shadow_seed_learning_4_6.md` (canon), `positioning-synthese.md`,
-> `current-status.md`, `evaluation-matrix.md`, rounds 005–029
+> `current-status.md`, `evaluation-matrix.md`, rounds 005–031
 
 ## Doel
 
@@ -88,10 +88,14 @@ off-topic-sturing; de strikte noise-/hallucinatie-kolommen bleven schoon) —
 de head-to-head-winst van round 025 is dus deels gpt-4.1-specifiek en
 model-/beurttype-afhankelijk. Maar op de seed-effect-as repliceert de kern
 wél: **6/9 "helpt"** consensus, en HEALTH transfereert schoon (3/3, "helpt
-duidelijk"). F blijft daarmee "voorzichtig positief": begrensd op de
-winnaar-as, over twee modellen bevestigd op de seed-effect-as — dat laatste
-voorlopig, tot r2's sheet gecommit is
-(`round_029/human_review/r2_concurrence.md`).
+duidelijk"). **De discipline-hertest (round 031, 2 reviewers, beide sheets
+gecommit) tempert verder:** overeenstemming 0.43, consensus-SSL 0/7,
+seed-effect 5/14 "helpt" — de vroege ruis is weg maar dezelfde matig
+passende seed bleef op late beurten duwen. F blijft "voorzichtig positief"
+op het gerepliceerde HEALTH/sterke-fit-patroon, maar de begrenzing is nu
+tweezijdig: head-to-head én seed-fit-afhankelijkheid
+(`round_031/human_review/RESULTS.md`; round-029-voorbehoud:
+`round_029/human_review/r2_concurrence.md`).
 
 ### Laag G — Modelinterne research (H-neuron-spoor) · **Eerste iteratie doorlopen — schoon nul**
 Twee sporen (`laag-g-scoping.md`):
@@ -118,7 +122,7 @@ eerlijk gerapporteerd, maar hij is **niet de vraag van de repo**
 (`positioning-synthese.md`: win-rate is nooit hoofdmetriek). De vraag is:
 *helpt SSL naar een beter antwoord?* Daarvoor is het
 `seed_effect_after_choice`-label de directe meting. Alle gecommitte labels
-(rounds 022–029, 69 beoordelingen):
+(rounds 022–031, 83 beoordelingen):
 
 | Ronde | Labels | Helpt (duidelijk+beetje) | Geen verschil/neutraal | Ruis/vernauwt |
 |---|---|---|---|---|
@@ -126,18 +130,20 @@ eerlijk gerapporteerd, maar hij is **niet de vraag van de repo**
 | 023 (met discipline) | 30 | 20 | 10 | 0 |
 | 025 (transfer, gpt-4.1) | 14 | **14** | 0 | 0 |
 | 029 (transfer, gpt-4o; voorlopige consensus, alleen r1-sheet gecommit) | 9 | 6 | 1 | 2 (beide t04) |
-| **Totaal** | **69** | **52 (~75%)** | 12 | 5 |
+| 031 (discipline-hertest, gpt-4o; 2 reviewers, beide sheets gecommit) | 14 | 5 | 1 | 8 (alle op t05/t06) |
+| **Totaal** | **83** | **57 (~69%)** | 13 | 13 |
 
 De eerlijke lezing van beide assen samen:
 
 - **Winnaar-as:** SSL wint de head-to-head niet structureel (win-rate ≤0.5 in
   023 en 029; 4/7 consensus in 025). De baseline is hetzelfde frontier-model op
   z'n best — 50/50 betekent "even goed", niet "schaadt".
-- **Seed-effect-as:** in **~75% van alle beoordelingen** zegt de reviewer dat de
-  seed naar een beter antwoord helpt; ruis is zeldzaam (5/69): 3× in round 022
-  (vóór de use-time discipline) en 2× op de vroege t04-beurten in round 029 —
-  dáár stond de discipline wel aan, maar de cap begrenst flooding, geen
-  off-topic-sturing (zie `round_029/human_review/RESULTS.md`).
+- **Seed-effect-as:** in **~69% van alle beoordelingen** zegt de reviewer dat de
+  seed naar een beter antwoord helpt. De ruis (13/83) is niet willekeurig
+  verdeeld: 3× vóór de use-time discipline (022), 2× op vroege beurten (029),
+  en 8× in de discipline-hertest (031) — daar verdween de vroege ruis maar
+  verscheen hij op late beurten, doordat dezelfde matig passende seed
+  herhaald bleef duwen (zie `round_031/human_review/RESULTS.md`).
 - **Conditioneel het sterkst:** aanscherpings- en valkuilvragen (round 025: alle
   t6-valkuilvragen consensus-SSL) en het HEALTH-domein (round 029: 3/3).
 
@@ -172,11 +178,13 @@ Buiten de bewijslagen, maar wél repo-feit en de **verdedigbare kern** van SSL
 3. Een bevestigd cross-turn *mechanisme* (E) dat met use-time discipline
    ruisarm is en, blijkens W10 (F), **cross-domein overdraagt** — voorzichtig
    positief.
-4. Op de **seed-effect-as**: reviewers oordelen in ~75% van alle gecommitte
-   beoordelingen (52/69, rounds 022–029) dat de seed naar een beter antwoord
-   *helpt* — het sterkst op aanscherpings-/valkuilvragen en in HEALTH; de
-   zeldzame ruis zit vóór de use-time discipline (022) en in vroege-beurt
-   off-topic-sturing die de huidige cap niet uitsluit (029, t04).
+4. Op de **seed-effect-as**: reviewers oordelen in ~69% van alle gecommitte
+   beoordelingen (57/83, rounds 022–031) dat de seed naar een beter antwoord
+   *helpt* — het sterkst en meest robuust op sterke-fit-seeds
+   (aanscherpings-/valkuilvragen, HEALTH). De ruis (13/83) is gelokaliseerd:
+   vóór de discipline (022), vroege beurten (029) en herhaald duwen van een
+   matig passende seed op late beurten (031) — dat laatste is de open
+   disciplinevraag.
 
 ## Wat SSL als geheel (nog) niet draagt
 
@@ -195,29 +203,32 @@ Buiten de bewijslagen, maar wél repo-feit en de **verdedigbare kern** van SSL
 > SSL is een sterke, gedisciplineerde researchharness met een bewezen
 > lifecycle-kern en, als onderscheidende verdedigbare bijdrage, een
 > afdwingbare en auditeerbare geheugendiscipline; het cross-turn mechanisme
-> vuurt, en op de seed-effect-as oordelen reviewers in ~75% van alle
+> vuurt, en op de seed-effect-as oordelen reviewers in ~69% van alle
 > beoordelingen dat de seed naar een beter antwoord helpt — de seed **helpt
 > vaker dan hij de head-to-head wint** (win-rate ≤0.5 tegen hetzelfde
-> frontier-model), met de winst conditioneel het duidelijkst op
-> aanscherpings-/valkuilvragen en in HEALTH; modelinterne steun is op kleine
-> modellen niet aangetoond — precies de begrenzing die de doctrine
+> frontier-model), met de winst het duidelijkst en meest robuust bij sterke
+> seed-fit (aanscherpings-/valkuilvragen, HEALTH) en met herhaald duwen van
+> matig passende seeds als gemeten, gelokaliseerde zwakte (round 031);
+> modelinterne steun is op kleine modellen niet aangetoond — precies de
+> begrenzing die de doctrine
 > ("gewichtloos tot verdiend, signaal ≠ verdict, geen totaalscore") ook van
 > onszelf eist.
 
 ## Waar het bewijs het dunst is (eerlijke prioriteit)
 
-1. **E/F — vroege-beurt-sturing:** de use-time discipline begrenst flooding
-   maar niet off-topic-sturing op vroege beurten (round 029, t04). **De
-   disciplinestap is gebouwd** (round 031: vroege-beurt-marge op de
-   relevantielat + "vraag blijft leidend"-promptregel; fit-selectie, geen
-   beurt-blok) — de blinde hertest op gpt-4o is nu de meest waardevolle
-   volgende bewijsstap. Voor F verder: r2's round-029-sheet als
-   `r2_scores.csv` committen (maakt het voorlopige verdict definitief),
-   daarna een derde model of meer items.
-2. **E — payoff-kwaliteit:** de seed-effect-as (helpt ~75%) leunt op
+1. **E/F — seed-herhaling over beurten:** de round-031-hertest haalde de
+   vooraf vastgelegde leesregel níet: de vroege-beurt-marge filterde de
+   vroege ruis weg, maar dezelfde matig passende seed bleef op late beurten
+   herhaald duwen (8/14 ruis-of-vernauwt, overeenstemming terug naar 0.43,
+   consensus-SSL 0). De gemeten disciplinevraag is nu **herhaald surfacen
+   van dezelfde seed over opeenvolgende beurten** (cooldown of
+   eenmalig-surfacen als kandidaat-ingreep), plus seed-gecontroleerd
+   rapporteren omdat het seed-aanbod per run verschilt. Voor F verder:
+   r2's round-029-sheet committen, daarna een derde model.
+2. **E — payoff-kwaliteit:** de seed-effect-as (helpt ~69%) leunt op
    reviewer-labels met beperkte n per ronde; een taaktype waar SSL ook de
-   head-to-head structureel wint is nog niet geïsoleerd, en de vroege-beurt
-   (t04) sturing is een open disciplinevraag.
+   head-to-head structureel wint is nog niet geïsoleerd, en round 031
+   verplaatste de open disciplinevraag naar seed-herhaling op late beurten.
 3. **C — seedkwaliteit:** relevant maar triviaal blijft de open zwakte aan de
    detectiekant.
 4. **G — modelintern:** vraagt een NL-capabel/groter model vóór enige positieve

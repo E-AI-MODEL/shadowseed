@@ -33,9 +33,12 @@
 > (gpt-4.1-oordeel: 6 HOUDT_STAND / 17 WEERLEGD; vloer 0.002) gaf de derde
 > schone null (sterkste laag p 0.2056) — geen lineair leesbaar
 > houdbaarheidsoordeel in kleine modellen, ook niet NL-getraind. **De
-> vroege-beurt-discipline is gebouwd** (round 031: relevantiemarge op vroege
-> beurten + "vraag blijft leidend"-promptregel, deterministisch getest); de
-> blinde hertest op gpt-4o staat open als volgende bewijsstap.
+> vroege-beurt-discipline is gebouwd én blind hertest** (round 031, 2
+> reviewers, beide sheets gecommit): de vooraf vastgelegde leesregel werd
+> NIET gehaald — vroege ruis weg, maar dezelfde matig passende seed bleef op
+> late beurten duwen (seed-effect 5/14 helpt, overeenstemming 0.43). De
+> teltabel staat nu op 57/83 (~69%) "helpt" over rounds 022–031; de open
+> disciplinevraag is seed-herhaling over beurten (cooldown-kandidaat).
 
 ## Doel van dit document
 

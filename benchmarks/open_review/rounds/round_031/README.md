@@ -1,7 +1,9 @@
 # Round 031 — vroege-beurt-discipline: bouwen en blind hertesten
 
-> **Status: discipline gebouwd en getest; hertest-run GEDRAAID (2026-07-13),
-> pack klaar voor blinde review.** Doel:
+> **Status: VERDICT — hertest gedraaid én blind gereviewd (2 reviewers,
+> beide sheets gecommit). De leesregel wordt NIET gehaald: vroege ruis weg,
+> maar de ruis verschoof naar late beurten en de vroege winst verdween mee.
+> Zie `human_review/RESULTS.md`.** Doel:
 > de laatste bekende ruisbron dichten. In round 029 stuurde een matig
 > passende seed op de vroege t04-beurten het antwoord off-topic (EDU en
 > POLICY), terwijl een sterk passende seed op diezelfde beurt juist duidelijk
