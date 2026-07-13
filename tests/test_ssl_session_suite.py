@@ -226,6 +226,20 @@ def test_early_turn_margin_raises_bar_on_early_turns(tmp_path: Path, monkeypatch
     late_ok, _ = _payoff_turns(0.10, 3)
     assert late_ok == base_turns
 
+    # defaults (codex round-031): de round-029-ruis zat op beurtindex 4, dus
+    # de default-zone moet t=4 dekken — geen payoff vóór index 5
+    def _payoff_defaults():
+        out = tmp_path / "sdef.json"
+        run_ssl_session(str(inp), str(out), backend="openai")
+        payload = json.loads(out.read_text(encoding="utf-8"))
+        turns = payload["conversations"][0]["turns"]
+        appl = payload["conversations"][0]["applied_thresholds"]
+        return [tr["turn"] for tr in turns if tr["is_cross_turn_payoff"]], appl
+
+    def_turns, def_appl = _payoff_defaults()
+    assert def_appl["early_turn_history"] == 5
+    assert def_turns and min(def_turns) >= 5
+
 
 def test_chat_prompt_keeps_question_leading():
     # Round 029: de gestelde vraag blijft leidend — de weave-instructie verbiedt

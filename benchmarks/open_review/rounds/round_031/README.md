@@ -10,8 +10,11 @@
 ## De ingreep (fit-selectie, geen beurt-blok)
 
 1. **Vroege-beurt-marge** (`--early-turn-margin`, default 0.10): zolang de
-   beurtindex kleiner is dan `--early-turn-history` (default 3) geldt een
-   hogere relevantielat (`surface_threshold` + marge). Rationale: vroeg in
+   beurtindex kleiner is dan `--early-turn-history` (default 5) geldt een
+   hogere relevantielat (`surface_threshold` + marge). Let op de indexering:
+   review-items zijn 0-geïndexeerd (`t{t}`), dus de round-029-ruisbeurten
+   (t04 = index 4) vallen precies bínnen de default-zone, en t05/t06 — in
+   rounds 023/025 schoon en winnend — blijven erbuiten op de basislat. Rationale: vroeg in
    het gesprek is er nog weinig opgebouwd bewijs dat het thema centraal
    staat, dus moet de fit met de gestelde vraag zelf sterker zijn. Een
    HEALTH-t04-achtige sterk-passende seed blijft vuren; een EDU/POLICY-

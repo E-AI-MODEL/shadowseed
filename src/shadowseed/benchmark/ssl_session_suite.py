@@ -104,7 +104,7 @@ def run_ssl_session(
     surface_threshold: float = 0.30,
     surface_top_k: int = 2,
     early_turn_margin: float = 0.10,
-    early_turn_history: int = 3,
+    early_turn_history: int = 5,
     max_seeds_per_turn: int = 5,
     dedup_threshold: float | None = None,
     min_occurrences: int | None = None,
@@ -224,6 +224,9 @@ def run_ssl_session(
             # stuurde een matig-passende seed het antwoord off-topic (EDU/POLICY
             # t04) terwijl een sterk passende seed daar wél hielp (HEALTH t04).
             # Daarom geldt vroeg een hogere relevantielat (fit, geen beurt-blok).
+            # Indexering: review-items heten t{t} met 0-based t, dus de
+            # round-029-ruis zat op t=4; de default-zone (t < 5) dekt die en
+            # laat t05/t06 (in rounds 023/025 schoon) op de basislat.
             q_emb = manager.get_embedding(q)
             turn_bar = eff_surface_threshold + (
                 eff_early_margin if t < eff_early_history else 0.0

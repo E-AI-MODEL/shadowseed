@@ -522,7 +522,7 @@ def build_parser() -> argparse.ArgumentParser:
     ssl_session.add_argument(
         "--early-turn-history",
         type=int,
-        default=3,
+        default=5,
         help="Aantal eerste beurten (0-geïndexeerd: t < N) waarop de vroege-beurt-marge geldt.",
     )
     ssl_session.add_argument(
