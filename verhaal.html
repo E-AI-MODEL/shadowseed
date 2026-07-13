@@ -659,7 +659,8 @@ var seedData=[
  ["022",6,6,1,3,"vóór de gebruiksregel (2 beoordelaars, 8 antwoorden)"],
  ["023",12,8,10,0,"met gebruiksregel (3 beoordelaars, 10 antwoorden)"],
  ["025",9,5,0,0,"drie nieuwe onderwerpen: 14 van 14 hielp"],
- ["029",4,2,1,2,"tweede AI-model; de 2 zijpaden zaten op vroege beurten"]];
+ ["029",4,2,1,2,"tweede AI-model; de 2 zijpaden zaten op vroege beurten"],
+ ["031",2,3,1,8,"discipline-hertest: vroege ruis weg, maar een matig passende aantekening bleef laat terugduwen"]];
 var seedCats=["hielp duidelijk","hielp een beetje","maakte geen verschil","zat in de weg"];
 var winData=[
  ["022","verdeeld","beoordelaars te zeer oneens voor een uitslag",null],
@@ -697,7 +698,9 @@ function drawAs(){
     leg.innerHTML=seedCats.map(function(c,i){return "<span><i style='background:"+cols[i]+"'></i>"+c+"</span>"}).join("");
     tb.innerHTML="<thead><tr><th>Ronde</th>"+seedCats.map(function(c){return "<th>"+c+"</th>"}).join("")+"<th>Totaal</th></tr></thead><tbody>"+
       seedData.map(function(r){return "<tr><td>"+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+r[4]+"</td><td>"+(r[1]+r[2]+r[3]+r[4])+"</td></tr>"}).join("")+
-      "<tr><td><b>Totaal</b></td><td><b>33</b></td><td><b>24</b></td><td><b>13</b></td><td><b>13</b></td><td><b>83</b></td></tr></tbody>";
+      (function(){var t=[0,0,0,0];seedData.forEach(function(r){for(var k=0;k<4;k++)t[k]+=r[1+k]});
+      var tot=t[0]+t[1]+t[2]+t[3];
+      return "<tr><td><b>Totaal</b></td><td><b>"+t[0]+"</b></td><td><b>"+t[1]+"</b></td><td><b>"+t[2]+"</b></td><td><b>"+t[3]+"</b></td><td><b>"+tot+"</b></td></tr></tbody>";})();
   }else{
     $("askop").textContent="Wie won de vergelijking? Head-to-head tegen hetzelfde topmodel";
     $("assub").textContent="Beoordelaars moesten kiezen, ook als beide antwoorden goed waren. 0.5 betekent hier: even goed";
