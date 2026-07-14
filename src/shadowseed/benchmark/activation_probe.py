@@ -185,7 +185,11 @@ def _fit_l1_logistic_batch(
     Y = np.ascontiguousarray(Y, dtype=np.float32)
     lam32 = lam.astype(np.float32)
     gram = X @ X.T
-    v = np.ones(n, dtype=np.float32) / np.sqrt(n)
+    # startvector: deterministisch maar niet-constant — de all-ones-vector
+    # ligt na kolom-centrering (standaardisatie) exact in de nullspace van
+    # de gram-matrix en zou de power-iteratie direct laten instorten
+    v = np.random.default_rng(7).standard_normal(n).astype(np.float32)
+    v /= max(float(np.linalg.norm(v)), 1e-12)
     for _ in range(30):
         nxt = gram @ v
         norm = float(np.linalg.norm(nxt))
@@ -193,6 +197,10 @@ def _fit_l1_logistic_batch(
             break
         v = nxt / norm
     sigma2 = float(v @ gram @ v)
+    if sigma2 <= 0.0:
+        # fallback: trace >= sigma_max^2 voor PSD — conservatiever (kleinere
+        # stap) maar altijd veilig, i.p.v. een gesatureerde reuzenstap
+        sigma2 = float(np.trace(gram))
     step = np.float32(1.0 / max(sigma2 / (4.0 * n), 1e-12))
     W = np.zeros((d, Y.shape[1]), dtype=np.float32)
     b = np.zeros(Y.shape[1], dtype=np.float32)

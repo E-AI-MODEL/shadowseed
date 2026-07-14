@@ -308,6 +308,23 @@ def test_probe_records_read_location(tmp_path: Path):
     assert result["read_location"] == "neuron"
 
 
+def test_l1_fit_survives_exactly_centered_data():
+    # codex-P2-regressie: bij kolomsommen die exact 0 zijn (ook in float32)
+    # ligt de all-ones-vector in de nullspace van de gram-matrix; de
+    # power-iteratie mag daar niet op instorten (gesatureerde reuzenstap)
+    from shadowseed.benchmark.activation_probe import _fit_l1_logistic_batch
+
+    rng = np.random.default_rng(5)
+    half = rng.normal(size=(6, 8))
+    X = np.vstack([half, -half])  # a + (-a) = 0 exact, ook na float32-cast
+    y = (X[:, 2] > 0).astype(float).reshape(-1, 1)
+    W, b = _fit_l1_logistic_batch(X, y, np.array([0.01]), n_iter=200)
+    assert np.all(np.isfinite(W)) and np.all(np.isfinite(b))
+    preds = 1.0 / (1.0 + np.exp(-(X @ W[:, 0] + b[0])))
+    acc = float(((preds >= 0.5) == (y[:, 0] == 1)).mean())
+    assert acc >= 0.9  # de fit optimaliseert echt i.p.v. te satureren
+
+
 def test_probe_touches_no_seed_state():
     # doctrine guard: the probe module must not import or construct a manager
     import shadowseed.benchmark.activation_probe as mod

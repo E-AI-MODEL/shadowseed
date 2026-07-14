@@ -26,6 +26,10 @@ on:
         description: "Leespunt: mlp_out (rounds 026-030) of neuron (H-Neurons: down_proj-input)"
         required: true
         default: "neuron"
+      sparse_permutations:
+        description: "Label-shuffles voor de sparse detector; vloer = 1/(N+1). Default 500 -> ~0.002, net onder de Bonferroni-lat voor 24 lagen (0.05/24)"
+        required: true
+        default: "500"
 
 permissions:
   contents: read
@@ -33,12 +37,13 @@ permissions:
 jobs:
   real-verdict-probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       PROBE_MODEL_ID: ${{ inputs.probe_model_id }}
       DIALECTIC_MODEL_ID: ${{ inputs.dialectic_model_id }}
       INPUT_PATH: ${{ inputs.input_path }}
       READ_LOCATION: ${{ inputs.read_location }}
+      SPARSE_PERMUTATIONS: ${{ inputs.sparse_permutations }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -72,6 +77,7 @@ jobs:
             --verdicts results/dialectic_verdicts.json
             --pooling stelling
             --read-location "$READ_LOCATION"
+            --sparse-permutations "$SPARSE_PERMUTATIONS"
             --output results/activation_probe_real_verdict.json)
           python -m shadowseed.cli "${args[@]}"
 

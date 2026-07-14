@@ -47,6 +47,7 @@ probe_model_id: Qwen/Qwen2.5-0.5B
 dialectic_model_id: gpt-4.1
 input_path: src/shadowseed/data/dialectic_falsification_transfer_v2.json   # 24 cases
 read_location: neuron
+sparse_permutations: 500
 ```
 
 gpt-4.1 blijft de ontkoppelde oordeelbron (zelfde keten als rounds 028/030);
@@ -56,8 +57,12 @@ de sonde leest de internals van het Qwen-model met díe labels.
 
 - **Signaal** alleen als de permutatie-p van de sterkste laag — sparse óf
   centroïde — na Bonferroni-correctie over het aantal geteste lagen onder
-  0.05 blijft (24 lagen: ruwe p < ~0.002). Eén laag die ongecorrigeerd
-  "significant" oogt telt niet; we testen tientallen lagen.
+  0.05 blijft (24 lagen: ruwe p < 0.05/24 ≈ 0.00208). Eén laag die
+  ongecorrigeerd "significant" oogt telt niet; we testen tientallen lagen.
+  De permutatievloer moet die lat ook kúnnen halen: met 500 shuffles is de
+  laagst haalbare sparse-p 1/501 ≈ 0.0020 — net eronder (codex-P1-les:
+  met de eerdere 200 was de lat per constructie onhaalbaar geweest). Bij
+  meer dan 24 geteste lagen moet `sparse_permutations` mee omhoog.
 - Een hoge LOOCV-score zonder lage permutatie-p is **geen** signaal (zie
   punt 2 hierboven — de detector kan op ruis scoren, de shuffle niet).
 - **Vierde schone null** → dit spoor gaat in rust (richting 3 uit round
