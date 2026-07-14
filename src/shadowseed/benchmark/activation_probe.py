@@ -164,10 +164,155 @@ def permutation_control(
     }
 
 
+def _sigmoid(z: np.ndarray) -> np.ndarray:
+    return 1.0 / (1.0 + np.exp(-np.clip(z, -30.0, 30.0)))
+
+
+def _fit_l1_logistic_batch(
+    X: np.ndarray, Y: np.ndarray, lam: np.ndarray, n_iter: int = 200
+) -> tuple[np.ndarray, np.ndarray]:
+    """ISTA voor L1-logistische regressie, gebatcht over label-kolommen.
+
+    ``X``: (n, d) gestandaardiseerd; ``Y``: (n, k) in {0,1}; ``lam``: (k,)
+    L1-sterkte per kolom. Onbestrafte intercept. Deterministisch: init 0,
+    vaste stapgrootte 1/L met L via power-iteratie op de kleine gram-matrix
+    (n x n), FISTA-momentum voor snellere convergentie. float32 voor de
+    matmuls (dit is een detector, geen precisie-instrument). Geen externe
+    dependency — bewust numpy-only.
+    """
+    n, d = X.shape
+    X = np.ascontiguousarray(X, dtype=np.float32)
+    Y = np.ascontiguousarray(Y, dtype=np.float32)
+    lam32 = lam.astype(np.float32)
+    gram = X @ X.T
+    v = np.ones(n, dtype=np.float32) / np.sqrt(n)
+    for _ in range(30):
+        nxt = gram @ v
+        norm = float(np.linalg.norm(nxt))
+        if norm == 0.0:
+            break
+        v = nxt / norm
+    sigma2 = float(v @ gram @ v)
+    step = np.float32(1.0 / max(sigma2 / (4.0 * n), 1e-12))
+    W = np.zeros((d, Y.shape[1]), dtype=np.float32)
+    b = np.zeros(Y.shape[1], dtype=np.float32)
+    Z = W  # FISTA-extrapolatiepunt
+    t_acc = 1.0
+    for _ in range(n_iter):
+        resid = (_sigmoid(X @ Z + b) - Y) / np.float32(n)
+        W_next = Z - step * (X.T @ resid)
+        W_next = np.sign(W_next) * np.maximum(np.abs(W_next) - step * lam32, 0.0)
+        b = b - step * resid.sum(axis=0)
+        t_next = (1.0 + np.sqrt(1.0 + 4.0 * t_acc * t_acc)) / 2.0
+        Z = W_next + np.float32((t_acc - 1.0) / t_next) * (W_next - W)
+        W, t_acc = W_next, t_next
+    return W.astype(np.float64), b.astype(np.float64)
+
+
+def sparse_probe(
+    vectors: list[np.ndarray],
+    labels: list[str],
+    n_permutations: int = 200,
+    rng_seed: int = 45,
+    lam_frac: float = 0.1,
+    n_iter: int = 200,
+) -> dict[str, Any]:
+    """H-Neurons-stijl detector: sparse L1-classifier met leave-one-out-CV.
+
+    Gao et al. 2025 identificeren hallucinatie-neuronen met een sparse
+    (L1-)logistische classifier op per-neuron-activaties. Dit is die
+    detector, aangepast aan onze kleine n: leave-one-out-CV als
+    generalisatietoets en een label-shuffle-permutatiecontrole op de
+    CV-score (de centroïde-cosine ziet alleen gemiddelde-verschuiving; een
+    classifier kan ook sparse, niet-centroïde patronen vinden — en de
+    permutatie houdt hem eerlijk bij hoge dimensie en kleine n).
+    """
+    classes = sorted(set(labels))
+    if len(classes) != 2:
+        return {"valid": False, "reason": "twee klassen vereist"}
+    counts = {c: labels.count(c) for c in classes}
+    if min(counts.values()) < 2:
+        return {
+            "valid": False,
+            "reason": "minstens 2 per klasse vereist voor leave-one-out-CV",
+            "n_per_class": counts,
+        }
+    X = np.stack(vectors).astype(np.float64)
+    y = np.array([1.0 if lbl == classes[1] else 0.0 for lbl in labels])
+    n, d = X.shape
+    rng = np.random.default_rng(rng_seed)
+    Y = np.empty((n, 1 + n_permutations))
+    Y[:, 0] = y
+    for j in range(n_permutations):
+        Y[:, j + 1] = rng.permutation(y)
+
+    probs = np.empty((n, Y.shape[1]))
+    for i in range(n):
+        mask = np.ones(n, dtype=bool)
+        mask[i] = False
+        x_tr = X[mask]
+        mu = x_tr.mean(axis=0)
+        sd = x_tr.std(axis=0)
+        sd[sd == 0.0] = 1.0
+        x_std = (x_tr - mu) / sd
+        y_tr = Y[mask]
+        # lam relatief aan lam_max (waar de L1-oplossing volledig 0 wordt),
+        # per label-kolom — schaalvrij en deterministisch
+        lam = lam_frac * np.max(np.abs(x_std.T @ (0.5 - y_tr)), axis=0) / (n - 1)
+        W, b = _fit_l1_logistic_batch(x_std, y_tr, lam, n_iter=n_iter)
+        probs[i] = _sigmoid(((X[i] - mu) / sd) @ W + b)
+
+    hard = probs >= 0.5
+    pos = Y == 1.0
+    tpr = (hard & pos).sum(axis=0) / pos.sum(axis=0)
+    tnr = (~hard & ~pos).sum(axis=0) / (~pos).sum(axis=0)
+    baccs = (tpr + tnr) / 2.0
+    observed = float(baccs[0])
+    p_value = (
+        float((1 + int((baccs[1:] >= observed - 1e-12).sum())) / (1 + n_permutations))
+        if n_permutations
+        else None
+    )
+
+    # volledige-data-fit alleen voor de kandidaatlijst (sparsity-inspectie);
+    # de generalisatieclaim komt uitsluitend uit de LOOCV + permutatie
+    mu = X.mean(axis=0)
+    sd = X.std(axis=0)
+    sd[sd == 0.0] = 1.0
+    x_std = (X - mu) / sd
+    y_col = y.reshape(-1, 1)
+    lam_full = lam_frac * np.max(np.abs(x_std.T @ (0.5 - y_col)), axis=0) / n
+    W_full, _ = _fit_l1_logistic_batch(x_std, y_col, lam_full, n_iter=n_iter)
+    w = W_full[:, 0]
+    nonzero = np.flatnonzero(w)
+    top = nonzero[np.argsort(np.abs(w[nonzero]))[::-1][:5]]
+    return {
+        "valid": True,
+        "method": (
+            "sparse L1-logistische classifier (ISTA, numpy) + "
+            "leave-one-out-CV + label-shuffle-permutatie — "
+            "H-Neurons-stijl detector (Gao et al. 2025)"
+        ),
+        "classes": classes,
+        "n_per_class": counts,
+        "loocv_balanced_accuracy": observed,
+        "p_value": p_value,
+        "n_permutations": n_permutations,
+        "min_possible_p": (1.0 / (1 + n_permutations)) if n_permutations else None,
+        "n_dims": int(d),
+        "n_nonzero_full_fit": int(nonzero.size),
+        "sparsity_fraction": float(nonzero.size / d) if d else 0.0,
+        "candidate_neurons": [
+            {"dim": int(i), "weight": float(w[i])} for i in top
+        ],
+    }
+
+
 def probe_report(
     per_layer: dict[str, dict[str, list[np.ndarray]]],
+    sparse_permutations: int = 200,
 ) -> dict[str, Any]:
-    """Per-laag scheiding + permutatie-controle + de sterkste laag."""
+    """Per-laag scheiding + permutatie-controle + sparse detector + sterkste laag."""
     layers: dict[str, dict[str, Any]] = {}
     for name, acts in per_layer.items():
         rep = class_separation(acts)
@@ -175,6 +320,9 @@ def probe_report(
             vectors = [v for label in sorted(acts) for v in acts[label]]
             labels = [label for label in sorted(acts) for _ in acts[label]]
             rep["permutation"] = permutation_control(vectors, labels)
+            rep["sparse_probe"] = sparse_probe(
+                vectors, labels, n_permutations=sparse_permutations
+            )
         layers[name] = rep
     scored = {
         name: rep["cosine_distance"]
@@ -182,12 +330,25 @@ def probe_report(
         if rep.get("separable")
     }
     best = max(scored, key=scored.get) if scored else None
+    sparse_scored = {
+        name: rep["sparse_probe"]["loocv_balanced_accuracy"]
+        for name, rep in layers.items()
+        if rep.get("sparse_probe", {}).get("valid")
+    }
+    sparse_best = max(sparse_scored, key=sparse_scored.get) if sparse_scored else None
     return {
         "layers": layers,
         "strongest_layer": best,
         "strongest_cosine_distance": scored.get(best) if best else None,
         "strongest_permutation_p": (
             layers[best]["permutation"]["p_value"] if best else None
+        ),
+        "strongest_sparse_layer": sparse_best,
+        "strongest_sparse_balanced_accuracy": (
+            sparse_scored.get(sparse_best) if sparse_best else None
+        ),
+        "strongest_sparse_p": (
+            layers[sparse_best]["sparse_probe"]["p_value"] if sparse_best else None
         ),
     }
 
@@ -221,13 +382,29 @@ class FakeActivationModel:
 
 
 class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-in)
-    """Echte sonde: forward-hooks op de MLP-lagen van een klein HF-model."""
+    """Echte sonde: forward-hooks op de MLP-lagen van een klein HF-model.
 
-    def __init__(self, model_id: str, device: str = "cpu") -> None:
+    ``read_location`` kiest het leespunt:
+
+    - ``"mlp_out"`` (historisch default, rounds 026–030): de output van de
+      MLP-blokken (``.mlp`` / ``.mlp.c_proj``) — hidden-dimensie;
+    - ``"neuron"``: de **input** van de down-projectie (``.mlp.c_proj`` bij
+      GPT-2, ``.mlp.down_proj`` bij Llama/Qwen-stijl) — dat is het
+      per-neuron-niveau waarop H-Neurons (Gao et al. 2025) hallucinatie-
+      neuronen kwantificeert: de activatie ná de niet-lineariteit, vóór de
+      terugprojectie naar de residual stream.
+    """
+
+    def __init__(
+        self, model_id: str, device: str = "cpu", read_location: str = "mlp_out"
+    ) -> None:
         import torch  # noqa: F401
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
+        if read_location not in ("mlp_out", "neuron"):
+            raise ValueError(f"Onbekende read_location: {read_location!r}")
         self.name = f"hf:{model_id}"
+        self.read_location = read_location
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id)
         self.model.eval()
@@ -255,17 +432,29 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
             ) or None
 
         captured: dict[str, np.ndarray] = {}
+
+        def _pool(tensor, _name):
+            tensor = tensor.detach().float()
+            if positions is not None and tensor.dim() == 3:
+                tensor = tensor[:, positions, :]
+            captured[_name] = tensor.mean(dim=(0, 1)).cpu().numpy()
+
         handles = []
         for name, module in self.model.named_modules():
-            # dek de gangbare MLP-naamgevingen (GPT-2 'mlp', Llama-stijl 'mlp')
-            if name.endswith(".mlp") or name.endswith(".mlp.c_proj"):
-                def _hook(mod, inputs, output, _name=name):
-                    tensor = output[0] if isinstance(output, tuple) else output
-                    tensor = tensor.detach().float()
-                    if positions is not None and tensor.dim() == 3:
-                        tensor = tensor[:, positions, :]
-                    captured[_name] = tensor.mean(dim=(0, 1)).cpu().numpy()
-                handles.append(module.register_forward_hook(_hook))
+            if self.read_location == "neuron":
+                # H-Neurons-leespunt: de input van de down-projectie
+                # (per-neuron-activaties, intermediate-dimensie)
+                if name.endswith(".mlp.c_proj") or name.endswith(".mlp.down_proj"):
+                    def _pre_hook(mod, inputs, _name=name):
+                        _pool(inputs[0], _name)
+                    handles.append(module.register_forward_pre_hook(_pre_hook))
+            else:
+                # dek de gangbare MLP-naamgevingen (GPT-2 'mlp', Llama-stijl 'mlp')
+                if name.endswith(".mlp") or name.endswith(".mlp.c_proj"):
+                    def _hook(mod, inputs, output, _name=name):
+                        tensor = output[0] if isinstance(output, tuple) else output
+                        _pool(tensor, _name)
+                    handles.append(module.register_forward_hook(_hook))
         try:
             tokens = self.tokenizer(
                 prompt, return_tensors="pt", truncation=True, max_length=512
@@ -307,6 +496,8 @@ def run_activation_probe(
     model_id: str | None = None,
     pooling: str = "stelling",
     verdicts_path: str | None = None,
+    read_location: str = "mlp_out",
+    sparse_permutations: int = 200,
 ) -> dict[str, Any]:
     """Sondeer de dialectische cases: activaties per verdict-klasse, per laag.
 
@@ -325,7 +516,7 @@ def run_activation_probe(
     elif backend == "hf":
         if not model_id:
             raise ValueError("--model-id is verplicht voor backend 'hf'")
-        model = HFActivationModel(model_id)
+        model = HFActivationModel(model_id, read_location=read_location)
     else:
         raise ValueError(f"Onbekende activation-probe backend: {backend!r}")
 
@@ -359,6 +550,7 @@ def run_activation_probe(
         "evidence_layer": "G",
         "backend": getattr(model, "name", backend),
         "pooling": pooling,
+        "read_location": read_location,
         "verdict_source": verdict_source,
         "doctrine": (
             "Laag G-signaal: activatie-scheiding tussen dialectische "
@@ -367,7 +559,7 @@ def run_activation_probe(
             "harnas-mechaniek."
         ),
         "cases": cases_out,
-        "report": probe_report(per_layer),
+        "report": probe_report(per_layer, sparse_permutations=sparse_permutations),
     }
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)

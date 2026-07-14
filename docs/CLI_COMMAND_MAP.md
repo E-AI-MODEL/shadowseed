@@ -50,7 +50,7 @@ Deze commands verdiepen het bewijs verder, maar draaien niet automatisch mee in 
 | `run-open-set-seed-review` | open-set seedkwaliteit | handmatig |
 | `summarize-open-set-seed-review` | open-set samenvatting | handmatig |
 | `run-dialectic-falsification` | Laag G instap: dialectische falsificatie van promoted seeds | handmatig |
-| `run-activation-probe` | Laag G spoor 2: MLP-activatiescheiding tussen verdict-klassen (signaal, geen verdict); `--verdicts` ontkoppelt de verdictbron van het gesondeerde model | handmatig (fake-smoke in CI-tests; hf opt-in) |
+| `run-activation-probe` | Laag G spoor 2: activatiescheiding tussen verdict-klassen (signaal, geen verdict); `--verdicts` ontkoppelt de verdictbron, `--read-location neuron` leest op het H-Neurons-punt (down_proj-input), sparse L1-detector met LOOCV + permutatie zit in elk rapport | handmatig (fake-smoke in CI-tests; hf opt-in) |
 
 Voor deze laag is het doel niet alleen output maken, maar vooral reviewerbare en stabiele artefacts opbouwen.
 

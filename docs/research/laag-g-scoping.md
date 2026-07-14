@@ -137,6 +137,31 @@ niet-lineaire codering, andere leeslocaties (attention/residual), of grotere
 modellen (het H-Neurons-precedent zit op een andere orde van grootte). Zie
 `benchmarks/open_review/rounds/round_030/RESULTS.md`.
 
+**Iteratie 7 (2026-07-14, instrument klaar — run gepland als round 032):
+de H-Neurons-methodiek zelf geadopteerd.** De twee open richtingen uit
+round 030 in één stap, door het precedent nu ook methodisch te volgen in
+plaats van alleen te citeren:
+
+1. **Leespunt `--read-location neuron`**: de input van de down-projectie
+   (`.mlp.c_proj` bij GPT-2, `.mlp.down_proj` bij Llama/Qwen) — het
+   per-neuron-niveau waarop H-Neurons kwantificeert; onze eerdere rounds
+   lazen de al teruggeprojecteerde MLP-output.
+2. **Sparse detector**: `sparse_probe` — L1-logistische classifier
+   (FISTA, numpy-only, deterministisch) met leave-one-out-CV en een
+   label-shuffle-permutatiecontrole op de CV-score, naast de bestaande
+   centroïde-meting. Een centroïde ziet alleen gemiddelde-verschuiving;
+   dit ziet ook sparse subset-patronen (H-Neurons' kernresultaat: <0.1‰
+   van de neuronen draagt het onderscheid).
+3. **Groter multilingual model** als run-parameter: `Qwen/Qwen2.5-0.5B`
+   (NL-capabel, orde groter dan alles tot nu toe; de
+   `down_proj`-naamgeving past direct op de nieuwe hooks).
+
+Bewust niet overgenomen: de activation-scaling-interventie — interveniëren
+is pas aan de orde als er een gerepliceerbaar signaal is. Leesregel vooraf
+(zie round 032): signaal alleen bij permutatie-p onder Bonferroni over de
+geteste lagen; een vierde schone null legt dit spoor in rust en verwijst
+de schaalvraag (H-Neurons meet op 24B–70B) expliciet naar toekomstwerk.
+
 ## Doctrine-regels (gelden voor beide sporen)
 
 - Een intern of dialectisch signaal is **falsificatie- of evidence-input**,
