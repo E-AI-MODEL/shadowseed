@@ -170,8 +170,12 @@ Qwen2.5-0.5B (leespunt `neuron`) vond centroïde-p 0.014
 boven de Bonferroni-lat van ~0.00208, en over 24 lagen × 2 detectoren goed
 verenigbaar met toeval. Conform de vooraf vastgelegde leesregel gaat spoor
 2 hiermee **in rust**: geen nieuwe runs zonder vooraf geregistreerd
-replicatieplan (bv. een nieuwe caseset die uitsluitend de twee gevonden
-lagen toetst, of een wezenlijk groter model). Eerlijk genoteerd: dit is de
+replicatieplan. Dat plan bestaat inmiddels: de maintainer heeft besloten
+tot één vooraf geregistreerde replicatie (round 033,
+`dialectic_falsification_transfer_v3.json`: nieuwe brontekst, alleen de
+lagen 2 en 5 tellen, Bonferroni over 4 toetsen, lat 0.0125) — repliceert
+het niet, dan sluit het spoor definitief voor deze schaal. Eerlijk
+genoteerd: round 032 is de
 eerste níet-vlakke null van het spoor (eerdere p's 0.21–0.83) — het
 instrument rapporteerde correct néé, en de permutatiecontrole hield een
 verleidelijke LOOCV-score van 0.88 tegen. Spoor 1 (dialectische
