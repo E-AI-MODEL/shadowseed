@@ -22,6 +22,14 @@ on:
         description: "Dialectische case-file (source_text + cases)"
         required: true
         default: "src/shadowseed/data/dialectic_falsification_transfer.json"
+      read_location:
+        description: "Leespunt: mlp_out (rounds 026-030) of neuron (H-Neurons: down_proj-input)"
+        required: true
+        default: "neuron"
+      sparse_permutations:
+        description: "Label-shuffles voor de sparse detector; vloer = 1/(N+1). Default 500 -> ~0.002, net onder de Bonferroni-lat voor 24 lagen (0.05/24)"
+        required: true
+        default: "500"
 
 permissions:
   contents: read
@@ -29,11 +37,13 @@ permissions:
 jobs:
   real-verdict-probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       PROBE_MODEL_ID: ${{ inputs.probe_model_id }}
       DIALECTIC_MODEL_ID: ${{ inputs.dialectic_model_id }}
       INPUT_PATH: ${{ inputs.input_path }}
+      READ_LOCATION: ${{ inputs.read_location }}
+      SPARSE_PERMUTATIONS: ${{ inputs.sparse_permutations }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -66,6 +76,8 @@ jobs:
             --input "$INPUT_PATH"
             --verdicts results/dialectic_verdicts.json
             --pooling stelling
+            --read-location "$READ_LOCATION"
+            --sparse-permutations "$SPARSE_PERMUTATIONS"
             --output results/activation_probe_real_verdict.json)
           python -m shadowseed.cli "${args[@]}"
 
@@ -75,17 +87,27 @@ jobs:
           import json
           r = json.load(open("results/activation_probe_real_verdict.json"))
           rep = r["report"]
-          print("gesondeerd model:", r["backend"], "| verdict-bron:", r["verdict_source"])
+          print("gesondeerd model:", r["backend"], "| verdict-bron:", r["verdict_source"],
+                "| leespunt:", r.get("read_location", "mlp_out"))
           print("cases:", [(c["seed_text"][:40], c["verdict"]) for c in r["cases"]])
           best = rep["strongest_layer"]
           if best:
               perm = rep["layers"][best]["permutation"]
-              print("sterkste laag:", best,
+              print("sterkste laag (centroide):", best,
                     "| cosine-afstand:", round(rep["strongest_cosine_distance"], 4),
                     "| permutatie-p:", round(perm["p_value"], 4),
                     "| haalbare vloer:", round(perm["min_possible_p"], 4))
           else:
               print("geen separabele laag (te weinig van een klasse)")
+          sbest = rep.get("strongest_sparse_layer")
+          if sbest:
+              sp = rep["layers"][sbest]["sparse_probe"]
+              print("sterkste laag (sparse L1):", sbest,
+                    "| LOOCV balanced accuracy:", round(sp["loocv_balanced_accuracy"], 4),
+                    "| permutatie-p:", round(sp["p_value"], 4) if sp["p_value"] is not None else None,
+                    "| nonzero:", sp["n_nonzero_full_fit"], "/", sp["n_dims"])
+          else:
+              print("sparse detector: niet toepasbaar (minder dan 2 per klasse)")
           EOF
 
       - name: Upload artifacts

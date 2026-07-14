@@ -21,6 +21,7 @@ from shadowseed.benchmark.activation_probe import (
     permutation_control,
     run_activation_probe,
     select_focus_positions,
+    sparse_probe,
 )
 from shadowseed.benchmark.dialectic_falsification import build_dialectic_prompt
 
@@ -212,6 +213,116 @@ def test_probe_uses_external_verdicts(tmp_path: Path):
 def test_probe_default_verdict_source_is_fixture(tmp_path: Path):
     result = run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "p.json"))
     assert result["verdict_source"] == "fixture"
+
+
+def _planted_data(n_per_class: int = 6, dim: int = 16, seed: int = 3):
+    # klasse-verschil geplant in precies één dimensie (3); rest is ruis
+    rng = np.random.default_rng(seed)
+    vecs, labels = [], []
+    for _ in range(n_per_class):
+        v = rng.normal(size=dim)
+        v[3] = rng.normal(-1.5, 0.3)
+        vecs.append(v)
+        labels.append("WEERLEGD")
+    for _ in range(n_per_class):
+        v = rng.normal(size=dim)
+        v[3] = rng.normal(1.5, 0.3)
+        vecs.append(v)
+        labels.append("HOUDT_STAND")
+    return vecs, labels
+
+
+def test_sparse_probe_finds_planted_dimension():
+    vecs, labels = _planted_data()
+    rep = sparse_probe(vecs, labels, n_permutations=99, n_iter=150)
+    assert rep["valid"] is True
+    assert rep["loocv_balanced_accuracy"] >= 0.9
+    assert rep["p_value"] <= 0.05
+    # de detector hoort sparse te zijn en de geplante dimensie te vinden
+    assert rep["n_nonzero_full_fit"] < rep["n_dims"]
+    assert 3 in {c["dim"] for c in rep["candidate_neurons"]}
+
+
+def test_sparse_probe_on_random_data_is_not_significant():
+    rng = np.random.default_rng(11)
+    vecs = [rng.normal(size=16) for _ in range(12)]
+    labels = ["WEERLEGD"] * 6 + ["HOUDT_STAND"] * 6
+    rep = sparse_probe(vecs, labels, n_permutations=99, n_iter=150)
+    assert rep["valid"] is True
+    assert rep["p_value"] > 0.05  # ruis hoort niet significant te classificeren
+
+
+def test_sparse_probe_is_deterministic():
+    vecs, labels = _planted_data()
+    a = sparse_probe(vecs, labels, n_permutations=49, n_iter=100)
+    b = sparse_probe(vecs, labels, n_permutations=49, n_iter=100)
+    assert a["loocv_balanced_accuracy"] == b["loocv_balanced_accuracy"]
+    assert a["p_value"] == b["p_value"]
+    assert a["candidate_neurons"] == b["candidate_neurons"]
+
+
+def test_sparse_probe_requires_two_per_class():
+    vecs = [np.ones(4), np.zeros(4), np.full(4, 0.5)]
+    rep = sparse_probe(vecs, ["W", "W", "H"])
+    assert rep["valid"] is False
+    assert "leave-one-out" in rep["reason"]
+
+
+def test_sparse_probe_without_permutations_skips_p_value():
+    vecs, labels = _planted_data()
+    rep = sparse_probe(vecs, labels, n_permutations=0, n_iter=100)
+    assert rep["valid"] is True
+    assert rep["p_value"] is None and rep["min_possible_p"] is None
+
+
+def test_probe_report_includes_sparse_probe():
+    vecs, labels = _planted_data()
+    acts = {"WEERLEGD": [], "HOUDT_STAND": []}
+    for v, lbl in zip(vecs, labels):
+        acts[lbl].append(v)
+    rep = probe_report({"mlp.x": acts}, sparse_permutations=49)
+    sp = rep["layers"]["mlp.x"]["sparse_probe"]
+    assert sp["valid"] is True
+    assert rep["strongest_sparse_layer"] == "mlp.x"
+    assert rep["strongest_sparse_balanced_accuracy"] == sp["loocv_balanced_accuracy"]
+    assert rep["strongest_sparse_p"] == sp["p_value"]
+
+
+def test_probe_report_sparse_invalid_at_tiny_class(tmp_path: Path):
+    # fixture heeft minderheid n=1: de sparse detector meldt zich eerlijk af,
+    # de rest van het rapport blijft intact
+    out = tmp_path / "probe.json"
+    result = run_activation_probe(str(FIXTURE), output_path=str(out))
+    for layer_report in result["report"]["layers"].values():
+        assert layer_report["sparse_probe"]["valid"] is False
+    assert result["report"]["strongest_sparse_layer"] is None
+
+
+def test_probe_records_read_location(tmp_path: Path):
+    out = tmp_path / "probe.json"
+    result = run_activation_probe(str(FIXTURE), output_path=str(out))
+    assert result["read_location"] == "mlp_out"  # backward-compatibel default
+    result = run_activation_probe(
+        str(FIXTURE), output_path=str(out), read_location="neuron"
+    )
+    assert result["read_location"] == "neuron"
+
+
+def test_l1_fit_survives_exactly_centered_data():
+    # codex-P2-regressie: bij kolomsommen die exact 0 zijn (ook in float32)
+    # ligt de all-ones-vector in de nullspace van de gram-matrix; de
+    # power-iteratie mag daar niet op instorten (gesatureerde reuzenstap)
+    from shadowseed.benchmark.activation_probe import _fit_l1_logistic_batch
+
+    rng = np.random.default_rng(5)
+    half = rng.normal(size=(6, 8))
+    X = np.vstack([half, -half])  # a + (-a) = 0 exact, ook na float32-cast
+    y = (X[:, 2] > 0).astype(float).reshape(-1, 1)
+    W, b = _fit_l1_logistic_batch(X, y, np.array([0.01]), n_iter=200)
+    assert np.all(np.isfinite(W)) and np.all(np.isfinite(b))
+    preds = 1.0 / (1.0 + np.exp(-(X @ W[:, 0] + b[0])))
+    acc = float(((preds >= 0.5) == (y[:, 0] == 1)).mean())
+    assert acc >= 0.9  # de fit optimaliseert echt i.p.v. te satureren
 
 
 def test_probe_touches_no_seed_state():

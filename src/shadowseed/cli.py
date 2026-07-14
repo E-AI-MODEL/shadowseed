@@ -462,6 +462,13 @@ def build_parser() -> argparse.ArgumentParser:
     act_probe.add_argument("--verdicts", default=None,
         help="Pad naar een dialectic_falsification-artifact: gebruik díe verdict-labels "
         "(bv. gpt-4.1 oordeelt) i.p.v. de fixture-mechaniek. De echte Laag G-vraag.")
+    act_probe.add_argument("--read-location", choices=["mlp_out", "neuron"], default="mlp_out",
+        help="'mlp_out' = MLP-blok-output (rounds 026-030); 'neuron' = input van de "
+        "down-projectie (c_proj/down_proj) — het per-neuron-leespunt van H-Neurons "
+        "(Gao et al. 2025).")
+    act_probe.add_argument("--sparse-permutations", type=int, default=200,
+        help="Aantal label-shuffles voor de permutatiecontrole op de sparse "
+        "L1-classifier (0 = alleen LOOCV, geen p-waarde).")
 
     chat = subparsers.add_parser(
         "chat",
