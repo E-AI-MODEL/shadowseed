@@ -97,7 +97,7 @@ tweezijdig: head-to-head én seed-fit-afhankelijkheid
 (`round_031/human_review/RESULTS.md`; round-029-voorbehoud:
 `round_029/human_review/r2_concurrence.md`).
 
-### Laag G — Modelinterne research (H-neuron-spoor) · **Eerste iteratie doorlopen — schoon nul**
+### Laag G — Modelinterne research (H-neuron-spoor) · **Zeven iteraties doorlopen — vier nulls, spoor 2 in rust**
 Twee sporen (`laag-g-scoping.md`):
 - **Spoor 1 — dialectische falsificatie** (`run-dialectic-falsification`): een
   model argumenteert een promoted seed weg tegen de bron; WEERLEGD → Gate-
@@ -110,9 +110,15 @@ Twee sporen (`laag-g-scoping.md`):
   0.002** (round 030, iteratie 6). Resultaat, drie keer: **geen scheiding
   boven toeval** — ook een NL-capabel klein model codeert gpt-4.1's
   houdbaarheidsoordeel niet lineair in zijn MLP-activaties (round 030:
-  sterkste laag p 0.2056). Een null is hier het **correcte** antwoord, geen
-  falen; signaal ≠ verdict, raakt lagen A–F niet. Open blijven: niet-lineaire
-  codering, andere leeslocaties, of wezenlijk grotere modellen.
+  sterkste laag p 0.2056). Iteratie 7 (round 032) adopteerde vervolgens de
+  H-Neurons-methodiek zelf: leespunt `neuron` (down_proj-input), sparse
+  L1-detector met LOOCV + permutatie, en **Qwen2.5-0.5B** als groter
+  multilingual model. Uitkomst: centroïde-p 0.014 / sparse-p 0.018 — de
+  eerste níet-vlakke null, maar boven de vooraf vastgelegde Bonferroni-lat
+  (~0.00208 bij 24 lagen), dus **vierde null; spoor 2 is in rust** (geen
+  nieuwe runs zonder vooraf geregistreerd replicatieplan). Een null is hier
+  het **correcte** antwoord, geen falen; signaal ≠ verdict, raakt lagen A–F
+  niet. Spoor 1 (dialectische falsificatie) blijft de actieve Laag G-route.
 
 ## Twee assen: winnaar-as vs seed-effect-as
 
