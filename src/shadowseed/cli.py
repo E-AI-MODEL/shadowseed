@@ -466,9 +466,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="'mlp_out' = MLP-blok-output (rounds 026-030); 'neuron' = input van de "
         "down-projectie (c_proj/down_proj) — het per-neuron-leespunt van H-Neurons "
         "(Gao et al. 2025).")
-    act_probe.add_argument("--sparse-permutations", type=int, default=200,
+    act_probe.add_argument("--sparse-permutations", type=int, default=500,
         help="Aantal label-shuffles voor de permutatiecontrole op de sparse "
-        "L1-classifier (0 = alleen LOOCV, geen p-waarde).")
+        "L1-classifier (0 = alleen LOOCV, geen p-waarde). Default 500: vloer "
+        "1/501 ~0.002, haalbaar onder de Bonferroni-lat van 24 lagen (round 032).")
 
     chat = subparsers.add_parser(
         "chat",

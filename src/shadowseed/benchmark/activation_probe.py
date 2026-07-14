@@ -220,7 +220,7 @@ def _fit_l1_logistic_batch(
 def sparse_probe(
     vectors: list[np.ndarray],
     labels: list[str],
-    n_permutations: int = 200,
+    n_permutations: int = 500,
     rng_seed: int = 45,
     lam_frac: float = 0.1,
     n_iter: int = 200,
@@ -318,7 +318,7 @@ def sparse_probe(
 
 def probe_report(
     per_layer: dict[str, dict[str, list[np.ndarray]]],
-    sparse_permutations: int = 200,
+    sparse_permutations: int = 500,
 ) -> dict[str, Any]:
     """Per-laag scheiding + permutatie-controle + sparse detector + sterkste laag."""
     layers: dict[str, dict[str, Any]] = {}
@@ -505,7 +505,7 @@ def run_activation_probe(
     pooling: str = "stelling",
     verdicts_path: str | None = None,
     read_location: str = "mlp_out",
-    sparse_permutations: int = 200,
+    sparse_permutations: int = 500,
 ) -> dict[str, Any]:
     """Sondeer de dialectische cases: activaties per verdict-klasse, per laag.
 

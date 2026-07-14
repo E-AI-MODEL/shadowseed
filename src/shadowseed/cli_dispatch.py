@@ -198,7 +198,7 @@ def _run_activation_probe(args: argparse.Namespace) -> str:
         pooling=getattr(args, "pooling", "stelling"),
         verdicts_path=getattr(args, "verdicts", None),
         read_location=getattr(args, "read_location", "mlp_out"),
-        sparse_permutations=getattr(args, "sparse_permutations", 200),
+        sparse_permutations=getattr(args, "sparse_permutations", 500),
     )
     return args.output
 
