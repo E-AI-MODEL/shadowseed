@@ -162,6 +162,26 @@ is pas aan de orde als er een gerepliceerbaar signaal is. Leesregel vooraf
 geteste lagen; een vierde schone null legt dit spoor in rust en verwijst
 de schaalvraag (H-Neurons meet op 24B–70B) expliciet naar toekomstwerk.
 
+**Uitkomst (run 29299952586, round 032): vierde null — spoor in rust.**
+gpt-4.1 gaf 7× HOUDT_STAND / 17× WEERLEGD over alle 24 cases; de sonde op
+Qwen2.5-0.5B (leespunt `neuron`) vond centroïde-p 0.014
+(`model.layers.2.mlp.down_proj`) en sparse-L1-p 0.018
+(`model.layers.5.mlp.down_proj`, LOOCV 0.88, 37/4864 dims) — beide ruim
+boven de Bonferroni-lat van ~0.00208, en over 24 lagen × 2 detectoren goed
+verenigbaar met toeval. Conform de vooraf vastgelegde leesregel gaat spoor
+2 hiermee **in rust**: geen nieuwe runs zonder vooraf geregistreerd
+replicatieplan. Dat plan bestaat inmiddels: de maintainer heeft besloten
+tot één vooraf geregistreerde replicatie (round 033,
+`dialectic_falsification_transfer_v3.json`: nieuwe brontekst, alleen de
+lagen 2 en 5 tellen, Bonferroni over 4 toetsen, lat 0.0125) — repliceert
+het niet, dan sluit het spoor definitief voor deze schaal. Eerlijk
+genoteerd: round 032 is de
+eerste níet-vlakke null van het spoor (eerdere p's 0.21–0.83) — het
+instrument rapporteerde correct néé, en de permutatiecontrole hield een
+verleidelijke LOOCV-score van 0.88 tegen. Spoor 1 (dialectische
+falsificatie) blijft de actieve Laag G-route. Zie
+`benchmarks/open_review/rounds/round_032/RESULTS.md`.
+
 ## Doctrine-regels (gelden voor beide sporen)
 
 - Een intern of dialectisch signaal is **falsificatie- of evidence-input**,

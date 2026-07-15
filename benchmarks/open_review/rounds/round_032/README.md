@@ -1,6 +1,9 @@
 # Round 032 — Laag G iteratie 7: de H-Neurons-methodiek geadopteerd
 
-> **Status: PLAN + INSTRUMENT KLAAR (run nog niet gedraaid).** Doel: de twee
+> **Status: VERDICT — run gedraaid (2026-07-14, run 29299952586): vierde
+> null volgens de vooraf vastgelegde leesregel (centroïde p 0.014, sparse
+> L1 p 0.018, beide boven de Bonferroni-lat ~0.00208) — het spoor gaat in
+> rust. Wel de eerste níet-vlakke null; zie `RESULTS.md`.** Doel: de twee
 > open richtingen uit round 030 in één iteratie dichten door de methodiek
 > van het H-Neurons-precedent (Gao et al. 2025, arXiv 2512.01797, code
 > thunlp/H-Neurons, MIT) daadwerkelijk over te nemen — niet alleen als
