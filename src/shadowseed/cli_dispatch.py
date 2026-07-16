@@ -236,6 +236,7 @@ def _run_ssl_session(args: argparse.Namespace) -> str:
             surface_top_k=getattr(args, "surface_top_k", 2),
             early_turn_margin=getattr(args, "early_turn_margin", 0.10),
             early_turn_history=getattr(args, "early_turn_history", 5),
+            resurface_margin=getattr(args, "resurface_margin", 0.15),
             dedup_threshold=getattr(args, "dedup_threshold", None),
             min_occurrences=getattr(args, "min_occurrences", None),
             promotion_threshold=getattr(args, "promotion_threshold", None),

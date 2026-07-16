@@ -241,6 +241,91 @@ def test_early_turn_margin_raises_bar_on_early_turns(tmp_path: Path, monkeypatch
     assert def_turns and min(def_turns) >= 5
 
 
+def test_resurface_margin_damps_consecutive_steering(tmp_path: Path, monkeypatch):
+    # Gebruiksdemping (round 031-les, TrTL op use-time): een seed die net een
+    # antwoord stuurde krijgt de dírect volgende beurt een hogere lat
+    # (halverend per beurt) en moet zich via verse fit opnieuw bewijzen.
+    # Round 031 mat precies dit falen: dezelfde matig-passende seed kleurde
+    # t05 én t06 (8/14 hinder). Geen beurt-blok, weight onaangeroerd.
+    conv = {
+        "version": "t",
+        "conversations": [
+            {"id": "A", "domain": "d", "min_occurrences": 2,
+             "turns": [{"question": f"Vraag {i}?"} for i in range(10)]},
+        ],
+    }
+    inp = tmp_path / "in.json"
+    inp.write_text(json.dumps(conv), encoding="utf-8")
+
+    class _Model:
+        name = "fake"
+
+        def generate(self, prompt, scenario, mode, seeds):
+            return "SSL-antwoord." if mode == "ssl" else "Baseline-antwoord."
+
+    class _Detector:
+        name = "fake-det"
+
+        def detect_seeds(self, item, max_seeds=5):
+            return ["SEEDGAP terugkerend ontbrekend punt."]
+
+    v_seed = np.zeros(8)
+    v_seed[0] = 1.0
+    v_q = np.zeros(8)
+    v_q[0] = 0.35
+    v_q[1] = float(np.sqrt(1 - 0.35**2))
+
+    def _embedder(backend, model_id=None, **kw):
+        def embed(text: str) -> np.ndarray:
+            return v_seed.copy() if "SEEDGAP" in text else v_q.copy()
+
+        return embed, 8
+
+    monkeypatch.setattr(sess, "make_backend", lambda **kw: _Model())
+    monkeypatch.setattr(sess, "make_detector_backend", lambda *a, **kw: _Detector())
+    monkeypatch.setattr(sess, "make_embedding_fn", _embedder)
+
+    def _payoff_turns(resurface):
+        out = tmp_path / f"r{resurface}.json"
+        run_ssl_session(
+            str(inp), str(out), backend="openai",
+            early_turn_margin=0.0, early_turn_history=0,
+            resurface_margin=resurface,
+        )
+        payload = json.loads(out.read_text(encoding="utf-8"))
+        turns = [
+            tr["turn"]
+            for tr in payload["conversations"][0]["turns"]
+            if tr["is_cross_turn_payoff"]
+        ]
+        return turns, payload["conversations"][0]["applied_thresholds"]
+
+    # zonder demping stuurt de sim-0.35-seed élke beurt na promotie
+    free, appl0 = _payoff_turns(0.0)
+    assert len(free) >= 3
+    assert appl0["resurface_margin"] == 0.0
+    assert any(b - a == 1 for a, b in zip(free, free[1:])), (
+        "zonder demping horen opeenvolgende stuur-beurten voor te komen"
+    )
+
+    # met demping (0.08: +0.08 direct erna, +0.04 een beurt later) kan
+    # dezelfde seed nooit twee beurten op rij sturen — maar komt hij wél
+    # terug zodra de extra lat onder sim - drempel (0.05) zakt
+    damped, appl = _payoff_turns(0.08)
+    assert appl["resurface_margin"] == 0.08
+    assert damped, "demping mag surfacing niet permanent uitzetten"
+    assert damped[0] == free[0], "de eerste surfacing blijft ongemoeid"
+    assert all(b - a >= 2 for a, b in zip(damped, damped[1:])), (
+        "direct opeenvolgend hersturen moet gedempt zijn"
+    )
+
+    # default staat aan en wordt vastgelegd in het artifact
+    out = tmp_path / "rdef.json"
+    run_ssl_session(str(inp), str(out), backend="openai")
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    assert payload["conversations"][0]["applied_thresholds"]["resurface_margin"] == 0.15
+
+
 def test_chat_prompt_keeps_question_leading():
     # Round 029: de gestelde vraag blijft leidend — de weave-instructie verbiedt
     # onderwerp-/focusverschuiving expliciet (alleen in de SSL-arm aanwezig).

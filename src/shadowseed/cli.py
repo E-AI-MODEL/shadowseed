@@ -534,6 +534,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Aantal eerste beurten (0-geïndexeerd: t < N) waarop de vroege-beurt-marge geldt.",
     )
     ssl_session.add_argument(
+        "--resurface-margin",
+        type=float,
+        default=0.15,
+        help="Gebruiksdemping (round 031-les, TrTL op use-time): extra relevantiemarge voor een seed die net een antwoord stuurde, halverend per beurt sinds de laatste surfacing. Gebruik verbruikt trace; terugkomen vergt verse fit met de nieuwe vraag. Weight blijft Gate-exclusief. 0 = uit.",
+    )
+    ssl_session.add_argument(
         "--dedup-threshold",
         type=float,
         default=None,
