@@ -131,3 +131,23 @@ def test_fixture_backend_is_deterministic():
     first = backend.generate("p", scenario, "dialectic", [])
     assert first == backend.generate("p", scenario, "dialectic", [])
     assert "WEERLEGD" in first
+
+
+def test_transfer_v3_cases_survive_ingest_atomically():
+    # round-033-preregistratie-guard (codex-P2-les): elke case moet exact
+    # één geaccepteerde, tekst-intacte seed opleveren via de échte
+    # ingest-route — anders beoordeelt de dialectiek een fragment (of
+    # niets) terwijl het verdict onder de volle stelling wordt opgeslagen
+    data = json.loads(
+        Path("src/shadowseed/data/dialectic_falsification_transfer_v3.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert len(data["cases"]) == 24
+    for case in data["cases"]:
+        manager = SSLManager(embedding_fn=lexical_embedding)
+        ingest = manager.ingest_detection_candidates([case["seed_text"]])
+        accepted = ingest.get("accepted", [])
+        assert len(accepted) == 1, f"niet-atomisch door ingest: {case['seed_text']!r}"
+        got = (accepted[0].get("seed_text") or accepted[0].get("text", "")).rstrip(".")
+        assert got == case["seed_text"].rstrip("."), f"tekst gewijzigd: {case['seed_text']!r}"

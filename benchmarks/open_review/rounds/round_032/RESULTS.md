@@ -62,10 +62,12 @@ geen bewijs op zich.
    uit elkaar trekken.
 2. **Wat een eventuele heropening zou vergen** (toekomstwerk, geen
    belofte): een vooraf geregistreerde replicatie op een níeuwe caseset
-   die uitsluitend de twee hier gevonden lagen toetst (Bonferroni over 2:
-   lat 0.025 — haalbaar voor effecten van deze orde als ze echt zijn), of
-   een wezenlijk groter model. Beide zijn expliciet níet deze round; dat
-   zou post-hoc-selectie zijn als we het nu alsnog draaiden en meetelden.
+   die uitsluitend de twee hier gevonden lagen toetst met beide detectoren
+   (Bonferroni over 4 toetsen: lat 0.05/4 = 0.0125 — haalbaar voor
+   effecten van deze orde als ze echt zijn; dit is dezelfde lat als de
+   round-033-preregistratie), of een wezenlijk groter model. Beide zijn
+   expliciet níet deze round; dat zou post-hoc-selectie zijn als we het nu
+   alsnog draaiden en meetelden.
 3. **Het instrument heeft zich opnieuw bewezen.** De permutatiecontrole
    hield een LOOCV-score van 0.88 tegen — zonder die controle was dit een
    verleidelijk "resultaat" geweest. Correct néé zeggen waar néé hoort is

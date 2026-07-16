@@ -8,8 +8,8 @@
   "source_text": "Drie casussen. WONEN: een woningcorporatie verduurzaamt een flatwijk uit de jaren zeventig, met gevelisolatie, zonnepanelen op de daken, een bewonersavond per portiek en afspraken over de huurverhoging na de renovatie. ZORG: een zorgregio wil het personeelstekort in de ouderenzorg verkleinen via werving van zij-instromers, behoud van huidige medewerkers en slimmer roosteren. CULTUUR: een gemeente start een leesoffensief voor jongeren met een vernieuwde jeugdcollectie in de bibliotheek, leesclubs op middelbare scholen en een campagne op sociale media.",
   "cases": [
     {
-      "seed_text": "Hittewerende maatregelen voor de zomer, zoals zonwering en ventilatie, als onderdeel van dezelfde renovatie.",
-      "note": "kandidaat-gap (WONEN): zomercomfort ontbreekt in de bron"
+      "seed_text": "Hittewerende maatregelen die de woningen ook in warme zomers koel houden als onderdeel van dezelfde renovatie.",
+      "note": "kandidaat-gap (WONEN): zomercomfort ontbreekt in de bron; geherformuleerd zonder splitter-triggers (amendement vóór de run, zie README)"
     },
     {
       "seed_text": "Gezondheidswinst door de aanpak van vocht en schimmel als meetbaar nevendoel van de isolatie.",
@@ -68,8 +68,8 @@
       "note": "domein-nabij (WONEN): plausibel, niet in de bron"
     },
     {
-      "seed_text": "Zorgtechnologie zoals sensoren en beeldbellen om de werkdruk per medewerker te verlagen.",
-      "note": "domein-nabij (ZORG): plausibel, niet in de bron"
+      "seed_text": "Inzet van zorgtechnologie op afstand om de werkdruk per medewerker te verlagen.",
+      "note": "domein-nabij (ZORG): plausibel, niet in de bron; geherformuleerd zonder splitter-triggers (amendement vóór de run, zie README)"
     },
     {
       "seed_text": "Regionale samenwerking met opleiders voor voldoende stageplekken in de ouderenzorg.",

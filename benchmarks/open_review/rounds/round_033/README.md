@@ -48,6 +48,19 @@
 5. Een eventueel signaal blijft een Laag G-*signaal*: het voedt geen
    promotie en verandert geen claims van lagen A–F (signaal ≠ verdict).
 
+## Amendement vóór de run (codex-P2, 2026-07-14)
+
+Twee cases bleken bij deterministische controle niet heelhuids door de
+échte ingest-route te komen (`ingest_detection_candidates` met
+broad-splitting, zoals de runner hem aanroept): de hittewerende-
+maatregelen-case fragmenteerde op komma's/"zoals … en …" (alleen het
+eerste fragment zou beoordeeld zijn) en de zorgtechnologie-case werd zelfs
+volledig geweigerd (stil uit de set gevallen). Beide zijn vóór de run
+geherformuleerd zonder splitter-triggers; een test bewaakt nu dat álle 24
+cases exact één geaccepteerde, tekst-intacte seed opleveren. Dit is een
+amendement op de caseset vóór dataverzameling — de leesregel (vier
+toetsen, lat 0.0125) is ongewijzigd.
+
 ## Run-recept
 
 ```text
