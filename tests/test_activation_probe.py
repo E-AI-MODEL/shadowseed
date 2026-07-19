@@ -325,6 +325,69 @@ def test_l1_fit_survives_exactly_centered_data():
     assert acc >= 0.9  # de fit optimaliseert echt i.p.v. te satureren
 
 
+def test_verdict_coverage_recorded_and_foreign_rejected(tmp_path: Path):
+    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    seeds = [c["seed_text"] for c in fixture["cases"]]
+    # foreign label (niet in de input) -> harde fout (codex-P2)
+    bad = tmp_path / "bad.json"
+    bad.write_text(json.dumps({"records": [
+        {"seed_text": "een stelling uit een ander caseset", "verdict": "WEERLEGD"},
+    ]}), encoding="utf-8")
+    import pytest
+    with pytest.raises(ValueError, match="niet in"):
+        run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "o.json"),
+                             verdicts_path=str(bad))
+    # partiële dekking mag standaard (ONBESLIST is legitiem overgeslagen),
+    # coverage wordt geregistreerd
+    partial = tmp_path / "partial.json"
+    partial.write_text(json.dumps({"records": [
+        {"seed_text": seeds[0], "verdict": "WEERLEGD"},
+        {"seed_text": seeds[1], "verdict": "HOUDT_STAND"},
+    ]}), encoding="utf-8")
+    res = run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "p.json"),
+                               verdicts_path=str(partial))
+    cov = res["verdict_coverage"]
+    assert cov["n_labeled"] == 2 and cov["n_input_cases"] == len(seeds)
+    assert cov["n_missing"] == len(seeds) - 2 and cov["strict"] is False
+
+
+def test_require_verdict_coverage_fails_on_missing(tmp_path: Path):
+    import pytest
+    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    seeds = [c["seed_text"] for c in fixture["cases"]]
+    partial = tmp_path / "partial.json"
+    partial.write_text(json.dumps({"records": [
+        {"seed_text": seeds[0], "verdict": "WEERLEGD"},
+    ]}), encoding="utf-8")
+    with pytest.raises(ValueError, match="strikte dekking"):
+        run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "o.json"),
+                             verdicts_path=str(partial), require_verdict_coverage=True)
+    # volledige dekking met strict -> geen fout
+    full = tmp_path / "full.json"
+    full.write_text(json.dumps({"records": [
+        {"seed_text": s, "verdict": "WEERLEGD" if i % 2 else "HOUDT_STAND"}
+        for i, s in enumerate(seeds)
+    ]}), encoding="utf-8")
+    res = run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "f.json"),
+                               verdicts_path=str(full), require_verdict_coverage=True)
+    assert res["verdict_coverage"]["n_missing"] == 0
+    assert res["verdict_coverage"]["strict"] is True
+
+
+def test_probe_records_model_revision_field(tmp_path: Path):
+    # revisie-veld wordt vastgelegd (None bij fake-backend), zodat het artifact
+    # de pin-status draagt (codex-P1)
+    res = run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "o.json"))
+    assert "model_revision" in res and res["model_revision"] is None
+
+
+def test_probe_records_dtype_field(tmp_path: Path):
+    # dtype-veld wordt vastgelegd zodat het artifact de laad-precisie draagt
+    # (grotere-model-runs op bf16); default None = fp32-gedrag ongewijzigd
+    res = run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "o.json"))
+    assert "dtype" in res and res["dtype"] is None
+
+
 def test_probe_touches_no_seed_state():
     # doctrine guard: the probe module must not import or construct a manager
     import shadowseed.benchmark.activation_probe as mod

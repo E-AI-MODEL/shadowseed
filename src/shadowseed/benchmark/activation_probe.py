@@ -404,17 +404,40 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
     """
 
     def __init__(
-        self, model_id: str, device: str = "cpu", read_location: str = "mlp_out"
+        self,
+        model_id: str,
+        device: str = "cpu",
+        read_location: str = "mlp_out",
+        revision: str | None = None,
+        dtype: str | None = None,
     ) -> None:
         import torch  # noqa: F401
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         if read_location not in ("mlp_out", "neuron"):
             raise ValueError(f"Onbekende read_location: {read_location!r}")
-        self.name = f"hf:{model_id}"
+        # revisie-pin (reproduceerbaarheid, codex round-033-P1): zonder een
+        # vastgezette snapshot kan de Hub een andere modelversie serveren en
+        # verandert de meting stilletjes tussen runs.
+        self.name = f"hf:{model_id}" + (f"@{revision}" if revision else "")
         self.read_location = read_location
-        self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        self.model = AutoModelForCausalLM.from_pretrained(model_id)
+        self.revision = revision
+        # dtype-keuze: grotere modellen passen niet in fp32 op een CPU-runner
+        # (7B fp32 ~30GB); bf16/fp16 halveert het geheugen. Default = fp32 zodat
+        # de kleine-model-runs (rounds 026-033) onveranderd blijven.
+        self.dtype = dtype
+        torch_dtype = {
+            None: None,
+            "float32": torch.float32,
+            "float16": torch.float16,
+            "bfloat16": torch.bfloat16,
+        }.get(dtype)
+        if dtype is not None and torch_dtype is None:
+            raise ValueError(f"Onbekende dtype: {dtype!r}")
+        self.tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_id, revision=revision, torch_dtype=torch_dtype
+        )
         self.model.eval()
         self.device = device
         self.model.to(device)
@@ -506,6 +529,9 @@ def run_activation_probe(
     verdicts_path: str | None = None,
     read_location: str = "mlp_out",
     sparse_permutations: int = 500,
+    model_revision: str | None = None,
+    require_verdict_coverage: bool = False,
+    dtype: str | None = None,
 ) -> dict[str, Any]:
     """Sondeer de dialectische cases: activaties per verdict-klasse, per laag.
 
@@ -524,12 +550,49 @@ def run_activation_probe(
     elif backend == "hf":
         if not model_id:
             raise ValueError("--model-id is verplicht voor backend 'hf'")
-        model = HFActivationModel(model_id, read_location=read_location)
+        model = HFActivationModel(
+            model_id,
+            read_location=read_location,
+            revision=model_revision,
+            dtype=dtype,
+        )
     else:
         raise ValueError(f"Onbekende activation-probe backend: {backend!r}")
 
     external_labels = load_verdict_labels(verdicts_path) if verdicts_path else None
     verdict_source = "extern" if external_labels is not None else "fixture"
+    # Verdict-dekkingscontrole (codex round-033-P2): een verdict-bestand van
+    # een ánder caseset of een incompleet artifact zou anders een
+    # geldig-ogende run op een subset — of nul cases — starten, omdat labels
+    # puur op exacte seed_text worden opgezocht en missers stil worden
+    # overgeslagen.
+    verdict_coverage: dict[str, Any] | None = None
+    if external_labels is not None:
+        input_texts = {case["seed_text"] for case in data["cases"]}
+        foreign = sorted(set(external_labels) - input_texts)
+        if foreign:
+            raise ValueError(
+                f"verdict-bestand bevat {len(foreign)} stelling(en) die niet in "
+                f"de input-caseset staan (verkeerd bestand?): {foreign[:3]}"
+            )
+        labeled = input_texts & set(external_labels)
+        missing = sorted(input_texts - set(external_labels))
+        if not labeled:
+            raise ValueError(
+                "geen enkele input-case heeft een extern verdict-label — "
+                "verdict-bestand hoort niet bij deze input"
+            )
+        if require_verdict_coverage and missing:
+            raise ValueError(
+                f"strikte dekking vereist maar {len(missing)} van "
+                f"{len(input_texts)} cases missen een extern label: {missing[:3]}"
+            )
+        verdict_coverage = {
+            "n_input_cases": len(input_texts),
+            "n_labeled": len(labeled),
+            "n_missing": len(missing),
+            "strict": require_verdict_coverage,
+        }
     verdict_backend = FixtureDialecticBackend() if external_labels is None else None
     per_layer: dict[str, dict[str, list[np.ndarray]]] = {}
     cases_out: list[dict[str, Any]] = []
@@ -559,7 +622,10 @@ def run_activation_probe(
         "backend": getattr(model, "name", backend),
         "pooling": pooling,
         "read_location": read_location,
+        "model_revision": model_revision,
+        "dtype": dtype,
         "verdict_source": verdict_source,
+        "verdict_coverage": verdict_coverage,
         "doctrine": (
             "Laag G-signaal: activatie-scheiding tussen dialectische "
             "verdict-klassen. Signaal != verdict; raakt geen seed-state; "

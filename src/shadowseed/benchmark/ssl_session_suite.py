@@ -14,7 +14,12 @@ through the actual ``SSLManager``:
   (TrTL) revives dormant ones the new turn re-recognises;
 - only a **pipeline-PROMOTED seed born in an EARLIER turn**, still relevant to the
   current turn, may shape the SSL answer. The baseline is the same model with the
-  same conversation history but no shadow memory.
+  same conversation history but no shadow memory;
+- **use costs trace** (round 031-les, TrTL-denken op use-time): a seed that just
+  steered an answer faces a higher, per-turn-halving bar on the immediately
+  following turns and must re-earn its place through fresh fit with the new
+  question — recognition in the present, no credit from the past. Weight is
+  untouched (Gate-exclusive) and turns are never blocked.
 
 The cross-turn payoff question: does a seed that earned promotion across the
 conversation surface value at a later turn that the history-equipped baseline does
@@ -105,6 +110,7 @@ def run_ssl_session(
     surface_top_k: int = 2,
     early_turn_margin: float = 0.10,
     early_turn_history: int = 5,
+    resurface_margin: float = 0.15,
     max_seeds_per_turn: int = 5,
     dedup_threshold: float | None = None,
     min_occurrences: int | None = None,
@@ -177,10 +183,13 @@ def run_ssl_session(
         eff_surface_top_k = conv.get("surface_top_k", surface_top_k)
         eff_early_margin = conv.get("early_turn_margin", early_turn_margin)
         eff_early_history = conv.get("early_turn_history", early_turn_history)
+        eff_resurface_margin = conv.get("resurface_margin", resurface_margin)
         applied_thresholds["surface_threshold"] = eff_surface_threshold
         applied_thresholds["surface_top_k"] = eff_surface_top_k
         applied_thresholds["early_turn_margin"] = eff_early_margin
         applied_thresholds["early_turn_history"] = eff_early_history
+        applied_thresholds["resurface_margin"] = eff_resurface_margin
+        last_surfaced: dict[str, int] = {}
         seed_to_cluster: dict[str, int] = {}
         cluster_rep: dict[int, str] = {}
         born_turn: dict[str, int] = {}
@@ -238,11 +247,26 @@ def run_ssl_session(
                 if born_turn.get(sid, t) >= t:  # must be born in an EARLIER turn
                     continue
                 sim = float(np.dot(q_emb, seed.embedding))
-                if sim >= turn_bar:
+                # Gebruiksdemping (round 031-les, TrTL-denken op use-time):
+                # gebruik verbruikt trace. Een seed die net een antwoord heeft
+                # gestuurd moet zich op de dírect volgende beurten via een
+                # verse, stérkere fit met de nieuwe vraag opnieuw bewijzen —
+                # herkenning in het nu, geen krediet uit het verleden. De
+                # extra lat halveert per beurt sinds de laatste surfacing
+                # (aflopend, geen harde blokkade; beurten worden nooit
+                # geblokkeerd). Weight blijft onaangeroerd: invloed verandert
+                # uitsluitend via de Validation Gate.
+                seed_bar = turn_bar
+                last = last_surfaced.get(sid)
+                if eff_resurface_margin > 0 and last is not None:
+                    seed_bar += eff_resurface_margin * (0.5 ** (t - last - 1))
+                if sim >= seed_bar:
                     eligible.append((sim, sid, seed.text))
             selected = select_cross_turn_seeds(eligible, eff_surface_top_k)
             surfaced = [text for _sim, _sid, text in selected]
             surfaced_ids = [sid for _sim, sid, _text in selected]
+            for sid in surfaced_ids:
+                last_surfaced[sid] = t
             if surfaced:
                 cross_turn_events += 1
                 ssl = model.generate(build_chat_prompt(history, q, surfaced), turn, "ssl", surfaced)

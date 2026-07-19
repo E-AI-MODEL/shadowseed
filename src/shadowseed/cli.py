@@ -470,6 +470,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Aantal label-shuffles voor de permutatiecontrole op de sparse "
         "L1-classifier (0 = alleen LOOCV, geen p-waarde). Default 500: vloer "
         "1/501 ~0.002, haalbaar onder de Bonferroni-lat van 24 lagen (round 032).")
+    act_probe.add_argument("--model-revision", default=None,
+        help="HF-modelrevisie (commit-SHA/tag) om de gesondeerde modelversie te "
+        "pinnen — reproduceerbaarheid (codex round-033-P1). Leeg = laatste snapshot.")
+    act_probe.add_argument("--require-verdict-coverage", action="store_true",
+        help="Eis dat élke input-case een extern verdict-label heeft (faithful "
+        "re-probe). Faalt hard bij ontbrekende dekking i.p.v. stil een subset te "
+        "sonderen (codex round-033-P2).")
+    act_probe.add_argument("--dtype", choices=["float32", "float16", "bfloat16"], default=None,
+        help="Laad-precisie van het gesondeerde model. Default fp32 (rounds 026-033). "
+        "bfloat16/float16 halveert het geheugen zodat grotere modellen (3B+) op een "
+        "CPU-runner passen; de gepoolde activaties worden altijd naar fp32 gecast.")
 
     chat = subparsers.add_parser(
         "chat",
@@ -532,6 +543,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=5,
         help="Aantal eerste beurten (0-geïndexeerd: t < N) waarop de vroege-beurt-marge geldt.",
+    )
+    ssl_session.add_argument(
+        "--resurface-margin",
+        type=float,
+        default=0.15,
+        help="Gebruiksdemping (round 031-les, TrTL op use-time): extra relevantiemarge voor een seed die net een antwoord stuurde, halverend per beurt sinds de laatste surfacing. Gebruik verbruikt trace; terugkomen vergt verse fit met de nieuwe vraag. Weight blijft Gate-exclusief. 0 = uit.",
     )
     ssl_session.add_argument(
         "--dedup-threshold",

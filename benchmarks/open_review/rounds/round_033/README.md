@@ -1,6 +1,12 @@
 # Round 033 — vooraf geregistreerde replicatie van het round-032-signaalkandidaat
 
-> **Status: PREREGISTRATIE (run nog niet gedraaid).** Round 032 gaf op het
+> **Status: VERDICT — NIET gerepliceerd (zie `RESULTS.md`).** Op de vier
+> vooraf vastgelegde toetsen (lagen 2 en 5 × beide detectoren, lat 0.0125)
+> haalde 0 van de 4 de lat: laag 2 centroïde-p 0.0319 / sparse-p 0.597,
+> laag 5 centroïde-p 0.0459 / sparse-p 0.565 (LOOCV 0.50 = toeval). Het
+> round-032-kandidaat was ruis; spoor 2 sluit voor schaal ≤0.5B.
+>
+> **Oorspronkelijke preregistratie (run nog niet gedraaid).** Round 032 gaf op het
 > H-Neurons-leespunt de eerste níet-vlakke null van het spoor (centroïde
 > p 0.014 op laag 2, sparse L1 p 0.018 op laag 5) — boven de Bonferroni-lat
 > over 24 lagen, dus geen signaal, maar wél het patroon dat óf toeval óf
