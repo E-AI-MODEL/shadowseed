@@ -470,6 +470,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Aantal label-shuffles voor de permutatiecontrole op de sparse "
         "L1-classifier (0 = alleen LOOCV, geen p-waarde). Default 500: vloer "
         "1/501 ~0.002, haalbaar onder de Bonferroni-lat van 24 lagen (round 032).")
+    act_probe.add_argument("--model-revision", default=None,
+        help="HF-modelrevisie (commit-SHA/tag) om de gesondeerde modelversie te "
+        "pinnen — reproduceerbaarheid (codex round-033-P1). Leeg = laatste snapshot.")
+    act_probe.add_argument("--require-verdict-coverage", action="store_true",
+        help="Eis dat élke input-case een extern verdict-label heeft (faithful "
+        "re-probe). Faalt hard bij ontbrekende dekking i.p.v. stil een subset te "
+        "sonderen (codex round-033-P2).")
 
     chat = subparsers.add_parser(
         "chat",

@@ -38,6 +38,10 @@ on:
         description: "Komma-lijst lagen waarvan de samenvatting expliciet centroide-p en sparse-p print (bv. gepreregistreerde lagen). Leeg = alleen de sterkste."
         required: false
         default: ""
+      probe_model_revision:
+        description: "HF-modelrevisie (commit-SHA/tag) om de gesondeerde modelversie te pinnen — reproduceerbaarheid. Leeg = laatste snapshot."
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -54,6 +58,7 @@ jobs:
       SPARSE_PERMUTATIONS: ${{ inputs.sparse_permutations }}
       VERDICTS_PATH: ${{ inputs.verdicts_path }}
       REPORT_LAYERS: ${{ inputs.report_layers }}
+      PROBE_MODEL_REVISION: ${{ inputs.probe_model_revision }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -63,11 +68,15 @@ jobs:
           python-version: "3.11"
 
       - name: Installeer package + torch (CPU) + transformers + openai
+        # Gepinde versies (codex round-033-P1): zonder pin installeert elke run
+        # verse torch/transformers en produceren identieke inputs net andere
+        # activaties (BLAS/kernel-verschillen), waardoor een "faithful re-probe"
+        # niet reproduceert. Pin => bit-reproduceerbaar op vaste CPU + seed.
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[test]"
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install transformers openai
+          pip install "torch==2.12.1" --index-url https://download.pytorch.org/whl/cpu
+          pip install "transformers==5.12.1" openai
 
       - name: Stap 1 — dialectische verdicten (gpt-4.1 oordeelt, of gepind bestand)
         run: |
@@ -95,6 +104,9 @@ jobs:
             --read-location "$READ_LOCATION"
             --sparse-permutations "$SPARSE_PERMUTATIONS"
             --output results/activation_probe_real_verdict.json)
+          [ -n "$PROBE_MODEL_REVISION" ] && args+=(--model-revision "$PROBE_MODEL_REVISION")
+          # gepind verdict-bestand = faithful re-probe: eis volledige dekking
+          [ -n "$VERDICTS_PATH" ] && args+=(--require-verdict-coverage)
           python -m shadowseed.cli "${args[@]}"
 
       - name: Samenvatting naar de job-log

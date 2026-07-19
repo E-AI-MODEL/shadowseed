@@ -199,6 +199,8 @@ def _run_activation_probe(args: argparse.Namespace) -> str:
         verdicts_path=getattr(args, "verdicts", None),
         read_location=getattr(args, "read_location", "mlp_out"),
         sparse_permutations=getattr(args, "sparse_permutations", 500),
+        model_revision=getattr(args, "model_revision", None),
+        require_verdict_coverage=getattr(args, "require_verdict_coverage", False),
     )
     return args.output
 

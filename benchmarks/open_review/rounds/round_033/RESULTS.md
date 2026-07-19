@@ -39,19 +39,49 @@ gepreregistreerde lagen expliciet af te lezen.
 
 **0 van de 4. Niet gerepliceerd.**
 
+### Reproduceerbaarheid van het verdict (codex-P1)
+
+De re-probe (run B) reproduceerde run A niet bit-identiek — de sterkste
+sparse-laag verschilde (10 vs 19) omdat torch/transformers in beide runs
+ongepind vers werden geïnstalleerd. **Dat raakt het verdict niet:** de vier
+gepreregistreerde toetsen liggen ver van de lat 0.0125 — de sparse-LOOCV op
+laag 2 en 5 zit op toevalsniveau (0.458 / 0.500) en de centroïde-p's op
+0.032 / 0.046. Numerieke wiebel van die orde kan geen van de vier onder
+0.0125 duwen; het verdict "niet gerepliceerd" is robuust tegen de
+non-reproduceerbaarheid.
+
+Om de bewijsvoering tóch sluitend te maken zijn de modeldeps nu **gepind**
+(`torch==2.12.1`, `transformers==5.12.1`) en is een modelrevisie-pin
+beschikbaar (`--model-revision`); een bevestigingsrun op die pin legt de
+vier waarden reproduceerbaar vast. De verdict-lezing hieronder verandert
+daardoor niet.
+
 ## Waarom dit beslissend is
 
 1. **De sparse detector klapt in tot toeval.** Het round-032-"signaal" zat
    vooral in de sparse L1-classifier op laag 5 (LOOCV 0.88). Op een nieuwe
    brontekst geeft diezelfde laag met dezelfde detector LOOCV **0.50** —
    zuiver muntworp-niveau, p 0.56. Er was niets stabiels om te vinden.
-2. **Het "sterkste" signaal wandelt per run.** Sterkste lagen: round 032
-   → 2 (centroïde) / 5 (sparse); round-033-run-1 → 11 / 10; round-033
-   re-probe → 11 / 19. Een echte, gelokaliseerde interne codering blijft
-   op zijn plek; een die per run verspringt is de vingerafdruk van
-   dataset-specifieke ruis. Juist dáárvoor diende de preregistratie: zonder
-   de vooraf vastgelegde lagen had de losse "sparse p 0.004 op laag 19"
-   verleidelijk als vondst gelezen kunnen worden.
+2. **Het "sterkste" signaal is niet gelokaliseerd — twee aparte redenen.**
+   Sterkste lagen: round 032 → 2 (centroïde) / 5 (sparse); round-033-run-1
+   → 11 / 10; round-033 re-probe → 11 / 19. Hier moeten twee verschillen
+   uit elkaar gehouden worden (codex-P1-correctie — mijn eerdere lezing
+   plakte ze op één hoop):
+   - **Tussen 032 en 033 (verschillende brontekst):** de sterkste lagen
+     verspringen 2/5 → 11/10. Dát is legitiem bewijs dat er geen codering
+     is die over datasets heen op dezelfde plek stabiel is.
+   - **Tussen run-1 en de re-probe (identieke brontekst én labels):** de
+     sterkste sparse-laag verspringt 10 → 19. Dit is **géén** dataset-ruis
+     — de dataset was identiek. Het is (a) numerieke
+     niet-reproduceerbaarheid doordat torch/transformers in die twee runs
+     ongepind vers geïnstalleerd werden, en (b) het feit dat de sparse
+     LOOCV op n=24 op véél lagen tegen het plafond zit (0.96–1.0), zodat de
+     argmax onstabiel is voor minieme float-verschillen. Beide punten
+     bevéstigen "geen echt gelokaliseerd signaal", maar via
+     overfitting/instabiliteit, niet via de dataset.
+   Dit is precies waarom de preregistratie de vier toetsen op vaste lagen
+   vastlegde in plaats van "de sterkste laag": een losse "sparse p 0.004 op
+   laag 19" is post-hoc geselecteerde ruis en telt niet mee.
 3. **Het instrument werkt — het zegt correct néé.** De permutatiecontrole
    en de LOOCV hielden hier een ceiling-scorende classifier (LOOCV 1.0 op
    laag 19) tegen als niet-repliceerbaar. Dat is precies de bescherming
