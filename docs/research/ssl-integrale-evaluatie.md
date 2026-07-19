@@ -97,7 +97,7 @@ tweezijdig: head-to-head én seed-fit-afhankelijkheid
 (`round_031/human_review/RESULTS.md`; round-029-voorbehoud:
 `round_029/human_review/r2_concurrence.md`).
 
-### Laag G — Modelinterne research (H-neuron-spoor) · **Zeven iteraties doorlopen — vier nulls, spoor 2 in rust**
+### Laag G — Modelinterne research (H-neuron-spoor) · **Acht iteraties doorlopen — spoor 2 gesloten voor deze schaal (gepreregistreerde replicatie weerlegde het kandidaat)**
 Twee sporen (`laag-g-scoping.md`):
 - **Spoor 1 — dialectische falsificatie** (`run-dialectic-falsification`): een
   model argumenteert een promoted seed weg tegen de bron; WEERLEGD → Gate-
@@ -114,11 +114,16 @@ Twee sporen (`laag-g-scoping.md`):
   H-Neurons-methodiek zelf: leespunt `neuron` (down_proj-input), sparse
   L1-detector met LOOCV + permutatie, en **Qwen2.5-0.5B** als groter
   multilingual model. Uitkomst: centroïde-p 0.014 / sparse-p 0.018 — de
-  eerste níet-vlakke null, maar boven de vooraf vastgelegde Bonferroni-lat
-  (~0.00208 bij 24 lagen), dus **vierde null; spoor 2 is in rust** (geen
-  nieuwe runs zonder vooraf geregistreerd replicatieplan). Een null is hier
-  het **correcte** antwoord, geen falen; signaal ≠ verdict, raakt lagen A–F
-  niet. Spoor 1 (dialectische falsificatie) blijft de actieve Laag G-route.
+  eerste níet-vlakke null. Dat kandidaat-signaal is vervolgens
+  **gepreregistreerd getoetst** (round 033, iteratie 8): nieuwe brontekst,
+  alleen de lagen 2 en 5 tellen, Bonferroni-lat 0.0125. **0 van de 4
+  toetsen haalde de lat** (laag 5 sparse LOOCV zakte van 0.88 naar 0.50 =
+  toeval; het "sterkste" signaal verhuisde per run) — niet gerepliceerd,
+  het kandidaat was ruis. **Spoor 2 (activatie-sonde) is hiermee gesloten
+  voor schaal ≤0.5B**; heropening vraagt de H-Neurons-schaal (24B–70B) plus
+  een nieuwe preregistratie. Een null is hier het **correcte** antwoord,
+  geen falen; signaal ≠ verdict, raakt lagen A–F niet. Spoor 1
+  (dialectische falsificatie) blijft de actieve Laag G-route.
 
 ## Twee assen: winnaar-as vs seed-effect-as
 

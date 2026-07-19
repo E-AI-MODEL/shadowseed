@@ -182,6 +182,23 @@ verleidelijke LOOCV-score van 0.88 tegen. Spoor 1 (dialectische
 falsificatie) blijft de actieve Laag G-route. Zie
 `benchmarks/open_review/rounds/round_032/RESULTS.md`.
 
+**Iteratie 8 (2026-07-18/19, round 033): gepreregistreerde replicatie —
+NIET gerepliceerd; spoor 2 sluit voor deze schaal.** Het round-032-
+kandidaat is getoetst op een níeuwe brontekst (WONEN/ZORG/CULTUUR, 24
+cases) met vooraf vastgelegde leesregel: alleen de lagen 2 en 5 tellen, ×
+beide detectoren, Bonferroni-lat 0.0125. Uitkomst (gpt-4.1: 12 HOUDT_STAND
+/ 12 WEERLEGD): **0 van de 4 gepreregistreerde toetsen haalt de lat** —
+laag 2 centroïde-p 0.0319 / sparse-p 0.5968 (LOOCV 0.458), laag 5
+centroïde-p 0.0459 / sparse-p 0.5649 (LOOCV 0.500). De sparse detector die
+in round 032 op laag 5 LOOCV 0.88 gaf, staat nu op 0.50 (toeval); en het
+"sterkste" signaal verhuisde opnieuw (naar lagen 11/19), de vingerafdruk
+van dataset-specifieke ruis. Het round-032-kandidaat was toeval — precies
+wat de preregistratie moest uitwijzen. **Spoor 2 (activatie-sonde) sluit
+definitief voor schaal ≤0.5B**; heropening vraagt de H-Neurons-schaal
+(24B–70B) én een nieuwe preregistratie, expliciet toekomstwerk. Het
+instrument rapporteerde correct néé. Zie
+`benchmarks/open_review/rounds/round_033/RESULTS.md`.
+
 ## Doctrine-regels (gelden voor beide sporen)
 
 - Een intern of dialectisch signaal is **falsificatie- of evidence-input**,
@@ -197,12 +214,16 @@ falsificatie) blijft de actieve Laag G-route. Zie
 
 - Spoor 1 (dialectische falsificatie) is geland en in CI; echte modelruns
   leveren leesbare verdict-artifacts. **Klaar als instap.**
-- Spoor 2 (activatie-sonde) is als eerste iteratie doorlopen: harnas +
-  token-scoped pooling + permutatie-controle, gemeten op twee modellen en met
-  gpt-4.1 als echte oordeelbron. **Resultaat: schoon nulresultaat** (rounds
-  026–028) — geen bewijs van interne steun, wat het correcte antwoord is voor
-  kleine Engelse modellen. Een positieve uitspraak vraagt een NL-capabel,
-  groter model + meer cases; dat is open richting, geen must.
+- Spoor 2 (activatie-sonde) is over acht iteraties volledig doorlopen:
+  harnas + token-scoped pooling + permutatie-controle + H-Neurons-leespunt
+  (`neuron`) + sparse L1-detector, gemeten op meerdere modellen t/m
+  Qwen2.5-0.5B, met gpt-4.1 als echte oordeelbron, en afgesloten met een
+  **gepreregistreerde replicatie (round 033)** die het enige suggestieve
+  kandidaat-signaal (round 032) weerlegde. **Eindresultaat: geen
+  aantoonbare interne codering van het externe houdbaarheidsoordeel in
+  modellen ≤0.5B.** Spoor 2 is hiermee **gesloten voor deze schaal**;
+  heropening vraagt de H-Neurons-schaal (24B–70B) én een nieuwe
+  preregistratie — expliciet toekomstwerk, geen must.
 - PvA-V2 is afgevinkt (deze scoping + de gelande sonde).
 
 ## Claimgrens
