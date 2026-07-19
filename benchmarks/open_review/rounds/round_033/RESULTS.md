@@ -12,10 +12,11 @@
 
 ```text
 workflow: Research · Laag G sonde met echte verdictbron
-run 1 (vers oordeel): 29490380118   # gpt-4.1 vers, main @ 9ced9a7, success
-re-probe (faithful) : 29665325310   # gepinde verdicten, branch-ref, success
-artifact (re-probe) : activation-probe-real-verdict (id 8435812870)
-digest              : sha256:6c373e4e8ddc8e4179f4494c06bf94e1c66139666b83581235684bee2cb62a7d
+run 1 (vers oordeel)     : 29490380118   # gpt-4.1 vers, main @ 9ced9a7, success
+re-probe (ongepind)      : 29665325310   # gepinde verdicten, branch @ 5921da2
+bevestiging C (gepind)   : 29666729658   # branch @ 9d5e7d0, artifact 8436199831
+bevestiging D (gepind)   : 29666734199   # branch @ 9d5e7d0, artifact 8436183526 — C≡D bit-identiek
+digest (C)               : sha256:d8ea665b5c2b54f7b5042985c259015d5200857cd9dc311daf338ba0fcd9e814
 probe_model: Qwen/Qwen2.5-0.5B (multilingual, read_location=neuron)
 verdict_model: gpt-4.1 (extern, ontkoppeld) — 12 HOUDT_STAND / 12 WEERLEGD
 input: dialectic_falsification_transfer_v3.json (24 cases, nieuwe brontekst WONEN/ZORG/CULTUUR)
@@ -30,36 +31,35 @@ gepreregistreerde lagen expliciet af te lezen.
 
 ## De vier gepreregistreerde toetsen (lat 0.05/4 = 0.0125)
 
-| Toets | round 032 (ontdekking) | round 033 (replicatie) | onder 0.0125? |
+| Toets | round 032 (ontdekking) | round 033 (reproduceerbaar, C≡D) | onder 0.0125? |
 |---|---|---|---|
 | `layers.2.mlp.down_proj` — centroïde-p | 0.014 | **0.0319** | nee |
-| `layers.2.mlp.down_proj` — sparse-p | — | **0.5968** (LOOCV 0.458) | nee |
-| `layers.5.mlp.down_proj` — centroïde-p | — | **0.0459** | nee |
-| `layers.5.mlp.down_proj` — sparse-p | 0.018 (LOOCV 0.88) | **0.5649** (LOOCV 0.500) | nee |
+| `layers.2.mlp.down_proj` — sparse-p | — | **0.509** (LOOCV 0.50) | nee |
+| `layers.5.mlp.down_proj` — centroïde-p | — | **0.0479** | nee |
+| `layers.5.mlp.down_proj` — sparse-p | 0.018 (LOOCV 0.88) | **0.4232** (LOOCV 0.5417) | nee |
 
 **0 van de 4. Niet gerepliceerd.**
 
-### Reproduceerbaarheid van het verdict (codex-P1)
+### Reproduceerbaarheid van het verdict (codex-P1) — aangetoond
 
-De re-probe (run B) reproduceerde run A niet bit-identiek — de sterkste
-sparse-laag verschilde (10 vs 19) omdat torch/transformers in beide runs
-ongepind vers werden geïnstalleerd. **Dat raakt het verdict niet:** de vier
-gepreregistreerde toetsen liggen ver van de lat 0.0125 — de sparse-LOOCV op
-laag 2 en 5 zit op toevalsniveau (0.458 / 0.500) en de centroïde-p's op
-0.032 / 0.046. Numerieke wiebel van die orde kan geen van de vier onder
-0.0125 duwen; het verdict "niet gerepliceerd" is robuust tegen de
-non-reproduceerbaarheid.
+De eerste re-probe (run B, ongepinde deps) reproduceerde run A niet
+bit-identiek: de sterkste sparse-laag verschilde (10 vs 19). Na het pinnen
+van torch/transformers zijn **twee onafhankelijke bevestigingsruns gedraaid
+— C (29666729658) en D (29666734199), zelfde commit, near-simultaan — en
+die zijn tot op de laatste decimaal gelijk**: sterkste centroïde laag 11
+(cos 0.1546, p 0.008), sterkste sparse laag 19 (LOOCV 1.0, p 0.002,
+35/4864), en de vier gepreregistreerde toetsen exact zoals in de tabel
+hierboven. Het eerdere 10→19-verschil wás dus deps-drift tussen 16 en 18
+juli, nu gedicht.
 
-Om de bewijsvoering tóch sluitend te maken is de volledige numerieke
-omgeving nu **gepind** — `torch==2.12.1`, `transformers==5.12.1` én
-`numpy==2.4.6` (de sparse classifier + permutatiestatistiek draaien in
-numpy) — en **eist het faithful-pad een immutable `--model-revision`**
-(commit-SHA), zodat een upstream model-update de activaties niet stil kan
-veranderen. Een bevestigingsrun op die volledige pin legt de vier waarden
-durable-reproduceerbaar vast; die SHA vergt netwerktoegang tot de HF Hub
-(in de sandbox geblokkeerd) en wordt door de maintainer aangeleverd. De
-verdict-lezing hieronder verandert daardoor niet — de vier toetsen liggen
-ver van 0.0125.
+De volledige numerieke omgeving is gepind — `torch==2.12.1`,
+`transformers==5.12.1`, `numpy==2.4.6` — en het faithful-pad eist een
+immutable `--model-revision` (commit-SHA) zodat ook de modelsnapshot
+vastligt; die SHA vergt HF-netwerk (in de sandbox geblokkeerd) en wordt door
+de maintainer aangeleverd voor een volledig durable pin. C≡D toont dat het
+resterende gat (numpy/BLAS binnen dezelfde runner-image) in de praktijk
+gesloten is. Het verdict staat op deze reproduceerbare cijfers: alle vier
+ver boven 0.0125, sparse-LOOCV op toevalsniveau (0.50 / 0.54).
 
 ## Waarom dit beslissend is
 
