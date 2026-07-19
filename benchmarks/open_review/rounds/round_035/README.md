@@ -40,6 +40,27 @@ sparse_permutations: 500
 probe_dtype: bfloat16
 ```
 
+## Extra exploratieve arms (cross-variant, buiten de schone schaal-as)
+
+Naast de zuivere Qwen2.5-schaal-as draaien op verzoek enkele cross-variant-
+modellen. Ze worden gerapporteerd maar vallen buiten de schone
+grootte-vergelijking (andere generatie/training); dezelfde leesregel geldt.
+
+| Model | Grootte | bf16-geheugen | Haalbaar op 16GB CPU? |
+|---|---|---|---|
+| `Qwen/Qwen3-4B` | 4B dense | ~8 GB | ja |
+| `Qwen/Qwen2.5-Coder-7B-Instruct` | 7B dense | ~15 GB | grens (kan OOM'en) |
+| `Qwen/Qwen3-Coder-30B-A3B-Instruct` | 30B MoE (3B actief) | ~60 GB | **nee** |
+
+`Qwen3-Coder-30B-A3B` kan niet in deze opzet: (1) 60 GB >> 16 GB (harde
+OOM), en (2) het is een **mixture-of-experts** — de sonde hookt één
+`.mlp.down_proj` per laag, maar MoE routeert tokens over losse expert-MLP's,
+dus dat leespunt meet de per-token-activaties niet correct. Dit vraagt een
+GPU én een MoE-bewuste sonde-variant; expliciet toekomstwerk, niet deze
+round. Coder-modellen zijn bovendien op code getraind (zwakker op
+NL-proza), dus hun uitkomst leest als zwakkere indicatie voor de
+NL-houdbaarheidsvraag.
+
 ## Leesregel (vooraf vastgelegd)
 
 - **Signaal** alleen als een laag na Bonferroni-correctie over het aantal
