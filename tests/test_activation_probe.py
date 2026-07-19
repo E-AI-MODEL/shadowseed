@@ -381,6 +381,13 @@ def test_probe_records_model_revision_field(tmp_path: Path):
     assert "model_revision" in res and res["model_revision"] is None
 
 
+def test_probe_records_dtype_field(tmp_path: Path):
+    # dtype-veld wordt vastgelegd zodat het artifact de laad-precisie draagt
+    # (grotere-model-runs op bf16); default None = fp32-gedrag ongewijzigd
+    res = run_activation_probe(str(FIXTURE), output_path=str(tmp_path / "o.json"))
+    assert "dtype" in res and res["dtype"] is None
+
+
 def test_probe_touches_no_seed_state():
     # doctrine guard: the probe module must not import or construct a manager
     import shadowseed.benchmark.activation_probe as mod

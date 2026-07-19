@@ -409,6 +409,7 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
         device: str = "cpu",
         read_location: str = "mlp_out",
         revision: str | None = None,
+        dtype: str | None = None,
     ) -> None:
         import torch  # noqa: F401
         from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -421,8 +422,22 @@ class HFActivationModel:  # pragma: no cover - vereist torch/transformers (opt-i
         self.name = f"hf:{model_id}" + (f"@{revision}" if revision else "")
         self.read_location = read_location
         self.revision = revision
+        # dtype-keuze: grotere modellen passen niet in fp32 op een CPU-runner
+        # (7B fp32 ~30GB); bf16/fp16 halveert het geheugen. Default = fp32 zodat
+        # de kleine-model-runs (rounds 026-033) onveranderd blijven.
+        self.dtype = dtype
+        torch_dtype = {
+            None: None,
+            "float32": torch.float32,
+            "float16": torch.float16,
+            "bfloat16": torch.bfloat16,
+        }.get(dtype)
+        if dtype is not None and torch_dtype is None:
+            raise ValueError(f"Onbekende dtype: {dtype!r}")
         self.tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
-        self.model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_id, revision=revision, torch_dtype=torch_dtype
+        )
         self.model.eval()
         self.device = device
         self.model.to(device)
@@ -516,6 +531,7 @@ def run_activation_probe(
     sparse_permutations: int = 500,
     model_revision: str | None = None,
     require_verdict_coverage: bool = False,
+    dtype: str | None = None,
 ) -> dict[str, Any]:
     """Sondeer de dialectische cases: activaties per verdict-klasse, per laag.
 
@@ -535,7 +551,10 @@ def run_activation_probe(
         if not model_id:
             raise ValueError("--model-id is verplicht voor backend 'hf'")
         model = HFActivationModel(
-            model_id, read_location=read_location, revision=model_revision
+            model_id,
+            read_location=read_location,
+            revision=model_revision,
+            dtype=dtype,
         )
     else:
         raise ValueError(f"Onbekende activation-probe backend: {backend!r}")
@@ -604,6 +623,7 @@ def run_activation_probe(
         "pooling": pooling,
         "read_location": read_location,
         "model_revision": model_revision,
+        "dtype": dtype,
         "verdict_source": verdict_source,
         "verdict_coverage": verdict_coverage,
         "doctrine": (

@@ -477,6 +477,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Eis dat élke input-case een extern verdict-label heeft (faithful "
         "re-probe). Faalt hard bij ontbrekende dekking i.p.v. stil een subset te "
         "sonderen (codex round-033-P2).")
+    act_probe.add_argument("--dtype", choices=["float32", "float16", "bfloat16"], default=None,
+        help="Laad-precisie van het gesondeerde model. Default fp32 (rounds 026-033). "
+        "bfloat16/float16 halveert het geheugen zodat grotere modellen (3B+) op een "
+        "CPU-runner passen; de gepoolde activaties worden altijd naar fp32 gecast.")
 
     chat = subparsers.add_parser(
         "chat",

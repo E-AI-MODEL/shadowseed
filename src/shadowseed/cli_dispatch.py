@@ -201,6 +201,7 @@ def _run_activation_probe(args: argparse.Namespace) -> str:
         sparse_permutations=getattr(args, "sparse_permutations", 500),
         model_revision=getattr(args, "model_revision", None),
         require_verdict_coverage=getattr(args, "require_verdict_coverage", False),
+        dtype=getattr(args, "dtype", None),
     )
     return args.output
 

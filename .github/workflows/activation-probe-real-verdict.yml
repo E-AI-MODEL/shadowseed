@@ -42,6 +42,10 @@ on:
         description: "HF-modelrevisie (commit-SHA/tag) om de gesondeerde modelversie te pinnen — reproduceerbaarheid. Leeg = laatste snapshot."
         required: false
         default: ""
+      probe_dtype:
+        description: "Laad-precisie van het gesondeerde model (float32/float16/bfloat16). Leeg = fp32. bfloat16 voor grotere modellen (3B+) op de CPU-runner (16GB)."
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -59,6 +63,7 @@ jobs:
       VERDICTS_PATH: ${{ inputs.verdicts_path }}
       REPORT_LAYERS: ${{ inputs.report_layers }}
       PROBE_MODEL_REVISION: ${{ inputs.probe_model_revision }}
+      PROBE_DTYPE: ${{ inputs.probe_dtype }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -119,6 +124,7 @@ jobs:
             --sparse-permutations "$SPARSE_PERMUTATIONS"
             --output results/activation_probe_real_verdict.json)
           [ -n "$PROBE_MODEL_REVISION" ] && args+=(--model-revision "$PROBE_MODEL_REVISION")
+          [ -n "$PROBE_DTYPE" ] && args+=(--dtype "$PROBE_DTYPE")
           # gepind verdict-bestand = faithful re-probe: eis volledige dekking
           [ -n "$VERDICTS_PATH" ] && args+=(--require-verdict-coverage)
           python -m shadowseed.cli "${args[@]}"
