@@ -77,12 +77,26 @@ jobs:
           pip install -e ".[test]"
           pip install "torch==2.12.1" --index-url https://download.pytorch.org/whl/cpu
           pip install "transformers==5.12.1" openai
+          # numpy expliciet pinnen NA de editable install (codex round-033-P1):
+          # de sparse L1-classifier en de permutatiestatistiek draaien in numpy,
+          # dus een numpy-/BLAS-wissel kan identieke inputs weer andere scores
+          # geven. pyproject laat numpy>=1.24 open; hier vastzetten.
+          pip install "numpy==2.4.6"
+          python -c "import numpy, torch, transformers; print('pins:', numpy.__version__, torch.__version__, transformers.__version__)"
 
       - name: Stap 1 — dialectische verdicten (gpt-4.1 oordeelt, of gepind bestand)
         run: |
           mkdir -p results
           if [ -n "$VERDICTS_PATH" ]; then
-            echo "Gepind verdict-bestand: $VERDICTS_PATH (gpt-4.1 wordt overgeslagen — faithful re-probe)"
+            # Een faithful re-probe is pas durable-reproduceerbaar als óók de
+            # modelsnapshot vastligt (codex round-033-P1): met gepinde verdicten
+            # maar zonder revisie serveert de Hub de laatste snapshot en kan een
+            # upstream model-update alle activaties stil veranderen.
+            if [ -z "$PROBE_MODEL_REVISION" ]; then
+              echo "::error::faithful re-probe (verdicts_path gezet) vereist een probe_model_revision (immutable commit-SHA)."
+              exit 1
+            fi
+            echo "Gepind verdict-bestand: $VERDICTS_PATH + modelrevisie $PROBE_MODEL_REVISION (faithful re-probe)"
             cp "$VERDICTS_PATH" results/dialectic_verdicts.json
           else
             args=(run-dialectic-falsification

@@ -50,11 +50,16 @@ laag 2 en 5 zit op toevalsniveau (0.458 / 0.500) en de centroïde-p's op
 0.0125 duwen; het verdict "niet gerepliceerd" is robuust tegen de
 non-reproduceerbaarheid.
 
-Om de bewijsvoering tóch sluitend te maken zijn de modeldeps nu **gepind**
-(`torch==2.12.1`, `transformers==5.12.1`) en is een modelrevisie-pin
-beschikbaar (`--model-revision`); een bevestigingsrun op die pin legt de
-vier waarden reproduceerbaar vast. De verdict-lezing hieronder verandert
-daardoor niet.
+Om de bewijsvoering tóch sluitend te maken is de volledige numerieke
+omgeving nu **gepind** — `torch==2.12.1`, `transformers==5.12.1` én
+`numpy==2.4.6` (de sparse classifier + permutatiestatistiek draaien in
+numpy) — en **eist het faithful-pad een immutable `--model-revision`**
+(commit-SHA), zodat een upstream model-update de activaties niet stil kan
+veranderen. Een bevestigingsrun op die volledige pin legt de vier waarden
+durable-reproduceerbaar vast; die SHA vergt netwerktoegang tot de HF Hub
+(in de sandbox geblokkeerd) en wordt door de maintainer aangeleverd. De
+verdict-lezing hieronder verandert daardoor niet — de vier toetsen liggen
+ver van 0.0125.
 
 ## Waarom dit beslissend is
 

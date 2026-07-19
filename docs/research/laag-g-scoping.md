@@ -190,10 +190,13 @@ beide detectoren, Bonferroni-lat 0.0125. Uitkomst (gpt-4.1: 12 HOUDT_STAND
 / 12 WEERLEGD): **0 van de 4 gepreregistreerde toetsen haalt de lat** —
 laag 2 centroïde-p 0.0319 / sparse-p 0.5968 (LOOCV 0.458), laag 5
 centroïde-p 0.0459 / sparse-p 0.5649 (LOOCV 0.500). De sparse detector die
-in round 032 op laag 5 LOOCV 0.88 gaf, staat nu op 0.50 (toeval); en het
-"sterkste" signaal verhuisde opnieuw (naar lagen 11/19), de vingerafdruk
-van dataset-specifieke ruis. Het round-032-kandidaat was toeval — precies
-wat de preregistratie moest uitwijzen. **Spoor 2 (activatie-sonde) sluit
+in round 032 op laag 5 LOOCV 0.88 gaf, staat nu op 0.50 (toeval). Het
+round-032-kandidaat was toeval — precies wat de preregistratie moest
+uitwijzen. (De sterkste-laag-instabiliteit kent twee losse oorzaken, zie
+`round_033/RESULTS.md`: 032→033 verschuift 2/5→11/10 over een ándere
+brontekst, terwijl 10→19 tussen twee runs op dezelfde brontekst numerieke
+non-reproduceerbaarheid + ceiling-overfit is — geen dataset-ruis. Deps zijn
+inmiddels gepind om dat laatste te sluiten.) **Spoor 2 (activatie-sonde) sluit
 definitief voor schaal ≤0.5B**; heropening vraagt de H-Neurons-schaal
 (24B–70B) én een nieuwe preregistratie, expliciet toekomstwerk. Het
 instrument rapporteerde correct néé. Zie
