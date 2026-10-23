@@ -1,0 +1,43 @@
+{
+  "version": "ab5x-v1",
+  "status": "preregistered_synthetic_cases",
+  "language": "nl",
+  "cases": [
+    {
+      "id": "edu_transfer",
+      "domain": "onderwijs_en_transfer",
+      "facts": "FICTIEVE CASUS E1. Een klas van 24 leerlingen oefent met een AI-hulpmiddel. Van de oefenopgaven tijdens gebruik van AI is 80% goed. Er is geen meting van beginsituatie, geen willekeurige toewijzing en geen betrouwbare zelfstandige nameting. De getallen zijn verzonnen voor dit experiment.",
+      "turns": [
+        "Dag 1. Wat kunnen we op basis van die 80% correctheid wel zeggen over het leren en wat niet?",
+        "Dag 3. Leerlingen maken dezelfde soort oefenopgaven met AI sneller. Mag dit gelden als bewijs van zelfstandige beheersing?",
+        "Dag 7. Leerlingen krijgen met AI opgaven met een ander uiterlijk maar vergelijkbare inhoud. Wat blijft onzeker over transfer?",
+        "Dag 14. Zonder AI maakt dezelfde klas een nieuwe toets en haalt 63%; toetsmoeilijkheid en beginscore zijn onbekend. Welk oordeel is verdedigbaar?",
+        "Dag 30. Een leerling haalt na een maand zonder AI 61% op een andere toets. Welke gerichte vervolgvraag verdient onderzoek, zonder een leereffect te veronderstellen?"
+      ]
+    },
+    {
+      "id": "sensor_confounds",
+      "domain": "wetenschappelijk_metingen",
+      "facts": "FICTIEVE CASUS S2. Twee ruimtes met afgesloten bakken worden gemeten met thermometers. Ruimte B lijkt 1,2 °C warmer; sensorcalibratie en luchtstromen ontbreken. De hypothese betreft temperatuurverschil, maar de causaliteit staat niet vast. Alle waarden zijn verzonnen.",
+      "turns": [
+        "Meetdag 1. Er is een verschil van 1,2 °C. Wat is vastgesteld en welk mechanisme mag nog niet worden geconcludeerd?",
+        "Meetdag 2. Bij herhaling lijkt het verschil 1,1 °C. Hoe verhoudt reproduceerbaarheid zich tot meetbetrouwbaarheid?",
+        "Meetdag 3. De instrumenten worden van plek verwisseld; het verschil wordt 0,4 °C. Welke alternatieve verklaringen komen in beeld?",
+        "Meetdag 4. Een derde meter toont 0,7 °C maar de plaatsing verschilt. Wat zou een beheerste vergelijking vereisen?",
+        "Meetdag 5. Er is nog geen geblindeerde calibratie of analyse van luchtstromen. Welke onzekerheid moet voor een causale conclusie verdwijnen?"
+      ]
+    },
+    {
+      "id": "system_incident",
+      "domain": "techniek_en_oorzakelijkheid",
+      "facts": "FICTIEVE CASUS T3. Een schoolsoftwareplatform heeft na een migratie tijdelijke aanmeldfouten. In beide servergroepen zijn foutmeldingen gezien; verschillen in netwerkbelasting, clientversies en logging zijn niet gecontroleerd. De migratie wordt verdacht maar de oorzaak is niet vastgesteld. Er staan geen echte schoolgegevens in deze casus.",
+      "turns": [
+        "Incidentuur 1. Een toename van aanmeldfouten valt samen met de migratie. Wat volgt uit die samenloop?",
+        "Incidentuur 2. Foutpercentage op mobiele clients lijkt hoger, maar het aantal pogingen verschilt. Wat ontbreekt voor vergelijking?",
+        "Incidentuur 3. Een server wordt herstart en het aantal fouten daalt tijdelijk. Is dat bewijs dat die server de oorzaak was?",
+        "Incidentuur 4. Een testomgeving zonder migratie heeft ook foutmeldingen, maar op een andere dag. Welke mogelijke verklaringen moeten uit elkaar worden gehouden?",
+        "Incidentuur 5. Het team moet een besluit nemen terwijl loggegevens onvolledig zijn. Welke conclusie en meetstap zijn verantwoord?"
+      ]
+    }
+  ]
+}

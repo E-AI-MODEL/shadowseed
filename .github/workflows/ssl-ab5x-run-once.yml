@@ -1,0 +1,70 @@
+name: Research - SSL isolated AB5x real GPT-5 and GPT-6 Astra
+
+on:
+  push:
+    branches: ["research/ssl-ab5x-isolated-gpt5-gpt6"]
+    paths:
+      - "experiments/ssl_ab5x_run_once.signal"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shadowseed-ab5x-paid-20261023
+  cancel-in-progress: false
+
+jobs:
+  real-isolated-ab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: E-AI-MODEL/shadowseed-pro
+          ref: 13fda4189b3cff306642c41c47524dc3648bf1f4
+          path: ssl_pro
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+      - name: Install minimal reproducible runtime
+        run: python -m pip install -q --disable-pip-version-check "numpy>=1.24,<3"
+      - name: Fail closed on local AB design or core contract errors
+        env:
+          PYTHONPATH: ssl_pro/src
+        run: python experiments/ssl_ab5x.py --self-test
+      - name: Run paid two-model A/B once after clean preflight
+        env:
+          PYTHONPATH: ssl_pro/src
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "NOT_EXECUTED: OpenAI secret unavailable"
+            exit 3
+          fi
+          python experiments/ssl_ab5x.py --execute
+      - name: Keep raw result and audit file
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: shadowseed-ab5x-gpt5-gpt6-raw
+          path: results/ab5x_raw.json
+          if-no-files-found: warn
+          retention-days: 60
+      - name: Preserve blinded review packet separately from allocation key
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: shadowseed-ab5x-blind-review
+          path: results/ab5x_blind_review.json
+          if-no-files-found: warn
+          retention-days: 60
+      - name: Keep allocation key out of the blinded review ZIP
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: shadowseed-ab5x-arm-allocation-key
+          path: results/ab5x_allocation_key.json
+          if-no-files-found: warn
+          retention-days: 60

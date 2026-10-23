@@ -1,0 +1,37 @@
+name: Research - SSL isolated AB5x offline preflight
+
+on:
+  push:
+    branches: ["research/ssl-ab5x-isolated-gpt5-gpt6"]
+    paths:
+      - "experiments/ssl_ab5x.py"
+      - "experiments/ssl_ab5x_cases.json"
+      - ".github/workflows/ssl-ab5x-preflight.yml"
+      - ".github/workflows/ssl-ab5x-run-once.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: E-AI-MODEL/shadowseed-pro
+          ref: 13fda4189b3cff306642c41c47524dc3648bf1f4
+          path: ssl_pro
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+      - name: Install just the deterministic SSL core dependency
+        run: python -m pip install -q --disable-pip-version-check "numpy>=1.24,<3"
+      - name: Compile and verify both isolated arms without billable requests
+        env:
+          PYTHONPATH: ssl_pro/src
+        run: |
+          python -m py_compile experiments/ssl_ab5x.py
+          python experiments/ssl_ab5x.py --self-test
