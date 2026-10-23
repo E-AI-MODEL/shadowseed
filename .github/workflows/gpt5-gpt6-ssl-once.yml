@@ -1,0 +1,68 @@
+name: Research - GPT-5 vs GPT-6 Astra SSL once
+
+on:
+  push:
+    branches: ["research/gpt5-gpt6-ssl-pilot"]
+    paths:
+      - "experiments/gpt5_gpt6_ssl_once.py"
+      - ".github/workflows/gpt5-gpt6-ssl-once.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: one-shot-ssl-gpt5-gpt6-api
+  cancel-in-progress: false
+
+jobs:
+  dual-model-ssl:
+    name: Call both real models with canonical SSL core
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout experiment runner (this repo contains the existing secret)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Checkout exact Shadowseed Pro main/core SHA (read-only)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: E-AI-MODEL/shadowseed-pro
+          ref: 13fda4189b3cff306642c41c47524dc3648bf1f4
+          path: shadowseed_source
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Prepare minimal research dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -q "numpy>=1.24,<3"
+
+      - name: Test instrument and core locally, NO API calls
+        env:
+          PYTHONPATH: shadowseed_source/src
+        run: |
+          python -m py_compile experiments/gpt5_gpt6_ssl_once.py
+          python experiments/gpt5_gpt6_ssl_once.py --self-test
+
+      - name: Invoke exactly GPT-5 and GPT-6 Astra (authorized billable API)
+        env:
+          PYTHONPATH: shadowseed_source/src
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "NOT_EXECUTED: existing OPENAI_API_KEY secret not found." >&2
+            exit 3
+          fi
+          python experiments/gpt5_gpt6_ssl_once.py --execute
+
+      - name: Preserve actual model replies, usage and errors for independent review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ssl-gpt5-vs-gpt6-astra-actual-api
+          path: results/ssl-gpt5-gpt6-astra-2026-10-23.json
+          if-no-files-found: warn
+          retention-days: 60
