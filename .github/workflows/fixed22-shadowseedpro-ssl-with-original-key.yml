@@ -1,0 +1,80 @@
+name: Research - Shadowseed Pro fixed22 SSL with existing Shadowseed key
+# Deliberately separate from the zero arm. Merely adding this file makes NO paid calls.
+# Trigger by pushing the dedicated marker only after reviewing the zero run.
+on:
+  push:
+    branches:
+      - research/fixed22-pro-zero-existing-key-20261023
+    paths:
+      - research/fixed22-ssl-trigger-20261023.md
+permissions:
+  contents: read
+concurrency:
+  group: fixed22-pro-ssl-original-key-20261023
+  cancel-in-progress: false
+jobs:
+  fixed22-ssl:
+    name: fixed22 SSL / ${{ matrix.model }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        model: [gpt-5, gpt-6.1-sol]
+    env:
+      PYTHONUNBUFFERED: "1"
+      SOURCE_PRO_SHA: 2110ededd1e73c6db700c543be3cfeb4c1aafa65
+    steps:
+      - name: Checkout immutable Shadowseed Pro source (read-only)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: E-AI-MODEL/shadowseed-pro
+          ref: 2110ededd1e73c6db700c543be3cfeb4c1aafa65
+          path: shadowseed_source
+          persist-credentials: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+      - name: Set up pinned uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.8.14"
+      - name: Install pinned research dependencies
+        working-directory: shadowseed_source
+        run: uv sync --locked --extra openai --extra test
+      - name: Verify source, suite, runner and SSL imports before paid calls
+        working-directory: shadowseed_source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_PRO_SHA"
+          sha256sum src/shadowseed/data/ssl_session_suite.json
+          sha256sum scripts/research_controlled_pair_run.py
+          uv run --no-sync python -m py_compile scripts/research_controlled_pair_run.py
+          uv run --no-sync python -c 'from shadowseed.chat import ShadowChatSession; from shadowseed.detection.model_detector import OpenAIDetectorBackend; from shadowseed.surfacing import build_role_chat_messages; print("SSL imports OK")'
+      - name: Run separate genuine SSL arm with original Shadowseed repository secret
+        working-directory: shadowseed_source
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::Original Shadowseed repository secret unavailable. No model calls made."
+            exit 1
+          fi
+          mkdir -p results/fixed22
+          GITHUB_SHA="$SOURCE_PRO_SHA" uv run --no-sync python scripts/research_controlled_pair_run.py \
+            --arm ssl \
+            --model "${{ matrix.model }}" \
+            --suite src/shadowseed/data/ssl_session_suite.json \
+            --out "results/fixed22/ssl_${{ matrix.model }}.json"
+      - name: Keep independent SSL artifacts for review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fixed22-pro-ssl-${{ matrix.model }}-${{ github.run_id }}
+          path: shadowseed_source/results/fixed22/*.json
+          if-no-files-found: warn
+          retention-days: 60
