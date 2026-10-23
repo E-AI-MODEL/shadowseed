@@ -1,0 +1,9 @@
+APPROVED ONE-SHOT BILLABLE API RUN
+Preflight: GitHub Actions 39877830731 (success)
+Freeze core: 13fda4189b3cff306642c41c47524dc3648bf1f4
+Models: gpt-5 / gpt-6-astra
+Arms: A without shadow, B with canonical exploratory Gate
+Independent episodes: 3 x 5 turns per model and arm
+Maximum request count: 90
+Estimated maximum spend: USD 6.00 (not provider billing guarantee)
+The presence of this file triggers one push-only run. Subsequent source edits cannot retrigger it.
